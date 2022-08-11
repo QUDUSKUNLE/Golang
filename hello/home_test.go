@@ -3,14 +3,12 @@ package main
 import "testing"
 
 func TestHome(t *testing.T) {
-
 	assert_Hello_func := func(t *testing.T, got, want string) {
 		t.Helper()
 		if got != want {
 			t.Errorf("got %q want %q", got, want)
 		}
 	}
-
 	assert_Add_func := func(t *testing.T, got, want int) {
 		t.Helper()
 		if got != want {

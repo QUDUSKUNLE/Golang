@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	var x float64 = 20.0
@@ -50,4 +52,12 @@ func Add(x, y int) int {
 
 func Subtract(x, y int) int {
 	return x - y
+}
+
+func ReverseRunes(str string) string {
+	runes := []rune(str)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
 }
