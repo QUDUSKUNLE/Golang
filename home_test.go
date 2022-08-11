@@ -18,6 +18,13 @@ func TestHome(t *testing.T) {
 		}
 	}
 
+	assert_Subtract_func := func(t *testing.T, x, y int) {
+		t.Helper()
+		if x != y {
+			t.Errorf("got %d want %d", x, y)
+		}
+	}
+
 	t.Run("Hey, say Hello to Qudus Yekeen", func(t *testing.T) {
 		got := Hello("World", "Yoruba")
 		want := "Hello, World"
@@ -81,6 +88,15 @@ func TestHome(t *testing.T) {
 		if summ != expected {
 			t.Fail()
 			t.Errorf("expected '%d' but got '%d'", expected, summ)
+		}
+	})
+
+	t.Run("testing subtract function", func(t*testing.T) {
+		sub := Subtract(10, 5)
+		expected := 5
+		assert_Subtract_func(t, sub, expected)
+		if sub != expected {
+			t.Errorf("expected '%d' but got '%d'", expected, sub)
 		}
 	})
 }

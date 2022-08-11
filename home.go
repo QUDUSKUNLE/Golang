@@ -47,3 +47,7 @@ func Hello(name string, language string) string {
 func Add(x, y int) int {
 	return x + y
 }
+
+func Subtract(x, y int) int {
+	return x - y
+}
