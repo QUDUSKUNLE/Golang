@@ -67,16 +67,15 @@ func TestHome(t *testing.T) {
 	t.Run("empty string defaults to 'World'", func(t *testing.T) {
 		got := Hello("", "Yoruba")
 		want := "Hello, World"
+
 		assert_Hello_func(t, got, want)
 	})
 
 	t.Run("testing adder function", func(t *testing.T) {
 		sum := Add(2, 4)
 		expected := 6
+	
 		assert_Add_func(t, sum, expected)
-		if sum != expected {
-			t.Errorf("expected '%d' but got '%d'", expected, sum)
-		}
 	})
 
 	t.Run("testing adder function", func(t*testing.T) {

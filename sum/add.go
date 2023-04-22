@@ -12,3 +12,8 @@ func Sum(numbers []int) int {
 	}
 	return sum
 }
+
+func ExampleAdd(a, b int) int {
+	sum := Add(a, b)
+	return sum
+}

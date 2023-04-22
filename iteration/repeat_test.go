@@ -15,6 +15,7 @@ func TestRepeat(t *testing.T) {
 	})
 }
 
+// How to run Bench mark repeat.
 // go test -bench=.
 func BenchmarkRepeat(b *testing.B) {
 	for i := 0; i < b.N; i++ {
