@@ -1,4 +1,4 @@
-package main
+package structs
 import "math"
 
 type Rectangle struct {
