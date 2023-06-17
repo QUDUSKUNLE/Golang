@@ -22,7 +22,6 @@ func main() {
 	agesMap := make(map[string]interface{})
 	agesMap["age"] = 12
 	agesMap["sex"] = "Male"
-	// agesMap["sex"] = "Male"
 	fmt.Println("Hello world")
 	fmt.Println("Hello World")
 	fmt.Println("I am in Go programming world.")

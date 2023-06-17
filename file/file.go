@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 )
 
+
 func OpenFile(name string) (string, error) {
 	f, er := os.Open(name)
 	if er != nil {
