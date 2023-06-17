@@ -28,3 +28,6 @@ func SumAllTails(numbersToSum ...[]int) []int {
 	}
 	return sums
 }
+
+// Array of 3 strings
+var Arrayof3 = [...]string{"First", "Second", "Third"}

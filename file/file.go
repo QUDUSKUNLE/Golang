@@ -6,25 +6,6 @@ import (
 	"io/ioutil"
 )
 
-// func main() {
-// 	filename, e := OpenFile("data.txt")
-
-// 	if e != nil {
-// 		fmt.Println(e)
-// 	} else {
-// 		// Read the content of the file
-// 		filecontent, er := ReadFile(filename)
-// 		if er != nil {
-// 			fmt.Println(er)
-// 		}
-// 		write, err := WriteFile("data2.txt", filecontent)
-// 		if err != nil {
-// 			fmt.Println("Error writing to a file")
-// 		}
-// 		fmt.Println(write)
-// 	}
-
-// }
 
 func OpenFile(name string) (string, error) {
 	f, er := os.Open(name)
