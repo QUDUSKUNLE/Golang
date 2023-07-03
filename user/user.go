@@ -4,43 +4,47 @@ import (
 	"errors"
 )
 
-type FullName string
+type Name string
 
 var (
 	ErrorEditingFirstName = errors.New("error editing firstname")
 	ErrorDeletingLastName = errors.New("error deleting lastname")
 )
 
-type Name struct {
-	FirstName FullName
-	LastName FullName
+type FullName struct {
+	FirstName string
+	LastName string
 }
 
-func (name *Name) FullName(full Name) FullName {
-	name.FirstName, name.LastName = full.FirstName, full.LastName
-	return FullName(name.FirstName + " " + name.LastName) 
+type Person struct {
+	Name FullName
+	Age int
 }
 
-func (name *Name) EditFirstName(newName FullName) error {
-	if newName == name.FirstName {
+func (name Person) FullName() Name {
+	return Name(name.Name.FirstName + " " + name.Name.LastName)
+}
+
+func (name *Person) EditFirstName(newName FullName) error {
+	if newName.FirstName == name.Name.FirstName {
 		return ErrorEditingFirstName
 	}
-	name.FirstName = newName
+	name.Name.FirstName = newName.FirstName
 	return nil
 }
 
-func (name *Name) DeleteLastName(lastName FullName) error {
-	if lastName == name.LastName {
+func (name *Person) DeleteLastName(lastName FullName) error {
+	if lastName.LastName == name.Name.LastName {
 		return ErrorDeletingLastName
 	}
-	name.LastName = ""
+	name.Name.LastName = ""
 	return nil
 }
 
-func (name *Name) GetFirstName() FullName {
-	return FullName(name.FirstName)
+func (name *Person) GetFirstName() Name {
+	return Name(name.Name.FirstName)
 }
 
-func (name *Name) GetLastName() FullName {
-	return FullName(name.LastName)
+func (name *Person) GetLastName() Name {
+	return Name(name.Name.LastName)
 }

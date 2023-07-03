@@ -31,9 +31,14 @@ func main() {
 	single2 := singleton.New()
 
 	fmt.Println("This is", single2["this"])
-	users := user.Name{}
-	fmt.Println(users.FullName(user.Name{ FirstName: "AbdulQuddus", LastName: "Yekeen"}))
-	fmt.Println(users.EditFirstName("Adekunle"))
+	users := user.Person{
+		Name: user.FullName{
+			FirstName: "AbdulQuddus",
+			LastName: "Yekeen",
+		},
+	}
+	fmt.Println(users.FullName())
+	fmt.Println(users.EditFirstName(user.FullName{ FirstName: "Adekunle"}))
 	fmt.Println(users.GetFirstName())
 	fmt.Println(users.GetLastName())
 }
