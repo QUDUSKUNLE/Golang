@@ -1,4 +1,4 @@
-package wallets
+package pointer
 
 import (
 	"fmt"
@@ -37,4 +37,20 @@ func (w *Wallet) Balance() Bitcoin {
 
 func (b Bitcoin) String() string {
 	return fmt.Sprintf("%d BTC", b)
+}
+
+/*
+Suppose you have a variable
+age := 20
+Using &age get you the pointer to the variable, its memory address
+When you have the pointer to the variable, you can get the value it points
+to by using the * operator
+age := 20
+ageptr = &age
+agevalue = *ageptr
+*/
+
+func Increment(val *int) *int {
+	*val = *val + 1
+	return val
 }
