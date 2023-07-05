@@ -44,6 +44,19 @@ type Human interface {
 	Performance() string
 }
 
+type Printer interface {
+	Print()
+}
+
+type Book struct {
+	author, title string
+}
+
+type Magazine struct {
+	title string
+	issue int
+}
+
 // Emp user-defined type
 type Emp int
 type Pentagon int
@@ -81,4 +94,22 @@ func (m Man) Structure() []string {
 
 func (m Man) Performance() string {
 	return "8 Hrs/Day"
+}
+
+func (book *Book) Assign(auth, title string) {
+	book.author = auth
+	book.title = title
+}
+
+func (book *Book) Print() {
+	fmt.Printf("Author: %s, Title: %s\n", book.author, book.title)
+}
+
+func (mag *Magazine) Assign(title string, issue int) {
+	mag.title = title
+	mag.issue = issue
+}
+
+func (mag *Magazine) Print() {
+	fmt.Printf("Title: %s, Issue: %d\n", mag.title, mag.issue);
 }
