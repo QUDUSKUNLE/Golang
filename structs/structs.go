@@ -89,7 +89,7 @@ func (square *Square) Perimeter() int {
 	return square.Geometry.Perimeter
 }
 
-func (emp *Employee) SalaryEarned() (salary, hra, tax int) {
+func (emp *Employee) SalaryEarned() (totalsalary, totalHra, totalTax int) {
 	totalSalary, totalHra, totalTax := 0, 0, 0
 	for _, salary := range emp.MonthlySalary {
 		totalSalary = totalSalary + int(salary.Basic)

@@ -1,4 +1,4 @@
-package iterations
+package iteration
 
 import "testing"
 

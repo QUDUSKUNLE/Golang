@@ -1,4 +1,4 @@
-package countdowns
+package mock
 
 import (
 	"bytes"
