@@ -14,8 +14,8 @@ const (
 	Spring 
 )
 
-func (sess Season) String() string {
-	switch sess {
+func (season Season) String() string {
+	switch season {
 	case Summer:
 		return "summer"
 	case Autumn:

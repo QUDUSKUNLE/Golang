@@ -54,29 +54,29 @@ type Triangle struct {
 }
 
 // Areas
-func (t *Triangle) Area() float64 {
-	return 0.5 * t.Base * t.Height
+func (triangle *Triangle) Area() float64 {
+	return 0.5 * triangle.Base * triangle.Height
 }
 
-func (r *Rectangle) Area() float64 {
-	return r.Width * r.Height
+func (rectangle *Rectangle) Area() float64 {
+	return rectangle.Width * rectangle.Height
 }
 
-func (c *Circle) Area() float64 {
-	return math.Pi * c.Radius * c.Radius
+func (circle *Circle) Area() float64 {
+	return math.Pi * circle.Radius * circle.Radius
 }
 
 //  Perimeter of a rectangle
-func (t *Triangle) Perimeter() float64 {
-	return t.Base + t.Height
+func (triangle *Triangle) Perimeter() float64 {
+	return triangle.Base + triangle.Height
 }
 
-func (r *Rectangle) Perimeter() float64 {
-	return 2 * (r.Width + r.Height)
+func (rectangle *Rectangle) Perimeter() float64 {
+	return 2 * (rectangle.Width + rectangle.Height)
 }
 
-func (c *Circle) Perimeter() float64 {
-	return 2 * math.Pi * c.Radius
+func (circle *Circle) Perimeter() float64 {
+	return 2 * math.Pi * circle.Radius
 }
 
 func (square *Square) Area() int {
@@ -89,9 +89,9 @@ func (square *Square) Perimeter() int {
 	return square.Geometry.Perimeter
 }
 
-func (emp *Employee) SalaryEarned() (totalsalary, totalHra, totalTax int) {
+func (employee *Employee) SalaryEarned() (totalsalary, totalHra, totalTax int) {
 	totalSalary, totalHra, totalTax := 0, 0, 0
-	for _, salary := range emp.MonthlySalary {
+	for _, salary := range employee.MonthlySalary {
 		totalSalary = totalSalary + int(salary.Basic)
 		totalHra = totalHra + int(salary.HRA)
 		totalTax = totalTax + int(salary.TA)
