@@ -34,14 +34,18 @@ type Square struct {
 }
 
 type Salary struct {
-	Basic, HRA, TA float64
+	Basic float64
+	HRA float64
+	TA float64
 	Mon Month
 }
 
 type Employee struct {
-	FirstName, LastName, Email string
-	Age 											 int
-	MonthlySalary 						 []Salary
+	FirstName 	string 	`json:"title" myfmt:"s1"`
+	LastName 		string
+	Email 			string
+	Age 				int
+	MonthlySalary []Salary
 }
 
 type Circle struct {
@@ -96,5 +100,5 @@ func (employee *Employee) SalaryEarned() (totalsalary, totalHra, totalTax int) {
 		totalHra = totalHra + int(salary.HRA)
 		totalTax = totalTax + int(salary.TA)
 	}
-	return totalSalary, totalHra, totalTax
+	return
 }

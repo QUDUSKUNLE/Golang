@@ -2,31 +2,30 @@ package main
 
 import (
 	"fmt"
-	"sync"
-	channels "tutorial/channels"
+	"bytes"
+	"unicode/utf8"
 )
 
-var wg sync.WaitGroup
+func Runes2Bytes(rs []rune) []byte {
+	n := 0
+	for _, r := range rs {
+		n += utf8.RuneLen(r)
+	}
+	n, bs := 0, make([]byte, n)
+	for _, r := range rs {
+		n += utf8.EncodeRune(bs[n:], r)
+	}
+	return bs
+}
 
 func main() {
-	input := make(chan int)
-	output := make(chan int)
-	done := make(chan bool)
+	s := "Color Infection is a fun game."
+	sb := []byte(s) // string <-> []byte
+	bs := string(sb) // []byte <-> string
+	sr := []rune(bs) // string <-> []rune
+	_ = bytes.Runes(sb) // []byte <-> []rune
 
-	wg.Add(1)
-	go channels.Worker(input, output, done, &wg)
-
-	for i := 0; i < 10; i++ {
-		input <- i
-	}
-
-	close(input)
-
-	for n := range output {
-		fmt.Println(n)
-	}
-
-	done <-true
-	wg.Wait()
-	fmt.Println("done")
+	s = string(sr)
+	fmt.Println(sb, bs, sr, s)
+	fmt.Println("Done")
 }

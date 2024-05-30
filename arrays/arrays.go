@@ -31,3 +31,21 @@ func SumAllTails(numbersToSum ...[]int) []int {
 
 // Array of 3 strings
 var Arrayof3 = [...]string{"First", "Second", "Third"}
+
+// Array Type
+var A [5]string
+
+// Slice Type
+var B []string
+
+// Map Type
+var C map[string]string
+
+const Size = 32;
+
+type Person struct {
+	name string
+	age int
+}
+
+var D [5]string

@@ -55,3 +55,8 @@ func (dictionary Dictionary) Update(word, newDefinition string) error {
 func (dictionary Dictionary) Delete(word string) {
 	delete(dictionary, word)
 }
+
+type LangCategory struct {
+	dynamic bool
+	strong bool
+}
