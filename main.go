@@ -5,12 +5,8 @@ import (
 )
 
 func main() {
-	number := 100000000
-	better := 100_000_000
-	arr := [3]int{1, 2, 3}
-	sameArr := [...]int{ 1, 2, 3}
+	name := "Muhsinah"
 
-	fmt.Println(arr, sameArr)
-	fmt.Println(number == better, better)
+	fmt.Printf("My name is %s. Yes, heard that right: %s\n", name, name)
 	fmt.Println("Done")
 }
