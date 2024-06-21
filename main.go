@@ -2,30 +2,15 @@ package main
 
 import (
 	"fmt"
-	"bytes"
-	"unicode/utf8"
 )
 
-func Runes2Bytes(rs []rune) []byte {
-	n := 0
-	for _, r := range rs {
-		n += utf8.RuneLen(r)
-	}
-	n, bs := 0, make([]byte, n)
-	for _, r := range rs {
-		n += utf8.EncodeRune(bs[n:], r)
-	}
-	return bs
-}
-
 func main() {
-	s := "Color Infection is a fun game."
-	sb := []byte(s) // string <-> []byte
-	bs := string(sb) // []byte <-> string
-	sr := []rune(bs) // string <-> []rune
-	_ = bytes.Runes(sb) // []byte <-> []rune
+	number := 100000000
+	better := 100_000_000
+	arr := [3]int{1, 2, 3}
+	sameArr := [...]int{ 1, 2, 3}
 
-	s = string(sr)
-	fmt.Println(sb, bs, sr, s)
+	fmt.Println(arr, sameArr)
+	fmt.Println(number == better, better)
 	fmt.Println("Done")
 }
