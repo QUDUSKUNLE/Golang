@@ -1,0 +1,2 @@
+Protocol Buffers (protobuf) is a language-agnoistic binary serialization format developed by Google. It's designed to be simple, efficient, and scalable, making it a popular choice for data exchange between services. Using JSON or XML, 
+protobuf encodes data in a compact binary format, which reduces the size of transmitted data and impproves performance.
