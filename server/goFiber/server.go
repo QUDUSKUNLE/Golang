@@ -2,21 +2,21 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gofiber/models"
 	"gofiber/middlewares"
+	// "gofiber/db"
 	// "log"
+	"gofiber/router"
 )
 
 func main() {
-
-	// if err := 
+	// Connect to database
+	// if err := db.Connect(); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// Fiber framework
 	app := fiber.New()
-	app.Get("/", models.GetHome)
-	app.Get("/:name?", models.GetName)
-	app.Get("/api/*", models.GetAPI)
-	app.Post("/admin", models.GetBody)
 	app.Use(middlewares.Logger)
+	router.SetupRoutes(app)
 	app.Listen(":3000")
 }

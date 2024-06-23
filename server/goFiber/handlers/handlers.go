@@ -1,7 +1,9 @@
-package models
+package handlers
 
-import "github.com/gofiber/fiber/v2"
-import "encoding/json"
+import (
+	"github.com/gofiber/fiber/v2"
+	"encoding/json"
+)
 
 func GetHome(context *fiber.Ctx) error {
 	return context.SendString("Hello, World!")

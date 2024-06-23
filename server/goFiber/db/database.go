@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"gofiber/config"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
