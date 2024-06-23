@@ -7,5 +7,6 @@ func CreateProductTable() {
 		name text UNIQUE,
 		description text,
 		category text NOT NULL
-	)`)
+	)`,
+)
 }
