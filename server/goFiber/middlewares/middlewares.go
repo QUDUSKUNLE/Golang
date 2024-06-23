@@ -18,6 +18,5 @@ func AuthReq() func(*fiber.Ctx) error {
 			config.Config("USERNAME"): config.Config("PASSWORD"),
 		},
 	}
-	err := basicauth.New(cfg);
-	return err
+	return basicauth.New(cfg);
 }
