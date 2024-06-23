@@ -11,7 +11,4 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 )
 
-require (
-	github.com/google/go-cmp v0.6.0 // indirect
-	google.golang.org/grpc v1.64.0
-)
+require google.golang.org/grpc v1.64.0
