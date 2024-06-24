@@ -27,7 +27,7 @@ func GetBody(context *fiber.Ctx) error {
 func GetAllProducts(context *fiber.Ctx) error {
 	rows, err := database.DB.Query(`SELECT name, description, category, amount FROM products order by name`)
 	if err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err,
 		})
@@ -38,7 +38,7 @@ func GetAllProducts(context *fiber.Ctx) error {
 	for rows.Next() {
 		product := models.Product{}
 		if err := rows.Scan(&product.Name, &product.Description, &product.Category, &product.Amount); err != nil {
-			context.Status(500).JSON(&fiber.Map{
+			context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 				"success": false,
 				"error": err,
 			})
@@ -47,12 +47,12 @@ func GetAllProducts(context *fiber.Ctx) error {
 		result.Products = append(result.Products, product)
 	}
 	// return result in JSON
-	if err := context.Status(200).JSON(&fiber.Map{
+	if err := context.Status(fiber.StatusOK).JSON(&fiber.Map{
 		"success": true,
 		"products": result,
 		"message": "All product returned successfully",
 	}); err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
@@ -68,7 +68,7 @@ func GetSingleProduct(context *fiber.Ctx) error {
 
 	row, err := database.DB.Query("SELECT * FROM products WHERE id = $1", id)
 	if err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
@@ -79,14 +79,14 @@ func GetSingleProduct(context *fiber.Ctx) error {
 		switch err := row.Scan(&id, &product.Amount, &product.Name, &product.Description, &product.Category); err {
 		case sql.ErrNoRows:
 			log.Println("Now rows were returned!")
-			context.Status(400).JSON(&fiber.Map{
+			context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 				"success": false,
 				"message": err,
 			})
 		case nil:
 			log.Println(product.Name, product.Amount, product.Category, product.Description)
 		default:
-			context.Status(500).JSON(&fiber.Map{
+			context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 				"success": false,
 				"message": err,
 			})
@@ -97,7 +97,7 @@ func GetSingleProduct(context *fiber.Ctx) error {
 		"message": "Successfully fetched product",
 		"product": product,
 	}); err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
@@ -111,7 +111,7 @@ func CreateProduct(context *fiber.Ctx) error {
 	product := new(models.Product)
 
 	if err := context.BodyParser(product); err != nil {
-		context.Status(400).JSON(&fiber.Map{
+		context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
@@ -119,7 +119,7 @@ func CreateProduct(context *fiber.Ctx) error {
 	}
 	_, err := database.DB.Exec("INSERT INTO products (name, description, category, amount) VALUES ($1, $2, $3, $4)", product.Name, product.Description, product.Category, product.Amount)
 	if err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
@@ -131,7 +131,7 @@ func CreateProduct(context *fiber.Ctx) error {
 		"message": "Product successfully created",
 		"product": product,
 	}); err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": "Error creating product",
 		})
@@ -145,7 +145,7 @@ func DeleteProduct(context *fiber.Ctx) error {
 	id := context.Params("id")
 	_, err := database.DB.Query("DELETE FROM products WHERE id = $1", id)
 	if err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err,
 		})
@@ -155,7 +155,7 @@ func DeleteProduct(context *fiber.Ctx) error {
 		"success": true,
 		"message": "Product deleted succcessfully",
 	}); err != nil {
-		context.Status(500).JSON(&fiber.Map{
+		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err,
 		})
