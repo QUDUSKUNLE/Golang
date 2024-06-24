@@ -18,6 +18,11 @@ func Next(context *fiber.Ctx) error {
 	return context.Next()
 }
 
+func SetContentType(context *fiber.Ctx) error {
+	context.Set("Content-Type", "application/json")
+	return context.Next()
+}
+
 func AuthReq() func(*fiber.Ctx) error {
 	cfg := basicauth.Config{
 		Users: map[string]string{

@@ -2,6 +2,10 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/helmet/v2"
+	// "github.com/gofiber/fiber/v2/middleware/crsf"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"gofiber/middlewares"
 	"gofiber/database"
 	"gofiber/router"
@@ -23,8 +27,12 @@ func main() {
 	// Fiber framework
 	app := fiber.New(config)
 	// app.Use(middlewares.Logger)
-	// Add Middlewares
-	app.Use(middlewares.Next)
+	app.Use(helmet.New()) // Use helmet middlewares for each route
+	// app.Use(crsf.New()) // Use CSRF middleware
+	app.Use(limiter.New()) // Use Limiter middleware
+	app.Use(logger.New()) // Add logger middleware
+	app.Use(middlewares.Next) // Add Time Logging Middlewares
+	app.Use("", middlewares.SetContentType)
 	router.SetupRoutes(app)
 	app.Listen(":3000")
 }

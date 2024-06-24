@@ -119,6 +119,12 @@ func TestGetHome(t *testing.T) {
 			route: "/",
 			statusCode: 200,
 		},
+		// Second test case
+    {
+      description:  "get HTTP status 404, when route is not exists",
+      route:        "/not-found",
+      statusCode:   404,
+    },
 	}
 
 	app := fiber.New()
