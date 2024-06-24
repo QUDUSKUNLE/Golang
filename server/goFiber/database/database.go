@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -12,7 +12,6 @@ var DB *sql.DB
 
 func Connect() error {
 	point := config.Config("DB_PORT")
-
 	port, err := strconv.ParseUint(point, 10, 32);
 	if err != nil {
 		fmt.Println("Error parsing str to int.")
@@ -21,10 +20,10 @@ func Connect() error {
 	if err != nil {
 		return err
 	}
+
 	if err = DB.Ping(); err != nil {
 		return err
 	}
-	CreateProductTable()
-	fmt.Println("Connection opened to database")
+	fmt.Println("Connection opened to database.")
 	return nil
 }

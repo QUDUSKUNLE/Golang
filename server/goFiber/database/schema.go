@@ -1,4 +1,4 @@
-package db
+package database
 
 func CreateProductTable() {
 	DB.Query(`CREATE TABLE IF NOT EXISTS products (
@@ -7,5 +7,6 @@ func CreateProductTable() {
 		name text UNIQUE,
 		description text,
 		category text NOT NULL
-	)`)
+	)`,
+)
 }
