@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"net/http/httptest"
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetSingleProduct(t *testing.T) {
@@ -107,21 +109,23 @@ func TestGetBody(t *testing.T) {
 }
 
 func TestGetHome(t *testing.T) {
-	type args struct {
-		context *fiber.Ctx
-	}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
+		description    string
+		route          string
+		statusCode     int
 	}{
-		// TODO: Add test cases.
+		{
+			description: "get HTTP status 200",
+			route: "/",
+			statusCode: 200,
+		},
 	}
+
+	app := fiber.New()
+	app.Get("/", GetHome)
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := GetHome(tt.args.context); (err != nil) != tt.wantErr {
-				t.Errorf("GetHome() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
+		req := httptest.NewRequest("GET", tt.route, nil)
+		resp, _ := app.Test(req, 1)
+		assert.Equal(t, tt.statusCode, resp.StatusCode, tt.description)
 	}
 }
