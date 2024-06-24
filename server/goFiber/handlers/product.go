@@ -1,17 +1,17 @@
 package handlers
 
 import (
-	"log"
 	"database/sql"
 	"encoding/json"
-	"gofiber/db"
+	"gofiber/database"
 	"gofiber/models"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetHome(context *fiber.Ctx) error {
-	return context.SendString("Hello, World!")
+	return context.Status(fiber.StatusOK).SendString("Hello, World!")
 }
 
 func GetBody(context *fiber.Ctx) error {
@@ -25,7 +25,7 @@ func GetBody(context *fiber.Ctx) error {
 
 // Get All Products from database
 func GetAllProducts(context *fiber.Ctx) error {
-	rows, err := db.DB.Query("SELECT name, description, category, amount FROM products order by name")
+	rows, err := database.DB.Query(`SELECT name, description, category, amount FROM products order by name`)
 	if err != nil {
 		context.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -66,7 +66,7 @@ func GetSingleProduct(context *fiber.Ctx) error {
 	id := context.Params("id")
 	product := models.Product{}
 
-	row, err := db.DB.Query("SELECT * FROM products WHERE id = $1", id)
+	row, err := database.DB.Query("SELECT * FROM products WHERE id = $1", id)
 	if err != nil {
 		context.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -111,14 +111,13 @@ func CreateProduct(context *fiber.Ctx) error {
 	product := new(models.Product)
 
 	if err := context.BodyParser(product); err != nil {
-		log.Println(err)
 		context.Status(400).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
 		return nil
 	}
-	_, err := db.DB.Query("INSERT INTO products (name, description, category, amount) VALUES ($1, $2, $3, $4)", product.Name, product.Description, product.Category, product.Amount)
+	_, err := database.DB.Exec("INSERT INTO products (name, description, category, amount) VALUES ($1, $2, $3, $4)", product.Name, product.Description, product.Category, product.Amount)
 	if err != nil {
 		context.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -144,7 +143,7 @@ func CreateProduct(context *fiber.Ctx) error {
 // Delete Product from DB
 func DeleteProduct(context *fiber.Ctx) error {
 	id := context.Params("id")
-	_, err := db.DB.Query("DELETE FROM products WHERE id = $1", id)
+	_, err := database.DB.Query("DELETE FROM products WHERE id = $1", id)
 	if err != nil {
 		context.Status(500).JSON(&fiber.Map{
 			"success": false,

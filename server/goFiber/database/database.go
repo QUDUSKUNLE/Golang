@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -20,6 +20,7 @@ func Connect() error {
 	if err != nil {
 		return err
 	}
+
 	if err = DB.Ping(); err != nil {
 		return err
 	}
