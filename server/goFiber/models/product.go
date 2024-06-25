@@ -1,6 +1,8 @@
 package models
 
-import "sync"
+import (
+	"sync"
+)
 
 type Product struct {
 	sync.Mutex 

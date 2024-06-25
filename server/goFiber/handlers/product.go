@@ -1,15 +1,14 @@
 package handlers
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"gofiber/database"
 	"gofiber/models"
-	"strconv"
 
-	"github.com/gofiber/fiber/v2"
 )
 
-func GetHome(context *fiber.Ctx) error {
-	return context.Status(fiber.StatusOK).SendString("Hello, World!")
+func FiberHome(context *fiber.Ctx) error {
+	return context.Status(fiber.StatusOK).SendString("Fiber framework!")
 }
 
 // Get All Products from database
@@ -42,21 +41,13 @@ func GetAllProducts(context *fiber.Ctx) error {
 
 // Get Singel Product from database
 func GetSingleProduct(context *fiber.Ctx) error {
-	ID := context.Params("id")
-	id, err := strconv.Atoi(ID);
-	if err != nil {
-		panic(err)
-	}
-	
-	// Create a database connection
-	db, err := database.OpenDBConnection()
-	if err != nil {
+	db, id, err := HandlerHelper(context)
+		if err != nil {
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err.Error(),
 		})
 	}
-
 	// Fetch Product from the database
 	product, err := db.GetProduct(id)
 	if err != nil {
@@ -111,17 +102,10 @@ func CreateProduct(context *fiber.Ctx) error {
 	})
 }
 
-// Delete Product from DB
+// Delete a Product
 func DeleteProduct(context *fiber.Ctx) error {
-	ID := context.Params("id")
-	id, err := strconv.Atoi(ID);
-	if err != nil {
-		panic(err)
-	}
-	
-	// Create a database connection
-	db, err := database.OpenDBConnection()
-	if err != nil {
+	db, id, err := HandlerHelper(context)
+		if err != nil {
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err.Error(),
@@ -140,5 +124,37 @@ func DeleteProduct(context *fiber.Ctx) error {
 	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Product deleted succcessfully",
+	})
+}
+
+// Update a Product
+func UpdateProduct(context *fiber.Ctx) error {
+	product := &models.Product{}
+
+	if err := context.BodyParser(product); err != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+
+	db, id, err := HandlerHelper(context)
+		if err != nil {
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+
+	if err := db.UpdateProduct(id, product); err != nil {
+		defer db.Close()
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			"success": false,
+			"error": err,
+		})
+	}
+	return context.Status(fiber.StatusNoContent).JSON(&fiber.Map{
+		"success": true,
+		"message": "Product updated successfully",
 	})
 }

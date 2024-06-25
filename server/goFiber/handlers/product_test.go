@@ -108,7 +108,7 @@ func TestGetHome(t *testing.T) {
 	}
 
 	app := fiber.New()
-	app.Get("/", GetHome)
+	app.Get("/", FiberHome)
 	for _, tt := range tests {
 		req := httptest.NewRequest("GET", tt.route, nil)
 		resp, _ := app.Test(req, 1)
