@@ -4,9 +4,24 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gofiber/database"
 	"gofiber/models"
-
+	"strconv"
 )
 
+func HandlerHelper(c *fiber.Ctx) (*database.Queries, int, error) {
+	ID := c.Params("id")
+	id, err := strconv.Atoi(ID);
+	if err != nil {
+		panic(err)
+	}
+	// Create a database connection
+	db, err := database.OpenDBConnection()
+	if err != nil {
+		return nil, 0, err
+	}
+	return db, id, nil
+}
+
+// Home
 func FiberHome(context *fiber.Ctx) error {
 	return context.Status(fiber.StatusOK).SendString("Fiber framework!")
 }
@@ -22,7 +37,7 @@ func GetAllProducts(context *fiber.Ctx) error {
 		})
 	}
 
-	products, err := db.GetProducts();
+	products, err := db.QueryGetProducts();
 	if err != nil {
 		defer db.Close();
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
@@ -39,7 +54,7 @@ func GetAllProducts(context *fiber.Ctx) error {
 	})
 }
 
-// Get Singel Product from database
+// Get Single Product from database
 func GetSingleProduct(context *fiber.Ctx) error {
 	db, id, err := HandlerHelper(context)
 		if err != nil {
@@ -49,7 +64,7 @@ func GetSingleProduct(context *fiber.Ctx) error {
 		})
 	}
 	// Fetch Product from the database
-	product, err := db.GetProduct(id)
+	product, err := db.QueryGetProduct(id)
 	if err != nil {
 		defer db.Close() // Close database connection
 		return context.Status(fiber.StatusNotFound).JSON(&fiber.Map{
@@ -86,7 +101,7 @@ func CreateProduct(context *fiber.Ctx) error {
 	}
 
 	product.ID = models.NewProduct().ID
-	if err := db.CreateProduct(product); err != nil {
+	if err := db.QueryCreateProduct(product); err != nil {
 		defer db.Close() // Close database
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
@@ -112,7 +127,7 @@ func DeleteProduct(context *fiber.Ctx) error {
 		})
 	}
 
-	if err := db.DeleteProduct(id); err != nil {
+	if err := db.QueryDeleteProduct(id); err != nil {
 		defer db.Close()
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
@@ -146,7 +161,7 @@ func UpdateProduct(context *fiber.Ctx) error {
 		})
 	}
 
-	if err := db.UpdateProduct(id, product); err != nil {
+	if err := db.QueryUpdateProduct(id, product); err != nil {
 		defer db.Close()
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,

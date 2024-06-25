@@ -25,6 +25,7 @@ func main() {
 	app.Use(logger.New()) // Add logger middleware
 	app.Use(middlewares.Next) // Add Time Logging Middlewares
 	app.Use("", middlewares.SetContentType)
+	// router.SwaggerRoute(app)
 	router.SetupRoutes(app)
 	app.Listen(":3000")
 }
