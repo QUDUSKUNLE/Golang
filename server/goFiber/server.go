@@ -3,21 +3,13 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/helmet/v2"
-	// "github.com/gofiber/fiber/v2/middleware/crsf"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"gofiber/middlewares"
-	"gofiber/database"
 	"gofiber/router"
-	"log"
 )
 
 func main() {
-	// Connect to database
-	if err := database.Connect(); err != nil {
-		log.Fatal(err)
-	}
-
 	// Custom server header
 	config := fiber.Config{
 		ServerHeader: "Fiber Application",
