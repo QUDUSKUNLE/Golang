@@ -18,13 +18,13 @@ func (query *Fiber) GetProducts() ([]models.Product, error) {
 	return products, nil
 }
 
-func (query *Fiber) GetProduct(id int) (models.Product, error) {
+func (query *Fiber) GetProduct(id int) (*models.Product, error) {
 	product := models.Product{}
 	q := `SELECT * FROM products WHERE id = $1`
 	if err := query.Get(&product, q, id); err != nil {
-		return product, err
+		return &product, err
 	}
-	return product, nil
+	return &product, nil
 }
 
 func (query *Fiber) CreateProduct(product *models.Product) error {

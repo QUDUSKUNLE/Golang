@@ -1,6 +1,8 @@
 package models
 
-import "sync"
+import (
+	"sync"
+)
 
 type Product struct {
 	sync.Mutex 
@@ -9,10 +11,6 @@ type Product struct {
 	Description string `json: "description"`
 	Category    string `json: "category"`
 	Amount      int    `json: "amount"`
-}
-
-type Products struct {
-	Products []Product 	`json: "products"`
 }
 
 var product Product
