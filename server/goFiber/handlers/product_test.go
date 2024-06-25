@@ -88,26 +88,6 @@ func TestGetAllProducts(t *testing.T) {
 	}
 }
 
-func TestGetBody(t *testing.T) {
-	type args struct {
-		context *fiber.Ctx
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := GetBody(tt.args.context); (err != nil) != tt.wantErr {
-				t.Errorf("GetBody() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
 func TestGetHome(t *testing.T) {
 	tests := []struct {
 		description    string

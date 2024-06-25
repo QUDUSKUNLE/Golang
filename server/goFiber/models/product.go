@@ -11,10 +11,6 @@ type Product struct {
 	Amount      int    `json: "amount"`
 }
 
-type Products struct {
-	Products []Product 	`json: "products"`
-}
-
 var product Product
 
 func (p *Product) Unique() (id int) {

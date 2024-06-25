@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"gofiber/database"
 	"gofiber/models"
 	"strconv"
@@ -11,15 +10,6 @@ import (
 
 func GetHome(context *fiber.Ctx) error {
 	return context.Status(fiber.StatusOK).SendString("Hello, World!")
-}
-
-func GetBody(context *fiber.Ctx) error {
-	body := context.Body()
-	var result map[string]interface{}
-	if err:= json.Unmarshal(body, &result); err != nil {
-		return context.Send(body)
-	}
-	return context.JSON(result)
 }
 
 // Get All Products from database
@@ -41,6 +31,7 @@ func GetAllProducts(context *fiber.Ctx) error {
 			"error": err.Error(),
 		})
 	}
+
 	defer db.Close(); // close database connection
 	return context.Status(fiber.StatusOK).JSON(&fiber.Map{
 		"success": true,
@@ -65,6 +56,7 @@ func GetSingleProduct(context *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
+
 	// Fetch Product from the database
 	product, err := db.GetProduct(id)
 	if err != nil {
@@ -74,6 +66,7 @@ func GetSingleProduct(context *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
+
 	defer db.Close() // Close database connection
 	return context.JSON(&fiber.Map{
 		"success": true,
@@ -120,24 +113,32 @@ func CreateProduct(context *fiber.Ctx) error {
 
 // Delete Product from DB
 func DeleteProduct(context *fiber.Ctx) error {
-	id := context.Params("id")
-	_, err := database.DB.Query("DELETE FROM products WHERE id = $1", id)
+	ID := context.Params("id")
+	id, err := strconv.Atoi(ID);
 	if err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+		panic(err)
+	}
+	
+	// Create a database connection
+	db, err := database.OpenDBConnection()
+	if err != nil {
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
+	}
+
+	if err := db.DeleteProduct(id); err != nil {
+		defer db.Close()
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err,
 		})
-		return nil
 	}
-	if err := context.JSON(&fiber.Map{
+
+	defer db.Close()
+	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Product deleted succcessfully",
-	}); err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-			"success": false,
-			"error": err,
-		})
-		return nil
-	}
-	return nil
+	})
 }
