@@ -1,11 +1,10 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"gofiber/database"
 	"gofiber/models"
-	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -25,119 +24,98 @@ func GetBody(context *fiber.Ctx) error {
 
 // Get All Products from database
 func GetAllProducts(context *fiber.Ctx) error {
-	rows, err := database.DB.Query(`SELECT name, description, category, amount FROM products order by name`)
+	// Create a database connection
+	db, err := database.OpenDBConnection()
 	if err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
-			"error": err,
+			"message": err.Error(),
 		})
 	}
-	defer rows.Close()
-	result := models.Products{}
 
-	for rows.Next() {
-		product := models.Product{}
-		if err := rows.Scan(&product.Name, &product.Description, &product.Category, &product.Amount); err != nil {
-			context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-				"success": false,
-				"error": err,
-			})
-			return nil
-		}
-		result.Products = append(result.Products, product)
-	}
-	// return result in JSON
-	if err := context.Status(fiber.StatusOK).JSON(&fiber.Map{
-		"success": true,
-		"products": result,
-		"message": "All product returned successfully",
-	}); err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+	products, err := db.GetProducts();
+	if err != nil {
+		defer db.Close();
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"error": err.Error(),
 		})
-		return nil
 	}
-	return nil
+	defer db.Close(); // close database connection
+	return context.Status(fiber.StatusOK).JSON(&fiber.Map{
+		"success": true,
+		"products": products,
+		"message": "All product returned successfully",
+	})
 }
 
 // Get Singel Product from database
 func GetSingleProduct(context *fiber.Ctx) error {
-	id := context.Params("id")
-	product := models.Product{}
-
-	row, err := database.DB.Query("SELECT * FROM products WHERE id = $1", id)
+	ID := context.Params("id")
+	id, err := strconv.Atoi(ID);
 	if err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+		panic(err)
+	}
+	
+	// Create a database connection
+	db, err := database.OpenDBConnection()
+	if err != nil {
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"message": err.Error(),
 		})
 	}
-	defer row.Close();
-
-	for row.Next() {
-		switch err := row.Scan(&id, &product.Amount, &product.Name, &product.Description, &product.Category); err {
-		case sql.ErrNoRows:
-			log.Println("Now rows were returned!")
-			context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
-				"success": false,
-				"message": err,
-			})
-		case nil:
-			log.Println(product.Name, product.Amount, product.Category, product.Description)
-		default:
-			context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-				"success": false,
-				"message": err,
-			})
-		}
+	// Fetch Product from the database
+	product, err := db.GetProduct(id)
+	if err != nil {
+		defer db.Close() // Close database connection
+		return context.Status(fiber.StatusNotFound).JSON(&fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
 	}
-	if err := context.JSON(&fiber.Map{
+	defer db.Close() // Close database connection
+	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Successfully fetched product",
-		"product": product,
-	}); err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-			"success": false,
-			"message": err,
-		})
-		return nil
-	}
-	return nil
+		"product": &product,
+	});
 }
 
 // Creating a Product
 func CreateProduct(context *fiber.Ctx) error {
-	product := new(models.Product)
+	product := &models.Product{}
 
 	if err := context.BodyParser(product); err != nil {
-		context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+		return context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"message": err.Error(),
 		})
-		return nil
 	}
-	_, err := database.DB.Exec("INSERT INTO products (name, description, category, amount) VALUES ($1, $2, $3, $4)", product.Name, product.Description, product.Category, product.Amount)
+	// Create a database connection
+	db, err := database.OpenDBConnection()
 	if err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"message": err.Error(),
 		})
-		return nil
+	}
+
+	product.ID = models.NewProduct().ID
+	if err := db.CreateProduct(product); err != nil {
+		defer db.Close() // Close database
+		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
 	}
 	
-	if err := context.JSON(&fiber.Map{
+	defer db.Close() // Close database
+	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Product successfully created",
 		"product": product,
-	}); err != nil {
-		context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-			"success": false,
-			"message": "Error creating product",
-		})
-		return nil
-	}
-	return nil
+	})
 }
 
 // Delete Product from DB
