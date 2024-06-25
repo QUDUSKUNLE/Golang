@@ -6,11 +6,11 @@ import (
 
 type Product struct {
 	sync.Mutex 
-	ID          int    `json: "id"`
-	Name 				string `json: "name"`
-	Description string `json: "description"`
-	Category    string `json: "category"`
-	Amount      int    `json: "amount"`
+	ID          int    `json:"id"`
+	Name 				string `json:"name"`
+	Description string `json:"description"`
+	Category    string `json:"category"`
+	Amount      int    `json:"amount"`
 }
 
 var product Product

@@ -90,21 +90,21 @@ func TestGetAllProducts(t *testing.T) {
 
 func TestGetHome(t *testing.T) {
 	tests := []struct {
-		description    string
-		route          string
-		statusCode     int
+		description string
+		route       string
+		statusCode  int
 	}{
 		{
 			description: "get HTTP status 200",
-			route: "/",
-			statusCode: 200,
+			route:       "/",
+			statusCode:  200,
 		},
 		// Second test case
-    {
-      description:  "get HTTP status 404, when route is not exists",
-      route:        "/not-found",
-      statusCode:   404,
-    },
+		{
+			description: "get HTTP status 404, when route is not exists",
+			route:       "/not-found",
+			statusCode:  404,
+		},
 	}
 
 	app := fiber.New()
@@ -113,5 +113,25 @@ func TestGetHome(t *testing.T) {
 		req := httptest.NewRequest("GET", tt.route, nil)
 		resp, _ := app.Test(req, 1)
 		assert.Equal(t, tt.statusCode, resp.StatusCode, tt.description)
+	}
+}
+
+func TestUpdateProduct(t *testing.T) {
+	type args struct {
+		context *fiber.Ctx
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := UpdateProduct(tt.args.context); (err != nil) != tt.wantErr {
+				t.Errorf("UpdateProduct() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
 	}
 }
