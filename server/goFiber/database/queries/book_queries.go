@@ -1,7 +1,7 @@
 package queries
 
 import (
-	"database/sql"
+	// "database/sql"
 	"gofiber/models"
 
 	"github.com/google/uuid"
@@ -10,8 +10,7 @@ import (
 func (query *Fiber) QueryGetBooks() ([]models.Book, error) {
 	books := []models.Book{}
 	q := `SELECT * FROM books`
-	err := query.Select(&books, q);
-	if err != sql.ErrNoRows {
+	if err := query.Select(&books, q); err != nil {
 		return books, err
 	}
 	return books, nil
@@ -21,7 +20,7 @@ func (query *Fiber) QueryGetBook(id uuid.UUID) (models.Book, error) {
 	book := models.Book{}
 	q := `SELECT * FROM books WHERE id = $1`
 	if err := query.Get(&book, q, id); err != nil {
-		return book, err
+		return models.Book{}, err
 	}
 	return book, nil
 }

@@ -18,7 +18,6 @@ func main() {
 	}
 	// Fiber framework
 	app := fiber.New(config)
-	// app.Use(middlewares.Logger)
 	app.Use(helmet.New()) // Use helmet middlewares for each route
 	// app.Use(crsf.New()) // Use CSRF middleware
 	app.Use(limiter.New()) // Use Limiter middleware
