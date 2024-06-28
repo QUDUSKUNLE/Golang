@@ -49,6 +49,8 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.17.0 // indirect
