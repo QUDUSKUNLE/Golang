@@ -39,14 +39,12 @@ func GetAllProducts(context *fiber.Ctx) error {
 
 	products, err := db.QueryGetProducts();
 	if err != nil {
-		defer db.Close();
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err.Error(),
 		})
 	}
 
-	defer db.Close(); // close database connection
 	return context.Status(fiber.StatusOK).JSON(&fiber.Map{
 		"success": true,
 		"products": products,
@@ -66,14 +64,12 @@ func GetSingleProduct(context *fiber.Ctx) error {
 	// Fetch Product from the database
 	product, err := db.QueryGetProduct(id)
 	if err != nil {
-		defer db.Close() // Close database connection
 		return context.Status(fiber.StatusNotFound).JSON(&fiber.Map{
 			"success": false,
 			"message": err.Error(),
 		})
 	}
 
-	defer db.Close() // Close database connection
 	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Successfully fetched product",
@@ -102,14 +98,12 @@ func CreateProduct(context *fiber.Ctx) error {
 
 	product.ID = models.NewProduct().ID
 	if err := db.QueryCreateProduct(product); err != nil {
-		defer db.Close() // Close database
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"message": err.Error(),
 		})
 	}
 	
-	defer db.Close() // Close database
 	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Product successfully created",
@@ -128,14 +122,12 @@ func DeleteProduct(context *fiber.Ctx) error {
 	}
 
 	if err := db.QueryDeleteProduct(id); err != nil {
-		defer db.Close()
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err,
 		})
 	}
 
-	defer db.Close()
 	return context.JSON(&fiber.Map{
 		"success": true,
 		"message": "Product deleted succcessfully",
@@ -162,7 +154,6 @@ func UpdateProduct(context *fiber.Ctx) error {
 	}
 
 	if err := db.QueryUpdateProduct(id, product); err != nil {
-		defer db.Close()
 		return context.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
 			"success": false,
 			"error": err,

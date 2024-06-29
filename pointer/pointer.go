@@ -51,6 +51,6 @@ agevalue = *ageptr
 */
 
 func Increment(val *int) *int {
-	*val = *val + 1
+	(*val)++
 	return val
 }

@@ -1,22 +1,22 @@
 package middlewares
 
 import (
-	"os"
+	// "os"
 	"github.com/gofiber/fiber/v2"
 
-  Middleware "github.com/gofiber/jwt/v2"
+  // Middleware "github.com/gofiber/jwt"
 )
 
-func JWTProtected() func(*fiber.Ctx) error {
-	config := Middleware.Config{
-		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
-		ContextKey: "jwt",
-		ErrorHandler: jwtError,
-	}
-	return Middleware.New(config)
-}
+// func JWTProtected() func(*fiber.Ctx) error {
+// 	config := Middleware.Config{
+// 		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
+// 		ContextKey: "jwt",
+// 		ErrorHandler: jwtError,
+// 	}
+// 	return Middleware.New(config)
+// }
 
-func jwtError(c *fiber.Ctx, err error) error {
+func JwtError(c *fiber.Ctx, err error) error {
 	// Return status 401 and failed authentication error.
 	if err.Error() == "Missing or malformed JWT" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
