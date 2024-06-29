@@ -19,7 +19,7 @@ func Next(context *fiber.Ctx) error {
 }
 
 func SetContentType(context *fiber.Ctx) error {
-	context.Set("Content-Type", "application/json")
+	context.Set("Content-Type", "text/plain")
 	return context.Next()
 }
 

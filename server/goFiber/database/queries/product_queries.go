@@ -16,7 +16,7 @@ func (query *Fiber) QueryGetProducts() ([]models.Product, error) {
 	q := `SELECT * from products`
 	err := query.Select(&products, q);
 	if err != sql.ErrNoRows {
-		return products, err
+		return []models.Product{}, err
 	}
 	return products, nil
 }
@@ -25,7 +25,7 @@ func (query *Fiber) QueryGetProduct(id int) (*models.Product, error) {
 	product := models.Product{}
 	q := `SELECT * FROM products WHERE id = $1`
 	if err := query.Get(&product, q, id); err != nil {
-		return &product, err
+		return &models.Product{}, err
 	}
 	return &product, nil
 }
