@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gofiber/database"
-	"gofiber/models"
+	"github.com/QUDUSKUNLE/gofiber/database"
+	"github.com/QUDUSKUNLE/gofiber/models"
 	"strconv"
 )
 

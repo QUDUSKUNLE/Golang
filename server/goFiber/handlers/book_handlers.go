@@ -1,10 +1,12 @@
 package handlers
 
 import (
-	"gofiber/database"
-	"gofiber/models"
+	"encoding/json"
+	"fmt"
+	"github.com/QUDUSKUNLE/gofiber/database"
+	"github.com/QUDUSKUNLE/gofiber/models"
 
-	"gofiber/utils"
+	"github.com/QUDUSKUNLE/gofiber/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -48,6 +50,10 @@ func CreateBook(context *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
+
+	jsonValue, _ := json.Marshal(book)
+
+	fmt.Println(jsonValue)
 	// bookAttr.Scan(val)
 
 	// Create a database connection
