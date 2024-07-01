@@ -3,7 +3,6 @@ package queries
 import (
 	"database/sql"
 	"github.com/QUDUSKUNLE/gofiber/src/models"
-
 	"github.com/jmoiron/sqlx"
 )
 
