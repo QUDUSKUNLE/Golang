@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 	"strconv"
-	"gofiber/config"
-	"gofiber/database/queries"
+	"github.com/QUDUSKUNLE/gofiber/config"
+	"github.com/QUDUSKUNLE/gofiber/database/queries"
 	"github.com/jmoiron/sqlx"
 
   _ "github.com/jackc/pgx/v4/stdlib" 

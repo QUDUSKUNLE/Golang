@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gofiber/handlers"
+	"github.com/QUDUSKUNLE/gofiber/handlers"
 )
 
 

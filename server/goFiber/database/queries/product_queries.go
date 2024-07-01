@@ -2,7 +2,7 @@ package queries
 
 import (
 	"database/sql"
-	"gofiber/models"
+	"github.com/QUDUSKUNLE/gofiber/models"
 
 	"github.com/jmoiron/sqlx"
 )

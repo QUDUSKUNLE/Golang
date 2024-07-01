@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"gofiber/database"
-	"gofiber/models"
+	"github.com/QUDUSKUNLE/gofiber/database"
+	"github.com/QUDUSKUNLE/gofiber/models"
 
-	"gofiber/utils"
+	"github.com/QUDUSKUNLE/gofiber/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -37,10 +37,6 @@ func GetAllBooks(context *fiber.Ctx) error {
 func CreateBook(context *fiber.Ctx) error {
 	// bookAttr := new(models.BookAttrs)
 	book := new(models.Book)
-	// val, err := models.BookAttrs.Value(models.BookAttrs{});
-	// if err != nil {
-	// 	panic(err)
-	// }
 
 	if err := context.BodyParser(&book); err != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
@@ -48,7 +44,6 @@ func CreateBook(context *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-	// bookAttr.Scan(val)
 
 	// Create a database connection
 	db, err := database.OpenDBConnection()

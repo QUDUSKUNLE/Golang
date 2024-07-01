@@ -1,4 +1,4 @@
-module gofiber
+module github.com/QUDUSKUNLE/gofiber
 
 go 1.20
 
