@@ -1,4 +1,4 @@
-module tutorial
+module github.com/QUDUSKUNLE/Golang/tutorial
 
 go 1.18
 

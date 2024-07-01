@@ -4,10 +4,11 @@ import (
 	"context"
 	"log"
 	"net"
-	"google.golang.org/grpc"
- 	"google.golang.org/grpc/reflection"
 
-	pb "tutorial/protocols"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
+	pb "github.com/QUDUSKUNLE/Golang/tutorial/protocols"
 )
 
 type server struct {

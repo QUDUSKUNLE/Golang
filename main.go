@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"tutorial/pointer"
-	"tutorial/allocation"
+
+	"github.com/QUDUSKUNLE/Golang/tutorial/allocation"
+	"github.com/QUDUSKUNLE/Golang/tutorial/pointer"
 )
 
 func main() {

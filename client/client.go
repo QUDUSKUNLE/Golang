@@ -1,12 +1,12 @@
 package main
 
 import (
- "context"
- "log"
- "time"
+	"context"
+	"log"
+	"time"
 
- "google.golang.org/grpc"
- pb "tutorial/protocols"
+	pb "github.com/QUDUSKUNLE/Golang/tutorial/protocols"
+	"google.golang.org/grpc"
 )
 
 func main() {
