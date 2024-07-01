@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/QUDUSKUNLE/gofiber/config"
+	"github.com/QUDUSKUNLE/gofiber/src/config"
 	"time"
 	"fmt"
 

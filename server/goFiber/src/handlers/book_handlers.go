@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"github.com/QUDUSKUNLE/gofiber/database"
-	"github.com/QUDUSKUNLE/gofiber/models"
+	"github.com/QUDUSKUNLE/gofiber/src/database"
+	"github.com/QUDUSKUNLE/gofiber/src/models"
 
-	"github.com/QUDUSKUNLE/gofiber/utils"
+	"github.com/QUDUSKUNLE/gofiber/src/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"

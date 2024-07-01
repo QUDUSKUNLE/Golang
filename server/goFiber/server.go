@@ -5,8 +5,8 @@ import (
 	"github.com/gofiber/helmet/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/QUDUSKUNLE/gofiber/middlewares"
-	"github.com/QUDUSKUNLE/gofiber/router"
+	"github.com/QUDUSKUNLE/gofiber/src/middlewares"
+	"github.com/QUDUSKUNLE/gofiber/src/router"
 )
 
 func main() {

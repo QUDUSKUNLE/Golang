@@ -1,7 +1,7 @@
 package queries
 
 import (
-	"github.com/QUDUSKUNLE/gofiber/models"
+	"github.com/QUDUSKUNLE/gofiber/src/models"
 	"github.com/google/uuid"
 )
 

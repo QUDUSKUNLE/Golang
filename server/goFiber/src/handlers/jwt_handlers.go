@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/QUDUSKUNLE/gofiber/utils"
+	"github.com/QUDUSKUNLE/gofiber/src/utils"
 )
 
 func GetNewAccessToken(c *fiber.Ctx) error {
