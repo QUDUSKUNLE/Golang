@@ -2,7 +2,7 @@ package channels
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"sync"
@@ -23,11 +23,11 @@ func ResponseSize(url string, nums chan int) {
 
 	defer response.Body.Close()
 
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	nums <-len(body)
+	nums <- len(body)
 }
 
 var i int

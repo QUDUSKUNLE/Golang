@@ -60,13 +60,15 @@ func CreateBook(context *fiber.Ctx) error {
 	}
 
 	newProduct := models.NewBook()
-	book.ID = newProduct.ID
-	book.CreatedAt = newProduct.CreatedAt
-	book.UpdatedAt = newProduct.UpdatedAt
-	book.BookAttrs = models.BookAttrs{
-		Picture: book.BookAttrs.Picture,
-		Description: book.BookAttrs.Description,
-		Rating: book.BookAttrs.Rating,
+	book = &models.Book{
+		ID: newProduct.ID,
+		CreatedAt: newProduct.CreatedAt,
+		UpdatedAt: newProduct.UpdatedAt,
+		BookAttrs: models.BookAttrs{
+			Picture: book.BookAttrs.Picture,
+			Description: book.BookAttrs.Description,
+			Rating: book.BookAttrs.Rating,
+		},
 	}
 
 	// Create a new validator
