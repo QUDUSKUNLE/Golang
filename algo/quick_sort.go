@@ -18,7 +18,7 @@ func QuickSort(dataList []int) []int {
 
 	fmt.Println(result)
 
-	for key, _ := range dataList {
+	for key := range dataList {
 		if dataList[key] < dataList[right] {
 			dataList[left], dataList[key] = dataList[key], dataList[left]
 			left++
