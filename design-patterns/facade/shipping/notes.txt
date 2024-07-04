@@ -1,0 +1,19 @@
+Design a shipping app
+
+1. Allow user to register on the shipping app
+    Requirements
+      a. Create a user account with Email and a Password
+      b. Validate user data
+      c. Check if user already exist
+      d. Encrypt Password
+      e. Save data in the database
+      f. Send registration notification with email confirmation
+
+2. Shipping of product from point A to point B.
+    Requirements
+      a. Check account
+      b. check product type
+      b. make entry
+      c. schedule pickup
+      d. send notification
+

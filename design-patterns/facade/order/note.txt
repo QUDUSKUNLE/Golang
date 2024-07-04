@@ -1,0 +1,9 @@
+Conceptual Example
+
+It’s easy to underestimate the complexities that happen behind the scenes when you order a pizza using your credit card. There are dozens of subsystems that are acting in this process. Here’s just a shortlist of them:
+
+Check account
+Check security PIN
+Credit/debit balance
+Make ledger entry
+Send notification
