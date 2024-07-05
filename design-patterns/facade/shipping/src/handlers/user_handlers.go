@@ -19,9 +19,9 @@ func NewUser(context echo.Context) error {
 		return err
 	}
 	// Initiate a new user registration
-	newUser := shipping.NewUserAdaptor(user.Email)
+	newUserAdaptor := shipping.NewUserAdaptor()
 
-	if err := newUser.NewUser(user.Email, user.Password, user.ConfirmPassword); err != nil {
+	if err := newUserAdaptor.RegisterNewUser(user.Email, user.Password, user.ConfirmPassword); err != nil {
 		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
 	}
 	// Process valid user data

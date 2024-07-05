@@ -23,8 +23,9 @@ func NewUser(ID uuid.UUID) *User {
 	}
 }
 
-func RegisterNewUser(email string) *User {
+func RegisterUser(email string) *User {
 	return &User{
+		ID: uuid.New(),
 		Email: email,
 		CreatedAt: time.Now(),
 	}
