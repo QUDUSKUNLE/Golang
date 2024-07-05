@@ -25,7 +25,7 @@ func DeliveryProduct(context echo.Context) error {
 		return err
 	}
 	// Initiate a new delivery
-	newDelivery := shipping.NewDelivery(accountID, deliveryDto.ProductType)
+	newDelivery := shipping.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
 
 	// Convert ProductType to string
 	productType := deliveryDto.ProductType.PrintProduct()

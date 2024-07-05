@@ -6,7 +6,7 @@ import (
 
 type UserLedger struct {}
 
-func (ledger *UserLedger) Ledger(accountID string) (userID string, err error) {
+func (ledger *UserLedger) RegisterLedger(accountID string) error {
 	fmt.Printf("Register a new user %s\n", accountID)
-	return accountID, nil
+	return nil
 }

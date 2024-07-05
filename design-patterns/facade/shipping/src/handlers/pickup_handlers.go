@@ -26,13 +26,13 @@ func PickupProduct(context echo.Context) error {
 		return err
 	}
 	// Initiate a new pick up
-	newPickUp := shipping.NewPickUp(accountID, pickUpDto.ProductType)
+	newPickUp := shipping.NewPickUpAdaptor(accountID, pickUpDto.ProductType)
 
 	// Convert ProductType to string
 	productType := pickUpDto.ProductType.PrintProduct()
 
 	// Pick up the product
-	if err := newPickUp.NewSchedulePickUp(accountID, pickUpDto.PickUpAddress, pickUpDto.DeliveryAddress, productType); err != nil {
+	if err := newPickUp.NewPickUp(accountID, pickUpDto.PickUpAddress, pickUpDto.DeliveryAddress, productType); err != nil {
 		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
 	}
 	return context.JSON(http.StatusOK, map[string]string{

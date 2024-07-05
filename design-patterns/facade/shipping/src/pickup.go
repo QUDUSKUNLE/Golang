@@ -3,25 +3,25 @@ package shipping
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/QUDUSKUNLE/shipping/src/account"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
 	"github.com/QUDUSKUNLE/shipping/src/product"
 	"github.com/QUDUSKUNLE/shipping/src/schedule"
 )
 
-type PickUp struct {
-	user *account.User
+type PickUpAdaptor struct {
+	user *model.User
 	product *product.Product
 	pickUpLedger *ledger.PickUpLedger
 	schedulePickUp *schedule.SchedulePickUp
 	notification *notification.Notification
 }
 
-func NewPickUp(accountID uuid.UUID, productType product.ProductType) *PickUp {
+func NewPickUpAdaptor(accountID uuid.UUID, productType product.ProductType) *PickUpAdaptor {
 	fmt.Println("Initiate a new product pick up")
-	pickup := &PickUp{
-		user: account.NewUser(accountID),
+	pickup := &PickUpAdaptor{
+		user: model.NewUser(accountID),
 		product: product.NewProduct(productType),
 		pickUpLedger: &ledger.PickUpLedger{},
 		schedulePickUp: &schedule.SchedulePickUp{},
@@ -32,7 +32,7 @@ func NewPickUp(accountID uuid.UUID, productType product.ProductType) *PickUp {
 }
 
 
-func (pickUp *PickUp) NewSchedulePickUp(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
+func (pickUp *PickUpAdaptor) NewPickUp(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
 	fmt.Println("Start a new pickup.")
 	if err := pickUp.user.CheckUser(accountID); err != nil {
 		return err

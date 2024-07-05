@@ -1,4 +1,4 @@
-package account
+package model
 
 import (
 	"github.com/google/uuid"
@@ -12,7 +12,7 @@ import (
 type User struct {
 	ID 		   		uuid.UUID
 	Email 	 		string
-	Password 		string
+	Password 		    string
 	CreatedAt 	time.Time
 	UpdatedAt 	time.Time
 }
@@ -27,7 +27,6 @@ func RegisterNewUser(email string) *User {
 	return &User{
 		Email: email,
 		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
 	}
 }
 

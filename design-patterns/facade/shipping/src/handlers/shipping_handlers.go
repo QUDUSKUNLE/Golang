@@ -24,13 +24,13 @@ func ScheduleProduct(context echo.Context) error {
 		return err
 	}
 	// Initiate new shipping
-	newShipping := shipping.NewShipping(accountID, shippingDto.ProductType)
+	newShipping := shipping.NewShippingAdaptor(accountID, shippingDto.ProductType)
 
 	// Convert ProductType to string
 	productType := shippingDto.ProductType.PrintProduct()
 
 	// Schedule shipping
-	if err := newShipping.NewScheduleShipping(accountID, shippingDto.PickUpAddress, shippingDto.DeliveryAddress, productType); err != nil {
+	if err := newShipping.NewShipping(accountID, shippingDto.PickUpAddress, shippingDto.DeliveryAddress, productType); err != nil {
 		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
 	}
 	return context.JSON(http.StatusOK, map[string]string{
