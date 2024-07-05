@@ -1,4 +1,4 @@
-package shipping
+package notification
 
 import "fmt"
 
@@ -23,3 +23,12 @@ func (notification *Notification) SendWalletCreditNotification() {
 func (notification *Notification) SendWalletDebitNotification() {
 	fmt.Println("Sending wallet debit notification")
 }
+
+func (notification *Notification) SendDeliveryNotification() {
+	fmt.Println("Sending delivery notification")
+}
+
+func (notification *Notification) SendRegistrationNotification() {
+	fmt.Println("Sending registration notification")
+}
+
