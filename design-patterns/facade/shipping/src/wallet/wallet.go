@@ -1,4 +1,4 @@
-package shipping
+package wallet
 
 import "fmt"
 

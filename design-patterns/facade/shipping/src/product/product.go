@@ -1,4 +1,4 @@
-package shipping
+package product
 
 import "fmt"
 
@@ -48,9 +48,9 @@ func NewProduct(product ProductType) *Product {
 	}
 }
 
-func (p *Product) CheckProduct(product ProductType) error {
-	if p.productType.PrintProduct() != string(product) {
-		return fmt.Errorf("wrong product is submitted: %s", string(product))
+func (p *Product) CheckProduct(product string) error {
+	if p.productType.PrintProduct() != product {
+		return fmt.Errorf("wrong product is submitted: %s", product)
 	}
 	return nil
 }
