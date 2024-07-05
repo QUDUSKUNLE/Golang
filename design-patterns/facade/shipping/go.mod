@@ -21,6 +21,7 @@ require (
 )
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/labstack/gommon v0.4.2 // indirect

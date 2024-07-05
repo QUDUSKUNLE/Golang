@@ -2,14 +2,13 @@ package shipping
 
 import (
 	"fmt"
-
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src/account"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
 	"github.com/QUDUSKUNLE/shipping/src/product"
 	"github.com/QUDUSKUNLE/shipping/src/schedule"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 )
-
 
 type Delivery struct {
 	user *account.User
@@ -19,7 +18,7 @@ type Delivery struct {
 	notification *notification.Notification
 }
 
-func NewDelivery(accountID string, productType product.ProductType) *Delivery {
+func NewDelivery(accountID uuid.UUID, productType product.ProductType) *Delivery {
 	fmt.Println("Initiate a new delivery")
 	delivery :=  &Delivery{
 		user: account.NewUser(accountID),
@@ -32,7 +31,7 @@ func NewDelivery(accountID string, productType product.ProductType) *Delivery {
 	return delivery
 }
 
-func (delivery *Delivery) NewDelivery(accountID, pickUpAddress, deliveryAddress, productType string) error {
+func (delivery *Delivery) NewDelivery(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
 	fmt.Println("Start a new delivery.")
 	if err := delivery.user.CheckUser(accountID); err != nil {
 		return err
