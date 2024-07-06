@@ -1,19 +1,54 @@
 Design a shipping app
 
 1. Allow user to register on the shipping app
-    Requirements
-      a. Create a user account with Email and a Password
-      b. Validate user data
-      c. Check if user already exist
-      d. Encrypt Password
-      e. Save data in the database
-      f. Send registration notification with email confirmation
+  Requirements
+    a. Create a user account with Email and a Password
+    b. Validate user data
+    c. Check if user already exist
+    d. Encrypt Password
+    e. Save data in the database
+    f. Send registration notification with email confirmation
 
-2. Shipping of product from point A to point B.
-    Requirements
-      a. Check account
-      b. check product type
-      b. make entry
-      c. schedule pickup
-      d. send notification
+2. Allow user to log in into the app
+  Requirements
+    a. log in a user with Email and Password
+    b. Validate user log in details
+    c. check user is register
+    d. throw error if not
+    e. Provide a JWT if success
 
+3. Shipping of product from point A to point B.
+  Requirements
+    a. Check account
+    b. check product type
+    b. make entry
+    c. schedule pickup
+    d. send notification
+
+4. schedulePickUp product from Point A for delivery at Point b
+  Requirements
+    a. Rider pick it up, check account
+    b. Check productType
+    c. Schedule pick up time
+    d. log pick up time
+    d. Send schedule pick up notification
+
+5. Pickup product
+  Requirements
+    a. item picked up
+    b. log product picked up
+    c. send pickup notification
+
+6. scheduleDelivery from point A to point b
+  Requirements
+    a. Check Rider details
+    b. Schedule delivery time and date
+    c. Log scheduleDelivery
+
+7. Delivery to point b
+  Requirements
+    a. Check Rider
+    b. Confirm product
+    c. Delivered
+    d. log delivery
+    f. send delivery notification
