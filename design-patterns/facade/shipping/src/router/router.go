@@ -12,6 +12,7 @@ func RoutesAdaptor(e *echo.Echo) *echo.Echo {
 	g.POST("/delivery", handlers.DeliveryProduct)
 	g.POST("/reject", handlers.RejectProduct)
 
-	g.POST("/users", handlers.NewUser)
+	g.POST("/users", handlers.Register)
+	g.POST("/login", handlers.Login)
 	return e
 }

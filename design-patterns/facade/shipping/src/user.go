@@ -3,6 +3,7 @@ package shipping
 import (
 	"fmt"
 
+	"github.com/QUDUSKUNLE/shipping/src/dto"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
@@ -22,21 +23,14 @@ func NewUserAdaptor() *UserAdaptor {
 	}
 } 
 
-func (userAdaptor *UserAdaptor) RegisterNewUser(email, password, confirmPassword string) error {
+func (userAdaptor *UserAdaptor) RegisterNewUser(user dto.UserDTO) error {
 	fmt.Println("Start a new user registration")
-	// Compare both passwords
-	if err := userAdaptor.user.CompareBothPasswords(password, confirmPassword); err != nil {
+	buildUser, err := userAdaptor.user.BuildUser(user)
+	if err != nil {
 		return err
 	}
-	// Hash user password, this should be done at the database level
-	password, err := userAdaptor.user.HashPassword(password);
-	if err != nil {
-		return err;
-	}
-	registerUser := model.RegisterUser(email)
-	registerUser.Password = password
 	// Save use in the database
-	if err := userAdaptor.userLedger.RegisterLedger(registerUser); err != nil {
+	if err := userAdaptor.userLedger.UserLedger(buildUser); err != nil {
 		return err
 	}
 	userAdaptor.notification.SendRegistrationNotification()

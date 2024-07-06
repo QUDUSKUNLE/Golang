@@ -9,18 +9,27 @@ type Database struct {
 	*sqlx.DB
 }
 
-func (database *Database) QueryUser(id string) (model.User, error) {
+func (database *Database) QueryUser(ID string) (model.User, error) {
 	user := model.User{}
-	query := `SELECT * FROM users WHERE id = $1`
-	if err := database.Get(&user, query, id); err != nil {
+	query := `SELECT * FROM users WHERE id=$1`
+	if err := database.Get(&user, query, ID); err != nil {
+		return model.User{}, nil
+	}
+	return user, nil
+}
+
+func (database *Database) QueryUserByEmail(email string) (model.User, error) {
+	user := model.User{}
+	query := `SELECT * FROM public.users WHERE email=$1`
+	if err := database.Get(&user, query, email); err != nil {
 		return model.User{}, nil
 	}
 	return user, nil
 }
 
 func (database *Database) QueryCreateUser(user model.User) error {
-	query := `INSERT INTO users VALUES ($1, $2, $3, $4)`
-	_, err := database.Exec(query, user.ID, user.Email, user.Password, user.CreatedAt)
+	query := `INSERT INTO users (email, pass, user_type) VALUES ($1, $2, $3)`
+	_, err := database.Exec(query, user.Email, user.Password, user.UserType)
 	if err != nil {
 		return err
 	}

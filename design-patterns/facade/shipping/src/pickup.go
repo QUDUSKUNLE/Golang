@@ -23,8 +23,8 @@ func NewPickUpAdaptor(accountID uuid.UUID, productType product.ProductType) *Pic
 	pickup := &PickUpAdaptor{
 		user: model.NewUser(accountID),
 		product: product.NewProduct(productType),
-		pickUpLedger: &ledger.PickUpLedger{},
 		schedulePickUp: &schedule.SchedulePickUp{},
+		pickUpLedger: &ledger.PickUpLedger{},
 		notification: &notification.Notification{},
 	}
 	fmt.Println("Product picked up initiated successfully.")

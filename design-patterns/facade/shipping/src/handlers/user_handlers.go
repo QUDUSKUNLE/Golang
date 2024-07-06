@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	// "fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
@@ -9,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewUser(context echo.Context) error {
+func Register(context echo.Context) error {
 	user := new(dto.UserDTO)
 	// Bind userDto
 	if err := context.Bind(user); err != nil {
@@ -20,9 +19,9 @@ func NewUser(context echo.Context) error {
 		return err
 	}
 	// Initiate a new user registration
-	newUserAdaptor := shipping.NewUserAdaptor()
+	userAdaptor := shipping.NewUserAdaptor()
 
-	err := newUserAdaptor.RegisterNewUser(user.Email, user.Password, user.ConfirmPassword);
+	err := userAdaptor.RegisterNewUser(*user);
 	if err != nil {
 		if err.Error() == "user`s already exist" {
 			return context.JSON(http.StatusConflict, map[string]string{"message": "User already registered", "success": "false" })
@@ -39,3 +38,31 @@ func NewUser(context echo.Context) error {
 	})
 }
 
+
+func Login(context echo.Context) error {
+	loginDto := new(dto.LogInDTO)
+	// Bind loginDto
+	if err := context.Bind(loginDto); err != nil {
+		return context.JSON(http.StatusBadRequest, err)
+	}
+	// Validate user input
+	if err := context.Validate(loginDto); err != nil {
+		return err
+	}
+	// Initiate a new login adaptor
+	login := shipping.NewLogInAdaptor()
+
+   token, err := login.LoginUser(*loginDto);
+	 if err != nil {
+		return context.JSON(http.StatusBadRequest, map[string]string{
+			"message": err.Error(),
+			"success": "false",
+		})
+	}
+	// Process valid user data
+	return context.JSON(http.StatusOK, map[string]string{
+		"message": "User login successfully",
+		"token": token,
+		"success": "true",
+	})
+}
