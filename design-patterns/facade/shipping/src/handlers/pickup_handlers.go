@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src"
 	"github.com/QUDUSKUNLE/shipping/src/dto"
 	"github.com/labstack/echo/v4"
@@ -19,14 +20,19 @@ func PickupProduct(context echo.Context) error {
 	if err := context.Validate(pickUpDto); err != nil {
 		return err
 	}
+
+	accountID, err := uuid.Parse(pickUpDto.AccountID);
+	if err != nil {
+		return err
+	}
 	// Initiate a new pick up
-	newPickUp := shipping.NewPickUp(pickUpDto.AccountID, pickUpDto.ProductType)
+	newPickUp := shipping.NewPickUpAdaptor(accountID, pickUpDto.ProductType)
 
 	// Convert ProductType to string
 	productType := pickUpDto.ProductType.PrintProduct()
 
 	// Pick up the product
-	if err := newPickUp.NewSchedulePickUp(pickUpDto.AccountID, pickUpDto.PickUpAddress, pickUpDto.DeliveryAddress, productType); err != nil {
+	if err := newPickUp.NewPickUp(accountID, pickUpDto.PickUpAddress, pickUpDto.DeliveryAddress, productType); err != nil {
 		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
 	}
 	return context.JSON(http.StatusOK, map[string]string{

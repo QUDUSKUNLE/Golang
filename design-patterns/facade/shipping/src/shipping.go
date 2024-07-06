@@ -1,7 +1,8 @@
 package shipping
 
 import (
-	"github.com/QUDUSKUNLE/shipping/src/account"
+	"github.com/google/uuid"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
 	"github.com/QUDUSKUNLE/shipping/src/schedule"
@@ -10,8 +11,8 @@ import (
 	"fmt"
 )
 
-type Shipping struct {
-	user *account.User
+type ShippingAdaptor struct {
+	user *model.User
 	product *product.Product
 	scheduleshippingLedger *ledger.ScheduleShippingLedger
 	scheduleShipping *schedule.ScheduleShipping
@@ -19,10 +20,10 @@ type Shipping struct {
 }
 
 
-func NewShipping(accountID string, productType product.ProductType) *Shipping {
+func NewShippingAdaptor(accountID uuid.UUID, productType product.ProductType) *ShippingAdaptor {
 	fmt.Println("Start creating a new pickup shipping")
-	ship := &Shipping{
-		user: account.NewUser(accountID),
+	ship := &ShippingAdaptor{
+		user: model.NewUser(accountID),
 		product: product.NewProduct(productType),
 		scheduleshippingLedger: &ledger.ScheduleShippingLedger{},
 		scheduleShipping: &schedule.ScheduleShipping{},
@@ -33,7 +34,7 @@ func NewShipping(accountID string, productType product.ProductType) *Shipping {
 	return ship
 }
 
-func (shipping *Shipping) NewScheduleShipping(accountID, pickUpAddress, deliveryAddress, productType string) error {
+func (shipping *ShippingAdaptor) NewShipping(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
 	fmt.Println("Start to schedule a pickup shipping.")
 	if err := shipping.user.CheckUser(accountID); err != nil {
 		return err

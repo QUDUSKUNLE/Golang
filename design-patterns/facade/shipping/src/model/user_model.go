@@ -1,6 +1,7 @@
-package account
+package model
 
 import (
+	"github.com/google/uuid"
 	"errors"
 	"fmt"
 	"time"
@@ -9,26 +10,28 @@ import (
 )
 
 type User struct {
-	ID 		   		string
+	ID 		   		uuid.UUID
 	Email 	 		string
-	Password 		string
+	Password 		    string
 	CreatedAt 	time.Time
 	UpdatedAt 	time.Time
 }
 
-func NewUser(userID string) *User {
+func NewUser(ID uuid.UUID) *User {
 	return &User{
-		ID: userID,
+		ID: ID,
 	}
 }
 
-func RegisterNewUser(email string) *User {
+func RegisterUser(email string) *User {
 	return &User{
+		ID: uuid.New(),
 		Email: email,
+		CreatedAt: time.Now(),
 	}
 }
 
-func (user *User) CheckUser(userID string) error {
+func (user *User) CheckUser(userID uuid.UUID) error {
 	if user.ID != userID {
 		return fmt.Errorf("accountID %s is not known", userID)
 	}

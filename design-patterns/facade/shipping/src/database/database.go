@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 	"strconv"
-	"github.com/QUDUSKUNLE/shipping/src/database/queries"
+	"github.com/QUDUSKUNLE/shipping/src/database/query"
 	"github.com/jmoiron/sqlx"
 
   _ "github.com/jackc/pgx/v4/stdlib" 
@@ -14,7 +14,7 @@ import (
 
 
 type ShippingDB struct {
-	*queries.Database
+	*query.Database
 }
 
 func PostgresSQLConnection() (*sqlx.DB, error) {
@@ -50,6 +50,6 @@ func OpenDBConnection() (*ShippingDB, error) {
 		return nil, err
 	}
 	return &ShippingDB{
-		Database: &queries.Database{ DB: db },
+		Database: &query.Database{ DB: db },
 	}, nil
 }

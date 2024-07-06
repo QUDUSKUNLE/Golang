@@ -2,27 +2,26 @@ package shipping
 
 import (
 	"fmt"
-
-	"github.com/QUDUSKUNLE/shipping/src/account"
+	"github.com/google/uuid"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
 	"github.com/QUDUSKUNLE/shipping/src/product"
 	"github.com/QUDUSKUNLE/shipping/src/schedule"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 )
 
-
-type Delivery struct {
-	user *account.User
+type DeliveryAdaptor struct {
+	user *model.User
 	product *product.Product
 	deliveryLedger *ledger.DeliveryLedger
 	delivery *schedule.ScheduleDelivery
 	notification *notification.Notification
 }
 
-func NewDelivery(accountID string, productType product.ProductType) *Delivery {
+func NewDeliveryAdaptor(accountID uuid.UUID, productType product.ProductType) *DeliveryAdaptor {
 	fmt.Println("Initiate a new delivery")
-	delivery :=  &Delivery{
-		user: account.NewUser(accountID),
+	delivery :=  &DeliveryAdaptor{
+		user: model.NewUser(accountID),
 		product: product.NewProduct(productType),
 		deliveryLedger: &ledger.DeliveryLedger{},
 		delivery: &schedule.ScheduleDelivery{},
@@ -32,7 +31,7 @@ func NewDelivery(accountID string, productType product.ProductType) *Delivery {
 	return delivery
 }
 
-func (delivery *Delivery) NewDelivery(accountID, pickUpAddress, deliveryAddress, productType string) error {
+func (delivery *DeliveryAdaptor) NewDelivery(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
 	fmt.Println("Start a new delivery.")
 	if err := delivery.user.CheckUser(accountID); err != nil {
 		return err
