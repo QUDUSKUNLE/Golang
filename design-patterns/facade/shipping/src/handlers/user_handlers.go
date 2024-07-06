@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	// "fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
@@ -21,7 +22,14 @@ func NewUser(context echo.Context) error {
 	// Initiate a new user registration
 	newUserAdaptor := shipping.NewUserAdaptor()
 
-	if err := newUserAdaptor.RegisterNewUser(user.Email, user.Password, user.ConfirmPassword); err != nil {
+	err := newUserAdaptor.RegisterNewUser(user.Email, user.Password, user.ConfirmPassword);
+	if err != nil {
+		if err.Error() == "user`s already exist" {
+			return context.JSON(http.StatusConflict, map[string]string{"message": "User already registered", "success": "false" })
+		}
+		if err.Error() == `incorrect passwords` {
+			return context.JSON(http.StatusBadRequest, map[string]string{"message": err.Error(), "success": "false" })
+		}
 		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
 	}
 	// Process valid user data
