@@ -2,35 +2,39 @@ package utils
 
 import (
 	"os"
-	"strconv"
+	// "strconv"
 	"time"
 	"github.com/google/uuid"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
+	// "github.com/labstack/echo/v4"
+	// "github.com/labstack/echo/v4/middleware"
+	// echojwt "github.com/labstack/echo-jwt/v4"
 )
 
 type Utils struct {}
 
+type JwtCustomClaims struct {
+	ID uuid.UUID `json:"id"`
+	jwt.RegisteredClaims
+}
+
 func (util *Utils) GenerateAccessToken(id uuid.UUID) (string, error) {
 	// Get JWT_SECRET_KEY
 	secret := os.Getenv("JWT_SECRET_KEY")
-
-	// Set expires minute
-	minutesCount, _ := strconv.Atoi(os.Getenv("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT"))
-
 	// Create a new claims
-	claims := jwt.MapClaims{}
-
-	// set public claims
-	claims["id"] = id
-	claims["exp"] = time.Now().Add(time.Minute * time.Duration(minutesCount)).Unix()
-
+	claims := &JwtCustomClaims{
+		id,
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+		},
+	}
 	// Create a new JWT access token with claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate token
-	tokenString, err := token.SignedString([]byte(secret))
+	token, err := jwtToken.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}
-	return tokenString, nil 
+	return token, nil
 }

@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/QUDUSKUNLE/shipping/src/config"
-	"github.com/QUDUSKUNLE/shipping/src/middleware"
-	"github.com/QUDUSKUNLE/shipping/src/router"
+	echojwt "github.com/labstack/echo-jwt/v4"
+	validationMiddleware "github.com/QUDUSKUNLE/shipping/src/middleware"
+	"github.com/QUDUSKUNLE/shipping/src/routes"
 )
 
 func init() {
@@ -24,12 +26,21 @@ func main() {
 	// Create a new echo instance
 	e := echo.New()
 
+	e.Use(middleware.Logger())
+
 	// Plug echo int validationAdaptor
-	e = middleware.ValidationAdaptor(e)
+	e = validationMiddleware.ValidationAdaptor(e)
 
-	// Plug echo into routesAdaptor
-	e = router.RoutesAdaptor(e)
+	// Plug echo into PublicRoutesAdaptor
+	e = routes.PublicRoutesAdaptor(e)
 
+	privateRoutes := e.Group("/private")
+	// Set JWT Configuration
+	config := config.JWTConfig(os.Getenv("JWT_SECRET_KEY"))
+	privateRoutes.Use(echojwt.WithConfig(config))
+
+	// Plug echo into PrivateRoutesAdaptor
+	routes.PrivateRoutesAdaptor(privateRoutes)
 	// Start the server on port 8080
 	if err := e.Start(fmt.Sprintf(":%s", port)); err != http.ErrServerClosed {
 		log.Fatal(err)
