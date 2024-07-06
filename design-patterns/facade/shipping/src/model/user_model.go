@@ -19,12 +19,12 @@ const (
 )
 
 type User struct {
-	ID 		   		uuid.UUID
-	Email 	 		string
-	Password 		string
-	UserType    UserType
-	CreatedAt 	time.Time
-	UpdatedAt 	time.Time
+	ID 		   		uuid.UUID `db:"id"`
+	Email 	 		string    `db:"email"`
+	Password		string    `db:"pass"`
+	CreatedAt 	time.Time `db:"created_at"`
+	UpdatedAt 	time.Time `db:"updated_at"`
+	UserType    UserType  `db:"user_type"`
 }
 
 func NewUser(ID uuid.UUID) *User {
@@ -43,11 +43,11 @@ func (user UserType) ReturnUserString() string {
 	return string(UNKNOWN)
 }
 
-func BuildUser(user dto.UserDTO) (*User, error) {
-	if err := compareBothPasswords(user.Password, user.ConfirmPassword); err != nil {
+func (u *User) BuildUser(user dto.UserDTO) (*User, error) {
+	if err := compareBothPasswords(user.Pass, user.ConfirmPassword); err != nil {
 		return &User{}, err
 	}
-	Pass, err := hashPassword(user.Password)
+	Pass, err := hashPassword(user.Pass)
 	if err != nil {
 		return &User{}, err
 	}
@@ -55,7 +55,6 @@ func BuildUser(user dto.UserDTO) (*User, error) {
 		Email: user.Email,
 		Password: Pass,
 		UserType: UserType(user.UserType),
-		CreatedAt: time.Now(),
 	}, nil
 }
 
@@ -66,9 +65,9 @@ func (user *User) CheckUser(userID uuid.UUID) error {
 	return nil
 }
 
-func (user *User) ComparePassword(pass string) error {
-	if err := bcrypt.CompareHashAndPassword([]byte(pass), []byte(user.Password)); err != nil {
-		return errors.New("incorrect password")
+func (user *User) ComparePassword(dbpass, pass string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(dbpass), []byte(pass)); err != nil {
+		return errors.New("incorrect log in credentials")
 	}
 	return nil
 }

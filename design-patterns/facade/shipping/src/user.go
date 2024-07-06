@@ -25,7 +25,7 @@ func NewUserAdaptor() *UserAdaptor {
 
 func (userAdaptor *UserAdaptor) RegisterNewUser(user dto.UserDTO) error {
 	fmt.Println("Start a new user registration")
-	buildUser, err := model.BuildUser(user)
+	buildUser, err := userAdaptor.user.BuildUser(user)
 	if err != nil {
 		return err
 	}
