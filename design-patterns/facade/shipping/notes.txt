@@ -2,7 +2,7 @@ Design a shipping app
 
 1. Allow user to register on the shipping app
   Requirements
-    a. Create a user account with Email and a Password
+    a. Create a user account with Email and a Password either a rider
     b. Validate user data
     c. Check if user already exist
     d. Encrypt Password

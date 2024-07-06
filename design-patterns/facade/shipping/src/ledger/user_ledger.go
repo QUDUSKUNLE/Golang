@@ -2,13 +2,14 @@ package ledger
 
 import (
 	"errors"
+
 	"github.com/QUDUSKUNLE/shipping/src/database"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 )
 
 type UserLedger struct {}
 
-func (ledger *UserLedger) RegisterLedger(user *model.User) error {
+func (ledger *UserLedger) UserLedger(user *model.User) error {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {

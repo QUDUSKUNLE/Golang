@@ -19,8 +19,8 @@ func (database *Database) QueryUser(id string) (model.User, error) {
 }
 
 func (database *Database) QueryCreateUser(user model.User) error {
-	query := `INSERT INTO users VALUES ($1, $2, $3, $4)`
-	_, err := database.Exec(query, user.ID, user.Email, user.Password, user.CreatedAt)
+	query := `INSERT INTO users (email, pass, created_at, user_type) VALUES ($1, $2, $3, $4)`
+	_, err := database.Exec(query, user.Email, user.Password, user.CreatedAt, user.UserType)
 	if err != nil {
 		return err
 	}
