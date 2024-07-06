@@ -48,7 +48,7 @@ func Login(context echo.Context) error {
 	}
 	// Validate user input
 	if err := context.Validate(loginDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 	// Initiate a new login adaptor
 	login := shipping.NewLogInAdaptor()

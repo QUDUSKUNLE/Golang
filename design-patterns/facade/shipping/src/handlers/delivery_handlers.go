@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-
 func DeliveryProduct(context echo.Context) error {
 	deliveryDto := new(dto.DeliveryDTO)
 	if err := context.Bind(deliveryDto); err != nil {
@@ -17,12 +16,12 @@ func DeliveryProduct(context echo.Context) error {
 
 	// Validate shippingDto
 	if err := context.Validate(deliveryDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 
 	accountID, err := uuid.Parse(deliveryDto.AccountID);
 	if err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 	// Initiate a new delivery
 	newDelivery := shipping.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
@@ -32,10 +31,10 @@ func DeliveryProduct(context echo.Context) error {
 
 	// Deliver a product
 	if err := newDelivery.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress,productType); err != nil {
-		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false })
 	}
-	return context.JSON(http.StatusOK, map[string]string{
+	return context.JSON(http.StatusOK, echo.Map{
 		"message": "Product is delivered.",
-		"success": "true",
+		"success": true,
 	})
 }

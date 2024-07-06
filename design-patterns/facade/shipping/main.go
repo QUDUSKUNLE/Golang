@@ -36,8 +36,8 @@ func main() {
 
 	privateRoutes := e.Group("/private")
 	// Set JWT Configuration
-	config := config.JWTConfig(os.Getenv("JWT_SECRET_KEY"))
-	privateRoutes.Use(echojwt.WithConfig(config))
+	con := config.JWTConfig(os.Getenv("JWT_SECRET_KEY"))
+	privateRoutes.Use(echojwt.WithConfig(con))
 
 	// Plug echo into PrivateRoutesAdaptor
 	routes.PrivateRoutesAdaptor(privateRoutes)

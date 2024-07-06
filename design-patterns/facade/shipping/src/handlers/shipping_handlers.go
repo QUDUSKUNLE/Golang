@@ -16,12 +16,12 @@ func ScheduleProduct(context echo.Context) error {
 	}
 	// Validate shippingDto
 	if err := context.Validate(shippingDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 
 	accountID, err := uuid.Parse(shippingDto.AccountID);
 	if err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 	// Initiate new shipping
 	newShipping := shipping.NewShippingAdaptor(accountID, shippingDto.ProductType)
@@ -31,17 +31,17 @@ func ScheduleProduct(context echo.Context) error {
 
 	// Schedule shipping
 	if err := newShipping.NewShipping(accountID, shippingDto.PickUpAddress, shippingDto.DeliveryAddress, productType); err != nil {
-		return context.JSON(http.StatusNotAcceptable, map[string]string{"message": err.Error(), "success": "false" })
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false })
 	}
-	return context.JSON(http.StatusOK, map[string]string{
+	return context.JSON(http.StatusOK, echo.Map{
 		"message": "Product is scheduled for shipping.",
-		"success": "true",
+		"success": true,
 	})
 }
 
 func RejectProduct(context echo.Context) error {
-	return context.JSON(http.StatusOK, map[string]string{
+	return context.JSON(http.StatusOK, echo.Map{
 		"message": "Product is delivered.",
-		"success": "true",
+		"success": true,
 	})
 }

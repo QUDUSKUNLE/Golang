@@ -18,12 +18,12 @@ func PickupProduct(context echo.Context) error {
 	}
 	// Validate shippingDto
 	if err := context.Validate(pickUpDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 
 	accountID, err := uuid.Parse(pickUpDto.AccountID);
 	if err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 	// Initiate a new pick up
 	newPickUp := shipping.NewPickUpAdaptor(accountID, pickUpDto.ProductType)
