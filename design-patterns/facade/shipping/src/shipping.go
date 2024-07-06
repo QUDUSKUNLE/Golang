@@ -15,7 +15,7 @@ type ShippingAdaptor struct {
 	user *model.User
 	shipping *model.Shipping
 	scheduleShippingLedger *ledger.ScheduleShippingLedger
-	scheduleShipping *schedule.ScheduleShipping
+	schedulePickUp *schedule.SchedulePickUp
 	notification *notification.Notification
 	Utils *utils.Utils
 }
@@ -26,7 +26,7 @@ func NewShippingAdaptor() *ShippingAdaptor {
 		user: &model.User{},
 		shipping: &model.Shipping{},
 		scheduleShippingLedger: &ledger.ScheduleShippingLedger{},
-		scheduleShipping: &schedule.ScheduleShipping{},
+		schedulePickUp: &schedule.SchedulePickUp{},
 		notification: &notification.Notification{},
 		Utils: &utils.Utils{},
 	}
@@ -34,13 +34,14 @@ func NewShippingAdaptor() *ShippingAdaptor {
 	return ship
 }
 
-func (shipp *ShippingAdaptor) NewShipping(ID uuid.UUID, pickUpAddress, deliveryAddress model.Address, productType string) error {
-	fmt.Println("Start to schedule a pickup shipping.")
-	shippingID, err := shipp.scheduleShippingLedger.Ledger(ID, productType)
+func (shipp *ShippingAdaptor) NewShipping(ID uuid.UUID, dto model.ShippingDTO) error {
+	fmt.Println("Start to schedule a new shipping.")
+	shippingID, err := shipp.scheduleShippingLedger.ShippingLedger(ID, dto)
 	if err != nil {
 		return err;
 	}
-	shipp.scheduleShipping.ScheduleShipping(shippingID, pickUpAddress, deliveryAddress, "date", "time")
+	fmt.Println(shippingID)
+	// shipp.schedulePickUp.SchedulePickUp(shippingID, pickUpAddress.State, deliveryAddress.State, "date", "time")
 	shipp.notification.SendShippingNotification()
 	fmt.Println("Schedule pickup is successfull.")
 	return nil

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
@@ -19,8 +18,6 @@ func ScheduleShipping(context echo.Context) error {
 	if err := context.Validate(shippingDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
 	}
-
-	fmt.Println(shippingDto, "&&&&&")
 	// Initiate new shipping
 	newShipping := shipping.NewShippingAdaptor()
 	// Parse ID
@@ -28,11 +25,9 @@ func ScheduleShipping(context echo.Context) error {
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
-	// Convert ProductType to string
-	productType := shippingDto.ProductType.PrintProduct()
 
 	// Schedule shipping
-	if err := newShipping.NewShipping(ID, shippingDto.PickUpAddress, shippingDto.DeliveryAddress, productType); err != nil {
+	if err := newShipping.NewShipping(ID, *shippingDto); err != nil {
 		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false })
 	}
 	return context.JSON(http.StatusOK, echo.Map{
