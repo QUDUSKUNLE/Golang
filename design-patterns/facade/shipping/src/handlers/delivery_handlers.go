@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"net/http"
-	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src"
 	"github.com/QUDUSKUNLE/shipping/src/dto"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 func DeliveryProduct(context echo.Context) error {
@@ -16,12 +16,12 @@ func DeliveryProduct(context echo.Context) error {
 
 	// Validate shippingDto
 	if err := context.Validate(deliveryDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
 	}
 
-	accountID, err := uuid.Parse(deliveryDto.AccountID);
+	accountID, err := uuid.Parse(deliveryDto.AccountID)
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
 	}
 	// Initiate a new delivery
 	newDelivery := shipping.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
@@ -30,8 +30,8 @@ func DeliveryProduct(context echo.Context) error {
 	productType := deliveryDto.ProductType.PrintProduct()
 
 	// Deliver a product
-	if err := newDelivery.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress,productType); err != nil {
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false })
+	if err := newDelivery.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false})
 	}
 	return context.JSON(http.StatusOK, echo.Map{
 		"message": "Product is delivered.",

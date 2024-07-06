@@ -1,7 +1,7 @@
 package shipping
 
 import (
-	"github.com/QUDUSKUNLE/shipping/src/dto"
+	// "github.com/QUDUSKUNLE/shipping/src/dto"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
@@ -22,7 +22,7 @@ func NewLogInAdaptor() *LoginAdaptor {
 	}
 }
 
-func (loginAdaptor *LoginAdaptor) LoginUser(user dto.LogInDTO) (string, error) {
+func (loginAdaptor *LoginAdaptor) LoginUser(user model.LogInDTO) (string, error) {
 	registeredUser, err := loginAdaptor.ledger.QueryLedgerByEmail(user.Email)
 	if err != nil {
 		return "", err

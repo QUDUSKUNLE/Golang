@@ -7,7 +7,7 @@ import (
 
 type ScheduleShippingLedger struct {}
 
-func (ledger *ScheduleShippingLedger) Ledger(accountID uuid.UUID, product string) (shippingID string, err error) {
-	fmt.Printf("Make schedule shipping ledger entry for accountID %s with productType %s.\n", accountID, product)
+func (ledger *ScheduleShippingLedger) Ledger(ID uuid.UUID, product string) (shippingID string, err error) {
+	fmt.Printf("Make schedule shipping ledger entry for accountID %s with productType %s.\n", ID, product)
 	return "1", nil
 }

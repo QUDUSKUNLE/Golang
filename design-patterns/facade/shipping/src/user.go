@@ -3,7 +3,6 @@ package shipping
 import (
 	"fmt"
 
-	"github.com/QUDUSKUNLE/shipping/src/dto"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
@@ -23,7 +22,7 @@ func NewUserAdaptor() *UserAdaptor {
 	}
 } 
 
-func (userAdaptor *UserAdaptor) RegisterNewUser(user dto.UserDTO) error {
+func (userAdaptor *UserAdaptor) RegisterNewUser(user model.UserDTO) error {
 	fmt.Println("Start a new user registration")
 	buildUser, err := userAdaptor.user.BuildUser(user)
 	if err != nil {

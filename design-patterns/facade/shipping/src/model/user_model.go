@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
-	"github.com/QUDUSKUNLE/shipping/src/dto"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -27,6 +25,19 @@ type User struct {
 	UserType    UserType  `db:"user_type"`
 }
 
+type UserDTO struct {
+	Email    				string `json:"email" binding:"required,email,lte=100" validate:"required"`
+	Pass 				    string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
+	ConfirmPassword string `json:"confirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
+	UserType 				string 	`json:"userType" binding:"required" validate:"required"`
+}
+
+type LogInDTO struct {
+	Email  string `json:"email" binding:"required,email,lte=100" validate:"required"`
+	Password string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
+}
+
+
 func NewUser(ID uuid.UUID) *User {
 	return &User{
 		ID: ID,
@@ -43,7 +54,7 @@ func (user UserType) ReturnUserString() string {
 	return string(UNKNOWN)
 }
 
-func (u *User) BuildUser(user dto.UserDTO) (*User, error) {
+func (u *User) BuildUser(user UserDTO) (*User, error) {
 	if err := compareBothPasswords(user.Pass, user.ConfirmPassword); err != nil {
 		return &User{}, err
 	}
