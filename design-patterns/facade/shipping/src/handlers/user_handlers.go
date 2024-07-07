@@ -20,10 +20,8 @@ func Register(context echo.Context) error {
 	if err := context.Validate(user); err != nil {
 		return err
 	}
-	// Initiate a new user registration
-	userAdaptor := shipping.NewUserAdaptor()
 
-	err := userAdaptor.RegisterNewUser(*user);
+	err := shipping.NewUserAdaptor(*user);
 	if err != nil {
 		if err.Error() == "user`s already exist" {
 			return context.JSON(http.StatusConflict, echo.Map{"message": "User already registered", "success": "false" })
@@ -51,9 +49,7 @@ func Login(context echo.Context) error {
 		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 	// Initiate a new login adaptor
-	login := shipping.NewLogInAdaptor()
-
-   token, err := login.LoginUser(*loginDto);
+	token, err := shipping.NewLogInAdaptor(*loginDto)
 	 if err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
 			"message": err.Error(),

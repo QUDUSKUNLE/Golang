@@ -9,7 +9,7 @@ import (
 
 type UserRepository struct {}
 
-func (ledger *UserRepository) UserLedger(user *model.User) error {
+func (ledger *UserRepository) QueryCreateUser(user *model.User) error {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {

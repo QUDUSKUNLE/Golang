@@ -1,7 +1,8 @@
 package shipping
 
 import (
-	// "github.com/QUDUSKUNLE/shipping/src/dto"
+	"fmt"
+
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
@@ -11,26 +12,24 @@ import (
 type LoginAdaptor struct {
 	userService *model.User
 	userRepositoryService *ledger.UserRepository
-	utilService *utils.Utils
+	utilsService *utils.Utils
 }
 
-func NewLogInAdaptor() *LoginAdaptor {
-	return &LoginAdaptor{
+func NewLogInAdaptor(loginDto model.LogInDTO) (string, error) {
+	fmt.Println("Initiate a new login")
+	loginAdaptor := &LoginAdaptor{
 		userService: &model.User{},
 		userRepositoryService: &ledger.UserRepository{},
-		utilService: &utils.Utils{},
+		utilsService: &utils.Utils{},
 	}
-}
-
-func (loginAdaptor *LoginAdaptor) LoginUser(user model.LogInDTO) (string, error) {
-	registeredUser, err := loginAdaptor.userRepositoryService.QueryLedgerByEmail(user.Email)
+	user, err := loginAdaptor.userRepositoryService.QueryLedgerByEmail(loginDto.Email)
 	if err != nil {
 		return "", err
 	}
-	if err := loginAdaptor.userService.ComparePassword(registeredUser.Password, user.Password); err != nil {
+	if err := loginAdaptor.userService.ComparePassword(user.Password, loginDto.Password); err != nil {
 		return "", err
 	}
-	token, err := loginAdaptor.utilService.GenerateAccessToken(registeredUser.ID)
+	token, err := loginAdaptor.utilsService.GenerateAccessToken(user.ID)
 	if err != nil {
 		return "", err
 	}
