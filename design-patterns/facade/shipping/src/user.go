@@ -9,30 +9,28 @@ import (
 )
 
 type UserAdaptor struct {
-	user *model.User
-	userRepository *ledger.UserRepository
-	notification *notification.Notification
+	userService *model.User
+	userRepositoryService *ledger.UserRepository
+	notificationService *notification.Notification
 }
 
-func NewUserAdaptor() *UserAdaptor {
-	return &UserAdaptor{
-		user: &model.User{},
-		userRepository: &ledger.UserRepository{},
-		notification: &notification.Notification{},
+func NewUserAdaptor(userDto model.UserDTO) error {
+	fmt.Println("Initiate a new user registration")
+	userAdaptor := &UserAdaptor{
+		userService: &model.User{},
+		userRepositoryService: &ledger.UserRepository{},
+		notificationService: &notification.Notification{},
 	}
-} 
-
-func (userAdaptor *UserAdaptor) RegisterNewUser(user model.UserDTO) error {
-	fmt.Println("Start a new user registration")
-	buildUser, err := userAdaptor.user.BuildNewUser(user)
+	buildUser, err := userAdaptor.userService.BuildNewUser(userDto)
 	if err != nil {
 		return err
 	}
 	// Save use in the database
-	if err := userAdaptor.userRepository.UserLedger(buildUser); err != nil {
+	err = userAdaptor.userRepositoryService.QueryCreateUser(buildUser);
+	if err != nil {
 		return err
 	}
-	userAdaptor.notification.SendRegistrationNotification()
+	userAdaptor.notificationService.SendRegistrationNotification()
 	fmt.Println("Successfully registered a new user")
 	return nil
 }
