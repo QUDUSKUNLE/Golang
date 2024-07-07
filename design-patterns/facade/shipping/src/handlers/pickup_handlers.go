@@ -9,9 +9,12 @@ import (
 )
 
 func UpdatePickUp(context echo.Context) error {
-	pickUpDto := new(model.PickUpDTO)
+	pickUpDto := new(model.PickUp)
 	if err := context.Bind(pickUpDto); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return context.JSON(http.StatusBadRequest, echo.Map{
+			"message": err.Error(),
+			"success": false,
+		})
 	}
 	// Validate pickUpDto
 	if err := context.Validate(pickUpDto); err != nil {
