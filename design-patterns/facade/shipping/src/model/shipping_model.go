@@ -44,7 +44,7 @@ func (product ProductType) PrintProduct() string {
 
 type Shipping struct {
 	ID 					uuid.UUID
-	UserID      User
+	UserID      uuid.UUID
 	Description  string
 	PickUpAddress Address
 	DeliveryAddress Address
@@ -65,4 +65,15 @@ type Address struct {
 	StreetName string `json:"street_name" binding:"required" validate:"required"`
 	City       string `json:"city" binding:"required" validate:"required"`
 	State      string `json:"state" binding:"required" validate:"required"`
+}
+
+func (shipping *Shipping) BuildShipping(userID uuid.UUID, ship ShippingDTO) (*Shipping, error) {
+	return &Shipping{
+		ID: uuid.New(),
+		UserID: userID,
+		Description: ship.Description,
+		PickUpAddress: ship.PickUpAddress,
+		DeliveryAddress: ship.DeliveryAddress,
+		ProductType: ship.ProductType,
+	}, nil
 }

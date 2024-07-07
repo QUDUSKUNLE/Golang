@@ -35,11 +35,11 @@ func (pickUp *PickUpAdaptor) NewPickUp(accountID uuid.UUID, pickUpAddress, deliv
 	if err := pickUp.user.CheckUser(accountID); err != nil {
 		return err
 	}
-	shippingID, err := pickUp.pickUpLedger.Ledger(accountID, productType)
+	_, err := pickUp.pickUpLedger.Ledger(accountID, productType)
 	if err != nil {
 		return err;
 	}
-	pickUp.schedulePickUp.SchedulePickUp(shippingID, pickUpAddress, deliveryAddress, "date", "time")
+	// pickUp.schedulePickUp.SchedulePickUp(accountID, pickUpAddress, deliveryAddress, "date", "time")
 	pickUp.notification.SendPickUpNotification()
 	fmt.Println("Product is picked up successfully.")
 	return nil

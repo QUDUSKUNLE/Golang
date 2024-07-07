@@ -7,7 +7,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/src/schedule"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
 	"github.com/google/uuid"
-
+	"time"
 	"fmt"
 )
 
@@ -34,15 +34,22 @@ func NewShippingAdaptor() *ShippingAdaptor {
 	return ship
 }
 
-func (shipp *ShippingAdaptor) NewShipping(ID uuid.UUID, dto model.ShippingDTO) error {
-	fmt.Println("Start to schedule a new shipping.")
-	shippingID, err := shipp.scheduleShippingLedger.ShippingLedger(ID, dto)
+func (ship *ShippingAdaptor) NewShipping(ID uuid.UUID, dto model.ShippingDTO) error {
+	// Build a new shipping
+	newShipping, err := ship.shipping.BuildShipping(ID, dto)
+	if err != nil {
+		return err
+	}
+	// Log shipping request to shipping ledger
+	err = ship.scheduleShippingLedger.ShippingLedger(newShipping)
 	if err != nil {
 		return err;
 	}
-	fmt.Println(shippingID)
-	// shipp.schedulePickUp.SchedulePickUp(shippingID, pickUpAddress.State, deliveryAddress.State, "date", "time")
-	shipp.notification.SendShippingNotification()
+	err = ship.schedulePickUp.SchedulePickUp(newShipping.ID, dto.PickUpAddress.State, dto.DeliveryAddress.State, time.Now().String(), time.Now().String())
+	if err != nil {
+		return err
+	}
+	ship.notification.SendShippingNotification()
 	fmt.Println("Schedule pickup is successfull.")
 	return nil
 }
