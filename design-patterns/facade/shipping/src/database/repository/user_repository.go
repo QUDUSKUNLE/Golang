@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -9,7 +10,7 @@ type Database struct {
 	*sqlx.DB
 }
 
-func (database *Database) QueryUser(ID string) (model.User, error) {
+func (database *Database) QueryUser(ID uuid.UUID) (model.User, error) {
 	user := model.User{}
 	query := `SELECT * FROM users WHERE id=$1`
 	if err := database.Get(&user, query, ID); err != nil {

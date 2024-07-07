@@ -9,6 +9,7 @@ import (
 )
 
 type PickUpAdaptor struct {
+	userRepository *ledger.UserRepository
 	pickUpService *model.PickUp
 	pickUpRepositoryService *ledger.PickUpRepository
 	notificationService *notification.Notification
@@ -32,15 +33,22 @@ func NewPickUpAdaptor(pick model.PickUpDTO) error {
 	return nil
 }
 
-func UpDatePickUpAdaptor(pickUp model.PickUpDTO) error {
+func UpDatePickUpAdaptor(pickUp model.PickUp) error {
 	fmt.Println("Update a parcel pick up")
 	adaptor := &PickUpAdaptor{
 		pickUpService: &model.PickUp{},
+		userRepository: &ledger.UserRepository{},
 		pickUpRepositoryService: &ledger.PickUpRepository{},
 		notificationService: &notification.Notification{},
 	}
+	// Validate carrier
+	_, err := adaptor.userRepository.QueryUserByID(pickUp.CarrierID)
+	if err != nil {
+		return err
+	}
 	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)
-	_, err := adaptor.pickUpRepositoryService.UpdateLedger(*pick)
+	fmt.Println(pick, "Nowwwwww")
+	err = adaptor.pickUpRepositoryService.UpdateLedger(*pick)
 	if err != nil {
 		return err
 	}

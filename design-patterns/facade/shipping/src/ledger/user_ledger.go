@@ -2,7 +2,7 @@ package ledger
 
 import (
 	"errors"
-
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src/database"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 )
@@ -21,7 +21,7 @@ func (ledger *UserRepository) QueryCreateUser(user *model.User) error {
 	return nil
 }
 
-func (ledger *UserRepository) QueryLedger(id string) (model.User, error) {
+func (ledger *UserRepository) QueryUserByID(id uuid.UUID) (model.User, error) {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {

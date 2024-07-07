@@ -6,7 +6,6 @@ import (
 )
 
 func PublicRoutesAdaptor(e *echo.Echo) *echo.Echo {
-	e.POST("/pickup", handlers.UpdatePickUp)
 	e.POST("/delivery", handlers.DeliveryProduct)
 	e.POST("/reject", handlers.RejectProduct)
 
