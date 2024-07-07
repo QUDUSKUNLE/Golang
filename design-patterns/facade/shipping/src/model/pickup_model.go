@@ -9,9 +9,9 @@ import (
 type PickUpStatus string
 
 const (
-	SCHEDULED PickUpStatus = "SCHEDULE"
-	PICKED  PickUpStatus = "PICKEDED"
-	RETURNED PickUpStatus = "RETURNEd"
+	SCHEDULED PickUpStatus = "SCHEDULED"
+	PICKED  PickUpStatus = "PICKED"
+	RETURNED PickUpStatus = "RETURNED"
 	REJECTED PickUpStatus = "REJECTED"
 )
 

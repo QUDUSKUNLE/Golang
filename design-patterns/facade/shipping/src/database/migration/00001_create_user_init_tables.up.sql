@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS pickups (
   shipping_id UUID,
   carrier_id UUID,
   pick_up_at TIMESTAMP WITH TIME ZONE,
+  status VARCHAR(12) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
   PRIMARY KEY(id),

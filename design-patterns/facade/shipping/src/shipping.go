@@ -1,66 +1,48 @@
 package shipping
 
 import (
+	"time"
+
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
-	"github.com/QUDUSKUNLE/shipping/src/notification"
-	"github.com/QUDUSKUNLE/shipping/src/schedule"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	// "time"
 	"fmt"
 )
 
 type ShippingAdaptor struct {
-	utils *utils.Utils
-	shipping *model.Shipping
-	shippingRepository *ledger.ShippingRepository
-	pickUp *model.PickUp
-	user *model.User
-	schedulePickUp *schedule.SchedulePickUp
-	notification *notification.Notification
+	utilsService *utils.Utils
+	shippingService *model.Shipping
+	shippingRepositoryService *ledger.ShippingRepository
 }
 
 func NewShippingAdaptor(cont echo.Context, shippingDto *model.ShippingDTO) error {
-	fmt.Println("Start a new pickup shipping")
+	fmt.Println("Initiate a new shipping")
 	adaptor := &ShippingAdaptor{
-		user: &model.User{},
-		shipping: &model.Shipping{},
-		shippingRepository: &ledger.ShippingRepository{},
-		pickUp: &model.PickUp{},
-		schedulePickUp: &schedule.SchedulePickUp{},
-		notification: &notification.Notification{},
-		utils: &utils.Utils{},
+		shippingService: &model.Shipping{},
+		shippingRepositoryService: &ledger.ShippingRepository{},
+		utilsService: &utils.Utils{},
 	}
-	userID, err := uuid.Parse(adaptor.utils.ObtainUser(cont))
+	userID, err := uuid.Parse(adaptor.utilsService.ObtainUser(cont))
 	if err != nil {
 		return err
 	}
-	newShipping := adaptor.shipping.BuildNewShipping(userID, *shippingDto)
-	err = adaptor.shippingRepository.ShippingLedger(*newShipping)
+	newShipping := adaptor.shippingService.BuildNewShipping(userID, *shippingDto)
+	err = adaptor.shippingRepositoryService.ShippingLedger(*newShipping)
+	if err != nil {
+		return err
+	}
+	pickUpDTO := model.PickUpDTO{
+		ShippingID: newShipping.ID,
+		CarrierID: newShipping.UserID,
+		Status: string(model.SCHEDULED),
+		PickUpAt: time.Now(),
+	}
+	err = NewPickUpAdaptor(pickUpDTO)
 	if err != nil {
 		return err
 	}
 	fmt.Println("Shipping created successfully.")
-	return nil
-}
-
-func (ship *ShippingAdaptor) NewShipping(ID uuid.UUID, dto model.ShippingDTO) error {
-	// Build a new shipping
-	newShipping := ship.shipping.BuildNewShipping(ID, dto)
-	// Log shipping request to shipping ledger
-	err := ship.shippingRepository.ShippingLedger(*newShipping)
-	if err != nil {
-		return err;
-	}
-	// Alert Pick up service for scheduling
-	// err = ship.schedulePickUp.SchedulePickUp(newShipping.ID, dto.PickUpAddress.State, dto.DeliveryAddress.State, time.Now().String(), time.Now().String())
-	// if err != nil {
-	// 	return err
-	// }
-	// Alert notification service
-	ship.notification.SendShippingNotification()
-	fmt.Println("Schedule pickup is successfull.")
 	return nil
 }
