@@ -5,9 +5,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/src/model"
 )
 
-type ScheduleShippingLedger struct {}
+type ShippingRepository struct {}
 
-func (ledger *ScheduleShippingLedger) ShippingLedger(shipping *model.Shipping) error {
+func (ledger *ShippingRepository) ShippingLedger(shipping model.Shipping) error {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {

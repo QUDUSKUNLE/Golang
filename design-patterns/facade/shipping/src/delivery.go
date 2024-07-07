@@ -20,7 +20,7 @@ type DeliveryAdaptor struct {
 func NewDeliveryAdaptor(accountID uuid.UUID, productType model.ProductType) *DeliveryAdaptor {
 	fmt.Println("Initiate a new delivery")
 	delivery :=  &DeliveryAdaptor{
-		user: model.NewUser(accountID),
+		user: &model.User{},
 		shipping: &model.Shipping{},
 		deliveryLedger: &ledger.DeliveryLedger{},
 		delivery: &schedule.ScheduleDelivery{},
@@ -32,9 +32,6 @@ func NewDeliveryAdaptor(accountID uuid.UUID, productType model.ProductType) *Del
 
 func (delivery *DeliveryAdaptor) NewDelivery(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
 	fmt.Println("Start a new delivery.")
-	if err := delivery.user.CheckUser(accountID); err != nil {
-		return err
-	}
 	deliveryID, err := delivery.deliveryLedger.Ledger(accountID, productType)
 	if err != nil {
 		return err;

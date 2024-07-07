@@ -33,3 +33,23 @@ CREATE TABLE IF NOT EXISTS shippings (
       REFERENCES users(id)
       ON DELETE CASCADE
 );
+
+
+-- Create shippings table
+CREATE TABLE IF NOT EXISTS pickups (
+  id UUID DEFAULT uuid_generate_v4 (),
+  shipping_id UUID,
+  carrier_id UUID,
+  pick_up_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
+  PRIMARY KEY(id),
+  CONSTRAINT fk_shippings
+    FOREIGN KEY(shipping_id)
+      REFERENCES shippings(id)
+      ON DELETE CASCADE
+  CONSTRAINT fk_users
+    FOREIGN KEY(carrier_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+);

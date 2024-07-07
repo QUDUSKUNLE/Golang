@@ -37,13 +37,6 @@ type LogInDTO struct {
 	Password string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
 }
 
-
-func NewUser(ID uuid.UUID) *User {
-	return &User{
-		ID: ID,
-	}
-}
-
 func (user UserType) ReturnUserString() string {
 	switch user {
 	case USER:
@@ -54,7 +47,7 @@ func (user UserType) ReturnUserString() string {
 	return string(UNKNOWN)
 }
 
-func (u *User) BuildUser(user UserDTO) (*User, error) {
+func (u *User) BuildNewUser(user UserDTO) (*User, error) {
 	if err := compareBothPasswords(user.Pass, user.ConfirmPassword); err != nil {
 		return &User{}, err
 	}
@@ -67,13 +60,6 @@ func (u *User) BuildUser(user UserDTO) (*User, error) {
 		Password: Pass,
 		UserType: UserType(user.UserType),
 	}, nil
-}
-
-func (user *User) CheckUser(userID uuid.UUID) error {
-	if user.ID != userID {
-		return fmt.Errorf("accountID %s is not known", userID)
-	}
-	return nil
 }
 
 func (user *User) ComparePassword(dbpass, pass string) error {

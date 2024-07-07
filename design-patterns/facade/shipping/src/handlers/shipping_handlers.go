@@ -5,11 +5,10 @@ import (
 
 	"github.com/QUDUSKUNLE/shipping/src"
 	"github.com/QUDUSKUNLE/shipping/src/model"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
-func ScheduleShipping(context echo.Context) error {
+func NewShipping(context echo.Context) error {
 	shippingDto := new(model.ShippingDTO)
 	if err := context.Bind(shippingDto); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -18,16 +17,10 @@ func ScheduleShipping(context echo.Context) error {
 	if err := context.Validate(shippingDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
 	}
-	// Initiate new shipping
-	newShipping := shipping.NewShippingAdaptor()
-	// Parse ID
-	ID, err := uuid.Parse(newShipping.Utils.ObtainUser(context));
-	if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
-	}
 
-	// Schedule shipping
-	if err := newShipping.NewShipping(ID, *shippingDto); err != nil {
+	// Initiate a new shipping
+	err := shipping.NewShippingAdaptor(context, shippingDto);
+	if err != nil {
 		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false })
 	}
 	return context.JSON(http.StatusOK, echo.Map{

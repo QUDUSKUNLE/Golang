@@ -67,7 +67,7 @@ type Address struct {
 	State      string `json:"state" binding:"required" validate:"required"`
 }
 
-func (shipping *Shipping) BuildShipping(userID uuid.UUID, ship ShippingDTO) (*Shipping, error) {
+func (shipping *Shipping) BuildNewShipping(userID uuid.UUID, ship ShippingDTO) *Shipping {
 	return &Shipping{
 		ID: uuid.New(),
 		UserID: userID,
@@ -75,5 +75,5 @@ func (shipping *Shipping) BuildShipping(userID uuid.UUID, ship ShippingDTO) (*Sh
 		PickUpAddress: ship.PickUpAddress,
 		DeliveryAddress: ship.DeliveryAddress,
 		ProductType: ship.ProductType,
-	}, nil
+	}
 }
