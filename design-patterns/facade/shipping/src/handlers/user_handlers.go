@@ -4,14 +4,14 @@ import (
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
-	"github.com/QUDUSKUNLE/shipping/src/dto"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
 func Register(context echo.Context) error {
-	user := new(dto.UserDTO)
+	user := new(model.UserDTO)
 	// Bind userDto
 	if err := context.Bind(user); err != nil {
 		return context.JSON(http.StatusBadRequest, err)
@@ -41,14 +41,14 @@ func Register(context echo.Context) error {
 }
 
 func Login(context echo.Context) error {
-	loginDto := new(dto.LogInDTO)
+	loginDto := new(model.LogInDTO)
 	// Bind loginDto
 	if err := context.Bind(loginDto); err != nil {
 		return context.JSON(http.StatusBadRequest, err)
 	}
 	// Validate user input
 	if err := context.Validate(loginDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
 	}
 	// Initiate a new login adaptor
 	login := shipping.NewLogInAdaptor()

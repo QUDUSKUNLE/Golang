@@ -2,50 +2,49 @@ package shipping
 
 import (
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/QUDUSKUNLE/shipping/src/model"
+
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
-	"github.com/QUDUSKUNLE/shipping/src/product"
-	"github.com/QUDUSKUNLE/shipping/src/schedule"
 )
 
 type PickUpAdaptor struct {
-	user *model.User
-	product *product.Product
-	pickUpLedger *ledger.PickUpLedger
-	schedulePickUp *schedule.SchedulePickUp
-	notification *notification.Notification
+	pickUpService *model.PickUp
+	pickUpRepositoryService *ledger.PickUpRepository
+	notificationService *notification.Notification
 }
 
-func NewPickUpAdaptor(accountID uuid.UUID, productType product.ProductType) *PickUpAdaptor {
-	fmt.Println("Initiate a new product pick up")
-	pickup := &PickUpAdaptor{
-		user: model.NewUser(accountID),
-		product: product.NewProduct(productType),
-		schedulePickUp: &schedule.SchedulePickUp{},
-		pickUpLedger: &ledger.PickUpLedger{},
-		notification: &notification.Notification{},
+func NewPickUpAdaptor(pick model.PickUpDTO) error {
+	fmt.Println("Initiate a new pick up")
+	adaptor := &PickUpAdaptor{
+		pickUpService: &model.PickUp{},
+		pickUpRepositoryService: &ledger.PickUpRepository{},
+		notificationService: &notification.Notification{},
 	}
-	fmt.Println("Product picked up initiated successfully.")
-	return pickup
-}
-
-
-func (pickUp *PickUpAdaptor) NewPickUp(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
-	fmt.Println("Start a new pickup.")
-	if err := pickUp.user.CheckUser(accountID); err != nil {
-		return err
-	}
-	if err := pickUp.product.CheckProduct(productType); err != nil {
-		return err
-	}
-	shippingID, err := pickUp.pickUpLedger.Ledger(accountID, productType)
+	pickUp := adaptor.pickUpService.BuildNewPickUp(pick)
+	err := adaptor.pickUpRepositoryService.NewLedger(*pickUp);
 	if err != nil {
-		return err;
+		fmt.Println(err)
+		return err
 	}
-	pickUp.schedulePickUp.SchedulePickUp(shippingID, pickUpAddress, deliveryAddress, "date", "time")
-	pickUp.notification.SendPickUpNotification()
-	fmt.Println("Product is picked up successfully.")
+	adaptor.notificationService.SendPickUpNotification()
+	fmt.Println("Parcel pickup initiated successfully.")
+	return nil
+}
+
+func UpDatePickUpAdaptor(pickUp model.PickUpDTO) error {
+	fmt.Println("Update a parcel pick up")
+	adaptor := &PickUpAdaptor{
+		pickUpService: &model.PickUp{},
+		pickUpRepositoryService: &ledger.PickUpRepository{},
+		notificationService: &notification.Notification{},
+	}
+	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)
+	_, err := adaptor.pickUpRepositoryService.UpdateLedger(*pick)
+	if err != nil {
+		return err
+	}
+	adaptor.notificationService.SendPickUpNotification()
+	fmt.Println("Parcel pickup updated successfully.")
 	return nil
 }

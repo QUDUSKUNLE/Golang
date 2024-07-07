@@ -3,7 +3,6 @@ package shipping
 import (
 	"fmt"
 
-	"github.com/QUDUSKUNLE/shipping/src/dto"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
@@ -11,26 +10,26 @@ import (
 
 type UserAdaptor struct {
 	user *model.User
-	userLedger *ledger.UserLedger
+	userRepository *ledger.UserRepository
 	notification *notification.Notification
 }
 
 func NewUserAdaptor() *UserAdaptor {
 	return &UserAdaptor{
 		user: &model.User{},
-		userLedger: &ledger.UserLedger{},
+		userRepository: &ledger.UserRepository{},
 		notification: &notification.Notification{},
 	}
 } 
 
-func (userAdaptor *UserAdaptor) RegisterNewUser(user dto.UserDTO) error {
+func (userAdaptor *UserAdaptor) RegisterNewUser(user model.UserDTO) error {
 	fmt.Println("Start a new user registration")
-	buildUser, err := userAdaptor.user.BuildUser(user)
+	buildUser, err := userAdaptor.user.BuildNewUser(user)
 	if err != nil {
 		return err
 	}
 	// Save use in the database
-	if err := userAdaptor.userLedger.UserLedger(buildUser); err != nil {
+	if err := userAdaptor.userRepository.UserLedger(buildUser); err != nil {
 		return err
 	}
 	userAdaptor.notification.SendRegistrationNotification()

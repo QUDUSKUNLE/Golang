@@ -27,6 +27,7 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
+	e.Use(middleware.Recover()) // Recover servers when break down
 
 	// Plug echo int validationAdaptor
 	e = validationMiddleware.ValidationAdaptor(e)
@@ -34,10 +35,10 @@ func main() {
 	// Plug echo into PublicRoutesAdaptor
 	e = routes.PublicRoutesAdaptor(e)
 
-	privateRoutes := e.Group("/private")
+	privateRoutes := e.Group("/v1")
 	// Set JWT Configuration
-	config := config.JWTConfig(os.Getenv("JWT_SECRET_KEY"))
-	privateRoutes.Use(echojwt.WithConfig(config))
+	con := config.JWTConfig(os.Getenv("JWT_SECRET_KEY"))
+	privateRoutes.Use(echojwt.WithConfig(con))
 
 	// Plug echo into PrivateRoutesAdaptor
 	routes.PrivateRoutesAdaptor(privateRoutes)

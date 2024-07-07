@@ -1,13 +1,20 @@
 package ledger
 
 import (
-	"fmt"
-	"github.com/google/uuid"
+	"github.com/QUDUSKUNLE/shipping/src/database"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 )
 
-type ScheduleShippingLedger struct {}
+type ShippingRepository struct {}
 
-func (ledger *ScheduleShippingLedger) Ledger(accountID uuid.UUID, product string) (shippingID string, err error) {
-	fmt.Printf("Make schedule shipping ledger entry for accountID %s with productType %s.\n", accountID, product)
-	return "1", nil
+func (ledger *ShippingRepository) ShippingLedger(shipping model.Shipping) error {
+	// Open database conection
+	db, err := database.OpenDBConnection()
+	if err != nil {
+		return err
+	}
+	if err := db.QueryCreateShipping(shipping); err != nil {
+		return err
+	}
+	return nil
 }

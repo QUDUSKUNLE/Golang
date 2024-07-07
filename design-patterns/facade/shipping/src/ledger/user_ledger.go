@@ -7,9 +7,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/src/model"
 )
 
-type UserLedger struct {}
+type UserRepository struct {}
 
-func (ledger *UserLedger) UserLedger(user *model.User) error {
+func (ledger *UserRepository) UserLedger(user *model.User) error {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {
@@ -21,7 +21,7 @@ func (ledger *UserLedger) UserLedger(user *model.User) error {
 	return nil
 }
 
-func (ledger *UserLedger) QueryLedger(id string) (model.User, error) {
+func (ledger *UserRepository) QueryLedger(id string) (model.User, error) {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {
@@ -34,7 +34,7 @@ func (ledger *UserLedger) QueryLedger(id string) (model.User, error) {
 	return user, nil
 }
 
-func (ledger *UserLedger) QueryLedgerByEmail(email string) (model.User, error) {
+func (ledger *UserRepository) QueryLedgerByEmail(email string) (model.User, error) {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {
