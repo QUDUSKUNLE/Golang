@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserType string
@@ -17,6 +19,7 @@ const (
 )
 
 type User struct {
+	gorm.Model
 	ID 		   		uuid.UUID `db:"id"`
 	Email 	 		string    `db:"email"`
 	Password		string    `db:"pass"`

@@ -1,8 +1,10 @@
 package model
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type PickUpStatus string
@@ -15,6 +17,7 @@ const (
 )
 
 type PickUp struct {
+	gorm.Model
 	ID   uuid.UUID `db:"id" json:"id" binding:"required" validate:"required"`
 	ShippingID uuid.UUID `db:"shipping_id" json:"shipping_id" binding:"required" validate:"required"`
 	CarrierID  uuid.UUID `db:"carrier_id" json:"carrier_id" binding:"required" validate:"required"`

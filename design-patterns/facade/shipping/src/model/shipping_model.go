@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type ProductType string
@@ -43,6 +44,7 @@ func (product ProductType) PrintProduct() string {
 }
 
 type Shipping struct {
+	gorm.Model
 	ID 					uuid.UUID
 	UserID      uuid.UUID
 	Description  string

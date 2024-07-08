@@ -2,13 +2,16 @@ package database
 
 import (
 	"fmt"
+	"log"
 	"os"
-	"time"
 	"strconv"
-	"github.com/QUDUSKUNLE/shipping/src/database/repository"
-	"github.com/jmoiron/sqlx"
+	"time"
 
-  _ "github.com/jackc/pgx/v4/stdlib" 
+	"github.com/QUDUSKUNLE/shipping/src/database/repository"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+
+	_ "github.com/jackc/pgx/v4/stdlib"
 	_ "github.com/lib/pq"
 )
 
@@ -16,7 +19,7 @@ type ShippingDB struct {
 	*repository.Database
 }
 
-func PostgresSQLConnection() (*sqlx.DB, error) {
+func PostgresSQLConnection() (*gorm.DB, error) {
 	point := os.Getenv("DB_PORT")
 	port, err := strconv.ParseUint(point, 10, 32);
 	if err != nil {
@@ -26,18 +29,23 @@ func PostgresSQLConnection() (*sqlx.DB, error) {
   maxIdleConn, _ := strconv.Atoi(os.Getenv("DB_MAX_IDLE_CONNECTIONS"))
   maxLifetimeConn, _ := strconv.Atoi(os.Getenv("DB_MAX_LIFETIME_CONNECTIONS"))
 
-	DB, err := sqlx.Connect("pgx", fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), port, os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME")))
+	DB, err := gorm.Open(postgres.Open(fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), port, os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("error, not connected to database: %w", err)
 	}
 
+	sqlDB, err := DB.DB()
+	if err != nil {
+		log.Fatalf("Error: %s", err.Error())
+	}
+
 	// Set database connection settings.
-	DB.SetMaxOpenConns(maxConn)
-	DB.SetMaxIdleConns(maxIdleConn)
-	DB.SetConnMaxLifetime(time.Duration(maxLifetimeConn))
+	sqlDB.SetMaxOpenConns(maxConn)
+	sqlDB.SetMaxIdleConns(maxIdleConn)
+	sqlDB.SetConnMaxLifetime(time.Duration(maxLifetimeConn))
 
 	// Ping Database
-	if err = DB.Ping(); err != nil {
+	if err = sqlDB.Ping(); err != nil {
 		return nil, fmt.Errorf("error, not send ping to database: %w", err)
 	}
 	return DB, nil
