@@ -46,3 +46,26 @@ func NewShippingAdaptor(cont echo.Context, shippingDto *model.ShippingDTO) error
 	fmt.Println("Shipping created successfully.")
 	return nil
 }
+
+func GetShippingsAdaptor(context echo.Context) ([]model.Shipping, error) {
+	fmt.Println("Initiate a new shipping")
+	adaptor := &ShippingAdaptor{
+		utilsService: &utils.Utils{},
+		shippingRepositoryService: &ledger.ShippingRepository{},
+	}
+	userID, err := uuid.Parse(adaptor.utilsService.ObtainUser(context))
+	if err != nil {
+		return []model.Shipping{}, err
+	}
+	var status string
+	params := context.QueryParams()
+	status = params.Get("status")
+	if status == "" {
+		status = "SCHEDULED"
+	}
+	shippings, err := adaptor.shippingRepositoryService.QueryShippingLedger(userID, status)
+	if err != nil {
+		return shippings, err
+	}
+	return shippings, nil
+}

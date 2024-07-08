@@ -7,8 +7,9 @@ import (
 )
 
 func PrivateRoutesAdaptor(p *echo.Group) *echo.Group {
-	p.POST("/shipping", handlers.NewShipping)
-	p.POST("/pickup", handlers.UpdatePickUp)
+	p.POST("/shippings", handlers.NewShipping)
+	p.GET("/shippings", handlers.GetShippings)
+	p.POST("/pickups", handlers.UpdatePickUp)
 	p.GET("", handlers.Restricted)
 	return p
 }

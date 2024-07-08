@@ -14,8 +14,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// var DB *sql.DB
-
 type Queries struct {
 	*queries.Fiber
 }

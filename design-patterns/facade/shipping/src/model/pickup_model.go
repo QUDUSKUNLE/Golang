@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"github.com/google/uuid"
 	"time"
 )
@@ -51,9 +50,4 @@ func (pi *PickUp) BuildUpdatePickUp(pick PickUp) *PickUp {
 		Status:     PickUpStatus(pick.Status),
 		UpdatedAt:  time.Now(),
 	}
-}
-
-func (pickUp *PickUp) NewLedger(pick PickUp) (shippingID string, err error) {
-	fmt.Printf("Make pick up ledger entry for accountID %s with productType %s.\n", pick.ID, pick.Status)
-	return "1", nil
 }

@@ -25,6 +25,8 @@ Design a shipping app
     c. schedule pickup
     d. send notification
 
+4. A users should be able to see schedule shipping based on scheduled, delivered, rejected and returned.
+
 4. schedulePickUp product from Point A for delivery at Point b
   Requirements
     a. Rider pick it up, check account
@@ -52,3 +54,7 @@ Design a shipping app
     c. Delivered
     d. log delivery
     f. send delivery notification
+
+
+To Do
+1. How would a shipment be linked to a carrier

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	// "fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
@@ -26,6 +27,21 @@ func NewShipping(context echo.Context) error {
 	return context.JSON(http.StatusOK, echo.Map{
 		"message": "Product is scheduled for shipping.",
 		"success": true,
+	})
+}
+
+func GetShippings(context echo.Context) error {
+	shippings, err := shipping.GetShippingsAdaptor(context);
+	if err != nil {
+		return context.JSON(http.StatusNotImplemented, echo.Map{
+			"message": err.Error(),
+			"success": false,
+		})
+	}
+	return context.JSON(http.StatusOK, echo.Map{
+		"message": "Here are your shipment",
+		"success": true,
+		"shipments": shippings,
 	})
 }
 

@@ -33,7 +33,8 @@ func main() {
 	e = validationMiddleware.ValidationAdaptor(e)
 
 	// Plug echo into PublicRoutesAdaptor
-	e = routes.PublicRoutesAdaptor(e)
+	public := e.Group("/v1")
+	routes.PublicRoutesAdaptor(public)
 
 	privateRoutes := e.Group("/v1")
 	// Set JWT Configuration

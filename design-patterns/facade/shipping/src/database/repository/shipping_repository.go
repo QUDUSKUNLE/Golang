@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 )
 
@@ -11,4 +12,13 @@ func (database *Database) QueryCreateShipping(shipping model.Shipping) error {
 		return err
 	}
 	return nil
+}
+
+func (database *Database) QueryShippings(userID uuid.UUID, status string) ([]model.Shipping, error) {
+	shippings := []model.Shipping{}
+	query := `SELECT * FROM shippings WHERE id=$1`
+	if err := database.Select(&shippings, query, userID); err != nil {
+		return shippings, err
+	}
+	return shippings, nil
 }
