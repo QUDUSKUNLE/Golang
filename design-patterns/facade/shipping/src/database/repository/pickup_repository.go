@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/QUDUSKUNLE/shipping/src/model"
 )
 

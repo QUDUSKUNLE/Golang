@@ -5,10 +5,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/src/handlers"
 )
 
-func PublicRoutesAdaptor(e *echo.Echo) *echo.Echo {
+func PublicRoutesAdaptor(e *echo.Group) *echo.Group {
 	e.POST("/delivery", handlers.DeliveryProduct)
 	e.POST("/reject", handlers.RejectProduct)
-
 	e.POST("/users", handlers.Register)
 	e.POST("/login", handlers.Login)
 	return e

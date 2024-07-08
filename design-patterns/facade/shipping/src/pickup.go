@@ -46,12 +46,15 @@ func UpDatePickUpAdaptor(pickUp model.PickUp) error {
 	if err != nil {
 		return err
 	}
+	// build a new pick up
 	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)
-	fmt.Println(pick, "Nowwwwww")
+
+	// Update pcik up ledger
 	err = adaptor.pickUpRepositoryService.UpdateLedger(*pick)
 	if err != nil {
 		return err
 	}
+	// Send pick up notification
 	adaptor.notificationService.SendPickUpNotification()
 	fmt.Println("Parcel pickup updated successfully.")
 	return nil
