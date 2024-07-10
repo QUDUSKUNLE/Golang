@@ -1,7 +1,6 @@
 package ledger
 
 import (
-	"errors"
 	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src/database"
 	"github.com/QUDUSKUNLE/shipping/src/model"
@@ -16,9 +15,22 @@ func (ledger *UserRepository) QueryCreateUser(user *model.User) error {
 		return err
 	}
 	if err := db.QueryCreateUser(*user); err != nil {
-		return errors.New("user`s already exist")
+		return err
 	}
 	return nil
+}
+
+func (ledger *UserRepository) QueryUsers() ([]model.User, error) {
+	// Open database conection
+	db, err := database.OpenDBConnection()
+	if err != nil {
+		return []model.User{}, err
+	}
+	users, err := db.QueryUsers();
+	if err != nil {
+		return []model.User{}, err
+	}
+	return users, nil
 }
 
 func (ledger *UserRepository) QueryUserByID(id uuid.UUID) (model.User, error) {
@@ -34,15 +46,15 @@ func (ledger *UserRepository) QueryUserByID(id uuid.UUID) (model.User, error) {
 	return user, nil
 }
 
-func (ledger *UserRepository) QueryLedgerByEmail(email string) (model.User, error) {
+func (ledger *UserRepository) QueryLedgerByEmail(email string) (*model.User, error) {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {
-		return model.User{}, err
+		return &model.User{}, err
 	}
 	user, err := db.QueryUserByEmail(email);
 	if err != nil {
-		return model.User{}, err
+		return &model.User{}, err
 	}
 	return user, nil
 }

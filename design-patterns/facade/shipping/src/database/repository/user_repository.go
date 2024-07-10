@@ -18,12 +18,18 @@ func (database *Database) QueryUser(ID uuid.UUID) (model.User, error) {
 	return user, nil
 }
 
-func (database *Database) QueryUserByEmail(email string) (model.User, error) {
-	user := model.User{Email: email}
-	if err := database.First(&user); err != nil {
-		return model.User{}, nil
+func (database *Database) QueryUsers() ([]model.User, error) {
+	users := []model.User{}
+	if err := database.Find(&users); err != nil {
+		return []model.User{}, nil
 	}
-	return user, nil
+	return users, nil
+}
+
+func (database *Database) QueryUserByEmail(email string) (*model.User, error) {
+	user := model.User{}
+	_ = database.Where(&model.User{Email: email}).First(&user);
+	return &user, nil
 }
 
 func (database *Database) QueryCreateUser(user model.User) error {

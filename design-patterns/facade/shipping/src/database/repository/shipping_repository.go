@@ -1,13 +1,16 @@
 package repository
 
 import (
-	"github.com/google/uuid"
+	// "fmt"
+
 	"github.com/QUDUSKUNLE/shipping/src/model"
+	"github.com/google/uuid"
 )
 
 func (database *Database) QueryCreateShipping(shipping model.Shipping) error {
 	query := model.Shipping{
-		UserID: shipping.ID,
+		ID: shipping.ID,
+		UserID: shipping.UserID,
 		Description: shipping.Description,
 		PickUpAddress: shipping.PickUpAddress,
 		DeliveryAddress: shipping.DeliveryAddress,
@@ -21,10 +24,10 @@ func (database *Database) QueryCreateShipping(shipping model.Shipping) error {
 }
 
 func (database *Database) QueryShippings(userID uuid.UUID, status string) ([]model.Shipping, error) {
-	shippings := []model.Shipping{}
-	result := database.Where(map[string]interface{}{"user_id": userID, "status": status}).Find(&shippings);
+	var shippings []model.Shipping
+	result := database.Where(&model.Shipping{UserID: userID}).Preload("PickUp").Limit(10).Find(&shippings, model.Shipping{UserID: userID});
 	if result.Error != nil {
-		return shippings, result.Error
+		return []model.Shipping{}, result.Error
 	}
 	return shippings, nil
 }

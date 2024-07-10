@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/QUDUSKUNLE/shipping/src/database/repository"
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -33,6 +34,14 @@ func PostgresSQLConnection() (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error, not connected to database: %w", err)
 	}
+	if err := DB.AutoMigrate(
+		&model.User{},
+		&model.Shipping{},
+		&model.PickUp{},
+	); err != nil {
+		log.Fatalf("Error: %s", err.Error())
+	}
+
 
 	sqlDB, err := DB.DB()
 	if err != nil {

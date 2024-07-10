@@ -8,7 +8,7 @@ func (database *Database) QueryCreatePickUp(pickUp model.PickUp) error {
 	query := model.PickUp{
 		ID: pickUp.ID,
 		ShippingID: pickUp.ShippingID,
-		CarrierID: pickUp.CarrierID,
+		UserID: pickUp.UserID,
 		PickUpAt: pickUp.PickUpAt,
 		Status: pickUp.Status,
 	}

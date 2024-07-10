@@ -34,3 +34,15 @@ func NewUserAdaptor(userDto model.UserDTO) error {
 	fmt.Println("Successfully registered a new user")
 	return nil
 }
+
+func UsersAdaptor() ([]model.User, error) {
+	userAdaptor := &UserAdaptor{
+		userRepositoryService: &ledger.UserRepository{},
+	}
+	// Save use in the database
+	users, err := userAdaptor.userRepositoryService.QueryUsers();
+	if err != nil {
+		return []model.User{}, err
+	}
+	return users, nil
+}
