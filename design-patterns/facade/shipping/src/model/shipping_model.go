@@ -47,30 +47,30 @@ func (product ProductType) PrintProduct() string {
 
 type Shipping struct {
 	gorm.Model
-	ID 							uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"ID"`
-	UserID      		uuid.UUID  `json:"UserID"`
-	Description  		string    `json:"Description"`
-	PickUpAddress 	Address   `gorm:"embedded" json:"PickUpAddress"`
-	DeliveryAddress Address	  `gorm:"embedded" json:"DeliveryAddress"`
-	ProductType  ProductType  `json:"ProductType"`
-	CreatedAt 	time.Time 		`json:"CreatedAt"`
-	UpdatedAt 	*time.Time 		`json:"UpdatedAt"`
-	DeletedAt   *time.Time    `gorm:"-:all" json:"DeletedAt"`
-	PickUp      PickUp   			`json:"PickUp"`
+	ID 									uuid.UUID  		`gorm:"primaryKey;->;<-:create" json:"ID"`
+	UserID      				uuid.UUID  		`json:"UserID"`
+	Description  				string    		`gorm:"size=150" json:"Description"`
+	PickUpAddress 			Address   		`gorm:"embedded" json:"PickUpAddress"`
+	DeliveryAddress 		Address	  		`gorm:"embedded" json:"DeliveryAddress"`
+	ProductType  				ProductType  	`json:"ProductType"`
+	CreatedAt 					time.Time 		`json:"CreatedAt"`
+	UpdatedAt 					*time.Time 		`json:"UpdatedAt"`
+	DeletedAt   				*time.Time    `gorm:"-:all" json:"DeletedAt"`
+	PickUp      				PickUp   			`json:"PickUp"`
 }
 
 type ShippingDTO struct {
-	Description   	string  	`json:"Description" binding:"required" validate:"required,gte=6,lte=1000"`
-	PickUpAddress 	Address  	`json:"PickUpAddress" binding:"required" validate:"required"`
-	DeliveryAddress Address 	`json:"DeliveryAddress" binding:"required" validate:"required"`
-	ProductType 		ProductType `json:"ProductType" binding:"required" validate:"required"`
+	Description   			string  	`json:"Description" binding:"required" validate:"required,gte=6,lte=1000"`
+	PickUpAddress 			Address  	`json:"PickUpAddress" binding:"required" validate:"required"`
+	DeliveryAddress 		Address 	`json:"DeliveryAddress" binding:"required" validate:"required"`
+	ProductType 				ProductType `json:"ProductType" binding:"required" validate:"required"`
 }
 
 type Address struct {
-	StreetNo   int 		`json:"StreetNo" binding:"required,gte=0,let=1000" validate:"required"`
-	StreetName string `json:"StreetName" binding:"required,max=50" validate:"required"`
-	Province   string `json:"Province" binding:"required,max=50" validate:"required"`
-	State      string `json:"State" binding:"required,max=50" validate:"required"`
+	StreetNo   				int 		`json:"StreetNo" binding:"required,gte=0,let=1000" validate:"required"`
+	StreetName 				string  `json:"StreetName" binding:"required,max=50" validate:"required"`
+	Province   				string  `json:"Province" binding:"required,max=50" validate:"required"`
+	State     			  string  `json:"State" binding:"required,max=50" validate:"required"`
 }
 
 func (a Address) Value() (driver.Value, error) {
