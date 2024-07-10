@@ -46,25 +46,25 @@ func Login(context echo.Context) error {
 	}
 	// Validate user input
 	if err := context.Validate(loginDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error() })
 	}
 	// Initiate a new login adaptor
 	token, err := shipping.NewLogInAdaptor(*loginDto)
 	 if err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
-			"message": err.Error(),
-			"success": "false",
+			"Message": err.Error(),
+			"Success": "false",
 		})
 	}
 	// Process valid user data
-	return context.JSON(http.StatusOK, echo.Map{"token": token})
+	return context.JSON(http.StatusOK, echo.Map{"Token": token})
 }
 
 func Restricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.JwtCustomClaims)
 	ID := claims.ID
-	return c.JSON(http.StatusOK, echo.Map{"message": ID.String()})
+	return c.JSON(http.StatusOK, echo.Map{"Message": ID.String()})
 }
 
 func Users(context echo.Context) error {
@@ -72,10 +72,10 @@ func Users(context echo.Context) error {
 	users, err := shipping.UsersAdaptor()
 	 if err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
-			"message": err.Error(),
-			"success": "false",
+			"Message": err.Error(),
+			"Success": "false",
 		})
 	}
 	// Process valid user data
-	return context.JSON(http.StatusOK, echo.Map{"users": users })
+	return context.JSON(http.StatusOK, echo.Map{"Users": users })
 }

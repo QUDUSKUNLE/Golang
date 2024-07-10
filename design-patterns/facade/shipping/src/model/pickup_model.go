@@ -19,14 +19,14 @@ const (
 
 type PickUp struct {
 	gorm.Model
-	ID   uuid.UUID 						`gorm:"primaryKey;->;<-:create" json:"id"`
-	ShippingID uuid.UUID 			`json:"shipping_id"`
-	UserID    uuid.UUID 			`json:"carrier_id"`
-	PickUpAt   time.Time 			`json:"pick_up_at"`
-	CreatedAt 	time.Time 		`json:"created_at"`
-	UpdatedAt 	*time.Time 		`json:"updated_at"`
-	DeletedAt   *time.Time    `gorm:"-:all"`
-	Status      PickUpStatus 	`json:"status"`
+	ID   uuid.UUID 						`gorm:"primaryKey;->;<-:create" json:"ID"`
+	ShippingID uuid.UUID 			`json:"ShippingID"`
+	UserID    uuid.UUID 			`json:"CarrierID"`
+	PickUpAt   time.Time 			`json:"PickUpAt"`
+	CreatedAt 	time.Time 		`json:"CreatedAt"`
+	UpdatedAt 	*time.Time 		`json:"UpdatedAt"`
+	DeletedAt   *time.Time    `gorm:"-:all" json:"DeletedAt"`
+	Status      PickUpStatus 	`json:"Status"`
 }
 
 type PickUpDTO struct {
