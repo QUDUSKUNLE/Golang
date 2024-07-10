@@ -66,16 +66,3 @@ func Restricted(c echo.Context) error {
 	ID := claims.ID
 	return c.JSON(http.StatusOK, echo.Map{"Message": ID.String()})
 }
-
-func Users(context echo.Context) error {
-	// Initiate a new login adaptor
-	users, err := shipping.UsersAdaptor()
-	 if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": "false",
-		})
-	}
-	// Process valid user data
-	return context.JSON(http.StatusOK, echo.Map{"Users": users })
-}

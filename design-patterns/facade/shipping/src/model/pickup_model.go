@@ -30,10 +30,10 @@ type PickUp struct {
 }
 
 type PickUpDTO struct {
-	ShippingID uuid.UUID `json:"shipping_id" binding:"required" validate:"required"`
-	CarrierID  uuid.UUID `json:"carrier_id" binding:"required" validate:"required"`
-	PickUpAt   time.Time `json:"pick_up_at" binding:"required" validate:"required"`
-	Status     string    `json:"status" binding:"required" validate:"required"`
+	ShippingID 				uuid.UUID 			`json:"ShippingID" binding:"required" validate:"required"`
+	CarrierID  				uuid.UUID 			`json:"CarrierID" binding:"required" validate:"required"`
+	PickUpAt   				time.Time       `json:"PickUpAt" binding:"required" validate:"required"`
+	Status     				string          `json:"Status" binding:"required" validate:"required"`
 }
 
 func (pickUp *PickUp) BuildNewPickUp(pick PickUpDTO) *PickUp {
