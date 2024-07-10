@@ -12,8 +12,9 @@ type Database struct {
 
 func (database *Database) QueryUser(ID uuid.UUID) (model.User, error) {
 	user := model.User{ID:  ID}
-	if err := database.First(&user); err != nil {
-		return model.User{}, nil
+	result := database.First(&user);
+	if result.Error != nil {
+		return model.User{}, result.Error
 	}
 	return user, nil
 }

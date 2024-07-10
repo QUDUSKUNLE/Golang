@@ -20,8 +20,8 @@ func (database *Database) QueryCreatePickUp(pickUp model.PickUp) error {
 }
 
 func (database *Database) QueryUpdatePickUp(pickUp model.PickUp) error {
-	query := model.PickUp{ID: pickUp.ID}
-	database.Model(&query).Updates(model.PickUp{
+	query := model.PickUp{ID: pickUp.ID, UserID: pickUp.UserID}
+	database.Where(&query).Updates(model.PickUp{
 		PickUpAt: pickUp.PickUpAt,
 		UpdatedAt: pickUp.UpdatedAt,
 		Status: pickUp.Status,
