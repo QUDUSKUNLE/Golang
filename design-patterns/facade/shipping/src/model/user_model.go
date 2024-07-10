@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserType string
@@ -17,19 +19,22 @@ const (
 )
 
 type User struct {
-	ID 		   		uuid.UUID `db:"id"`
-	Email 	 		string    `db:"email"`
-	Password		string    `db:"pass"`
-	CreatedAt 	time.Time `db:"created_at"`
-	UpdatedAt 	time.Time `db:"updated_at"`
-	UserType    UserType  `db:"user_type"`
+	gorm.Model
+	ID 		   		uuid.UUID 	`json:"id" gorm:"uuid;primaryKey"`
+	Email 	 		string    	`json:"email" gorm:"unique"`
+	Password		string    	`json:"password"`
+	UserType    UserType  	`json:"user_type"`
+	CreatedAt 	time.Time 	`json:"created_at"`
+	UpdatedAt 	*time.Time 	`json:"updated_at,omitempty"`
+	Shippings   []Shipping 	`json:"shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	PickUps    	[]PickUp  `json:"pickups" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type UserDTO struct {
 	Email    				string `json:"email" binding:"required,email,lte=100" validate:"required"`
-	Pass 				    string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
-	ConfirmPassword string `json:"confirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
-	UserType 				string 	`json:"userType" binding:"required" validate:"required"`
+	Password 				    string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
+	ConfirmPassword string `json:"confirm_password" binding:"required,gte=6,lte=20" validate:"required"`
+	UserType 				string 	`json:"user_type" binding:"required" validate:"required"`
 }
 
 type LogInDTO struct {
@@ -47,17 +52,22 @@ func (user UserType) ReturnUserString() string {
 	return string(UNKNOWN)
 }
 
+func (user *User) BeforeCreate(scope *gorm.DB) error {
+	user.ID = uuid.New()
+	return nil
+}
+
 func (u *User) BuildNewUser(user UserDTO) (*User, error) {
-	if err := compareBothPasswords(user.Pass, user.ConfirmPassword); err != nil {
+	if err := compareBothPasswords(user.Password, user.ConfirmPassword); err != nil {
 		return &User{}, err
 	}
-	Pass, err := hashPassword(user.Pass)
+	Password, err := hashPassword(user.Password)
 	if err != nil {
 		return &User{}, err
 	}
 	return &User{
 		Email: user.Email,
-		Password: Pass,
+		Password: Password,
 		UserType: UserType(user.UserType),
 	}, nil
 }

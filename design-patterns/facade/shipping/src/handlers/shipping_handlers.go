@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	// "fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
@@ -39,9 +38,8 @@ func GetShippings(context echo.Context) error {
 		})
 	}
 	return context.JSON(http.StatusOK, echo.Map{
-		"message": "Here are your shipment",
+		"shippings": shippings,
 		"success": true,
-		"shipments": shippings,
 	})
 }
 

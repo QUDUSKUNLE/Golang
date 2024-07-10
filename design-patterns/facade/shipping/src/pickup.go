@@ -42,7 +42,7 @@ func UpDatePickUpAdaptor(pickUp model.PickUp) error {
 		notificationService: &notification.Notification{},
 	}
 	// Validate carrier
-	_, err := adaptor.userRepository.QueryUserByID(pickUp.CarrierID)
+	_, err := adaptor.userRepository.QueryUserByID(pickUp.UserID)
 	if err != nil {
 		return err
 	}

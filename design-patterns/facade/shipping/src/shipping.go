@@ -2,7 +2,7 @@ package shipping
 
 import (
 	"time"
-
+	"errors"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
@@ -26,7 +26,12 @@ func NewShippingAdaptor(cont echo.Context, shippingDto *model.ShippingDTO) error
 	}
 	userID, err := uuid.Parse(adaptor.utilsService.ObtainUser(cont))
 	if err != nil {
+		fmt.Println(err, "&&&")
 		return err
+	}
+
+	if userID.String() == "" {
+		return errors.New("unauthorized")
 	}
 	newShipping := adaptor.shippingService.BuildNewShipping(userID, *shippingDto)
 	err = adaptor.shippingRepositoryService.ShippingLedger(*newShipping)
@@ -48,7 +53,7 @@ func NewShippingAdaptor(cont echo.Context, shippingDto *model.ShippingDTO) error
 }
 
 func GetShippingsAdaptor(context echo.Context) ([]model.Shipping, error) {
-	fmt.Println("Initiate a new shipping")
+	fmt.Println("Initiate a shipping")
 	adaptor := &ShippingAdaptor{
 		utilsService: &utils.Utils{},
 		shippingRepositoryService: &ledger.ShippingRepository{},
@@ -58,14 +63,13 @@ func GetShippingsAdaptor(context echo.Context) ([]model.Shipping, error) {
 		return []model.Shipping{}, err
 	}
 	var status string
-	params := context.QueryParams()
-	status = params.Get("status")
+	status = context.QueryParams().Get("status")
 	if status == "" {
 		status = "SCHEDULED"
 	}
 	shippings, err := adaptor.shippingRepositoryService.QueryShippingLedger(userID, status)
 	if err != nil {
-		return shippings, err
+		return []model.Shipping{}, err
 	}
 	return shippings, nil
 }

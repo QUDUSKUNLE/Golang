@@ -2,8 +2,11 @@ package model
 
 import (
 	"time"
-
+	"database/sql/driver"
+	"errors"
+	"encoding/json"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type ProductType string
@@ -43,28 +46,49 @@ func (product ProductType) PrintProduct() string {
 }
 
 type Shipping struct {
-	ID 					uuid.UUID
-	UserID      uuid.UUID
-	Description  string
-	PickUpAddress Address
-	DeliveryAddress Address
-	ProductType ProductType
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	gorm.Model
+	ID 							uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"id"`
+	UserID      		uuid.UUID  `json:"user_id"`
+	Description  		string    `json:"description"`
+	PickUpAddress 	Address   `gorm:"embedded" json:"pick_up_address"`
+	DeliveryAddress Address	  `gorm:"embedded" json:"delivery_address"`
+	ProductType  ProductType  `json:"product_type"`
+	CreatedAt 	time.Time 		`json:"created_at"`
+	UpdatedAt 	*time.Time 		`json:"updated_at"`
+	DeletedAt   *time.Time    `gorm:"-:all" json:"-"`
+	PickUp      PickUp   			`json:"pick_up"`
 }
 
 type ShippingDTO struct {
-	Description   	string  	`json:"description" binding:"required" validate:"required"`
+	Description   	string  	`json:"description" binding:"required" validate:"required,gte=6,lte=1000"`
 	PickUpAddress 	Address  	`json:"pick_up_address" binding:"required" validate:"required"`
 	DeliveryAddress Address 	`json:"delivery_address" binding:"required" validate:"required"`
 	ProductType 		ProductType `json:"product_type" binding:"required" validate:"required"`
 }
 
 type Address struct {
-	StreetNo   int 		`json:"street_no" binding:"required" validate:"required"`
-	StreetName string `json:"street_name" binding:"required" validate:"required"`
-	City       string `json:"city" binding:"required" validate:"required"`
-	State      string `json:"state" binding:"required" validate:"required"`
+	StreetNo   int 		`json:"street_no" binding:"required,gte=0,let=1000" validate:"required"`
+	StreetName string `json:"street_name" binding:"required,max=50" validate:"required"`
+	Province   string `json:"province" binding:"required,max=50" validate:"required"`
+	State      string `json:"state" binding:"required,max=50" validate:"required"`
+}
+
+func (a Address) Value() (driver.Value, error) {
+	// Serialize the Address struct into a format suitable for storage
+	// For example, you might serialize it into a JSON string
+	addressJSON, err := json.Marshal(a)
+	if err != nil {
+			return nil, err
+	}
+	return string(addressJSON), nil
+}
+
+func (a *Address) Scan(value interface{}) error {
+	addressJSON, ok := value.(string)
+	if !ok {
+		return errors.New("unexpected type for address")
+	}
+	return json.Unmarshal([]byte(addressJSON), a)
 }
 
 func (shipping *Shipping) BuildNewShipping(userID uuid.UUID, ship ShippingDTO) *Shipping {

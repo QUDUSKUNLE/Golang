@@ -10,5 +10,6 @@ func PublicRoutesAdaptor(e *echo.Group) *echo.Group {
 	e.POST("/reject", handlers.RejectProduct)
 	e.POST("/users", handlers.Register)
 	e.POST("/login", handlers.Login)
+	e.GET("/users", handlers.Users)
 	return e
 }

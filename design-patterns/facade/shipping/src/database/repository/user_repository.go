@@ -3,45 +3,49 @@ package repository
 import (
 	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/src/model"
-	"github.com/jmoiron/sqlx"
+	"gorm.io/gorm"
 )
 
 type Database struct {
-	*sqlx.DB
+	*gorm.DB
 }
 
 func (database *Database) QueryUser(ID uuid.UUID) (model.User, error) {
-	user := model.User{}
-	query := `SELECT * FROM users WHERE id=$1`
-	if err := database.Get(&user, query, ID); err != nil {
+	user := model.User{ID:  ID}
+	if err := database.First(&user); err != nil {
 		return model.User{}, nil
 	}
 	return user, nil
 }
 
-func (database *Database) QueryUserByEmail(email string) (model.User, error) {
-	user := model.User{}
-	query := `SELECT * FROM public.users WHERE email=$1`
-	if err := database.Get(&user, query, email); err != nil {
-		return model.User{}, nil
+func (database *Database) QueryUsers() ([]model.User, error) {
+	users := []model.User{}
+	if err := database.Find(&users); err != nil {
+		return []model.User{}, nil
 	}
-	return user, nil
+	return users, nil
+}
+
+func (database *Database) QueryUserByEmail(email string) (*model.User, error) {
+	user := model.User{}
+	_ = database.Where(&model.User{Email: email}).First(&user);
+	return &user, nil
 }
 
 func (database *Database) QueryCreateUser(user model.User) error {
-	query := `INSERT INTO users (email, pass, user_type) VALUES ($1, $2, $3)`
-	_, err := database.Exec(query, user.Email, user.Password, user.UserType)
-	if err != nil {
-		return err
+	query := model.User{
+		Email: user.Email,
+		Password: user.Password,
+		UserType: user.UserType,
+	}
+	result := database.Create(&query)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }
 
-func (database *Database) QueryUpdateUser(id string, user model.User) error {
-	q := `UPDATE user SET email=$2, pass=$3, created_at=$4, updated_at=$5 WHERE id=$1`;
-	_, err := database.Exec(q, id, user.Email, user.Password, user.CreatedAt, user.UpdatedAt)
-	if err != nil {
-		return err
-	}
+func (database *Database) QueryUpdateUser(id uuid.UUID, user model.User) error {
+	database.Model(&model.User{ID: id}).Updates(model.User{Email: user.Email, Password: user.Password,  UpdatedAt: user.UpdatedAt})
 	return nil
 }
