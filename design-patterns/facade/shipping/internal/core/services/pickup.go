@@ -3,23 +3,23 @@ package services
 import (
 	"fmt"
 	"github.com/QUDUSKUNLE/shipping/internal/core/ledger"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/QUDUSKUNLE/shipping/internal/core/utils"
 	"github.com/labstack/echo/v4"
 )
 
 type PickUpAdaptor struct {
-	pickUpService *model.PickUp
-	pickUpRepositoryService *ledger.PickUpRepository
+	pickUpService *domain.PickUp
+	pickUpRepositoryService *ledger.Ledger
 	utilsService *utils.Utils
 	notificationService *Notification
 }
 
-func NewPickUpAdaptor(pick model.PickUpDTO) error {
+func NewPickUpAdaptor(pick domain.PickUpDTO) error {
 	fmt.Println("Initiate a new pick up")
 	adaptor := &PickUpAdaptor{
-		pickUpService: &model.PickUp{},
-		pickUpRepositoryService: &ledger.PickUpRepository{},
+		pickUpService: &domain.PickUp{},
+		pickUpRepositoryService: &ledger.Ledger{},
 		notificationService: &Notification{},
 	}
 	pickUp := adaptor.pickUpService.BuildNewPickUp(pick)
@@ -33,11 +33,11 @@ func NewPickUpAdaptor(pick model.PickUpDTO) error {
 	return nil
 }
 
-func UpDatePickUpAdaptor(context echo.Context, pickUp model.PickUp) error {
+func UpDatePickUpAdaptor(context echo.Context, pickUp domain.PickUp) error {
 	fmt.Println("Update a parcel pick up")
 	adaptor := &PickUpAdaptor{
-		pickUpService: &model.PickUp{},
-		pickUpRepositoryService: &ledger.PickUpRepository{},
+		pickUpService: &domain.PickUp{},
+		pickUpRepositoryService: &ledger.Ledger{},
 		notificationService: &Notification{},
 		utilsService: &utils.Utils{},
 	}
@@ -47,7 +47,7 @@ func UpDatePickUpAdaptor(context echo.Context, pickUp model.PickUp) error {
 		return err
 	}
 
-	if carrier.UserType != string(model.RIDER) {
+	if carrier.UserType != string(domain.RIDER) {
 		return fmt.Errorf("unauthorized to perform this operation")
 	}
 	// build a new pick up

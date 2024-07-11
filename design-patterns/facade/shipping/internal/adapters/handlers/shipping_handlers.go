@@ -3,12 +3,12 @@ package handlers
 import (
 	"net/http"
 	"github.com/QUDUSKUNLE/shipping/internal/core/services"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/labstack/echo/v4"
 )
 
-func NewShipping(context echo.Context) error {
-	shippingDto := new(model.ShippingDTO)
+func (handler *HTTPHandler) NewShipping(context echo.Context) error {
+	shippingDto := new(domain.ShippingDTO)
 	if err := context.Bind(shippingDto); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -28,7 +28,7 @@ func NewShipping(context echo.Context) error {
 	})
 }
 
-func GetShippings(context echo.Context) error {
+func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 	shippings, err := services.GetShippingsAdaptor(context);
 	if err != nil {
 		return context.JSON(http.StatusNotImplemented, echo.Map{
@@ -42,7 +42,7 @@ func GetShippings(context echo.Context) error {
 	})
 }
 
-func RejectProduct(context echo.Context) error {
+func (handler *HTTPHandler) RejectProduct(context echo.Context) error {
 	return context.JSON(http.StatusOK, echo.Map{
 		"Message": "Product is delivered.",
 		"Success": true,

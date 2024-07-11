@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func DeliveryProduct(context echo.Context) error {
+func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 	deliveryDto := new(dto.DeliveryDTO)
 	if err := context.Bind(deliveryDto); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

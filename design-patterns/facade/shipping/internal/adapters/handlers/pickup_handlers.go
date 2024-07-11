@@ -3,13 +3,13 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/QUDUSKUNLE/shipping/internal/core/services"
 	"github.com/labstack/echo/v4"
 )
 
-func UpdatePickUp(context echo.Context) error {
-	pickUpDto := new(model.PickUp)
+func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
+	pickUpDto := new(domain.PickUp)
 	if err := context.Bind(pickUpDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
 			"Message": err.Error(),

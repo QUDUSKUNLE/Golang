@@ -1,4 +1,4 @@
-package model
+package domain
 
 import (
 	"errors"
@@ -13,33 +13,33 @@ import (
 type UserType string
 
 const (
-	USER UserType = "USER"
-	RIDER UserType = "RIDER"
+	USER    UserType = "USER"
+	RIDER   UserType = "RIDER"
 	UNKNOWN UserType = "UNKNOWN"
 )
 
 type User struct {
 	gorm.Model
-	ID 		   						uuid.UUID 	`json:"ID" gorm:"uuid;primaryKey"`
-	Email 	 						string    	`json:"Email" gorm:"unique"`
-	Password						string    	`json:"Password"`
-	UserType    				UserType  	`json:"UserType"`
-	CreatedAt 					time.Time 	`json:"CreatedAt"`
-	UpdatedAt 					*time.Time 	`json:"UpdatedAt,omitempty"`
-	Shippings   				[]Shipping 	`json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-	PickUps    					[]PickUp  	`json:"PickUps" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	ID        uuid.UUID  `json:"ID" gorm:"uuid;primaryKey"`
+	Email     string     `json:"Email" gorm:"unique"`
+	Password  string     `json:"Password"`
+	UserType  UserType   `json:"UserType"`
+	CreatedAt time.Time  `json:"CreatedAt"`
+	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
+	Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	PickUps   []PickUp   `json:"PickUps" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type UserDTO struct {
-	Email    						string 			`json:"Email" binding:"required,email,lte=100" validate:"required"`
-	Password 				    string 			`json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
-	ConfirmPassword 		string 			`json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
-	UserType 						string 			`json:"UserType" binding:"required" validate:"required"`
+	Email           string `json:"Email" binding:"required,email,lte=100" validate:"required"`
+	Password        string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
+	ConfirmPassword string `json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
+	UserType        string `json:"UserType" binding:"required" validate:"required"`
 }
 
 type LogInDTO struct {
-	Email  							string 			`json:"Email" binding:"required,email,lte=100" validate:"required"`
-	Password  					string 			`json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
+	Email    string `json:"Email" binding:"required,email,lte=100" validate:"required"`
+	Password string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
 }
 
 func (user UserType) ReturnUserString() string {
@@ -66,7 +66,7 @@ func (u *User) BuildNewUser(user UserDTO) (*User, error) {
 		return &User{}, err
 	}
 	return &User{
-		Email: user.Email,
+		Email:    user.Email,
 		Password: Password,
 		UserType: UserType(user.UserType),
 	}, nil
@@ -80,7 +80,7 @@ func (user *User) ComparePassword(dbpass, pass string) error {
 }
 
 func hashPassword(password string) (string, error) {
-	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost);
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
 	}

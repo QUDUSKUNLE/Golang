@@ -3,12 +3,12 @@ package ledger
 import (
 	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/repository"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-type UserRepository struct {}
+type Ledger struct {}
 
-func (ledger *UserRepository) QueryCreateUser(user *model.User) error {
+func (ledger *Ledger) QueryCreateUser(user *domain.User) error {
 	// Open repository conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
@@ -20,41 +20,41 @@ func (ledger *UserRepository) QueryCreateUser(user *model.User) error {
 	return nil
 }
 
-func (ledger *UserRepository) QueryUsers() ([]model.User, error) {
+func (ledger *Ledger) QueryUsers() ([]domain.User, error) {
 	// Open repository conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
-		return []model.User{}, err
+		return []domain.User{}, err
 	}
 	users, err := db.QueryUsers();
 	if err != nil {
-		return []model.User{}, err
+		return []domain.User{}, err
 	}
 	return users, nil
 }
 
-func (ledger *UserRepository) QueryUserByID(userID uuid.UUID) (model.User, error) {
+func (ledger *Ledger) QueryUserByID(userID uuid.UUID) (domain.User, error) {
 	// Open repository conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
-		return model.User{}, err
+		return domain.User{}, err
 	}
 	user, err := db.QueryUser(userID);
 	if err != nil {
-		return model.User{}, err
+		return domain.User{}, err
 	}
 	return user, nil
 }
 
-func (ledger *UserRepository) QueryLedgerByEmail(email string) (*model.User, error) {
+func (ledger *Ledger) QueryLedgerByEmail(email string) (*domain.User, error) {
 	// Open repository conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
-		return &model.User{}, err
+		return &domain.User{}, err
 	}
 	user, err := db.QueryUserByEmail(email);
 	if err != nil {
-		return &model.User{}, err
+		return &domain.User{}, err
 	}
 	return user, nil
 }

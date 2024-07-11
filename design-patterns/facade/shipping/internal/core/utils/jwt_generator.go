@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -17,7 +17,7 @@ type JwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func (util *Utils) GenerateAccessToken(user model.User) (string, error) {
+func (util *Utils) GenerateAccessToken(user domain.User) (string, error) {
 	// Get JWT_SECRET_KEY
 	secret := os.Getenv("JWT_SECRET_KEY")
 	// Create a new claims

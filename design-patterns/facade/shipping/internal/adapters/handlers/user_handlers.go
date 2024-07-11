@@ -3,15 +3,15 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/QUDUSKUNLE/shipping/internal/core/utils"
 	"github.com/QUDUSKUNLE/shipping/internal/core/services"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
-func Register(context echo.Context) error {
-	user := new(model.UserDTO)
+func (handler *HTTPHandler) Register(context echo.Context) error {
+	user := new(domain.UserDTO)
 	// Bind userDto
 	if err := context.Bind(user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -38,8 +38,8 @@ func Register(context echo.Context) error {
 	})
 }
 
-func Login(context echo.Context) error {
-	loginDto := new(model.LogInDTO)
+func (handler *HTTPHandler) Login(context echo.Context) error {
+	loginDto := new(domain.LogInDTO)
 	// Bind loginDto
 	if err := context.Bind(loginDto); err != nil {
 		return context.JSON(http.StatusBadRequest, err)
@@ -60,7 +60,7 @@ func Login(context echo.Context) error {
 	return context.JSON(http.StatusOK, echo.Map{"Token": token})
 }
 
-func Restricted(c echo.Context) error {
+func (handler *HTTPHandler) Restricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.JwtCustomClaims)
 	ID := claims.ID

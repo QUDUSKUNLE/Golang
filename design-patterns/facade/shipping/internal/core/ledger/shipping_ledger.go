@@ -2,13 +2,11 @@ package ledger
 
 import (
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/repository"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/google/uuid"
 )
 
-type ShippingRepository struct{}
-
-func (ledger *ShippingRepository) ShippingLedger(shipping model.Shipping) error {
+func (ledger *Ledger) ShippingLedger(shipping domain.Shipping) error {
 	// Open repository conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
@@ -20,11 +18,11 @@ func (ledger *ShippingRepository) ShippingLedger(shipping model.Shipping) error 
 	return nil
 }
 
-func (ledger *ShippingRepository) QueryShippingLedger(userID uuid.UUID, status string) ([]model.Shipping, error) {
+func (ledger *Ledger) QueryShippingLedger(userID uuid.UUID, status string) ([]domain.Shipping, error) {
 	// Open repository conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
-		return []model.Shipping{}, err
+		return []domain.Shipping{}, err
 	}
 	shippings, err := db.QueryShippings(userID, status)
 	if err != nil {

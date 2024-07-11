@@ -1,18 +1,18 @@
 package repository
 
 import (
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/google/uuid"
 )
 
-func (database *PostgresRepository) QueryCreateShipping(shipping model.Shipping) error {
-	result := database.Create(&model.Shipping{
-		ID: shipping.ID,
-		UserID: shipping.UserID,
-		Description: shipping.Description,
-		PickUpAddress: shipping.PickUpAddress,
+func (database *PostgresRepository) QueryCreateShipping(shipping domain.Shipping) error {
+	result := database.db.Create(&domain.Shipping{
+		ID:              shipping.ID,
+		UserID:          shipping.UserID,
+		Description:     shipping.Description,
+		PickUpAddress:   shipping.PickUpAddress,
 		DeliveryAddress: shipping.DeliveryAddress,
-		ProductType: shipping.ProductType,
+		ProductType:     shipping.ProductType,
 	})
 	if result.Error != nil {
 		return result.Error
@@ -20,11 +20,11 @@ func (database *PostgresRepository) QueryCreateShipping(shipping model.Shipping)
 	return nil
 }
 
-func (database *PostgresRepository) QueryShippings(userID uuid.UUID, status string) ([]model.Shipping, error) {
-	var shippings []model.Shipping
-	result := database.Where(&model.Shipping{UserID: userID}).Preload("PickUp").Limit(10).Find(&shippings, model.Shipping{UserID: userID});
+func (database *PostgresRepository) QueryShippings(userID uuid.UUID, status string) ([]domain.Shipping, error) {
+	var shippings []domain.Shipping
+	result := database.db.Where(&domain.Shipping{UserID: userID}).Preload("PickUp").Limit(10).Find(&shippings, domain.Shipping{UserID: userID})
 	if result.Error != nil {
-		return []model.Shipping{}, result.Error
+		return []domain.Shipping{}, result.Error
 	}
 	return shippings, nil
 }

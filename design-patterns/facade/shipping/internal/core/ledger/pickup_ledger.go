@@ -2,12 +2,10 @@ package ledger
 
 import (
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/repository"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-type PickUpRepository struct {}
-
-func (ledger *PickUpRepository) NewLedger(pick model.PickUp) error {
+func (ledger *Ledger) NewLedger(pick domain.PickUp) error {
 	// Open database conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {
@@ -20,7 +18,7 @@ func (ledger *PickUpRepository) NewLedger(pick model.PickUp) error {
 }
 
 
-func (ledger *PickUpRepository) UpdateLedger(update model.PickUp) error {
+func (ledger *Ledger) UpdateLedger(update domain.PickUp) error {
 	// Open database conection
 	db, err := repository.OpenDBConnection()
 	if err != nil {

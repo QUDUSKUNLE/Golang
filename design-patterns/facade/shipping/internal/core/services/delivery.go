@@ -3,23 +3,23 @@ package services
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/QUDUSKUNLE/shipping/internal/core/ledger"
 )
 
 type DeliveryAdaptor struct {
-	user *model.User
-	shipping *model.Shipping
-	deliveryLedger *ledger.DeliveryLedger
+	user *domain.User
+	shipping *domain.Shipping
+	deliveryLedger *ledger.Ledger
 	notification *Notification
 }
 
-func NewDeliveryAdaptor(accountID uuid.UUID, productType model.ProductType) *DeliveryAdaptor {
+func NewDeliveryAdaptor(accountID uuid.UUID, productType domain.ProductType) *DeliveryAdaptor {
 	fmt.Println("Initiate a new delivery")
 	delivery :=  &DeliveryAdaptor{
-		user: &model.User{},
-		shipping: &model.Shipping{},
-		deliveryLedger: &ledger.DeliveryLedger{},
+		user: &domain.User{},
+		shipping: &domain.Shipping{},
+		deliveryLedger: &ledger.Ledger{},
 		notification: &Notification{},
 	}
 	fmt.Println("New delivery initiated successfully.")

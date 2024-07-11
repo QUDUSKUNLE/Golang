@@ -2,15 +2,23 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/config"
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/handlers"
+	validationMiddleware "github.com/QUDUSKUNLE/shipping/internal/adapters/middleware"
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/repository"
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/routes"
+	"github.com/QUDUSKUNLE/shipping/internal/core/services"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/config"
-	echojwt "github.com/labstack/echo-jwt/v4"
-	validationMiddleware "github.com/QUDUSKUNLE/shipping/internal/adapters/middleware"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/routes"
+)
+
+var (
+	svc *services.ServicesHandler
 )
 
 func init() {
@@ -32,9 +40,17 @@ func main() {
 	// Plug echo int validationAdaptor
 	e = validationMiddleware.ValidationAdaptor(e)
 
+	store, err := repository.OpenDBConnection()
+
+	if err != nil {
+		log.Fatalf("Error connecting to the databse: %s", err.Error())
+	}
+	svc := services.ServicesAdapter(store)
+	httpHandler := handlers.HttpAdapter(*svc)
+
 	// Plug echo into PublicRoutesAdaptor
 	public := e.Group("/v1")
-	routes.PublicRoutesAdaptor(public)
+	routes.PublicRoutesAdaptor(public, httpHandler)
 
 	privateRoutes := e.Group("/v1")
 	// Set JWT Configuration
@@ -42,7 +58,7 @@ func main() {
 	privateRoutes.Use(echojwt.WithConfig(con))
 
 	// Plug echo into PrivateRoutesAdaptor
-	routes.PrivateRoutesAdaptor(privateRoutes)
+	routes.PrivateRoutesAdaptor(privateRoutes, httpHandler)
 	// Start the server on port 8080
 	if err := e.Start(fmt.Sprintf(":%s", port)); err != http.ErrServerClosed {
 		log.Fatal(err)
