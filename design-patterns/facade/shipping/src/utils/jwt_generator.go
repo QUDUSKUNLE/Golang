@@ -2,28 +2,28 @@ package utils
 
 import (
 	"os"
-	// "strconv"
 	"time"
-	"github.com/google/uuid"
+
+	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/golang-jwt/jwt/v5"
-	// "github.com/labstack/echo/v4"
-	// "github.com/labstack/echo/v4/middleware"
-	// echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/google/uuid"
 )
 
 type Utils struct {}
 
 type JwtCustomClaims struct {
 	ID uuid.UUID `json:"id"`
+	UserType string `json:"user_type"`
 	jwt.RegisteredClaims
 }
 
-func (util *Utils) GenerateAccessToken(id uuid.UUID) (string, error) {
+func (util *Utils) GenerateAccessToken(user model.User) (string, error) {
 	// Get JWT_SECRET_KEY
 	secret := os.Getenv("JWT_SECRET_KEY")
 	// Create a new claims
 	claims := &JwtCustomClaims{
-		id,
+		user.ID,
+		string(user.UserType),
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
 		},

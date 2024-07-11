@@ -33,13 +33,13 @@ func (ledger *UserRepository) QueryUsers() ([]model.User, error) {
 	return users, nil
 }
 
-func (ledger *UserRepository) QueryUserByID(id uuid.UUID) (model.User, error) {
+func (ledger *UserRepository) QueryUserByID(userID uuid.UUID) (model.User, error) {
 	// Open database conection
 	db, err := database.OpenDBConnection()
 	if err != nil {
 		return model.User{}, err
 	}
-	user, err := db.QueryUser(id);
+	user, err := db.QueryUser(userID);
 	if err != nil {
 		return model.User{}, err
 	}

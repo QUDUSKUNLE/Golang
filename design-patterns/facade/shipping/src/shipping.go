@@ -6,7 +6,6 @@ import (
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/utils"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"fmt"
 )
@@ -24,16 +23,16 @@ func NewShippingAdaptor(cont echo.Context, shippingDto *model.ShippingDTO) error
 		shippingRepositoryService: &ledger.ShippingRepository{},
 		utilsService: &utils.Utils{},
 	}
-	userID, err := uuid.Parse(adaptor.utilsService.ObtainUser(cont))
+	// Validate user
+	user, err := adaptor.utilsService.ParseUserID(cont)
 	if err != nil {
-		fmt.Println(err, "&&&")
 		return err
 	}
 
-	if userID.String() == "" {
-		return errors.New("unauthorized")
+	if user.UserType != string(model.USER) {
+		return errors.New("unauthorized to perform this operation")
 	}
-	newShipping := adaptor.shippingService.BuildNewShipping(userID, *shippingDto)
+	newShipping := adaptor.shippingService.BuildNewShipping(user.ID, *shippingDto)
 	err = adaptor.shippingRepositoryService.ShippingLedger(*newShipping)
 	if err != nil {
 		return err
@@ -58,7 +57,7 @@ func GetShippingsAdaptor(context echo.Context) ([]model.Shipping, error) {
 		utilsService: &utils.Utils{},
 		shippingRepositoryService: &ledger.ShippingRepository{},
 	}
-	userID, err := uuid.Parse(adaptor.utilsService.ObtainUser(context))
+	user, err := adaptor.utilsService.ParseUserID(context)
 	if err != nil {
 		return []model.Shipping{}, err
 	}
@@ -67,7 +66,7 @@ func GetShippingsAdaptor(context echo.Context) ([]model.Shipping, error) {
 	if status == "" {
 		status = "SCHEDULED"
 	}
-	shippings, err := adaptor.shippingRepositoryService.QueryShippingLedger(userID, status)
+	shippings, err := adaptor.shippingRepositoryService.QueryShippingLedger(user.ID, status)
 	if err != nil {
 		return []model.Shipping{}, err
 	}

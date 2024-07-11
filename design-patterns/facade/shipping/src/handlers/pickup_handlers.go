@@ -12,21 +12,24 @@ func UpdatePickUp(context echo.Context) error {
 	pickUpDto := new(model.PickUp)
 	if err := context.Bind(pickUpDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
-			"message": err.Error(),
-			"success": false,
+			"Message": err.Error(),
+			"Success": false,
 		})
 	}
 	// Validate pickUpDto
 	if err := context.Validate(pickUpDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error() })
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error() })
 	}
 	// Initiate a new pick up
-	err := shipping.UpDatePickUpAdaptor(*pickUpDto);
+	err := shipping.UpDatePickUpAdaptor(context, *pickUpDto);
 	if err != nil {
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": "false" })
+		if err.Error() == "record not found" {
+			return context.JSON(http.StatusUnauthorized, echo.Map{"Message": "User`s unauthorized to perform this operation.", "Success": false })
+		}
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": "false" })
 	}
 	return context.JSON(http.StatusOK, echo.Map{
-		"message": "Update parcel successfully.",
-		"success": true,
+		"Message": "Update parcel successfully.",
+		"Success": true,
 	})
 }

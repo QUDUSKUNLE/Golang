@@ -14,27 +14,27 @@ func Register(context echo.Context) error {
 	user := new(model.UserDTO)
 	// Bind userDto
 	if err := context.Bind(user); err != nil {
-		return context.JSON(http.StatusBadRequest, err)
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	// Validate user input
 	if err := context.Validate(user); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
 
 	err := shipping.NewUserAdaptor(*user);
 	if err != nil {
 		if err.Error() == "user`s already exist" {
-			return context.JSON(http.StatusConflict, echo.Map{"message": "User already registered", "success": "false" })
+			return context.JSON(http.StatusConflict, echo.Map{"Message": "User already registered", "Success": false })
 		}
 		if err.Error() == `incorrect passwords` {
-			return context.JSON(http.StatusBadRequest, echo.Map{"message": err.Error(), "success": "false" })
+			return context.JSON(http.StatusBadRequest, echo.Map{"Message": err.Error(), "Success": false })
 		}
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": "false" })
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": false })
 	}
 	// Process valid user data
 	return context.JSON(http.StatusOK, echo.Map{
-		"message": "User registered successfully",
-		"success": "true",
+		"Message": "User registered successfully",
+		"Success": true,
 	})
 }
 

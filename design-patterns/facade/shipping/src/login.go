@@ -29,7 +29,7 @@ func NewLogInAdaptor(loginDto model.LogInDTO) (string, error) {
 	if err := loginAdaptor.userService.ComparePassword(user.Password, loginDto.Password); err != nil {
 		return "", err
 	}
-	token, err := loginAdaptor.utilsService.GenerateAccessToken(user.ID)
+	token, err := loginAdaptor.utilsService.GenerateAccessToken(*user)
 	if err != nil {
 		return "", err
 	}

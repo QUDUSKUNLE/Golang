@@ -3,7 +3,7 @@ package dto
 // import (
 // 	"time"
 // 	"github.com/google/uuid"
-// 	// "github.com/QUDUSKUNLE/shipping/src/model"
+// "github.com/QUDUSKUNLE/shipping/src/model"
 // )
 
 // type PickUpDTO struct {

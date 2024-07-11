@@ -50,7 +50,7 @@ func (pi *PickUp) BuildUpdatePickUp(pick PickUp) *PickUp {
 	return &PickUp{
 		ID:         pick.ID,
 		ShippingID: pick.ShippingID,
-		UserID:  pick.UserID,
+		UserID:     pick.UserID,
 		PickUpAt:   time.Now(),
 		Status:     PickUpStatus(pick.Status),
 	}

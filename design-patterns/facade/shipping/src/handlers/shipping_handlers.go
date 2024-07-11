@@ -15,17 +15,17 @@ func NewShipping(context echo.Context) error {
 	}
 	// Validate shippingDto
 	if err := context.Validate(shippingDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
 
 	// Initiate a new shipping
 	err := shipping.NewShippingAdaptor(context, shippingDto);
 	if err != nil {
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false })
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": false })
 	}
 	return context.JSON(http.StatusOK, echo.Map{
-		"message": "Product is scheduled for shipping.",
-		"success": true,
+		"Message": "Product is scheduled for shipping.",
+		"Success": true,
 	})
 }
 
@@ -33,19 +33,19 @@ func GetShippings(context echo.Context) error {
 	shippings, err := shipping.GetShippingsAdaptor(context);
 	if err != nil {
 		return context.JSON(http.StatusNotImplemented, echo.Map{
-			"message": err.Error(),
-			"success": false,
+			"Message": err.Error(),
+			"Success": false,
 		})
 	}
 	return context.JSON(http.StatusOK, echo.Map{
-		"shippings": shippings,
-		"success": true,
+		"Shippings": shippings,
+		"Success": true,
 	})
 }
 
 func RejectProduct(context echo.Context) error {
 	return context.JSON(http.StatusOK, echo.Map{
-		"message": "Product is delivered.",
-		"success": true,
+		"Message": "Product is delivered.",
+		"Success": true,
 	})
 }

@@ -2,16 +2,17 @@ package shipping
 
 import (
 	"fmt"
-
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
+	"github.com/QUDUSKUNLE/shipping/src/utils"
+	"github.com/labstack/echo/v4"
 )
 
 type PickUpAdaptor struct {
-	userRepository *ledger.UserRepository
 	pickUpService *model.PickUp
 	pickUpRepositoryService *ledger.PickUpRepository
+	utilsService *utils.Utils
 	notificationService *notification.Notification
 }
 
@@ -33,18 +34,22 @@ func NewPickUpAdaptor(pick model.PickUpDTO) error {
 	return nil
 }
 
-func UpDatePickUpAdaptor(pickUp model.PickUp) error {
+func UpDatePickUpAdaptor(context echo.Context, pickUp model.PickUp) error {
 	fmt.Println("Update a parcel pick up")
 	adaptor := &PickUpAdaptor{
 		pickUpService: &model.PickUp{},
-		userRepository: &ledger.UserRepository{},
 		pickUpRepositoryService: &ledger.PickUpRepository{},
 		notificationService: &notification.Notification{},
+		utilsService: &utils.Utils{},
 	}
 	// Validate carrier
-	_, err := adaptor.userRepository.QueryUserByID(pickUp.UserID)
+	carrier, err := adaptor.utilsService.ParseUserID(context)
 	if err != nil {
 		return err
+	}
+
+	if carrier.UserType != string(model.RIDER) {
+		return fmt.Errorf("unauthorized to perform this operation")
 	}
 	// build a new pick up
 	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)

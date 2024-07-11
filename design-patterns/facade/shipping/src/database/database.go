@@ -11,13 +11,10 @@ import (
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-
-	_ "github.com/jackc/pgx/v4/stdlib"
-	_ "github.com/lib/pq"
 )
 
-type ShippingDB struct {
-	*repository.Database
+type Repository struct {
+	*repository.PostgresRepository
 }
 
 func PostgresSQLConnection() (*gorm.DB, error) {
@@ -42,30 +39,29 @@ func PostgresSQLConnection() (*gorm.DB, error) {
 		log.Fatalf("Error: %s", err.Error())
 	}
 
-
-	sqlDB, err := DB.DB()
+	postgresDB, err := DB.DB()
 	if err != nil {
 		log.Fatalf("Error: %s", err.Error())
 	}
 
 	// Set database connection settings.
-	sqlDB.SetMaxOpenConns(maxConn)
-	sqlDB.SetMaxIdleConns(maxIdleConn)
-	sqlDB.SetConnMaxLifetime(time.Duration(maxLifetimeConn))
+	postgresDB.SetMaxOpenConns(maxConn)
+	postgresDB.SetMaxIdleConns(maxIdleConn)
+	postgresDB.SetConnMaxLifetime(time.Duration(maxLifetimeConn))
 
-	// Ping Database
-	if err = sqlDB.Ping(); err != nil {
+	// Ping PostgresRepository
+	if err = postgresDB.Ping(); err != nil {
 		return nil, fmt.Errorf("error, not send ping to database: %w", err)
 	}
 	return DB, nil
 }
 
-func OpenDBConnection() (*ShippingDB, error) {
+func OpenDBConnection() (*Repository, error) {
 	db, err := PostgresSQLConnection()
 	if err != nil {
 		return nil, err
 	}
-	return &ShippingDB{
-		Database: &repository.Database{ DB: db },
+	return &Repository{
+		PostgresRepository: &repository.PostgresRepository{ DB: db },
 	}, nil
 }

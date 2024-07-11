@@ -16,12 +16,12 @@ func DeliveryProduct(context echo.Context) error {
 
 	// Validate shippingDto
 	if err := context.Validate(deliveryDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
 
 	accountID, err := uuid.Parse(deliveryDto.AccountID)
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": err.Error()})
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
 	// Initiate a new delivery
 	newDelivery := shipping.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
@@ -31,10 +31,10 @@ func DeliveryProduct(context echo.Context) error {
 
 	// Deliver a product
 	if err := newDelivery.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"message": err.Error(), "success": false})
+		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": false})
 	}
 	return context.JSON(http.StatusOK, echo.Map{
-		"message": "Product is delivered.",
-		"success": true,
+		"Message": "Product is delivered.",
+		"Success": true,
 	})
 }
