@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/QUDUSKUNLE/shipping/src/config"
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/config"
 	echojwt "github.com/labstack/echo-jwt/v4"
-	validationMiddleware "github.com/QUDUSKUNLE/shipping/src/middleware"
-	"github.com/QUDUSKUNLE/shipping/src/routes"
+	validationMiddleware "github.com/QUDUSKUNLE/shipping/internal/adapters/middleware"
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/routes"
 )
 
 func init() {
