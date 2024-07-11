@@ -11,7 +11,6 @@ import (
 )
 
 type PickUpAdaptor struct {
-	userRepository *ledger.UserRepository
 	pickUpService *model.PickUp
 	pickUpRepositoryService *ledger.PickUpRepository
 	utilsService *utils.Utils
@@ -40,18 +39,17 @@ func UpDatePickUpAdaptor(context echo.Context, pickUp model.PickUp) error {
 	fmt.Println("Update a parcel pick up")
 	adaptor := &PickUpAdaptor{
 		pickUpService: &model.PickUp{},
-		userRepository: &ledger.UserRepository{},
 		pickUpRepositoryService: &ledger.PickUpRepository{},
 		notificationService: &notification.Notification{},
 		utilsService: &utils.Utils{},
 	}
 	// Validate carrier
-	carrierID, err := adaptor.utilsService.ParseUserID(context)
+	carrier, err := adaptor.utilsService.ParseUserID(context)
 	if err != nil {
 		return err
 	}
 
-	if carrierID.String() == "" {
+	if carrier.UserType != string(model.RIDER) {
 		return errors.New("unauthorized to perform this operation")
 	}
 	// build a new pick up

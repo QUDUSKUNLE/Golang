@@ -6,14 +6,25 @@ import (
 	"github.com/google/uuid"
 )
 
-
-func obtainUser(context echo.Context) string {
-	user := context.Get("user").(*jwt.Token)
-	claims := user.Claims.(*JwtCustomClaims)
-	ID := claims.ID
-	return ID.String()
+type ObtainedUser struct {
+	ID uuid.UUID `json:"id"`
+	UserType string `json:"user_type"`
 }
 
-func (util *Utils) ParseUserID(context echo.Context) (uuid.UUID, error) {
-	return uuid.Parse(obtainUser(context))
+func obtainUser(context echo.Context) *ObtainedUser {
+	user := context.Get("user").(*jwt.Token)
+	claims := user.Claims.(*JwtCustomClaims)
+	return &ObtainedUser{
+		ID: claims.ID,
+		UserType: claims.UserType,
+	}
+}
+
+func (util *Utils) ParseUserID(context echo.Context) (*ObtainedUser, error) {
+	result := obtainUser(context)
+	_, err := uuid.Parse(result.ID.String())
+	if err != nil {
+		return &ObtainedUser{}, err
+	}
+	return result, nil
 }

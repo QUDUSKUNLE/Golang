@@ -16,7 +16,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type ShippingDB struct {
+type PostgresRepository struct {
 	*repository.Database
 }
 
@@ -60,12 +60,12 @@ func PostgresSQLConnection() (*gorm.DB, error) {
 	return DB, nil
 }
 
-func OpenDBConnection() (*ShippingDB, error) {
+func OpenDBConnection() (*PostgresRepository, error) {
 	db, err := PostgresSQLConnection()
 	if err != nil {
 		return nil, err
 	}
-	return &ShippingDB{
+	return &PostgresRepository{
 		Database: &repository.Database{ DB: db },
 	}, nil
 }
