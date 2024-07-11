@@ -58,3 +58,6 @@ Design a shipping app
 
 To Do
 1. How would a shipment be linked to a carrier
+2. Match a shipment to a Rider
+3. Look into carriers API
+4. 

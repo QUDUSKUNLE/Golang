@@ -2,7 +2,6 @@ package shipping
 
 import (
 	"fmt"
-	"errors"
 	"github.com/QUDUSKUNLE/shipping/src/ledger"
 	"github.com/QUDUSKUNLE/shipping/src/model"
 	"github.com/QUDUSKUNLE/shipping/src/notification"
@@ -50,7 +49,7 @@ func UpDatePickUpAdaptor(context echo.Context, pickUp model.PickUp) error {
 	}
 
 	if carrier.UserType != string(model.RIDER) {
-		return errors.New("unauthorized to perform this operation")
+		return fmt.Errorf("unauthorized to perform this operation")
 	}
 	// build a new pick up
 	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)

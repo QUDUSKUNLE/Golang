@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/src"
@@ -21,12 +20,11 @@ func UpdatePickUp(context echo.Context) error {
 	if err := context.Validate(pickUpDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error() })
 	}
-	fmt.Println(pickUpDto)
 	// Initiate a new pick up
 	err := shipping.UpDatePickUpAdaptor(context, *pickUpDto);
 	if err != nil {
 		if err.Error() == "record not found" {
-			return context.JSON(http.StatusUnauthorized, echo.Map{"Message": "User`s unauthorized to perform this operation", "Success": false })
+			return context.JSON(http.StatusUnauthorized, echo.Map{"Message": "User`s unauthorized to perform this operation.", "Success": false })
 		}
 		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": "false" })
 	}
