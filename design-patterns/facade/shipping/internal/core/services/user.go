@@ -2,22 +2,19 @@ package services
 
 import (
 	"fmt"
-
-	"github.com/QUDUSKUNLE/shipping/internal/core/ledger"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
 type UserAdaptor struct {
-	userService *model.User
-	userRepositoryService *ledger.UserRepository
+	userService *domain.User
 	notificationService *Notification
 }
 
-func NewUserAdaptor(userDto model.UserDTO) error {
+
+func (httpHandler *ServicesHandler) SaveUserAdaptor(userDto domain.UserDTO) error {
 	fmt.Println("Initiate a new user registration")
 	userAdaptor := &UserAdaptor{
-		userService: &model.User{},
-		userRepositoryService: &ledger.UserRepository{},
+		userService: &domain.User{},
 		notificationService: &Notification{},
 	}
 	buildUser, err := userAdaptor.userService.BuildNewUser(userDto)
@@ -25,7 +22,7 @@ func NewUserAdaptor(userDto model.UserDTO) error {
 		return err
 	}
 	// Save use in the database
-	err = userAdaptor.userRepositoryService.QueryCreateUser(buildUser);
+	err = httpHandler.Internal.SaveUser(*buildUser);
 	if err != nil {
 		return err
 	}

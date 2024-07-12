@@ -2,36 +2,25 @@ package services
 
 import (
 	"fmt"
-
-	"github.com/QUDUSKUNLE/shipping/internal/core/ledger"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
-	"github.com/QUDUSKUNLE/shipping/internal/core/utils"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
 
 type LoginAdaptor struct {
-	userService *model.User
-	userRepositoryService *ledger.UserRepository
-	utilsService *utils.Utils
+	userService *domain.User
 }
 
-func NewLogInAdaptor(loginDto model.LogInDTO) (string, error) {
+func (httpHandler *ServicesHandler) LogInUserAdaptor(loginDto domain.LogInDTO) (*domain.User, error) {
 	fmt.Println("Initiate a new login")
 	loginAdaptor := &LoginAdaptor{
-		userService: &model.User{},
-		userRepositoryService: &ledger.UserRepository{},
-		utilsService: &utils.Utils{},
+		userService: &domain.User{},
 	}
-	user, err := loginAdaptor.userRepositoryService.QueryLedgerByEmail(loginDto.Email)
+	user, err := httpHandler.Internal.ReadUserByEmail(loginDto.Email)
 	if err != nil {
-		return "", err
+		return &domain.User{}, err
 	}
 	if err := loginAdaptor.userService.ComparePassword(user.Password, loginDto.Password); err != nil {
-		return "", err
+		return  &domain.User{}, err
 	}
-	token, err := loginAdaptor.utilsService.GenerateAccessToken(*user)
-	if err != nil {
-		return "", err
-	}
-	return token, nil
+	return &domain.User{ID: user.ID, UserType: user.UserType}, nil
 }

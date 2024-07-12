@@ -2,14 +2,13 @@ package handlers
 
 import (
 	"net/http"
-
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
-	"github.com/QUDUSKUNLE/shipping/internal/core/services"
+	"fmt"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/labstack/echo/v4"
 )
 
-func UpdatePickUp(context echo.Context) error {
-	pickUpDto := new(model.PickUp)
+func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
+	pickUpDto := new(domain.PickUp)
 	if err := context.Bind(pickUpDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
 			"Message": err.Error(),
@@ -20,8 +19,19 @@ func UpdatePickUp(context echo.Context) error {
 	if err := context.Validate(pickUpDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error() })
 	}
+
+	// Validate carrier
+	carrier, err := handler.ParseUserID(context)
+	if err != nil {
+		return err
+	}
+
+	if carrier.UserType != string(domain.RIDER) {
+		return fmt.Errorf("unauthorized to perform this operation")
+	}
+
 	// Initiate a new pick up
-	err := services.UpDatePickUpAdaptor(context, *pickUpDto);
+	err = handler.ServicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
 	if err != nil {
 		if err.Error() == "record not found" {
 			return context.JSON(http.StatusUnauthorized, echo.Map{"Message": "User`s unauthorized to perform this operation.", "Success": false })

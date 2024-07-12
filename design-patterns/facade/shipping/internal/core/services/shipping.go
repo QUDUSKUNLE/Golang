@@ -2,73 +2,42 @@ package services
 
 import (
 	"time"
-	"errors"
-	"github.com/QUDUSKUNLE/shipping/internal/core/ledger"
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
-	"github.com/QUDUSKUNLE/shipping/internal/core/utils"
-	"github.com/labstack/echo/v4"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
+	"github.com/google/uuid"
 	"fmt"
 )
 
 type ShippingAdaptor struct {
-	utilsService *utils.Utils
-	shippingService *model.Shipping
-	shippingRepositoryService *ledger.ShippingRepository
+	shippingService *domain.Shipping
 }
 
-func NewShippingAdaptor(cont echo.Context, shippingDto *model.ShippingDTO) error {
+func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.ShippingDTO) error {
 	fmt.Println("Initiate a new shipping")
 	adaptor := &ShippingAdaptor{
-		shippingService: &model.Shipping{},
-		shippingRepositoryService: &ledger.ShippingRepository{},
-		utilsService: &utils.Utils{},
+		shippingService: &domain.Shipping{},
 	}
-	// Validate user
-	user, err := adaptor.utilsService.ParseUserID(cont)
-	if err != nil {
+	newShipping := adaptor.shippingService.BuildNewShipping(*shippingDto)
+	if err := httpHandler.Internal.CreateShipping(*newShipping); err != nil {
 		return err
 	}
-
-	if user.UserType != string(model.USER) {
-		return errors.New("unauthorized to perform this operation")
-	}
-	newShipping := adaptor.shippingService.BuildNewShipping(user.ID, *shippingDto)
-	err = adaptor.shippingRepositoryService.ShippingLedger(*newShipping)
-	if err != nil {
-		return err
-	}
-	pickUpDTO := model.PickUpDTO{
+	pickUpDTO := domain.PickUpDTO{
 		ShippingID: newShipping.ID,
 		CarrierID: newShipping.UserID,
-		Status: string(model.SCHEDULED),
+		Status: string(domain.SCHEDULED),
 		PickUpAt: time.Now(),
 	}
-	err = NewPickUpAdaptor(pickUpDTO)
-	if err != nil {
+	if err := httpHandler.NewPickUpAdaptor(pickUpDTO); err != nil {
 		return err
 	}
 	fmt.Println("Shipping created successfully.")
 	return nil
 }
 
-func GetShippingsAdaptor(context echo.Context) ([]model.Shipping, error) {
+func (httpHandler *ServicesHandler) GetShippingsAdaptor(ID uuid.UUID) ([]domain.Shipping, error) {
 	fmt.Println("Initiate a shipping")
-	adaptor := &ShippingAdaptor{
-		utilsService: &utils.Utils{},
-		shippingRepositoryService: &ledger.ShippingRepository{},
-	}
-	user, err := adaptor.utilsService.ParseUserID(context)
+	shippings, err := httpHandler.Internal.GetShippings(ID, "SCHEDULED")
 	if err != nil {
-		return []model.Shipping{}, err
-	}
-	var status string
-	status = context.QueryParams().Get("status")
-	if status == "" {
-		status = "SCHEDULED"
-	}
-	shippings, err := adaptor.shippingRepositoryService.QueryShippingLedger(user.ID, status)
-	if err != nil {
-		return []model.Shipping{}, err
+		return []domain.Shipping{}, err
 	}
 	return shippings, nil
 }

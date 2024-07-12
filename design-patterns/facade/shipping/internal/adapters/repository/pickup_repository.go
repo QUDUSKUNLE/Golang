@@ -1,16 +1,16 @@
 package repository
 
 import (
-	"github.com/QUDUSKUNLE/shipping/internal/core/model"
+	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (database *PostgresRepository) QueryCreatePickUp(pickUp model.PickUp) error {
-	result := database.Create(&model.PickUp{
-		ID: pickUp.ID,
+func (database *PostgresRepository) InitiatePickUp(pickUp domain.PickUp) error {
+	result := database.db.Create(&domain.PickUp{
+		ID:         pickUp.ID,
 		ShippingID: pickUp.ShippingID,
-		UserID: pickUp.UserID,
-		PickUpAt: pickUp.PickUpAt,
-		Status: pickUp.Status,
+		UserID:     pickUp.UserID,
+		PickUpAt:   pickUp.PickUpAt,
+		Status:     pickUp.Status,
 	})
 	if result.Error != nil {
 		return result.Error
@@ -18,12 +18,12 @@ func (database *PostgresRepository) QueryCreatePickUp(pickUp model.PickUp) error
 	return nil
 }
 
-func (database *PostgresRepository) QueryUpdatePickUp(pickUp model.PickUp) error {
-	query := model.PickUp{ID: pickUp.ID, UserID: pickUp.UserID}
-	database.Where(&query).Updates(model.PickUp{
-		PickUpAt: pickUp.PickUpAt,
+func (database *PostgresRepository) UpdatePickUp(pickUp domain.PickUp) error {
+	query := domain.PickUp{ID: pickUp.ID, UserID: pickUp.UserID}
+	database.db.Where(&query).Updates(domain.PickUp{
+		PickUpAt:  pickUp.PickUpAt,
 		UpdatedAt: pickUp.UpdatedAt,
-		Status: pickUp.Status,
+		Status:    pickUp.Status,
 	})
 	return nil
 }
