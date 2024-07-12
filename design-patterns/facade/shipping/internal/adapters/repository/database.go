@@ -35,7 +35,7 @@ func PostgresSQLConnection() (*PostgresRepository, error) {
 		&domain.Shipping{},
 		&domain.PickUp{},
 	); err != nil {
-		log.Fatalf("Error: %s", err.Error())
+		log.Fatalf("Error running struct model migration: %s", err.Error())
 	}
 
 	postgresDB, err := DB.DB()
