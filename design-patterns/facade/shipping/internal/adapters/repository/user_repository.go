@@ -6,7 +6,7 @@ import (
 )
 
 
-func (database *PostgresRepository) ReadUser(ID uuid.UUID) (*domain.User, error) {
+func (database *PostgresRepository) ReadUserAdaptor(ID uuid.UUID) (*domain.User, error) {
 	user := domain.User{ID: ID}
 	result := database.db.First(&user)
 	if result.Error != nil {
@@ -23,23 +23,10 @@ func (database *PostgresRepository) QueryUsers() ([]domain.User, error) {
 	return users, nil
 }
 
-func (database *PostgresRepository) ReadUserByEmail(email string) (*domain.User, error) {
+func (database *PostgresRepository) ReadUserByEmailAdaptor(email string) (*domain.User, error) {
 	user := domain.User{}
 	_ = database.db.Where(&domain.User{Email: email}).First(&user)
 	return &user, nil
-}
-
-func (database *PostgresRepository) SaveUser(user domain.User) error {
-	query := domain.User{
-		Email:    user.Email,
-		Password: user.Password,
-		UserType: user.UserType,
-	}
-	result := database.db.Create(&query)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
 }
 
 func (database *PostgresRepository) SaveUserAdaptor(user domain.User) error {

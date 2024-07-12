@@ -4,7 +4,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (database *PostgresRepository) InitiatePickUp(pickUp domain.PickUp) error {
+func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp domain.PickUp) error {
 	result := database.db.Create(&domain.PickUp{
 		ID:         pickUp.ID,
 		ShippingID: pickUp.ShippingID,
@@ -18,7 +18,7 @@ func (database *PostgresRepository) InitiatePickUp(pickUp domain.PickUp) error {
 	return nil
 }
 
-func (database *PostgresRepository) UpdatePickUp(pickUp domain.PickUp) error {
+func (database *PostgresRepository) UpdatePickUpAdaptor(pickUp domain.PickUp) error {
 	query := domain.PickUp{ID: pickUp.ID, UserID: pickUp.UserID}
 	database.db.Where(&query).Updates(domain.PickUp{
 		PickUpAt:  pickUp.PickUpAt,

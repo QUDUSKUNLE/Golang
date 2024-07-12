@@ -10,7 +10,6 @@ type UserAdaptor struct {
 	notificationService *Notification
 }
 
-
 func (httpHandler *ServicesHandler) SaveUserAdaptor(userDto domain.UserDTO) error {
 	fmt.Println("Initiate a new user registration")
 	userAdaptor := &UserAdaptor{
@@ -22,7 +21,7 @@ func (httpHandler *ServicesHandler) SaveUserAdaptor(userDto domain.UserDTO) erro
 		return err
 	}
 	// Save use in the database
-	err = httpHandler.Internal.SaveUser(*buildUser);
+	err = httpHandler.Internal.SaveUserAdaptor(*buildUser);
 	if err != nil {
 		return err
 	}

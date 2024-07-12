@@ -17,7 +17,7 @@ func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.Shipp
 		shippingService: &domain.Shipping{},
 	}
 	newShipping := adaptor.shippingService.BuildNewShipping(*shippingDto)
-	if err := httpHandler.Internal.CreateShipping(*newShipping); err != nil {
+	if err := httpHandler.Internal.CreateShippingAdaptor(*newShipping); err != nil {
 		return err
 	}
 	pickUpDTO := domain.PickUpDTO{
@@ -35,7 +35,7 @@ func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.Shipp
 
 func (httpHandler *ServicesHandler) GetShippingsAdaptor(ID uuid.UUID) ([]domain.Shipping, error) {
 	fmt.Println("Initiate a shipping")
-	shippings, err := httpHandler.Internal.GetShippings(ID, "SCHEDULED")
+	shippings, err := httpHandler.Internal.GetShippingsAdaptor(ID, "SCHEDULED")
 	if err != nil {
 		return []domain.Shipping{}, err
 	}
