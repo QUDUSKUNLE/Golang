@@ -6,13 +6,13 @@ import (
 )
 
 
-func (database *PostgresRepository) QueryUser(ID uuid.UUID) (domain.User, error) {
+func (database *PostgresRepository) ReadUser(ID uuid.UUID) (*domain.User, error) {
 	user := domain.User{ID: ID}
 	result := database.db.First(&user)
 	if result.Error != nil {
-		return domain.User{}, result.Error
+		return &domain.User{}, result.Error
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (database *PostgresRepository) QueryUsers() ([]domain.User, error) {
@@ -23,13 +23,13 @@ func (database *PostgresRepository) QueryUsers() ([]domain.User, error) {
 	return users, nil
 }
 
-func (database *PostgresRepository) QueryUserByEmail(email string) (*domain.User, error) {
+func (database *PostgresRepository) ReadUserByEmail(email string) (*domain.User, error) {
 	user := domain.User{}
 	_ = database.db.Where(&domain.User{Email: email}).First(&user)
 	return &user, nil
 }
 
-func (database *PostgresRepository) QueryCreateUser(user domain.User) error {
+func (database *PostgresRepository) SaveUser(user domain.User) error {
 	query := domain.User{
 		Email:    user.Email,
 		Password: user.Password,

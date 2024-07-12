@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (database *PostgresRepository) QueryCreateShipping(shipping domain.Shipping) error {
+func (database *PostgresRepository) CreateShipping(shipping domain.Shipping) error {
 	result := database.db.Create(&domain.Shipping{
 		ID:              shipping.ID,
 		UserID:          shipping.UserID,
@@ -20,7 +20,7 @@ func (database *PostgresRepository) QueryCreateShipping(shipping domain.Shipping
 	return nil
 }
 
-func (database *PostgresRepository) QueryShippings(userID uuid.UUID, status string) ([]domain.Shipping, error) {
+func (database *PostgresRepository) GetShippings(userID uuid.UUID, status string) ([]domain.Shipping, error) {
 	var shippings []domain.Shipping
 	result := database.db.Where(&domain.Shipping{UserID: userID}).Preload("PickUp").Limit(10).Find(&shippings, domain.Shipping{UserID: userID})
 	if result.Error != nil {

@@ -64,6 +64,7 @@ type ShippingDTO struct {
 	PickUpAddress   Address     `json:"PickUpAddress" binding:"required" validate:"required"`
 	DeliveryAddress Address     `json:"DeliveryAddress" binding:"required" validate:"required"`
 	ProductType     ProductType `json:"ProductType" binding:"required" validate:"required"`
+	UserID          uuid.UUID
 }
 
 type Address struct {
@@ -91,10 +92,10 @@ func (a *Address) Scan(value interface{}) error {
 	return json.Unmarshal([]byte(addressJSON), a)
 }
 
-func (shipping *Shipping) BuildNewShipping(userID uuid.UUID, ship ShippingDTO) *Shipping {
+func (shipping *Shipping) BuildNewShipping(ship ShippingDTO) *Shipping {
 	return &Shipping{
 		ID:              uuid.New(),
-		UserID:          userID,
+		UserID:          ship.UserID,
 		Description:     ship.Description,
 		PickUpAddress:   ship.PickUpAddress,
 		DeliveryAddress: ship.DeliveryAddress,

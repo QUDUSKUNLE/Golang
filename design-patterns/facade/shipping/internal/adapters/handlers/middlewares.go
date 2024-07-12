@@ -1,9 +1,11 @@
 package handlers
 
 import (
-		"github.com/golang-jwt/jwt/v5"
-		"github.com/google/uuid"
-		"github.com/labstack/echo/v4"
+	"os"
+	"time"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 )
 
 type CurrentUser struct {
@@ -33,4 +35,27 @@ func (httpHandler *HTTPHandler) ParseUserID(context echo.Context) (*CurrentUser,
 		return &CurrentUser{}, err
 	}
 	return result, nil
+}
+
+
+func (util *HTTPHandler) GenerateAccessToken(user CurrentUser) (string, error) {
+	// Get JWT_SECRET_KEY
+	secret := os.Getenv("JWT_SECRET_KEY")
+	// Create a new claims
+	claims := &JwtCustomClaims{
+		user.ID,
+		string(user.UserType),
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+		},
+	}
+	// Create a new JWT access token with claims
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate token
+	token, err := jwtToken.SignedString([]byte(secret))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
