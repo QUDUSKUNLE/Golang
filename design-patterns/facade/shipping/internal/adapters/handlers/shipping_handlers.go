@@ -9,12 +9,8 @@ import (
 
 func (handler *HTTPHandler) NewShipping(context echo.Context) error {
 	shippingDto := new(domain.ShippingDTO)
-	if err := context.Bind(shippingDto); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	// Validate shippingDto
-	if err := context.Validate(shippingDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+	if err := handler.ValidateStruct(context, shippingDto); err != nil {
+		return err
 	}
 
 	// Validate carrier

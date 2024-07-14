@@ -28,6 +28,18 @@ func (httpHandler *HTTPHandler) CurrentUser(context echo.Context) *CurrentUser {
 	}
 }
 
+func (httpHandler *HTTPHandler) ValidateStruct(context echo.Context, obj interface{}) error {
+	// Bind userDto
+	if err := context.Bind(obj); err != nil {
+		return err
+	}
+	// Validate user input
+	if err := context.Validate(obj); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (httpHandler *HTTPHandler) ParseUserID(context echo.Context) (*CurrentUser, error) {
 	result := httpHandler.CurrentUser(context)
 	_, err := uuid.Parse(result.ID.String())

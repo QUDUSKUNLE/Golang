@@ -9,13 +9,8 @@ import (
 
 func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 	deliveryDto := new(dto.DeliveryDTO)
-	if err := context.Bind(deliveryDto); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	// Validate shippingDto
-	if err := context.Validate(deliveryDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+	if err := handler.ValidateStruct(context, deliveryDto); err != nil {
+		return err
 	}
 
 	accountID, err := uuid.Parse(deliveryDto.AccountID)

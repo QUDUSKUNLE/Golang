@@ -10,7 +10,7 @@ type UserAdaptor struct {
 	notificationService *Notification
 }
 
-func (httpHandler *ServicesHandler) SaveUserAdaptor(userDto domain.UserDTO) error {
+func (httpHandler *ServicesHandler) SaveUser(userDto domain.UserDTO) error {
 	fmt.Println("Initiate a new user registration")
 	userAdaptor := &UserAdaptor{
 		userService: &domain.User{},
@@ -27,5 +27,20 @@ func (httpHandler *ServicesHandler) SaveUserAdaptor(userDto domain.UserDTO) erro
 	}
 	userAdaptor.notificationService.SendRegistrationNotification()
 	fmt.Println("Successfully registered a new user")
+	return nil
+}
+
+func (httpHandler *ServicesHandler) ResetPassword(userDto domain.ResetPasswordDto) error {
+	fmt.Println("Initiate a reset password")
+	userAdaptor := &UserAdaptor{
+		notificationService: &Notification{},
+	}
+
+	_, err := httpHandler.Internal.ReadUserByEmailAdaptor(userDto.Email)
+	if err != nil {
+		return fmt.Errorf("user %s with the email: %s", err.Error(), userDto.Email)
+	}
+	userAdaptor.notificationService.SendRegistrationNotification()
+	fmt.Println("Reset Password link sent successfully")
 	return nil
 }

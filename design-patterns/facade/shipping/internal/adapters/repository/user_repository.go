@@ -25,7 +25,10 @@ func (database *PostgresRepository) QueryUsers() ([]domain.User, error) {
 
 func (database *PostgresRepository) ReadUserByEmailAdaptor(email string) (*domain.User, error) {
 	user := domain.User{}
-	_ = database.db.Where(&domain.User{Email: email}).First(&user)
+	result := database.db.Where(&domain.User{Email: email}).First(&user)
+	if result.Error != nil {
+		return &user, result.Error
+	}
 	return &user, nil
 }
 

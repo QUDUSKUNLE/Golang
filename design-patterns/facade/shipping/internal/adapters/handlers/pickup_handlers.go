@@ -9,15 +9,8 @@ import (
 
 func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	pickUpDto := new(domain.PickUp)
-	if err := context.Bind(pickUpDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
-	}
-	// Validate pickUpDto
-	if err := context.Validate(pickUpDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error() })
+	if err := handler.ValidateStruct(context, pickUpDto); err != nil {
+		return err
 	}
 
 	// Validate carrier

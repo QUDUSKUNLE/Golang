@@ -10,16 +10,11 @@ import (
 
 func (handler *HTTPHandler) Register(context echo.Context) error {
 	user := new(domain.UserDTO)
-	// Bind userDto
-	if err := context.Bind(user); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	// Validate user input
-	if err := context.Validate(user); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+	if err := handler.ValidateStruct(context, user); err != nil {
+		return err
 	}
 
-	err := handler.ServicesAdapter.SaveUserAdaptor(*user);
+	err := handler.ServicesAdapter.SaveUser(*user);
 	if err != nil {
 		if err.Error() == "user`s already exist" {
 			return context.JSON(http.StatusConflict, echo.Map{"Message": "User already registered", "Success": false })
@@ -38,13 +33,8 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 
 func (handler *HTTPHandler) Login(context echo.Context) error {
 	loginDto := new(domain.LogInDTO)
-	// Bind loginDto
-	if err := context.Bind(loginDto); err != nil {
-		return context.JSON(http.StatusBadRequest, err)
-	}
-	// Validate user input
-	if err := context.Validate(loginDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error() })
+	if err := handler.ValidateStruct(context, loginDto); err != nil {
+		return err
 	}
 	// Initiate a new login adaptor
 	user, err := handler.ServicesAdapter.LogInUserAdaptor(*loginDto)
@@ -70,4 +60,18 @@ func (handler *HTTPHandler) Restricted(c echo.Context) error {
 	claims := user.Claims.(*JwtCustomClaims)
 	ID := claims.ID
 	return c.JSON(http.StatusOK, echo.Map{"Message": ID.String()})
+}
+
+func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
+	resetPasswordDto := new(domain.ResetPasswordDto)
+	if err := handler.ValidateStruct(context, resetPasswordDto); err != nil {
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+	}
+	if err := handler.ServicesAdapter.ResetPassword(*resetPasswordDto); err != nil {
+		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+	}
+	return context.JSON(http.StatusOK, echo.Map{
+		"Message": "Reset email sent successfully.",
+		"Success": true,
+	})
 }
