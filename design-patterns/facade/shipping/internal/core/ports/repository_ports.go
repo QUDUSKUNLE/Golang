@@ -17,5 +17,7 @@ type RepositoryPorts interface {
 
 	CreateShippingAdaptor(shipping domain.Shipping) error
 	GetShippingsAdaptor(ID uuid.UUID, status string) ([]domain.Shipping, error)
+
+	CarrierPickUps(carrierID uuid.UUID) ([]domain.PickUp, error)
 }
 

@@ -10,12 +10,13 @@ type ExternalPorts interface {
 	GetUser(UserID uuid.UUID) (*domain.User, error)
 	ResetPassword(Email string) error
 
-	PickUp(pickUp domain.PickUpDTO) error
-	UpdatePickUp(pickUp domain.PickUp) error
+	CarrierUpdatePickUp(pickUp domain.PickUp) error
+	CarrierPickUps() error
 	
 	ScheduleShipping(shipping domain.ShippingDTO) error
 	GetShippings(ID uuid.UUID, status string) ([]domain.Shipping, error)
-	CancelShipping() error
+	UpdateShipping() error
+
 
 	ComparePrice() error
 	AddMoneyToWallet() error

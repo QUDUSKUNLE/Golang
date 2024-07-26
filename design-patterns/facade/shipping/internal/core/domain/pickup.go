@@ -22,13 +22,13 @@ type PickUp struct {
 	PickUpAt   		time.Time    `json:"PickUpAt"`
 	CreatedAt  		time.Time    `json:"CreatedAt"`
 	UpdatedAt  		*time.Time   `json:"UpdatedAt"`
-	DeletedAt  		*time.Time   `gorm:"-:all" json:"DeletedAt"`
+	DeletedAt  		*time.Time   `gorm:"-:all" json:"-"`
 	Status     		PickUpStatus `json:"Status"`
 
-	ShippingID  	uuid.UUID    `json:"ShippingID"`
-	Shipping      *Shipping
-	CarrierID     uuid.UUID    `json:"CarrierID"`
-	Carrier       *Carrier
+	ShippingID  	uuid.UUID    `json:"-"`
+	Shipping      *Shipping    `json:"-"`
+	CarrierID     uuid.UUID    `json:"-"`
+	Carrier       *Carrier     `json:"-"`
 }
 
 type PickUpDTO struct {

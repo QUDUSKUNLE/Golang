@@ -8,6 +8,7 @@ func PrivateRoutesAdaptor(p *echo.Group, handler *handlers.HTTPHandler) *echo.Gr
 	p.POST("/shippings", handler.NewShipping)
 	p.GET("/shippings", handler.GetShippings)
 	p.PUT("/pickups", handler.UpdatePickUp)
+	p.GET("/pickups", handler.CarrierPickUps)
 	p.GET("", handler.Restricted)
 	return p
 }

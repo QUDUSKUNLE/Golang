@@ -22,7 +22,7 @@ func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.Shipp
 	}
 	pickUpDTO := domain.PickUpDTO{
 		ShippingID: newShipping.ID,
-		CarrierID: newShipping.UserID,
+		CarrierID: newShipping.CarrierID,
 		Status: string(domain.SCHEDULED),
 		PickUpAt: time.Now(),
 	}

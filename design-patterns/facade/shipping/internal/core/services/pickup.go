@@ -19,7 +19,6 @@ func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) erro
 	pickUp := adaptor.pickUpService.BuildNewPickUp(pick)
 	err := httpHandler.Internal.InitiatePickUpAdaptor(*pickUp);
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	adaptor.notificationService.SendPickUpNotification()

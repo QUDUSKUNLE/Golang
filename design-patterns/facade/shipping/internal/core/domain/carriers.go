@@ -15,10 +15,10 @@ type Carrier struct {
 	CompanyName 		string   		`json:"CompanyName"`
 	CompanyAddress 	Address  		`gorm:"embedded" json:"CompanyAddress"`
 	Contact       	Contact  		`gorm:"embedded" json:"Address"`
-	UserID    			uuid.UUID 	`json:"CarrierID"`
+	UserID    			uuid.UUID 	`json:"-"`
 	User      			*User
 	
-	PickUps   			[]PickUp   `json:"PickUps" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	PickUps   			[]PickUp   `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type CarrierDto struct {

@@ -50,15 +50,17 @@ type Shipping struct {
 	ID              uuid.UUID   `gorm:"primaryKey;->;<-:create" json:"ID"`
 	CreatedAt       time.Time   `json:"CreatedAt"`
 	UpdatedAt       *time.Time  `json:"UpdatedAt"`
-	DeletedAt       *time.Time  `gorm:"-:all" json:"DeletedAt"`
+	DeletedAt       *time.Time  `json:"-"`
 
-	UserID          uuid.UUID   `json:"UserID"`
-	// User            *User
+	UserID          uuid.UUID   `json:"-"`
+	User            *User       `json:"-"`
+	CarrierID       uuid.UUID   `json:"CarrierID"`
+	Carrier         *Carrier    `json:"-"`
 	Description     string      `gorm:"size=150" json:"Description"`
 	PickUpAddress   Address     `gorm:"embedded" json:"PickUpAddress"`
 	DeliveryAddress Address     `gorm:"embedded" json:"DeliveryAddress"`
 	ProductType     ProductType `json:"ProductType"`
-	PickUp          PickUp      `json:"PickUp"`
+	PickUp          PickUp      `json:"-"`
 }
 
 type ShippingDTO struct {
@@ -66,6 +68,7 @@ type ShippingDTO struct {
 	PickUpAddress   Address     `json:"PickUpAddress" binding:"required" validate:"required"`
 	DeliveryAddress Address     `json:"DeliveryAddress" binding:"required" validate:"required"`
 	ProductType     ProductType `json:"ProductType" binding:"required" validate:"required"`
+	CarrierID       uuid.UUID   `json:"CarrierID" binding:"required" validate:"required"`
 	UserID          uuid.UUID
 }
 
@@ -98,6 +101,7 @@ func (shipping *Shipping) BuildNewShipping(ship ShippingDTO) *Shipping {
 	return &Shipping{
 		ID:              uuid.New(),
 		UserID:          ship.UserID,
+		CarrierID:       ship.CarrierID,
 		Description:     ship.Description,
 		PickUpAddress:   ship.PickUpAddress,
 		DeliveryAddress: ship.DeliveryAddress,

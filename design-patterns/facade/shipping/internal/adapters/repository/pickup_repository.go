@@ -1,16 +1,17 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
 func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp domain.PickUp) error {
 	result := database.db.Create(&domain.PickUp{
-		ID:         pickUp.ID,
-		ShippingID: pickUp.ShippingID,
+		ID:            pickUp.ID,
+		ShippingID:    pickUp.ShippingID,
 		CarrierID:     pickUp.CarrierID,
-		PickUpAt:   pickUp.PickUpAt,
-		Status:     pickUp.Status,
+		PickUpAt:      pickUp.PickUpAt,
+		Status:        pickUp.Status,
 	})
 	if result.Error != nil {
 		return result.Error
@@ -26,4 +27,13 @@ func (database *PostgresRepository) UpdatePickUpAdaptor(pickUp domain.PickUp) er
 		Status:    pickUp.Status,
 	})
 	return nil
+}
+
+func (database *PostgresRepository) CarrierPickUps(carrierID uuid.UUID) ([]domain.PickUp, error) {
+	var shippings []domain.PickUp
+	result := database.db.Where(&domain.PickUp{CarrierID: carrierID}).Limit(10).Find(&shippings, domain.PickUp{CarrierID: carrierID})
+	if result.Error != nil {
+		return []domain.PickUp{}, result.Error
+	}
+	return shippings, nil
 }
