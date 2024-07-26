@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-		"gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 type PickUpStatus string
@@ -18,14 +18,17 @@ const (
 
 type PickUp struct {
 	gorm.Model
-	ID         uuid.UUID    `gorm:"primaryKey;->;<-:create" json:"ID"`
-	ShippingID uuid.UUID    `json:"ShippingID"`
-	UserID     uuid.UUID    `json:"CarrierID"`
-	PickUpAt   time.Time    `json:"PickUpAt"`
-	CreatedAt  time.Time    `json:"CreatedAt"`
-	UpdatedAt  *time.Time   `json:"UpdatedAt"`
-	DeletedAt  *time.Time   `gorm:"-:all" json:"DeletedAt"`
-	Status     PickUpStatus `json:"Status"`
+	ID         		uuid.UUID    `gorm:"primaryKey;->;<-:create" json:"ID"`
+	PickUpAt   		time.Time    `json:"PickUpAt"`
+	CreatedAt  		time.Time    `json:"CreatedAt"`
+	UpdatedAt  		*time.Time   `json:"UpdatedAt"`
+	DeletedAt  		*time.Time   `gorm:"-:all" json:"DeletedAt"`
+	Status     		PickUpStatus `json:"Status"`
+
+	ShippingID  	uuid.UUID    `json:"ShippingID"`
+	Shipping      *Shipping
+	CarrierID     uuid.UUID    `json:"CarrierID"`
+	Carrier       *Carrier
 }
 
 type PickUpDTO struct {
@@ -37,20 +40,20 @@ type PickUpDTO struct {
 
 func (pickUp *PickUp) BuildNewPickUp(pick PickUpDTO) *PickUp {
 	return &PickUp{
-		ID:         uuid.New(),
-		ShippingID: pick.ShippingID,
-		UserID:     pick.CarrierID,
-		PickUpAt:   pick.PickUpAt,
-		Status:     PickUpStatus(pick.Status),
+		ID:         	uuid.New(),
+		ShippingID: 	pick.ShippingID,
+		CarrierID:    pick.CarrierID,
+		PickUpAt:   	pick.PickUpAt,
+		Status:     	PickUpStatus(pick.Status),
 	}
 }
 
 func (pi *PickUp) BuildUpdatePickUp(pick PickUp) *PickUp {
 	return &PickUp{
-		ID:         pick.ID,
-		ShippingID: pick.ShippingID,
-		UserID:     pick.UserID,
-		PickUpAt:   time.Now(),
-		Status:     PickUpStatus(pick.Status),
+		ID:         	pick.ID,
+		ShippingID: 	pick.ShippingID,
+		CarrierID:    pick.CarrierID,
+		PickUpAt:   	time.Now(),
+		Status:     	PickUpStatus(pick.Status),
 	}
 }

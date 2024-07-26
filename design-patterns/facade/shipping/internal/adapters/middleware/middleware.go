@@ -11,8 +11,8 @@ type CustomValidator struct {
 	validator *validator.Validate
 }
 
-func (cv *CustomValidator) Validate(inter interface{}) error {
-	if err := cv.validator.Struct(inter); err != nil {
+func (custom *CustomValidator) Validate(inter interface{}) error {
+	if err := custom.validator.Struct(inter); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return nil

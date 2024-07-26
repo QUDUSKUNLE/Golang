@@ -11,22 +11,33 @@ import (
 func (handler *HTTPHandler) Register(context echo.Context) error {
 	user := new(domain.UserDTO)
 	if err := handler.ValidateStruct(context, user); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{
+			"Message": err.Error(),
+			"Success": false,
+		})
 	}
 
 	err := handler.ServicesAdapter.SaveUser(*user);
 	if err != nil {
 		if err.Error() == "user`s already exist" {
-			return context.JSON(http.StatusConflict, echo.Map{"Message": "User already registered", "Success": false })
+			return context.JSON(http.StatusConflict, echo.Map{
+				"Message": "User already registered",
+				"Success": false })
 		}
 		if err.Error() == `incorrect passwords` {
-			return context.JSON(http.StatusBadRequest, echo.Map{"Message": err.Error(), "Success": false })
+			return context.JSON(http.StatusBadRequest, echo.Map{
+				"Message": err.Error(),
+				"Success": false,
+			})
 		}
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": false })
+		return context.JSON(http.StatusConflict, echo.Map{
+			"Message": "User`s already registered.",
+			"Success": false,
+		})
 	}
 	// Process valid user data
 	return context.JSON(http.StatusOK, echo.Map{
-		"Message": "User registered successfully",
+		"Message": "User registered successfully.",
 		"Success": true,
 	})
 }
@@ -34,7 +45,10 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 func (handler *HTTPHandler) Login(context echo.Context) error {
 	loginDto := new(domain.LogInDTO)
 	if err := handler.ValidateStruct(context, loginDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{
+			"Message": err.Error(),
+			"Success": false,
+		})
 	}
 	// Initiate a new login adaptor
 	user, err := handler.ServicesAdapter.LogInUserAdaptor(*loginDto)
@@ -44,7 +58,7 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 			"Success": "false",
 		})
 	}
-	token, err := handler.GenerateAccessToken(CurrentUser{ID: user.ID, UserType: string(user.UserType)})
+	Token, err := handler.GenerateAccessToken(CurrentUser{ID: user.ID, UserType: string(user.UserType)})
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
 			"Message": err.Error(),
@@ -52,7 +66,7 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 		})
 	}
 	// Process valid user data
-	return context.JSON(http.StatusOK, echo.Map{"Token": token})
+	return context.JSON(http.StatusOK, echo.Map{"Token": Token })
 }
 
 func (handler *HTTPHandler) Restricted(c echo.Context) error {

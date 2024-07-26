@@ -13,9 +13,9 @@ import (
 type UserType string
 
 const (
-	USER    UserType = "USER"
-	RIDER   UserType = "RIDER"
-	UNKNOWN UserType = "UNKNOWN"
+	USER    	UserType = "USER"
+	CARRIER   UserType = "CARRIER"
+	UNKNOWN 	UserType = "UNKNOWN"
 )
 
 type User struct {
@@ -26,8 +26,21 @@ type User struct {
 	UserType  UserType   `json:"UserType"`
 	CreatedAt time.Time  `json:"CreatedAt"`
 	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
+
 	Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-	PickUps   []PickUp   `json:"PickUps" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+}
+
+type Profile struct {
+	gorm.Model
+	ID        uuid.UUID  `json:"ID" gorm:"uuid;primaryKey"`
+	CreatedAt time.Time  `json:"CreatedAt"`
+	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
+
+	FullName 	string   `json:"FullName"`
+	Address 	Address  `gorm:"embedded" json:"CompanyAddress"`
+	Contact 	Contact  `gorm:"embedded" json:"ContactAddress"`
+	UserID    uuid.UUID  `json:"CarrierID"`
+	User      *User
 }
 
 type UserDTO struct {
@@ -42,12 +55,16 @@ type LogInDTO struct {
 	Password string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
 }
 
+type ResetPasswordDto struct {
+	Email string `json:"Email" binding:"required" validate:"required,email"`
+}
+
 func (user UserType) ReturnUserString() string {
 	switch user {
 	case USER:
 		return string(USER)
-	case RIDER:
-		return string(RIDER)
+	case CARRIER:
+		return string(CARRIER)
 	}
 	return string(UNKNOWN)
 }
@@ -55,6 +72,17 @@ func (user UserType) ReturnUserString() string {
 func (user *User) BeforeCreate(scope *gorm.DB) error {
 	user.ID = uuid.New()
 	return nil
+}
+
+func (user *User) AfterCreate(scope *gorm.DB) error {
+	if user.UserType == CARRIER {
+		scope.Model(&Carrier{}).Create(&Carrier{UserID: user.ID})
+	}
+	return nil
+}
+
+func (user *User) CarrierChannel(Result chan uuid.UUID) {
+	Result <- user.ID
 }
 
 func (u *User) BuildNewUser(user UserDTO) (*User, error) {

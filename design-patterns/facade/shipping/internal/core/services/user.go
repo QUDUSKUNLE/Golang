@@ -6,20 +6,23 @@ import (
 )
 
 type UserAdaptor struct {
-	userService *domain.User
-	notificationService *Notification
+	userService domain.User
+	carrierService domain.Carrier
+	notificationService Notification
 }
 
 func (httpHandler *ServicesHandler) SaveUser(userDto domain.UserDTO) error {
 	fmt.Println("Initiate a new user registration")
 	userAdaptor := &UserAdaptor{
-		userService: &domain.User{},
-		notificationService: &Notification{},
+		userService: domain.User{},
+		carrierService: domain.Carrier{},
+		notificationService: Notification{},
 	}
 	buildUser, err := userAdaptor.userService.BuildNewUser(userDto)
 	if err != nil {
 		return err
 	}
+
 	// Save use in the database
 	err = httpHandler.Internal.SaveUserAdaptor(*buildUser);
 	if err != nil {
@@ -33,7 +36,7 @@ func (httpHandler *ServicesHandler) SaveUser(userDto domain.UserDTO) error {
 func (httpHandler *ServicesHandler) ResetPassword(userDto domain.ResetPasswordDto) error {
 	fmt.Println("Initiate a reset password")
 	userAdaptor := &UserAdaptor{
-		notificationService: &Notification{},
+		notificationService: Notification{},
 	}
 
 	_, err := httpHandler.Internal.ReadUserByEmailAdaptor(userDto.Email)

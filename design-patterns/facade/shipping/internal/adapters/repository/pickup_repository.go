@@ -8,7 +8,7 @@ func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp domain.PickUp) 
 	result := database.db.Create(&domain.PickUp{
 		ID:         pickUp.ID,
 		ShippingID: pickUp.ShippingID,
-		UserID:     pickUp.UserID,
+		CarrierID:     pickUp.CarrierID,
 		PickUpAt:   pickUp.PickUpAt,
 		Status:     pickUp.Status,
 	})
@@ -19,7 +19,7 @@ func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp domain.PickUp) 
 }
 
 func (database *PostgresRepository) UpdatePickUpAdaptor(pickUp domain.PickUp) error {
-	query := domain.PickUp{ID: pickUp.ID, UserID: pickUp.UserID}
+	query := domain.PickUp{ID: pickUp.ID, CarrierID: pickUp.CarrierID}
 	database.db.Where(&query).Updates(domain.PickUp{
 		PickUpAt:  pickUp.PickUpAt,
 		UpdatedAt: pickUp.UpdatedAt,

@@ -6,13 +6,14 @@ import (
 )
 
 type RepositoryPorts interface {
-	SaveUserAdaptor(user domain.User) error
+	SaveUserAdaptor(user domain.User) (error)
 	ReadUserAdaptor(UserID uuid.UUID) (*domain.User, error)
 	ReadUserByEmailAdaptor(Email string) (*domain.User, error)
 	// SaveUser(user domain.User) error
 
 	InitiatePickUpAdaptor(pickUp domain.PickUp) error
 	UpdatePickUpAdaptor(pickUp domain.PickUp) error
+	SaveCarrierAdaptor(carrier domain.Carrier) error
 
 	CreateShippingAdaptor(shipping domain.Shipping) error
 	GetShippingsAdaptor(ID uuid.UUID, status string) ([]domain.Shipping, error)

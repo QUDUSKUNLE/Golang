@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"fmt"
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -10,17 +9,26 @@ import (
 func (handler *HTTPHandler) NewShipping(context echo.Context) error {
 	shippingDto := new(domain.ShippingDTO)
 	if err := handler.ValidateStruct(context, shippingDto); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, echo.Map{
+			"Message": err.Error(),
+			"Success": false,
+		})
 	}
 
 	// Validate carrier
 	user, err := handler.ParseUserID(context)
 	if err != nil {
-		return err
+		return context.JSON(http.StatusUnauthorized, echo.Map{
+			"Message": err.Error(),
+			"Success": false,
+		})
 	}
 
 	if user.UserType != string(domain.USER) {
-		return fmt.Errorf("unauthorized to perform this operation")
+		return context.JSON(http.StatusUnauthorized, echo.Map{
+			"Message": "Unauthorized to perform this operation",
+			"Success": false,
+		})
 	}
 
 	shippingDto.UserID = user.ID
@@ -38,8 +46,19 @@ func (handler *HTTPHandler) NewShipping(context echo.Context) error {
 func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 	user, err := handler.ParseUserID(context)
 	if err != nil {
-		return err
+		return context.JSON(http.StatusUnauthorized, echo.Map{
+			"Message": err.Error(),
+			"Success": false,
+		})
 	}
+
+	if user.UserType != string(domain.USER) {
+		return context.JSON(http.StatusUnauthorized, echo.Map{
+			"Message": "Unauthorized to perform this operation.",
+			"Success": false,
+		})
+	}
+
 	shippings, err := handler.ServicesAdapter.GetShippingsAdaptor(user.ID);
 	if err != nil {
 		return context.JSON(http.StatusNotImplemented, echo.Map{
