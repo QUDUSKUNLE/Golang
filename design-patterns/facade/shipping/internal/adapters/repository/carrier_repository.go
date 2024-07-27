@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
@@ -16,4 +17,13 @@ func (database *PostgresRepository) SaveCarrierAdaptor(carrier domain.Carrier) e
 		return result.Error
 	}
 	return nil
+}
+
+func (database *PostgresRepository) ReadCarrierAdaptor(ID uuid.UUID) (*domain.Carrier, error) {
+	carrier := domain.Carrier{UserID: ID}
+	result := database.db.First(&carrier)
+	if result.Error != nil {
+		return &domain.Carrier{}, result.Error
+	}
+	return &carrier, nil
 }

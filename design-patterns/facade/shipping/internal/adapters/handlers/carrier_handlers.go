@@ -30,7 +30,7 @@ func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 		})
 	}
 	return context.JSON(http.StatusOK, echo.Map{
-		"Shippings": pickUps,
+		"PickUps": pickUps,
 		"Success": true,
 	})
 }

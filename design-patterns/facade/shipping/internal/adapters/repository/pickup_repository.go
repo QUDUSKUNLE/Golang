@@ -29,9 +29,13 @@ func (database *PostgresRepository) UpdatePickUpAdaptor(pickUp domain.PickUp) er
 	return nil
 }
 
-func (database *PostgresRepository) CarrierPickUps(carrierID uuid.UUID) ([]domain.PickUp, error) {
+func (database *PostgresRepository) CarrierPickUps(userID uuid.UUID) ([]domain.PickUp, error) {
 	var shippings []domain.PickUp
-	result := database.db.Where(&domain.PickUp{CarrierID: carrierID}).Limit(10).Find(&shippings, domain.PickUp{CarrierID: carrierID})
+	carrier, err := database.ReadCarrierAdaptor(userID)
+	if err != nil {
+		return []domain.PickUp{}, err
+	}
+	result := database.db.Preload("Shipping").Where(&domain.PickUp{CarrierID: carrier.ID}).Limit(10).Find(&shippings, domain.PickUp{CarrierID: carrier.ID})
 	if result.Error != nil {
 		return []domain.PickUp{}, result.Error
 	}
