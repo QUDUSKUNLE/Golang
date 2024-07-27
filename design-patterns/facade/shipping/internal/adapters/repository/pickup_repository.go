@@ -35,7 +35,7 @@ func (database *PostgresRepository) CarrierPickUps(userID uuid.UUID) ([]domain.P
 	if err != nil {
 		return []domain.PickUp{}, err
 	}
-	result := database.db.Preload("Shipping").Where(&domain.PickUp{CarrierID: carrier.ID}).Limit(10).Find(&shippings, domain.PickUp{CarrierID: carrier.ID})
+	result := database.db.Preload("Shipping").Limit(10).Find(&shippings, domain.PickUp{CarrierID: carrier.ID})
 	if result.Error != nil {
 		return []domain.PickUp{}, result.Error
 	}
