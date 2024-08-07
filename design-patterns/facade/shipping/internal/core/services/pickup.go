@@ -17,7 +17,7 @@ func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) erro
 		notificationService: &Notification{},
 	}
 	pickUp := adaptor.pickUpService.BuildNewPickUp(pick)
-	err := httpHandler.Internal.InitiatePickUpAdaptor(*pickUp);
+	err := httpHandler.internal.InitiatePickUpAdaptor(*pickUp);
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (httpHandler *ServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUp) er
 	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)
 
 	// Update pcik up ledger
-	if err := httpHandler.Internal.UpdatePickUpAdaptor(*pick); err != nil {
+	if err := httpHandler.internal.UpdatePickUpAdaptor(*pick); err != nil {
 		return err
 	}
 	// Send pick up notification

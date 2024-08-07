@@ -17,7 +17,7 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 		})
 	}
 
-	err := handler.ServicesAdapter.SaveUser(*user);
+	err := handler.servicesAdapter.SaveUser(*user);
 	if err != nil {
 		if err.Error() == "user`s already exist" {
 			return context.JSON(http.StatusConflict, echo.Map{
@@ -51,7 +51,7 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 		})
 	}
 	// Initiate a new login adaptor
-	user, err := handler.ServicesAdapter.LogInUserAdaptor(*loginDto)
+	user, err := handler.servicesAdapter.LogInUserAdaptor(*loginDto)
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{
 			"Message": err.Error(),
@@ -81,7 +81,7 @@ func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
 	if err := handler.ValidateStruct(context, resetPasswordDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
-	if err := handler.ServicesAdapter.ResetPassword(*resetPasswordDto); err != nil {
+	if err := handler.servicesAdapter.ResetPassword(*resetPasswordDto); err != nil {
 		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
 	return context.JSON(http.StatusOK, echo.Map{

@@ -32,7 +32,7 @@ func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	}
 
 	// Initiate a new pick up
-	err = handler.ServicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
+	err = handler.servicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
 	if err != nil {
 		if err.Error() == "record not found" {
 			return context.JSON(http.StatusUnauthorized, echo.Map{

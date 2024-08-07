@@ -15,7 +15,7 @@ func (httpHandler *ServicesHandler) LogInUserAdaptor(loginDto domain.LogInDTO) (
 	loginAdaptor := &LoginAdaptor{
 		userService: &domain.User{},
 	}
-	user, err := httpHandler.Internal.ReadUserByEmailAdaptor(loginDto.Email)
+	user, err := httpHandler.internal.ReadUserByEmailAdaptor(loginDto.Email)
 	if err != nil {
 		return &domain.User{}, err
 	}

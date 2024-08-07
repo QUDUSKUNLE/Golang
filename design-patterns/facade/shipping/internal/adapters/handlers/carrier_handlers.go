@@ -22,7 +22,7 @@ func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 		})
 	}
 
-	pickUps, err := handler.ServicesAdapter.CarrierPickUpsAdaptor(user.ID);
+	pickUps, err := handler.servicesAdapter.CarrierPickUpsAdaptor(user.ID);
 	if err != nil {
 		return context.JSON(http.StatusNotImplemented, echo.Map{
 			"Message": err.Error(),

@@ -24,7 +24,7 @@ func (httpHandler *ServicesHandler) SaveUser(userDto domain.UserDTO) error {
 	}
 
 	// Save use in the database
-	err = httpHandler.Internal.SaveUserAdaptor(*buildUser);
+	err = httpHandler.internal.SaveUserAdaptor(*buildUser);
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func (httpHandler *ServicesHandler) ResetPassword(userDto domain.ResetPasswordDt
 		notificationService: Notification{},
 	}
 
-	_, err := httpHandler.Internal.ReadUserByEmailAdaptor(userDto.Email)
+	_, err := httpHandler.internal.ReadUserByEmailAdaptor(userDto.Email)
 	if err != nil {
 		return fmt.Errorf("user %s with the email: %s", err.Error(), userDto.Email)
 	}

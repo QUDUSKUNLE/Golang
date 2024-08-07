@@ -5,11 +5,11 @@ import (
 )
 
 type HTTPHandler struct {
-	ServicesAdapter services.ServicesHandler
+	servicesAdapter services.ServicesHandler
 }
 
 func HttpAdapter(serviceHandlers services.ServicesHandler) *HTTPHandler {
 	return &HTTPHandler{
-		ServicesAdapter: serviceHandlers,
+		servicesAdapter: serviceHandlers,
 	}
 }

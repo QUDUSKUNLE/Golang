@@ -22,7 +22,7 @@ type Location struct {
 }
 
 type LocationDTO struct {
-	Address Address `json:"Address" binding:"required" validate:"required"`
+	Address []Address `json:"Address" binding:"required" validate:"required"`
 	UserID  uuid.UUID
 }
 
@@ -57,12 +57,12 @@ func (location *Location) BeforeCreate(scope *gorm.DB) error {
 	return nil
 }
 
-func (location *Location) BuildNewLocation(locationDto []LocationDTO) ([]*Location) {
+func (location *Location) BuildNewLocation(locationDto LocationDTO) ([]*Location) {
 	locations := []*Location{}
-	for _, location := range locationDto {
+	for _, address := range locationDto.Address {
 		locations = append(locations, &Location{
-			UserID: location.UserID,
-			Address: location.Address,
+			UserID: locationDto.UserID,
+			Address: address,
 		})
 	}
 	return locations

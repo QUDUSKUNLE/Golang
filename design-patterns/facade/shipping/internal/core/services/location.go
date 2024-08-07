@@ -11,14 +11,14 @@ type LocationAdaptor struct {
 	notificationService *Notification
 }
 
-func (httpHandler *ServicesHandler) NewLocationAdaptor(locationDto []domain.LocationDTO) error {
+func (httpHandler *ServicesHandler) NewLocationAdaptor(locationDto domain.LocationDTO) error {
 	fmt.Println("Initiate new addresses savings")
 	adaptor := &LocationAdaptor{
 		locationService: &domain.Location{},
 		notificationService: &Notification{},
 	}
 	locations := adaptor.locationService.BuildNewLocation(locationDto)
-	err := httpHandler.Internal.SaveAddressAdaptor(locations);
+	err := httpHandler.internal.SaveAddressAdaptor(locations);
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (httpHandler *ServicesHandler) NewLocationAdaptor(locationDto []domain.Loca
 
 func (httpHandler *ServicesHandler) GetLocationAdaptor(addressID, userID uuid.UUID) (*domain.Location, error) {
 	fmt.Println("Get a address")
-	location, err := httpHandler.Internal.ReadAddressAdaptor(addressID, userID);
+	location, err := httpHandler.internal.ReadAddressAdaptor(addressID, userID);
 	if err != nil {
 		return &domain.Location{}, err
 	}
@@ -38,7 +38,7 @@ func (httpHandler *ServicesHandler) GetLocationAdaptor(addressID, userID uuid.UU
 
 func (httpHandler *ServicesHandler) GetLocationsAdaptor(userID uuid.UUID) ([]domain.Location, error) {
 	fmt.Println("Get addresses")
-	location, err := httpHandler.Internal.ReadAddressesAdaptor(userID);
+	location, err := httpHandler.internal.ReadAddressesAdaptor(userID);
 	if err != nil {
 		return []domain.Location{}, err
 	}

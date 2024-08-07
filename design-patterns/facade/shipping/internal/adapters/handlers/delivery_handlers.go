@@ -18,7 +18,7 @@ func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
 	}
 	// Initiate a new delivery
-	newDelivery := handler.ServicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
+	newDelivery := handler.servicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
 
 	// Convert ProductType to string
 	productType := deliveryDto.ProductType.PrintProduct()

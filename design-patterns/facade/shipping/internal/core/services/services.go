@@ -5,11 +5,11 @@ import (
 )
 
 type ServicesHandler struct {
-	Internal ports.RepositoryPorts
+	internal ports.RepositoryPorts
 }
 
 func ServicesAdapter(repositoryPort ports.RepositoryPorts) *ServicesHandler {
 	return &ServicesHandler{
-		Internal: repositoryPort,
+		internal: repositoryPort,
 	}
 }

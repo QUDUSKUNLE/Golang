@@ -8,7 +8,7 @@ import (
 
 func (httpHandler *ServicesHandler) CarrierPickUpsAdaptor(ID uuid.UUID) ([]domain.PickUp, error) {
 	fmt.Println("Get Carrier pick ups")
-	pickUps, err := httpHandler.Internal.CarrierPickUps(ID)
+	pickUps, err := httpHandler.internal.CarrierPickUps(ID)
 	if err != nil {
 		return []domain.PickUp{}, err
 	}

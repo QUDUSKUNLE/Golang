@@ -33,7 +33,7 @@ func (handler *HTTPHandler) NewShipping(context echo.Context) error {
 
 	shippingDto.UserID = user.ID
 	// Initiate a new shipping
-	err = handler.ServicesAdapter.NewShippingAdaptor(shippingDto);
+	err = handler.servicesAdapter.NewShippingAdaptor(shippingDto);
 	if err != nil {
 		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": false })
 	}
@@ -59,7 +59,7 @@ func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 		})
 	}
 
-	shippings, err := handler.ServicesAdapter.GetShippingsAdaptor(user.ID);
+	shippings, err := handler.servicesAdapter.GetShippingsAdaptor(user.ID);
 	if err != nil {
 		return context.JSON(http.StatusNotImplemented, echo.Map{
 			"Message": err.Error(),
