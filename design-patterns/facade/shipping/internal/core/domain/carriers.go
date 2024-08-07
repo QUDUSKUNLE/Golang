@@ -21,7 +21,7 @@ type Carrier struct {
 	PickUps   			[]PickUp   `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
-type CarrierDto struct {
+type CarrierDTO struct {
 	CompanyName     string `json:"CompanyName" binding:"required" validate:"required,gte=6,lte=1000"`
 	CompanyAddress  Address `json:"CompanyAddress" binding:"required" validate:"required"`
 	Contact         Contact  `json:"Contact" binding:"required" validate:"required"`
@@ -33,8 +33,7 @@ func (carrier *Carrier) BeforeCreate(scope *gorm.DB) error {
 	return nil
 }
 
-
-func (carr *Carrier) BuildNewCarrier(carrierDto CarrierDto) (*Carrier, error) {
+func (carr *Carrier) BuildNewCarrier(carrierDto CarrierDTO) (*Carrier, error) {
 	return &Carrier{
 		UserID: carrierDto.UserID,
 	}, nil

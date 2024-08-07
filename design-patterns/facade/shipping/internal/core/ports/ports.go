@@ -17,16 +17,16 @@ type ExternalPorts interface {
 	GetShippings(ID uuid.UUID, status string) ([]domain.Shipping, error)
 	UpdateShipping() error
 
-
-	ComparePrice() error
-	AddMoneyToWallet() error
-	CheckBalance() error
-	Tracking() error
-
+	// Save Addresses
 	SaveAddress() error
 	UpdateAddress() error
 	GetAddress() error
 	DeleteAddress() error
 	GetAddresses() error
+
+	ComparePrice() error
+	AddMoneyToWallet() error
+	CheckBalance() error
+	Tracking() error
 }
 

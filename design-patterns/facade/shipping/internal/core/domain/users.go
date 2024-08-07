@@ -28,19 +28,8 @@ type User struct {
 	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
 
 	Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-}
 
-type Profile struct {
-	gorm.Model
-	ID        uuid.UUID  `json:"ID" gorm:"uuid;primaryKey"`
-	CreatedAt time.Time  `json:"CreatedAt"`
-	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
-
-	FullName 	string   `json:"FullName"`
-	Address 	Address  `gorm:"embedded" json:"CompanyAddress"`
-	Contact 	Contact  `gorm:"embedded" json:"ContactAddress"`
-	UserID    uuid.UUID  `json:"CarrierID"`
-	User      *User
+	Addresses []Location `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type UserDTO struct {
@@ -79,10 +68,6 @@ func (user *User) AfterCreate(scope *gorm.DB) error {
 		scope.Model(&Carrier{}).Create(&Carrier{UserID: user.ID})
 	}
 	return nil
-}
-
-func (user *User) CarrierChannel(Result chan uuid.UUID) {
-	Result <- user.ID
 }
 
 func (u *User) BuildNewUser(user UserDTO) (*User, error) {

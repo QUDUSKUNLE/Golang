@@ -16,6 +16,10 @@ func (notification *Notification) SendReturnNotification() {
 	fmt.Println("Sending return notification.")
 }
 
+func (notification *Notification) SendAddressNotification() {
+	fmt.Println("Sending address notification.")
+}
+
 func (notification *Notification) SendWalletCreditNotification() {
 	fmt.Println("Sending wallet credit notification")
 }
