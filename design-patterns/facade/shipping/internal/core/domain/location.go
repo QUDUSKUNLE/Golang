@@ -13,12 +13,12 @@ type Location struct {
 	gorm.Model
 	ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"ID"`
 	CreatedAt time.Time  `json:"CreatedAt"`
-	UpdatedAt *time.Time `json:"UpdatedAt"`
-	DeletedAt *time.Time `json:"DeletedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Address Address   `gorm:"embedded" json:"Address"`
-	UserID  uuid.UUID `json:"-"`
-	User    *User     `json:"-"`
+	Address Address   	`gorm:"embedded" json:"Address"`
+	UserID  uuid.UUID 	`json:"-"`
+	User    *User     	`json:"-"`
 }
 
 type LocationDTO struct {
@@ -27,6 +27,7 @@ type LocationDTO struct {
 }
 
 type Address struct {
+	Description *string  `json:"Description"`
 	StreetNo   int     `json:"StreetNo" binding:"required,gte=0,let=1000" validate:"required"`
 	StreetName string  `json:"StreetName" binding:"required,max=50" validate:"required"`
 	Province   string  `json:"Province" binding:"required,max=50" validate:"required"`

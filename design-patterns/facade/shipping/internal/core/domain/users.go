@@ -25,8 +25,8 @@ type User struct {
 	Password  string     `json:"Password"`
 	UserType  UserType   `json:"UserType"`
 	CreatedAt time.Time  `json:"CreatedAt"`
-	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
-	DeletedAt       *time.Time  `json:"DeletedAt"`
+	UpdatedAt time.Time  `json:"UpdatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 
