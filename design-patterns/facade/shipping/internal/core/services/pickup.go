@@ -2,12 +2,14 @@ package services
 
 import (
 	"fmt"
+	"log"
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
 type PickUpAdaptor struct {
 	pickUpService *domain.PickUp
 	notificationService *Notification
+	labelService *LabelService
 }
 
 func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) error {
@@ -15,6 +17,7 @@ func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) erro
 	adaptor := &PickUpAdaptor{
 		pickUpService: &domain.PickUp{},
 		notificationService: &Notification{},
+		labelService: &LabelService{},
 	}
 	pickUp := adaptor.pickUpService.BuildNewPickUp(pick)
 	err := httpHandler.internal.InitiatePickUpAdaptor(*pickUp);
@@ -22,6 +25,9 @@ func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) erro
 		return err
 	}
 	adaptor.notificationService.SendPickUpNotification()
+	if err := adaptor.labelService.CreateShippingLabel(pickUp.ShippingID.String()); err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("Parcel pickup initiated successfully.")
 	return nil
 }
