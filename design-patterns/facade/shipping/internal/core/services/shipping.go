@@ -7,16 +7,10 @@ import (
 	"fmt"
 )
 
-type ShippingAdaptor struct {
-	shippingService *domain.Shipping
-}
-
 func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.ShippingDTO) error {
 	fmt.Println("Initiate a new shipping")
-	adaptor := &ShippingAdaptor{
-		shippingService: &domain.Shipping{},
-	}
-	newShipping := adaptor.shippingService.BuildNewShipping(*shippingDto)
+	systemsHandler := httpHandler.NewServicesFacade()
+	newShipping := systemsHandler.shippingService.BuildNewShipping(*shippingDto)
 	if err := httpHandler.internal.CreateShippingAdaptor(*newShipping); err != nil {
 		return err
 	}

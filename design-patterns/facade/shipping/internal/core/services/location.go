@@ -6,23 +6,15 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-type LocationAdaptor struct {
-	locationService *domain.Location
-	notificationService *Notification
-}
-
 func (httpHandler *ServicesHandler) NewLocationAdaptor(locationDto domain.LocationDTO) error {
 	fmt.Println("Initiate new addresses savings")
-	adaptor := &LocationAdaptor{
-		locationService: &domain.Location{},
-		notificationService: &Notification{},
-	}
-	locations := adaptor.locationService.BuildNewLocation(locationDto)
+	systemsHandler := httpHandler.NewServicesFacade()
+	locations := systemsHandler.locationService.BuildNewLocation(locationDto)
 	err := httpHandler.internal.SaveAddressAdaptor(locations);
 	if err != nil {
 		return err
 	}
-	adaptor.notificationService.SendAddressNotification()
+	systemsHandler.notificationService.SendAddressNotification()
 	fmt.Println("New addresses saved successfully.")
 	return nil
 }

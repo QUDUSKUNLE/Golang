@@ -6,26 +6,16 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-type PickUpAdaptor struct {
-	pickUpService *domain.PickUp
-	notificationService *Notification
-	labelService *LabelService
-}
-
 func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) error {
 	fmt.Println("Initiate a new pick up")
-	adaptor := &PickUpAdaptor{
-		pickUpService: &domain.PickUp{},
-		notificationService: &Notification{},
-		labelService: &LabelService{},
-	}
-	pickUp := adaptor.pickUpService.BuildNewPickUp(pick)
+	systemsHandler := httpHandler.NewServicesFacade()
+	pickUp := systemsHandler.pickUpService.BuildNewPickUp(pick)
 	err := httpHandler.internal.InitiatePickUpAdaptor(*pickUp);
 	if err != nil {
 		return err
 	}
-	adaptor.notificationService.SendPickUpNotification()
-	if err := adaptor.labelService.CreateShippingLabel(pickUp.ShippingID.String()); err != nil {
+	systemsHandler.notificationService.SendPickUpNotification()
+	if err := systemsHandler.labelService.CreateShippingLabel(pickUp.ShippingID.String()); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("Parcel pickup initiated successfully.")
@@ -34,19 +24,16 @@ func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) erro
 
 func (httpHandler *ServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUp) error {
 	fmt.Println("Update a parcel pick up")
-	adaptor := &PickUpAdaptor{
-		pickUpService: &domain.PickUp{},
-		notificationService: &Notification{},
-	}
+	systemsHandler := httpHandler.NewServicesFacade()
 	// build a new pick up
-	pick := adaptor.pickUpService.BuildUpdatePickUp(pickUp)
+	pick := systemsHandler.pickUpService.BuildUpdatePickUp(pickUp)
 
 	// Update pcik up ledger
 	if err := httpHandler.internal.UpdatePickUpAdaptor(*pick); err != nil {
 		return err
 	}
 	// Send pick up notification
-	adaptor.notificationService.SendPickUpNotification()
+	systemsHandler.notificationService.SendPickUpNotification()
 	fmt.Println("Parcel pickup updated successfully.")
 	return nil
 }
