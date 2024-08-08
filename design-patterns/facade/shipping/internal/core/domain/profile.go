@@ -11,6 +11,7 @@ type Profile struct {
 	ID        uuid.UUID  `json:"ID" gorm:"uuid;primaryKey"`
 	CreatedAt time.Time  `json:"CreatedAt"`
 	UpdatedAt *time.Time `json:"UpdatedAt,omitempty"`
+	DeletedAt  		*time.Time   `json:"DeletedAt"`
 
 	FullName 	string   `json:"FullName"`
 	Address 	Address  `gorm:"embedded" json:"CompanyAddress"`

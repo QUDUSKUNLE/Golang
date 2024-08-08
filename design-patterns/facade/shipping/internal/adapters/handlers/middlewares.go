@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"net/http"
 	"os"
 	"time"
 
@@ -74,16 +73,9 @@ func (util *HTTPHandler) GenerateAccessToken(user CurrentUser) (string, error) {
 	return token, nil
 }
 
-func (util *HTTPHandler) Unauthorized(message string, context echo.Context) error {
-	return context.JSON(http.StatusUnauthorized, echo.Map{
-		"Message": message,
-		"Success": false,
-	})
-}
-
 func (util *HTTPHandler) ComputeErrorResponse(status int, message interface{}, context echo.Context) error {
 	return context.JSON(status, echo.Map{
-		"Message": message,
+		"Error": message,
 		"Success": false,
 	})
 }

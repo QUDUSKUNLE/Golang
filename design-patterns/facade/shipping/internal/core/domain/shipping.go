@@ -11,7 +11,7 @@ type Shipping struct {
 	ID              uuid.UUID   `gorm:"primaryKey;->;<-:create" json:"ID"`
 	CreatedAt       time.Time   `json:"CreatedAt"`
 	UpdatedAt       *time.Time  `json:"UpdatedAt"`
-	DeletedAt       *time.Time  `json:"-"`
+	DeletedAt       *time.Time  `json:"DeletedAt"`
 
 	UserID          uuid.UUID   `json:"-"`
 	User            *User       `json:"-"`

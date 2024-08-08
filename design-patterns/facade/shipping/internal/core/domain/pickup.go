@@ -22,7 +22,7 @@ type PickUp struct {
 	PickUpAt   		time.Time    `json:"PickUpAt"`
 	CreatedAt  		time.Time    `json:"CreatedAt"`
 	UpdatedAt  		*time.Time   `json:"UpdatedAt"`
-	DeletedAt  		*time.Time   `json:"-"`
+	DeletedAt  		*time.Time   `json:"DeletedAt"`
 	Status     		PickUpStatus `json:"Status"`
 
 	ShippingID  	uuid.UUID    `json:"-"`

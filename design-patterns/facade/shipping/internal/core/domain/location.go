@@ -1,24 +1,24 @@
 package domain
 
 import (
-	"time"
-	"errors"
-	"gorm.io/gorm"
-	"github.com/google/uuid"
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+	"time"
 )
 
 type Location struct {
 	gorm.Model
-	ID              uuid.UUID   `gorm:"primaryKey;->;<-:create" json:"ID"`
-	CreatedAt       time.Time   `json:"CreatedAt"`
-	UpdatedAt       *time.Time  `json:"UpdatedAt"`
-	DeletedAt       *time.Time  `json:"-"`
+	ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"ID"`
+	CreatedAt time.Time  `json:"CreatedAt"`
+	UpdatedAt *time.Time `json:"UpdatedAt"`
+	DeletedAt *time.Time `json:"DeletedAt"`
 
-	Address          Address    `gorm:"embedded" json:"Address"`
-	UserID           uuid.UUID  `json:"-"`
-	User             *User      `json:"-"`
+	Address Address   `gorm:"embedded" json:"Address"`
+	UserID  uuid.UUID `json:"-"`
+	User    *User     `json:"-"`
 }
 
 type LocationDTO struct {
@@ -27,10 +27,10 @@ type LocationDTO struct {
 }
 
 type Address struct {
-	StreetNo   int    `json:"StreetNo" binding:"required,gte=0,let=1000" validate:"required"`
-	StreetName string `json:"StreetName" binding:"required,max=50" validate:"required"`
-	Province   string `json:"Province" binding:"required,max=50" validate:"required"`
-	State      string `json:"State" binding:"required,max=50" validate:"required"`
+	StreetNo   int     `json:"StreetNo" binding:"required,gte=0,let=1000" validate:"required"`
+	StreetName string  `json:"StreetName" binding:"required,max=50" validate:"required"`
+	Province   string  `json:"Province" binding:"required,max=50" validate:"required"`
+	State      string  `json:"State" binding:"required,max=50" validate:"required"`
 	Country    Country `json:"Country"`
 }
 
@@ -57,11 +57,11 @@ func (location *Location) BeforeCreate(scope *gorm.DB) error {
 	return nil
 }
 
-func (location *Location) BuildNewLocation(locationDto LocationDTO) ([]*Location) {
+func (location *Location) BuildNewLocation(locationDto LocationDTO) []*Location {
 	locations := []*Location{}
 	for _, address := range locationDto.Address {
 		locations = append(locations, &Location{
-			UserID: locationDto.UserID,
+			UserID:  locationDto.UserID,
 			Address: address,
 		})
 	}

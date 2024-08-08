@@ -15,8 +15,9 @@ func (database *PostgresRepository) ReadAddressAdaptor(addressID, userID uuid.UU
 }
 
 func (database *PostgresRepository) ReadAddressesAdaptor(userID uuid.UUID) ([]domain.Location, error) {
-	locations := []domain.Location{}
-	if err := database.db.Where(&domain.Location{UserID: userID}).Find(&locations); err != nil {
+	var locations []domain.Location
+	result := database.db.Find(&locations, domain.Location{UserID: userID}).Limit(10);
+	if result.Error != nil {
 		return []domain.Location{}, nil
 	}
 	return locations, nil

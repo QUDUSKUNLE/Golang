@@ -11,6 +11,7 @@ type Carrier struct {
 	ID        			uuid.UUID  `json:"ID" gorm:"uuid;primaryKey"`
 	CreatedAt 			time.Time  `json:"CreatedAt"`
 	UpdatedAt 			*time.Time `json:"UpdatedAt,omitempty"`
+	DeletedAt       *time.Time `json:"DeletedAt"`
 
 	CompanyName 		string   		`json:"CompanyName"`
 	CompanyAddress 	Address  		`gorm:"embedded" json:"CompanyAddress"`
