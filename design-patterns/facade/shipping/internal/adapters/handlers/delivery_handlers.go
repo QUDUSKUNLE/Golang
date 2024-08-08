@@ -10,12 +10,14 @@ import (
 func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 	deliveryDto := new(dto.DeliveryDTO)
 	if err := handler.ValidateStruct(context, deliveryDto); err != nil {
-		return err
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(),
+			context)
 	}
 
 	accountID, err := uuid.Parse(deliveryDto.AccountID)
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(),
+			context)
 	}
 	// Initiate a new delivery
 	newDelivery := handler.servicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
@@ -25,10 +27,8 @@ func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 
 	// Deliver a product
 	if err := newDelivery.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
-		return context.JSON(http.StatusNotAcceptable, echo.Map{"Message": err.Error(), "Success": false})
+		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
+			context)
 	}
-	return context.JSON(http.StatusOK, echo.Map{
-		"Message": "Product is delivered.",
-		"Success": true,
-	})
+	return handler.ComputeResponseMessage(http.StatusOK, PRODUCT_IS_DELIVERED, context)
 }
