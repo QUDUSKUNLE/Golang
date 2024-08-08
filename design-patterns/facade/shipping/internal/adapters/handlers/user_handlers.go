@@ -11,81 +11,56 @@ import (
 func (handler *HTTPHandler) Register(context echo.Context) error {
 	user := new(domain.UserDTO)
 	if err := handler.ValidateStruct(context, user); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 
 	err := handler.servicesAdapter.SaveUser(*user);
 	if err != nil {
-		if err.Error() == "user`s already exist" {
-			return context.JSON(http.StatusConflict, echo.Map{
-				"Message": "User already registered",
-				"Success": false })
+		if err.Error() == string(USER_ALREADY_EXIST) {
+			return handler.ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 		}
-		if err.Error() == `incorrect passwords` {
-			return context.JSON(http.StatusBadRequest, echo.Map{
-				"Message": err.Error(),
-				"Success": false,
-			})
+
+		if err.Error() == string(INCORRECT_PASSWORDS) {
+			return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 		}
-		return context.JSON(http.StatusConflict, echo.Map{
-			"Message": "User`s already registered.",
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 	}
 	// Process valid user data
-	return context.JSON(http.StatusOK, echo.Map{
-		"Message": "User registered successfully.",
-		"Success": true,
-	})
+	return handler.ComputeResponseMessage(http.StatusOK,USER_REGISTERED_SUCCESSFULLY, context)
 }
 
 func (handler *HTTPHandler) Login(context echo.Context) error {
 	loginDto := new(domain.LogInDTO)
 	if err := handler.ValidateStruct(context, loginDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	// Initiate a new login adaptor
 	user, err := handler.servicesAdapter.LogInUserAdaptor(*loginDto)
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": "false",
-		})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	Token, err := handler.GenerateAccessToken(CurrentUser{ID: user.ID, UserType: string(user.UserType)})
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": "false",
-		})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	// Process valid user data
-	return context.JSON(http.StatusOK, echo.Map{"Token": Token })
+	return handler.ComputeResponseMessage(http.StatusOK, Token, context)
 }
 
 func (handler *HTTPHandler) Restricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*JwtCustomClaims)
 	ID := claims.ID
-	return c.JSON(http.StatusOK, echo.Map{"Message": ID.String()})
+	return handler.ComputeResponseMessage(http.StatusOK, ID.String(), c)
 }
 
 func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
 	resetPasswordDto := new(domain.ResetPasswordDto)
 	if err := handler.ValidateStruct(context, resetPasswordDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	if err := handler.servicesAdapter.ResetPassword(*resetPasswordDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{"Success": false, "Message": err.Error()})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
-	return context.JSON(http.StatusOK, echo.Map{
-		"Message": "Reset email sent successfully.",
-		"Success": true,
-	})
+	return handler.ComputeResponseMessage(http.StatusOK, RESET_EMAIL_SENT_SUCCESSFULLY, context)
 }

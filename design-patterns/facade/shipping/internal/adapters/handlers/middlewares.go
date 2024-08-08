@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"net/http"
 	"os"
 	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -70,4 +72,25 @@ func (util *HTTPHandler) GenerateAccessToken(user CurrentUser) (string, error) {
 		return "", err
 	}
 	return token, nil
+}
+
+func (util *HTTPHandler) Unauthorized(message string, context echo.Context) error {
+	return context.JSON(http.StatusUnauthorized, echo.Map{
+		"Message": message,
+		"Success": false,
+	})
+}
+
+func (util *HTTPHandler) ComputeErrorResponse(status int, message interface{}, context echo.Context) error {
+	return context.JSON(status, echo.Map{
+		"Message": message,
+		"Success": false,
+	})
+}
+
+func (util *HTTPHandler) ComputeResponseMessage(status int, message interface{}, context echo.Context) error {
+	return context.JSON(status, echo.Map{
+		"Result": message,
+		"Success": true,
+	})
 }

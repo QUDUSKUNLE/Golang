@@ -9,26 +9,18 @@ import (
 func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 	user, err := handler.ParseUserID(context)
 	if err != nil {
-		return context.JSON(http.StatusUnauthorized, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
 	}
 
 	if user.UserType != string(domain.CARRIER) {
-		return context.JSON(http.StatusUnauthorized, echo.Map{
-			"Message": "Unauthorized to perform this operation.",
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, "Unauthorized to perform this operation.", context)
 	}
 
 	pickUps, err := handler.servicesAdapter.CarrierPickUpsAdaptor(user.ID);
 	if err != nil {
-		return context.JSON(http.StatusNotImplemented, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
 	}
+
 	return context.JSON(http.StatusOK, echo.Map{
 		"PickUps": pickUps,
 		"Success": true,

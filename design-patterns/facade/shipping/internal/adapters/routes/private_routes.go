@@ -4,11 +4,13 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/handlers"
 	"github.com/labstack/echo/v4"
 )
-func PrivateRoutesAdaptor(p *echo.Group, handler *handlers.HTTPHandler) *echo.Group {
-	p.POST("/shippings", handler.NewShipping)
-	p.GET("/shippings", handler.GetShippings)
-	p.PUT("/pickups", handler.UpdatePickUp)
-	p.GET("/pickups", handler.CarrierPickUps)
-	p.GET("", handler.Restricted)
-	return p
+func PrivateRoutesAdaptor(private *echo.Group, handler *handlers.HTTPHandler) *echo.Group {
+	private.POST("/shippings", handler.NewShipping)
+	private.GET("/shippings", handler.GetShippings)
+	private.PUT("/pickups", handler.UpdatePickUp)
+	private.GET("/pickups", handler.CarrierPickUps)
+	private.POST("/addresses", handler.NewAddress)
+
+	private.GET("", handler.Restricted)
+	return private
 }
