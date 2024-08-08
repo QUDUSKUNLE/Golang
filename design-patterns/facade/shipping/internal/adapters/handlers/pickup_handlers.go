@@ -9,43 +9,26 @@ import (
 func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	pickUpDto := new(domain.PickUp)
 	if err := handler.ValidateStruct(context, pickUpDto); err != nil {
-		return context.JSON(http.StatusBadRequest, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 
 	// Validate carrier
 	carrier, err := handler.ParseUserID(context)
 	if err != nil {
-		return context.JSON(http.StatusUnauthorized, echo.Map{
-			"Message": err.Error(),
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
 	}
 
 	if carrier.UserType != string(domain.CARRIER) {
-		return context.JSON(http.StatusUnauthorized, echo.Map{
-			"Message": "Unauthorized to perform this operation.",
-			"Success": false,
-		})
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
 	// Initiate a new pick up
 	err = handler.servicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
 	if err != nil {
-		if err.Error() == "record not found" {
-			return context.JSON(http.StatusUnauthorized, echo.Map{
-				"Message": "User`s unauthorized to perform this operation.",
-				"Success": false })
+		if err.Error() == string(RECORD_NOT_FOUND) {
+			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 		}
-		return context.JSON(http.StatusNotAcceptable, echo.Map{
-			"Message": err.Error(),
-			"Success": "false",
-		})
+		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(), context)
 	}
-	return context.JSON(http.StatusOK, echo.Map{
-		"Message": "Update parcel successfully.",
-		"Success": true,
-	})
+	return handler.ComputeResponseMessage(http.StatusOK, UPDATE_PARCEL_SUCCESSFULLY, context)
 }

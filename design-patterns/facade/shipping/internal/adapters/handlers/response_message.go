@@ -8,4 +8,5 @@ const (
 	// Shipping
 	PRODUCT_SCHEDULED_FOR_SHIPPING ResponseMessage = "Product is scheduled for shipping."
 	PRODUCT_IS_DELIVERED ResponseMessage = "Product is delivered."
+	UPDATE_PARCEL_SUCCESSFULLY ResponseMessage = "Update parcel successfully."
 )
