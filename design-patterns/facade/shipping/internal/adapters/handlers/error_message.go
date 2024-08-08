@@ -9,4 +9,6 @@ const (
 
 	UNAUTHORIZED_TO_PERFORM_OPERATION ErrorMessage = "Unauthorized to perform this operation"
 	RECORD_NOT_FOUND ErrorMessage = "record not found"
+
+	ADDRESS_ALREADY_EXIST ErrorMessage = "Address already exist."
 )
