@@ -32,7 +32,7 @@ type Address struct {
 	StreetName string  `json:"StreetName" binding:"required,max=50" validate:"required"`
 	Province   string  `json:"Province" binding:"required,max=50" validate:"required"`
 	State      string  `json:"State" binding:"required,max=50" validate:"required"`
-	Country    Country `json:"Country"`
+	Country    Country `json:"Country" binding:"required,max=50" validate:"required"`
 }
 
 func (a Address) Value() (driver.Value, error) {
