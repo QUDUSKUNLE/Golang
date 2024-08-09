@@ -6,26 +6,16 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-type DeliveryAdaptor struct {
-	user *domain.User
-	shipping *domain.Shipping
-	notification *Notification
-}
-
-func (httpHandler *ServicesHandler) NewDeliveryAdaptor(accountID uuid.UUID, productType domain.ProductType) *DeliveryAdaptor {
+func (httpHandler *ServicesHandler) NewDeliveryAdaptor(accountID uuid.UUID, productType domain.ProductType) error {
 	fmt.Println("Initiate a new delivery")
-	delivery :=  &DeliveryAdaptor{
-		user: &domain.User{},
-		shipping: &domain.Shipping{},
-		notification: &Notification{},
-	}
 	fmt.Println("New delivery initiated successfully.")
-	return delivery
+	return nil
 }
 
-func (delivery *DeliveryAdaptor) NewDelivery(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
+func (httpHandler *ServicesHandler) NewDelivery(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
 	fmt.Println("Start a new delivery.")
-	delivery.notification.SendDeliveryNotification()
+	systemsHandler := httpHandler.NewServicesFacade()
+	systemsHandler.notificationService.SendDeliveryNotification()
 	fmt.Println("Product is delivered successfully.")
 	return nil
 }

@@ -20,13 +20,15 @@ func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 			context)
 	}
 	// Initiate a new delivery
-	newDelivery := handler.servicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType)
-
+	if err := handler.servicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType); err != nil {
+		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
+			context)
+	}
 	// Convert ProductType to string
 	productType := deliveryDto.ProductType.PrintProduct()
 
 	// Deliver a product
-	if err := newDelivery.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
+	if err := handler.servicesAdapter.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
 			context)
 	}
