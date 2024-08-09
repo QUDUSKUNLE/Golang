@@ -27,7 +27,7 @@ func (handler *HTTPHandler) NewShipping(context echo.Context) error {
 
 	shippingDto.UserID = user.ID
 	// Initiate a new shipping
-	err = handler.servicesAdapter.NewShippingAdaptor(shippingDto);
+	err = handler.internalServicesAdapter.NewShippingAdaptor(shippingDto);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
 		context)
@@ -45,7 +45,7 @@ func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
-	shippings, err := handler.servicesAdapter.GetShippingsAdaptor(user.ID);
+	shippings, err := handler.internalServicesAdapter.GetShippingsAdaptor(user.ID);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
 	}

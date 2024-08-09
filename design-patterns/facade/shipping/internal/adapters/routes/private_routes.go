@@ -12,6 +12,7 @@ func PrivateRoutesAdaptor(private *echo.Group, handler *handlers.HTTPHandler) *e
 	private.POST("/addresses", handler.NewAddress)
 	private.GET("/addresses", handler.GetAddresses)
 	private.GET("/addresses/:addressID", handler.GetAddress)
+	private.POST("/packaging", handler.Packaging)
 
 	private.GET("", handler.Restricted)
 	return private

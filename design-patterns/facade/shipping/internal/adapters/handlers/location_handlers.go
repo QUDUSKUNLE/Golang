@@ -24,7 +24,7 @@ func (handler *HTTPHandler) NewAddress(context echo.Context) error {
 	}
 
 	location.UserID = user.ID
-	err = handler.servicesAdapter.NewLocationAdaptor(*location);
+	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
@@ -47,7 +47,7 @@ func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
-	location, err := handler.servicesAdapter.GetLocationAdaptor(addressID, user.ID);
+	location, err := handler.internalServicesAdapter.GetLocationAdaptor(addressID, user.ID);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, err.Error(), context)
 	}
@@ -64,7 +64,7 @@ func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
-	locations, err := handler.servicesAdapter.GetLocationsAdaptor(user.ID);
+	locations, err := handler.internalServicesAdapter.GetLocationsAdaptor(user.ID);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, err.Error(), context)
 	}

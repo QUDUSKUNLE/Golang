@@ -99,7 +99,7 @@ func (label *LabelService) CreateShippingLabel(name string) error {
 
 		// To Configuration
 		pdFile.SetXY(xHeaderLeft - 23, 19.5 + 3.0)
-		err = pdFile.Text("To:")
+		err = pdFile.Text("Deliver To:")
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -143,31 +143,31 @@ func (label *LabelService) CreateShippingLabel(name string) error {
 
 		// Product Configuration
 		pdFile.SetXY(xHeaderLeft - 23, 37)
-		err = pdFile.Text("Product Details:")
+		err = pdFile.Text("Package Details:")
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
 		pdFile.SetXY(xHeaderLeft - 21, 39)
-		err = pdFile.Text(fmt.Sprintf("Product Identity: %s", name))
+		err = pdFile.Text(fmt.Sprintf("Package Reference: %s", name))
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
 		pdFile.SetXY(xHeaderLeft - 21, 41)
-		err = pdFile.Text(fmt.Sprintf("Product Tracking Identity: %s.", name))
+		err = pdFile.Text(fmt.Sprintf("Package Tracking Reference: %s.", name))
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
 		pdFile.SetXY(xHeaderLeft - 21, 43)
-		err = pdFile.Text(fmt.Sprintf("Product Weight: %s %s", "10", "Kg."))
+		err = pdFile.Text(fmt.Sprintf("Package Weight: %s %s", "10", "Kg."))
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
 		pdFile.SetXY(xHeaderLeft - 21, 45)
-		err = pdFile.Text(fmt.Sprintf("Product Carrier: %s", "UPS"))
+		err = pdFile.Text(fmt.Sprintf("Package Carrier: %s", "UPS"))
 		if err != nil {
 			log.Fatal(err)
 			return

@@ -20,7 +20,7 @@ func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 			context)
 	}
 	// Initiate a new delivery
-	if err := handler.servicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType); err != nil {
+	if err := handler.internalServicesAdapter.NewDeliveryAdaptor(accountID, deliveryDto.ProductType); err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
 			context)
 	}
@@ -28,7 +28,7 @@ func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 	productType := deliveryDto.ProductType.PrintProduct()
 
 	// Deliver a product
-	if err := handler.servicesAdapter.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
+	if err := handler.internalServicesAdapter.NewDelivery(accountID, deliveryDto.PickUpAddress, deliveryDto.DeliveryAddress, productType); err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
 			context)
 	}

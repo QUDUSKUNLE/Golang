@@ -23,7 +23,7 @@ func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	}
 
 	// Initiate a new pick up
-	err = handler.servicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
+	err = handler.internalServicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
 	if err != nil {
 		if err.Error() == string(RECORD_NOT_FOUND) {
 			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)

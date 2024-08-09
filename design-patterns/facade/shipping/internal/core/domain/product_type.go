@@ -1,6 +1,7 @@
 package domain
 
 type ProductType string
+type PACKAGE_TYPE string
 
 const (
 	Animal      ProductType = "Animal"
@@ -12,6 +13,11 @@ const (
 	Watery      ProductType = "Watery"
 	Ammunition  ProductType = "Ammunition"
 	Unknown     ProductType = "Unknown"
+
+	// PACKAGE_TYPE
+	BOX PACKAGE_TYPE = "box"
+	ENVELOPE PACKAGE_TYPE = "envelope"
+	SOFT_PACKAGING PACKAGE_TYPE = "soft_packaging"
 )
 
 func (product ProductType) PrintProduct() string {

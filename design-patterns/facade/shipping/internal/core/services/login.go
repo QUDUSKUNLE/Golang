@@ -5,9 +5,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *ServicesHandler) LogInUserAdaptor(loginDto domain.LogInDTO) (*domain.User, error) {
+func (httpHandler *InternalServicesHandler) LogInUserAdaptor(loginDto domain.LogInDTO) (*domain.User, error) {
 	fmt.Println("Initiate a new login")
-	systemsHandler := httpHandler.NewServicesFacade()
+	systemsHandler := httpHandler.NewInternalServicesFacade()
 	user, err := httpHandler.internal.ReadUserByEmailAdaptor(loginDto.Email)
 	if err != nil {
 		return &domain.User{}, err

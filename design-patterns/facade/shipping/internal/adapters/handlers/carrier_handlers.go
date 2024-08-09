@@ -16,7 +16,7 @@ func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
-	pickUps, err := handler.servicesAdapter.CarrierPickUpsAdaptor(user.ID);
+	pickUps, err := handler.internalServicesAdapter.CarrierPickUpsAdaptor(user.ID);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
 	}

@@ -2,7 +2,7 @@ package services
 
 import "github.com/QUDUSKUNLE/shipping/internal/core/domain"
 
-type ServicesFacade struct {
+type InternalServicesFacade struct {
 	userService *domain.User
 	notificationService *Notification
 	locationService *domain.Location
@@ -11,13 +11,23 @@ type ServicesFacade struct {
 	shippingService *domain.Shipping
 }
 
-func (httpHandler *ServicesHandler) NewServicesFacade() *ServicesFacade {
-	return &ServicesFacade{
+type ExternalServicesFacade struct {
+	packagingService *domain.PackagingDTO
+}
+
+func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacade() *InternalServicesFacade {
+	return &InternalServicesFacade{
 		shippingService: &domain.Shipping{},
 		pickUpService: &domain.PickUp{},
 		labelService: &LabelService{},
 		userService: &domain.User{},
 		notificationService: &Notification{},
 		locationService: &domain.Location{},
+	}
+}
+
+func (externalServicesHandler *ExternalServicesHandler) NewExternalServicesFacade() *ExternalServicesFacade {
+	return &ExternalServicesFacade{
+		packagingService: &domain.PackagingDTO{},
 	}
 }

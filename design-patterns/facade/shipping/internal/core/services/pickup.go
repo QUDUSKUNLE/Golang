@@ -6,9 +6,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) error {
+func (httpHandler *InternalServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) error {
 	fmt.Println("Initiate a new pick up")
-	systemsHandler := httpHandler.NewServicesFacade()
+	systemsHandler := httpHandler.NewInternalServicesFacade()
 	pickUp := systemsHandler.pickUpService.BuildNewPickUp(pick)
 	err := httpHandler.internal.InitiatePickUpAdaptor(*pickUp);
 	if err != nil {
@@ -22,9 +22,9 @@ func (httpHandler *ServicesHandler) NewPickUpAdaptor(pick domain.PickUpDTO) erro
 	return nil
 }
 
-func (httpHandler *ServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUp) error {
+func (httpHandler *InternalServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUp) error {
 	fmt.Println("Update a parcel pick up")
-	systemsHandler := httpHandler.NewServicesFacade()
+	systemsHandler := httpHandler.NewInternalServicesFacade()
 	// build a new pick up
 	pick := systemsHandler.pickUpService.BuildUpdatePickUp(pickUp)
 

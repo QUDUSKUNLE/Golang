@@ -14,7 +14,7 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 
-	err := handler.servicesAdapter.SaveUser(*user);
+	err := handler.internalServicesAdapter.SaveUser(*user);
 	if err != nil {
 		if err.Error() == string(USER_ALREADY_EXIST) {
 			return handler.ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
@@ -35,7 +35,7 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	// Initiate a new login adaptor
-	user, err := handler.servicesAdapter.LogInUserAdaptor(*loginDto)
+	user, err := handler.internalServicesAdapter.LogInUserAdaptor(*loginDto)
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
@@ -59,7 +59,7 @@ func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
 	if err := handler.ValidateStruct(context, resetPasswordDto); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
-	if err := handler.servicesAdapter.ResetPassword(*resetPasswordDto); err != nil {
+	if err := handler.internalServicesAdapter.ResetPassword(*resetPasswordDto); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	return handler.ComputeResponseMessage(http.StatusOK, RESET_EMAIL_SENT_SUCCESSFULLY, context)

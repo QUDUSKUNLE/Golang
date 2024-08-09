@@ -4,12 +4,22 @@ import (
 	ports "github.com/QUDUSKUNLE/shipping/internal/core/ports"
 )
 
-type ServicesHandler struct {
+type InternalServicesHandler struct {
 	internal ports.RepositoryPorts
 }
 
-func ServicesAdapter(repositoryPort ports.RepositoryPorts) *ServicesHandler {
-	return &ServicesHandler{
+type ExternalServicesHandler struct {
+	external ports.ExternalPorts
+}
+
+func InternalServicesAdapter(repositoryPort ports.RepositoryPorts) *InternalServicesHandler {
+	return &InternalServicesHandler{
 		internal: repositoryPort,
+	}
+}
+
+func ExternalServicesAdapter(externalPorts ports.ExternalPorts) *ExternalServicesHandler {
+	return &ExternalServicesHandler{
+		external: externalPorts,
 	}
 }

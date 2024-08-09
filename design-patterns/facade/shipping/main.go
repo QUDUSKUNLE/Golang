@@ -10,6 +10,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/handlers"
 	validationMiddleware "github.com/QUDUSKUNLE/shipping/internal/adapters/middleware"
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/repository"
+	"github.com/QUDUSKUNLE/shipping/internal/adapters/integration"
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/routes"
 	"github.com/QUDUSKUNLE/shipping/internal/core/services"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -18,7 +19,8 @@ import (
 )
 
 var (
-	svc *services.ServicesHandler
+	svc *services.InternalServicesHandler
+	ext *services.ExternalServicesHandler
 )
 
 func init() {
@@ -45,8 +47,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error connecting to the databse: %s", err.Error())
 	}
-	svc := services.ServicesAdapter(store)
-	httpHandler := handlers.HttpAdapter(*svc)
+	extStore := integration.OpenExternalConnection()
+	svc = services.InternalServicesAdapter(store)
+	ext = services.ExternalServicesAdapter(extStore)
+	httpHandler := handlers.HttpAdapter(*svc, *ext)
 
 	// Plug echo into PublicRoutesAdaptor
 	public := e.Group("/v1")

@@ -7,9 +7,9 @@ import (
 	"fmt"
 )
 
-func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.ShippingDTO) error {
+func (httpHandler *InternalServicesHandler) NewShippingAdaptor(shippingDto *domain.ShippingDTO) error {
 	fmt.Println("Initiate a new shipping")
-	systemsHandler := httpHandler.NewServicesFacade()
+	systemsHandler := httpHandler.NewInternalServicesFacade()
 	newShipping := systemsHandler.shippingService.BuildNewShipping(*shippingDto)
 	if err := httpHandler.internal.CreateShippingAdaptor(*newShipping); err != nil {
 		return err
@@ -27,7 +27,7 @@ func (httpHandler *ServicesHandler) NewShippingAdaptor(shippingDto *domain.Shipp
 	return nil
 }
 
-func (httpHandler *ServicesHandler) GetShippingsAdaptor(ID uuid.UUID) ([]domain.Shipping, error) {
+func (httpHandler *InternalServicesHandler) GetShippingsAdaptor(ID uuid.UUID) ([]domain.Shipping, error) {
 	fmt.Println("Initiate a shipping")
 	shippings, err := httpHandler.internal.GetShippingsAdaptor(ID, "SCHEDULED")
 	if err != nil {
