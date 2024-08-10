@@ -10,9 +10,9 @@ import (
 )
 
 func (handler *HTTPHandler) NewAddress(context echo.Context) error {
-	location := new(domain.LocationDTO)
+	location := new(domain.LocationDto)
 	if err := handler.ValidateStruct(context, location); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(),
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err,
 			context)
 	}
 

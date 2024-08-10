@@ -9,7 +9,7 @@ import (
 func (handler *HTTPHandler) Rates(context echo.Context) error {
 	response, err := handler.externalServicesAdapter.TerminalGetRatesAdaptor()
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusOK, err.Error(), context)
+		return handler.ComputeErrorResponse(http.StatusOK, err, context)
 	}
 	return handler.ComputeResponseMessage(http.StatusOK, response, context)
 }
@@ -21,7 +21,7 @@ func (handler *HTTPHandler) Packaging(context echo.Context) error {
 	}
 	response, err := handler.externalServicesAdapter.TerminalPackagingAdaptor(*packaging)
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusOK, err.Error(), context)
+		return handler.ComputeErrorResponse(http.StatusOK, err, context)
 	}
 	return handler.ComputeResponseMessage(http.StatusOK, response, context)
 }

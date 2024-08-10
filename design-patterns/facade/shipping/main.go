@@ -35,12 +35,12 @@ func main() {
 	port := os.Getenv("PORT")
 	// Create a new echo instance
 	e := echo.New()
-
+	// Plug echo int validationAdaptor
+	e = validationMiddleware.ValidationAdaptor(e)
+	
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover()) // Recover servers when break down
 
-	// Plug echo int validationAdaptor
-	e = validationMiddleware.ValidationAdaptor(e)
 
 	store, err := repository.OpenDBConnection()
 

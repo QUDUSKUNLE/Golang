@@ -3,7 +3,7 @@ package domain
 type Country string
 
 const (
-	Nigeria Country = "Nigeria"
+	NGN Country = "NG"
 	USA     Country = "USA"
 	UK      Country = "UK"
 	UAE     Country = "UAE"
