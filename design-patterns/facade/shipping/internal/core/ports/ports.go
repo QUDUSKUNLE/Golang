@@ -2,7 +2,7 @@ package ports
 
 import (
 	// "github.com/google/uuid"
-	domain "github.com/QUDUSKUNLE/shipping/internal/core/domain"
+	// domain "github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
 type ExternalPorts interface {
@@ -18,11 +18,11 @@ type ExternalPorts interface {
 	// UpdateShipping() error
 
 	// Packaging
-	CreatePackaging(packaging domain.PackagingDTO) (interface{}, error)
-	GetPackagingRates() (interface{}, error)
+	TerminalCreatePackaging(packaging interface{}) (interface{}, error)
+	TerminalGetPackagingRates() (interface{}, error)
 
 	// Save Addresses
-	// SaveAddress() error
+	TerminalCreateAddress(address interface{}) (interface{}, error)
 	// UpdateAddress() error
 	// GetAddress() error
 	// DeleteAddress() error

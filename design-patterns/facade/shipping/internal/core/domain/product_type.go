@@ -15,8 +15,8 @@ const (
 	Unknown     ProductType = "Unknown"
 
 	// PACKAGE_TYPE
-	BOX PACKAGE_TYPE = "box"
-	ENVELOPE PACKAGE_TYPE = "envelope"
+	BOX            PACKAGE_TYPE = "box"
+	ENVELOPE       PACKAGE_TYPE = "envelope"
 	SOFT_PACKAGING PACKAGE_TYPE = "soft_packaging"
 )
 

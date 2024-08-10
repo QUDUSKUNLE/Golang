@@ -12,7 +12,7 @@ type InternalServicesFacade struct {
 }
 
 type ExternalServicesFacade struct {
-	packagingService *domain.PackagingDTO
+	terminalService *domain.PackagingDTO
 }
 
 func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacade() *InternalServicesFacade {
@@ -28,6 +28,6 @@ func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacad
 
 func (externalServicesHandler *ExternalServicesHandler) NewExternalServicesFacade() *ExternalServicesFacade {
 	return &ExternalServicesFacade{
-		packagingService: &domain.PackagingDTO{},
+		terminalService: &domain.PackagingDTO{},
 	}
 }

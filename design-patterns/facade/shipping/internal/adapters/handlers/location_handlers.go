@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
-		"github.com/google/uuid"
+
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,7 +24,15 @@ func (handler *HTTPHandler) NewAddress(context echo.Context) error {
 	if user.UserType != string(domain.USER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
-
+	// To Do
+	for _, address := range location.Address {
+		externalAddress, err := handler.externalServicesAdapter.TerminalAddressAdaptor(address)
+		if err != nil {
+			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+		}
+		fmt.Println(externalAddress, "&&&&&&&&")
+	}
+	// Call externalServiceAdapter here
 	location.UserID = user.ID
 	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
 	if err != nil {

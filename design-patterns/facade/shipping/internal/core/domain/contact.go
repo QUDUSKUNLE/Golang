@@ -8,8 +8,8 @@ import (
 
 type Contact struct {
 	PhoneNumbers []string `json:"PhoneNumbers"`
-	WhatsApps string `json:"WhatsApp" binding:"required,max=50" validate:"required"`
-	Twitter  string `json:"Twitter" binding:"required,max=50" validate:"required"`
+	WhatsApps    string   `json:"WhatsApp" binding:"required,max=50" validate:"required"`
+	Twitter      string   `json:"Twitter" binding:"required,max=50" validate:"required"`
 }
 
 func (a Contact) Value() (driver.Value, error) {

@@ -8,11 +8,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (terminal *ExternalRepository) GetPackagingRates() (interface{}, error) {
+func (terminal *ExternalRepository) TerminalGetPackagingRates() (interface{}, error) {
 	fmt.Println("Get Terminal Shipping rates...")
 	req, err := buildNewTerminalRequest(GET, RATES, nil)
 	var data interface{}
@@ -49,24 +47,13 @@ func (terminal *ExternalRepository) RatesForShipment() (interface{}, error) {
 	return data, nil
 }
 
-func (terminal *ExternalRepository) CreatePackaging(packaging domain.PackagingDTO) (interface{}, error) {
+func (terminal *ExternalRepository) TerminalCreatePackaging(packaging interface{}) (interface{}, error) {
 	fmt.Println("Create a new package for shipping")
 	var data interface{}
-	requestBody := map[string]interface{}{
-		"height": packaging.Height,
-		"length": packaging.Length,
-		"name": packaging.Name,
-		"size_unit": packaging.Size_Unit,
-		"type": packaging.Type,
-		"width": packaging.Width,
-		"weight": packaging.Weight,
-		"weight_unit": packaging.Weight_Unit,
-	}
-	jsonBody, err := json.Marshal(requestBody)
+	bodyReader, err := byteReader(packaging)
 	if err != nil {
 		log.Fatal(err)
 	}
-	bodyReader := bytes.NewReader(jsonBody)
 	req, err := buildNewTerminalRequest(POST, PACKAGING, bodyReader)
 	if err != nil {
 		log.Fatal(err)
@@ -78,6 +65,36 @@ func (terminal *ExternalRepository) CreatePackaging(packaging domain.PackagingDT
 		return data, err
 	}
 	return data, nil
+}
+
+func (terminal *ExternalRepository) TerminalCreateAddress(address interface{}) (interface{}, error) {
+	fmt.Println("Create a new address for shipping")
+	var data interface{}
+	bodyReader, err := byteReader(address)
+	if err != nil {
+		log.Fatal(err)
+	}
+	req, err := buildNewTerminalRequest(POST, ADDRESSES, bodyReader)
+	if err != nil {
+		log.Fatal(err)
+		return data, err
+	}
+	data, err = result(req, data)
+	if err != nil {
+		log.Fatal(err)
+		return data, err
+	}
+	return data, nil
+}
+
+func byteReader(reader interface{}) (*bytes.Reader, error) {
+	var result *bytes.Reader
+	jsonBody, err := json.Marshal(reader)
+	if err != nil {
+		log.Fatal(err)
+		return result, err
+	}
+	return bytes.NewReader(jsonBody), nil
 }
 
 func buildNewTerminalRequest(method, endpoint string, body io.Reader) (*http.Request, error) {

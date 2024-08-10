@@ -13,19 +13,19 @@ import (
 type UserType string
 
 const (
-	USER    	UserType = "USER"
-	CARRIER   UserType = "CARRIER"
-	UNKNOWN 	UserType = "UNKNOWN"
+	USER    UserType = "USER"
+	CARRIER UserType = "CARRIER"
+	UNKNOWN UserType = "UNKNOWN"
 )
 
 type User struct {
 	gorm.Model
-	ID        uuid.UUID  `json:"ID" gorm:"uuid;primaryKey"`
-	Email     string     `json:"Email" gorm:"unique"`
-	Password  string     `json:"Password"`
-	UserType  UserType   `json:"UserType"`
-	CreatedAt time.Time  `json:"CreatedAt"`
-	UpdatedAt time.Time  `json:"UpdatedAt"`
+	ID        uuid.UUID      `json:"ID" gorm:"uuid;primaryKey"`
+	Email     string         `json:"Email" gorm:"unique"`
+	Password  string         `json:"Password"`
+	UserType  UserType       `json:"UserType"`
+	CreatedAt time.Time      `json:"CreatedAt"`
+	UpdatedAt time.Time      `json:"UpdatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`

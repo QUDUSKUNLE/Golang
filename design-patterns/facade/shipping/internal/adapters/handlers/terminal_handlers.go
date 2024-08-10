@@ -7,7 +7,7 @@ import (
 )
 
 func (handler *HTTPHandler) Rates(context echo.Context) error {
-	response, err := handler.externalServicesAdapter.GetPackagingRatesAdaptor()
+	response, err := handler.externalServicesAdapter.TerminalGetRatesAdaptor()
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusOK, err.Error(), context)
 	}
@@ -19,7 +19,7 @@ func (handler *HTTPHandler) Packaging(context echo.Context) error {
 	if err := handler.ValidateStruct(context, packaging); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
-	response, err := handler.externalServicesAdapter.CreatePackagingAdaptor(*packaging)
+	response, err := handler.externalServicesAdapter.TerminalPackagingAdaptor(*packaging)
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusOK, err.Error(), context)
 	}

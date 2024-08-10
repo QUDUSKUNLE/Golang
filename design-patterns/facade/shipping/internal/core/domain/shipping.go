@@ -1,17 +1,17 @@
 package domain
 
 import (
-	"time"
-	"gorm.io/gorm"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
+	"time"
 )
 
 type Shipping struct {
 	gorm.Model
-	ID              uuid.UUID   `gorm:"primaryKey;->;<-:create" json:"ID"`
-	CreatedAt       time.Time   `json:"CreatedAt"`
-	UpdatedAt       *time.Time  `json:"UpdatedAt"`
-	DeletedAt       *time.Time  `json:"DeletedAt"`
+	ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"ID"`
+	CreatedAt time.Time  `json:"CreatedAt"`
+	UpdatedAt *time.Time `json:"UpdatedAt"`
+	DeletedAt *time.Time `json:"DeletedAt"`
 
 	UserID          uuid.UUID   `json:"-"`
 	User            *User       `json:"-"`

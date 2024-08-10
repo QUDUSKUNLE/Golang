@@ -14,6 +14,7 @@ const (
 	SHIPMENT string = "shipments"
 	PACKAGING string = "packaging"
 	PICKUP string = "pickups"
+	ADDRESSES string = "addresses"
 
 	// PACKAGE_TYPE
 	BOX PACKAGE_TYPE = "box"
