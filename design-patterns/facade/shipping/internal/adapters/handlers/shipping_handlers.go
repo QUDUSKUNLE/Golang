@@ -9,7 +9,7 @@ import (
 func (handler *HTTPHandler) NewShipping(context echo.Context) error {
 	shippingDto := new(domain.ShippingDTO)
 	if err := handler.ValidateStruct(context, shippingDto); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(),
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err,
 			context)
 	}
 

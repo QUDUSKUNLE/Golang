@@ -2,7 +2,7 @@ package domain
 
 import "fmt"
 
-type PackagingDTO struct {
+type PackagingDto struct {
 	Height      float32      `json:"height" binding:"required" validate:"required"`
 	Length      float32      `json:"length" binding:"required" validate:"required"`
 	Name        string       `json:"name" binding:"required" validate:"required"`
@@ -18,7 +18,7 @@ type TerminalAddressDto struct {
 	Is_residential *bool `json:"Is_residential" binding:"required" validate:"required"`
 }
 
-func (packaging *PackagingDTO) BuildNewPackaging(pack PackagingDTO) map[string]interface{} {
+func (packaging *PackagingDto) BuildNewPackaging(pack PackagingDto) map[string]interface{} {
 	return map[string]interface{}{
 		"height":      pack.Height,
 		"length":      pack.Length,
@@ -31,7 +31,7 @@ func (packaging *PackagingDTO) BuildNewPackaging(pack PackagingDTO) map[string]i
 	}
 }
 
-func (address *PackagingDTO) BuildNewAddress(addr Address) map[string]interface{} {
+func (address *PackagingDto) BuildNewAddress(addr Address) map[string]interface{} {
 	return map[string]interface{}{
 		"city": addr.City,
 		"country": addr.Country,

@@ -27,7 +27,7 @@ type Shipping struct {
 type ShippingDTO struct {
 	Description     string      `json:"Description" binding:"required" validate:"required,gte=6,lte=1000"`
 	PickUpAddress   Address     `json:"PickUpAddress" binding:"required" validate:"required,dive,required"`
-	DeliveryAddress Address     `json:"DeliveryAddress" binding:"required" validate:"required"`
+	DeliveryAddress Address     `json:"DeliveryAddress" binding:"required" validate:"required,dive,required"`
 	ProductType     ProductType `json:"ProductType" binding:"required" validate:"required"`
 	CarrierID       uuid.UUID   `json:"CarrierID" binding:"required" validate:"required"`
 	UserID          uuid.UUID

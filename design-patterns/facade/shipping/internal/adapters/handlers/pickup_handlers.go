@@ -9,7 +9,7 @@ import (
 func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	pickUpDto := new(domain.PickUp)
 	if err := handler.ValidateStruct(context, pickUpDto); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 
 	// Validate carrier

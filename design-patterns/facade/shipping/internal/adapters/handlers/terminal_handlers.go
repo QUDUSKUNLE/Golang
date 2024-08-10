@@ -15,7 +15,7 @@ func (handler *HTTPHandler) Rates(context echo.Context) error {
 }
 
 func (handler *HTTPHandler) Packaging(context echo.Context) error {
-	packaging := new(domain.PackagingDTO)
+	packaging := new(domain.PackagingDto)
 	if err := handler.ValidateStruct(context, packaging); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}

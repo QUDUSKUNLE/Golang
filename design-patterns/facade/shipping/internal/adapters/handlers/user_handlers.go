@@ -30,9 +30,9 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 }
 
 func (handler *HTTPHandler) Login(context echo.Context) error {
-	loginDto := new(domain.LogInDTO)
+	loginDto := new(domain.LogInDto)
 	if err := handler.ValidateStruct(context, loginDto); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 	// Initiate a new login adaptor
 	user, err := handler.internalServicesAdapter.LogInUserAdaptor(*loginDto)

@@ -6,7 +6,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *ExternalServicesHandler) TerminalPackagingAdaptor(packaging domain.PackagingDTO) (interface{}, error ){
+func (httpHandler *ExternalServicesHandler) TerminalPackagingAdaptor(packaging domain.PackagingDto) (interface{}, error ){
 	fmt.Println("Initiate a new packaging")
 	var result interface{}
 	serviceHandler := httpHandler.NewExternalServicesFacade()

@@ -37,7 +37,7 @@ type (
 		ConfirmPassword string `json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
 		UserType        string `json:"UserType" binding:"required" validate:"required"`
 	}
-	LogInDTO struct {
+	LogInDto struct {
 		Email    string `json:"Email" binding:"required,email,lte=100" validate:"required"`
 		Password string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
 	}

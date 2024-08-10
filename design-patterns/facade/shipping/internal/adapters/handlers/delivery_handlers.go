@@ -10,7 +10,7 @@ import (
 func (handler *HTTPHandler) DeliveryProduct(context echo.Context) error {
 	deliveryDto := new(dto.DeliveryDTO)
 	if err := handler.ValidateStruct(context, deliveryDto); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(),
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err,
 			context)
 	}
 

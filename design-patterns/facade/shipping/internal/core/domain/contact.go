@@ -7,7 +7,7 @@ import (
 )
 
 type Contact struct {
-	PhoneNumbers []string `json:"PhoneNumbers"`
+	PhoneNumbers []string `json:"PhoneNumbers" validate:"required,dive,required"`
 	WhatsApps    string   `json:"WhatsApp" binding:"required,max=50" validate:"required"`
 	Twitter      string   `json:"Twitter" binding:"required,max=50" validate:"required"`
 }
