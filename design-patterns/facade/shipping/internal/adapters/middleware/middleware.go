@@ -3,7 +3,6 @@ package middleware
 import (
 	"fmt"
 	"net/http"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
@@ -13,6 +12,7 @@ type CustomValidator struct {
 	validator *validator.Validate
 }
 
+// Custom validator
 func (custom *CustomValidator) Validate(inter interface{}) error {
 	if err := custom.validator.Struct(inter); err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
@@ -27,6 +27,7 @@ func (custom *CustomValidator) Validate(inter interface{}) error {
 	return nil
 }
 
+// ValidationAdaptor
 func ValidationAdaptor(e *echo.Echo) *echo.Echo {
 	e.Validator = &CustomValidator{validator: validator.New(validator.WithRequiredStructEnabled())}
 	return e

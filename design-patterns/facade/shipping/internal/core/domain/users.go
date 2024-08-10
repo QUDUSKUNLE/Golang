@@ -13,7 +13,6 @@ import (
 const (
 	USER    UserType = "USER"
 	CARRIER UserType = "CARRIER"
-	UNKNOWN UserType = "UNKNOWN"
 )
 
 type (
@@ -31,11 +30,11 @@ type (
 
 		Addresses []Location `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	}
-	UserDTO struct {
+	UserDto struct {
 		Email           string `json:"Email" binding:"required,email,lte=100" validate:"required"`
 		Password        string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
 		ConfirmPassword string `json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
-		UserType        string `json:"UserType" binding:"required" validate:"required"`
+		UserType        UserType `json:"UserType" binding:"required" validate:"required"`
 	}
 	LogInDto struct {
 		Email    string `json:"Email" binding:"required,email,lte=100" validate:"required"`
@@ -54,7 +53,7 @@ func (user UserType) ReturnUserString() string {
 	case CARRIER:
 		return string(CARRIER)
 	}
-	return string(UNKNOWN)
+	return "Unknown"
 }
 
 func (user *User) BeforeCreate(scope *gorm.DB) error {
@@ -69,7 +68,7 @@ func (user *User) AfterCreate(scope *gorm.DB) error {
 	return nil
 }
 
-func (u *User) BuildNewUser(user UserDTO) (*User, error) {
+func (u *User) BuildNewUser(user UserDto) (*User, error) {
 	if err := compareBothPasswords(user.Password, user.ConfirmPassword); err != nil {
 		return &User{}, err
 	}

@@ -7,13 +7,13 @@ import (
 )
 
 type Address struct {
-	Email             string `json:"email" validate:"required,email"`
+	Email             string `json:"Email" validate:"required,email"`
 	Province          string `json:"Province"`
 	ExternalAddressID string `json:"ExternalAddressID"`
 	Description       string `json:"Description"`
 	FirstName         string  `json:"FirstName" validate:"required"`
 	LastName          string  `json:"LastName" binding:"required,max=50" validate:"required"`
-	StreetNo          string     `json:"StreetNo" binding:"required,max=50" validate:"required"`
+	StreetNo          string  `json:"StreetNo" binding:"required,max=50" validate:"required"`
 	StreetName        string  `json:"StreetName" binding:"required,max=50" validate:"required"`
 	City              string  `json:"City" binding:"required,max=50" validate:"required"`
 	State             string  `json:"State" binding:"required,max=50" validate:"required"`

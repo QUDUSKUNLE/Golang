@@ -19,9 +19,9 @@ func (httpHandler *ExternalServicesHandler) TerminalPackagingAdaptor(packaging d
 	return result, nil
 }
 
-func (httpHandler *ExternalServicesHandler) TerminalAddressAdaptor(address domain.Address) (interface{}, error ){
+func (httpHandler *ExternalServicesHandler) TerminalAddressAdaptor(address domain.Address) (map[string]interface{}, error ){
 	fmt.Println("Initiate a new address")
-	var result interface{}
+	var result map[string]interface{}
 	serviceHandler := httpHandler.NewExternalServicesFacade()
 	buildAddress := serviceHandler.terminalService.BuildNewAddress(address)
 

@@ -1,7 +1,9 @@
 package domain
 
-type ProductType string
-type PACKAGE_TYPE string
+type (
+	ProductType string
+  PACKAGE_TYPE string
+)
 
 const (
 	Animal      ProductType = "Animal"
@@ -12,7 +14,6 @@ const (
 	Electronics ProductType = "Electronics"
 	Watery      ProductType = "Watery"
 	Ammunition  ProductType = "Ammunition"
-	Unknown     ProductType = "Unknown"
 
 	// PACKAGE_TYPE
 	BOX            PACKAGE_TYPE = "box"
@@ -39,5 +40,17 @@ func (product ProductType) PrintProduct() string {
 	case Ammunition:
 		return string(Ammunition)
 	}
-	return string(Unknown)
+	return "Unknown"
+}
+
+func (packageType PACKAGE_TYPE) PrintPackageType() string {
+	switch packageType {
+	case BOX:
+		return string(BOX)
+	case ENVELOPE:
+		return string(ENVELOPE)
+	case SOFT_PACKAGING:
+		return string(SOFT_PACKAGING)
+	}
+	return "Unknown"
 }

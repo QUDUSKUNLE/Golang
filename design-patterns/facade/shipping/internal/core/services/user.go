@@ -5,7 +5,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *InternalServicesHandler) SaveUser(userDto domain.UserDTO) error {
+func (httpHandler *InternalServicesHandler) SaveUser(userDto domain.UserDto) error {
 	fmt.Println("Initiate a new user registration")
 
 	servicesHandler := httpHandler.NewInternalServicesFacade()

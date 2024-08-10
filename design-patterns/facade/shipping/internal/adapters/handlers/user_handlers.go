@@ -9,7 +9,7 @@ import (
 )
 
 func (handler *HTTPHandler) Register(context echo.Context) error {
-	user := new(domain.UserDTO)
+	user := new(domain.UserDto)
 	if err := handler.ValidateStruct(context, user); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}

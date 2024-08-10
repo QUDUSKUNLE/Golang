@@ -24,7 +24,7 @@ func (packaging *PackagingDto) BuildNewPackaging(pack PackagingDto) map[string]i
 		"length":      pack.Length,
 		"name":        pack.Name,
 		"size_unit":   pack.Size_Unit,
-		"type":        pack.Type,
+		"type":        pack.Type.PrintPackageType(),
 		"width":       pack.Width,
 		"weight":      pack.Weight,
 		"weight_unit": pack.Weight_Unit,
@@ -34,7 +34,7 @@ func (packaging *PackagingDto) BuildNewPackaging(pack PackagingDto) map[string]i
 func (address *PackagingDto) BuildNewAddress(addr Address) map[string]interface{} {
 	return map[string]interface{}{
 		"city": addr.City,
-		"country": addr.Country,
+		"country": addr.Country.PrintCountry(),
 		"email": addr.Email,
 		"first_name": addr.FirstName,
 		"is_residential": true,

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
@@ -25,12 +24,15 @@ func (handler *HTTPHandler) NewAddress(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 	// To Do
-	for _, address := range location.Address {
+	for i, address := range location.Address {
 		externalAddress, err := handler.externalServicesAdapter.TerminalAddressAdaptor(address)
 		if err != nil {
 			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 		}
-		fmt.Println(externalAddress, "&&&&&&&&")
+		if externalAddress["data"] != nil {
+			result := externalAddress["data"].(map[string]interface{})
+			location.Address[i].ExternalAddressID = result["address_id"].(string)
+		}
 	}
 	// Call externalServiceAdapter here
 	location.UserID = user.ID

@@ -12,8 +12,8 @@ import (
 
 func (terminal *ExternalRepository) TerminalGetPackagingRates() (interface{}, error) {
 	fmt.Println("Get Terminal Shipping rates...")
-	req, err := buildNewTerminalRequest(GET, RATES, nil)
-	var data interface{}
+	req, err := buildNewTerminalRequest(GET.PrintMethod(), RATES.PrintEndpoint(), nil)
+	var data map[string]interface{}
 	if err != nil {
 		log.Fatal(err)
 		return data, err
@@ -33,8 +33,8 @@ func (terminal *ExternalRepository) Rate(rateID string) error {
 
 func (terminal *ExternalRepository) RatesForShipment() (interface{}, error) {
 	fmt.Println("Get Terminal Shipping rate...")
-	req, err := buildNewTerminalRequest(GET, fmt.Sprintf("%s/%s", RATES,SHIPMENT), nil)
-	var data interface{}
+	req, err := buildNewTerminalRequest(GET.PrintMethod(), fmt.Sprintf("%s/%s", RATES.PrintEndpoint(), SHIPMENTS.PrintEndpoint()), nil)
+	var data map[string]interface{}
 	if err != nil {
 		log.Fatal(err)
 		return data, err
@@ -49,12 +49,12 @@ func (terminal *ExternalRepository) RatesForShipment() (interface{}, error) {
 
 func (terminal *ExternalRepository) TerminalCreatePackaging(packaging interface{}) (interface{}, error) {
 	fmt.Println("Create a new package for shipping")
-	var data interface{}
+	var data map[string]interface{}
 	bodyReader, err := byteReader(packaging)
 	if err != nil {
 		log.Fatal(err)
 	}
-	req, err := buildNewTerminalRequest(POST, PACKAGING, bodyReader)
+	req, err := buildNewTerminalRequest(POST.PrintMethod(), PACKAGING.PrintEndpoint(), bodyReader)
 	if err != nil {
 		log.Fatal(err)
 		return data, err
@@ -67,14 +67,14 @@ func (terminal *ExternalRepository) TerminalCreatePackaging(packaging interface{
 	return data, nil
 }
 
-func (terminal *ExternalRepository) TerminalCreateAddress(address interface{}) (interface{}, error) {
+func (terminal *ExternalRepository) TerminalCreateAddress(address interface{}) (map[string]interface{}, error) {
 	fmt.Println("Create a new address for shipping")
-	var data interface{}
+	var data map[string]interface{}
 	bodyReader, err := byteReader(address)
 	if err != nil {
 		log.Fatal(err)
 	}
-	req, err := buildNewTerminalRequest(POST, ADDRESSES, bodyReader)
+	req, err := buildNewTerminalRequest(POST.PrintMethod(), ADDRESSES.PrintEndpoint(), bodyReader)
 	if err != nil {
 		log.Fatal(err)
 		return data, err
@@ -123,7 +123,7 @@ func request(req *http.Request) (*http.Response, error) {
 	return response, nil
 }
 
-func response(res *http.Response, data interface {}) (interface{}, error) {
+func response(res *http.Response, data map[string]interface {}) (map[string]interface{}, error) {
 	defer res.Body.Close()
 	if err := json.NewDecoder(res.Body).Decode(&data); err != nil {
 		return data, err
@@ -131,7 +131,7 @@ func response(res *http.Response, data interface {}) (interface{}, error) {
 	return data, nil
 }
 
-func result(req *http.Request, data interface {}) (interface{}, error) {
+func result(req *http.Request, data map[string]interface {}) (map[string]interface{}, error) {
 	res, err := request(req)
 	if err != nil {
 		log.Fatal(err)
