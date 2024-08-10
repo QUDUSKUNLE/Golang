@@ -11,7 +11,7 @@ import (
 func (handler *HTTPHandler) Register(context echo.Context) error {
 	user := new(domain.UserDTO)
 	if err := handler.ValidateStruct(context, user); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 
 	err := handler.internalServicesAdapter.SaveUser(*user);

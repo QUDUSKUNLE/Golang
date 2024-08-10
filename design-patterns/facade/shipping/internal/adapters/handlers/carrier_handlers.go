@@ -9,7 +9,7 @@ import (
 func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 	user, err := handler.ParseUserID(context)
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, err, context)
 	}
 
 	if user.UserType != string(domain.CARRIER) {

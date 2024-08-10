@@ -6,7 +6,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *InternalServicesHandler) NewLocationAdaptor(locationDto domain.LocationDTO) error {
+func (httpHandler *InternalServicesHandler) NewLocationAdaptor(locationDto domain.LocationDto) error {
 	fmt.Println("Initiate new addresses savings")
 	systemsHandler := httpHandler.NewInternalServicesFacade()
 	locations := systemsHandler.locationService.BuildNewLocation(locationDto)

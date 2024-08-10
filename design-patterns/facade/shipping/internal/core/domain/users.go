@@ -10,44 +10,42 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserType string
-
 const (
 	USER    UserType = "USER"
 	CARRIER UserType = "CARRIER"
 	UNKNOWN UserType = "UNKNOWN"
 )
 
-type User struct {
-	gorm.Model
-	ID        uuid.UUID      `json:"ID" gorm:"uuid;primaryKey"`
-	Email     string         `json:"Email" gorm:"unique"`
-	Password  string         `json:"Password"`
-	UserType  UserType       `json:"UserType"`
-	CreatedAt time.Time      `json:"CreatedAt"`
-	UpdatedAt time.Time      `json:"UpdatedAt"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+type (
+	User struct {
+		gorm.Model
+		ID        uuid.UUID      `json:"ID" gorm:"uuid;primaryKey"`
+		Email     string         `json:"Email" gorm:"unique"`
+		Password  string         `json:"Password"`
+		UserType  UserType       `json:"UserType"`
+		CreatedAt time.Time      `json:"CreatedAt"`
+		UpdatedAt time.Time      `json:"UpdatedAt"`
+		DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+		Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 
-	Addresses []Location `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-}
-
-type UserDTO struct {
-	Email           string `json:"Email" binding:"required,email,lte=100" validate:"required"`
-	Password        string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
-	ConfirmPassword string `json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
-	UserType        string `json:"UserType" binding:"required" validate:"required"`
-}
-
-type LogInDTO struct {
-	Email    string `json:"Email" binding:"required,email,lte=100" validate:"required"`
-	Password string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
-}
-
-type ResetPasswordDto struct {
-	Email string `json:"Email" binding:"required" validate:"required,email"`
-}
+		Addresses []Location `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	}
+	UserDTO struct {
+		Email           string `json:"Email" binding:"required,email,lte=100" validate:"required"`
+		Password        string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
+		ConfirmPassword string `json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
+		UserType        string `json:"UserType" binding:"required" validate:"required"`
+	}
+	LogInDTO struct {
+		Email    string `json:"Email" binding:"required,email,lte=100" validate:"required"`
+		Password string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
+	}
+	ResetPasswordDto struct {
+		Email string `json:"Email" binding:"required" validate:"required,email"`
+	}
+	UserType string
+)
 
 func (user UserType) ReturnUserString() string {
 	switch user {
