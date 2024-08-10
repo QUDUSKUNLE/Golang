@@ -7,8 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type PickUpStatus string
-
 const (
 	SCHEDULED PickUpStatus = "SCHEDULED"
 	PICKED    PickUpStatus = "PICKED"
@@ -16,29 +14,31 @@ const (
 	REJECTED  PickUpStatus = "REJECTED"
 )
 
-type PickUp struct {
-	gorm.Model
-	ID        uuid.UUID    `gorm:"primaryKey;->;<-:create" json:"ID"`
-	PickUpAt  time.Time    `json:"PickUpAt"`
-	CreatedAt time.Time    `json:"CreatedAt"`
-	UpdatedAt *time.Time   `json:"UpdatedAt"`
-	DeletedAt *time.Time   `json:"DeletedAt"`
-	Status    PickUpStatus `json:"Status"`
+type (
+	PickUp struct {
+		gorm.Model
+		ID        uuid.UUID    `gorm:"primaryKey;->;<-:create" json:"id"`
+		PickUpAt  time.Time    `json:"pick_up_at"`
+		CreatedAt time.Time    `json:"created_at"`
+		UpdatedAt *time.Time   `json:"updated_at"`
+		DeletedAt *time.Time   `json:"deleted_at"`
+		Status    PickUpStatus `json:"status"`
 
-	ShippingID uuid.UUID `json:"-"`
-	Shipping   *Shipping `json:"Shipping"`
-	CarrierID  uuid.UUID `json:"-"`
-	Carrier    *Carrier  `json:"-"`
-}
+		ShippingID uuid.UUID `json:"-"`
+		Shipping   *Shipping `json:"shipping"`
+		CarrierID  uuid.UUID `json:"-"`
+		Carrier    *Carrier  `json:"-"`
+	}
+	PickUpDto struct {
+		ShippingID uuid.UUID `json:"shipping_id" binding:"required" validate:"required"`
+		CarrierID  uuid.UUID `json:"carrier_id" binding:"required" validate:"required"`
+		PickUpAt   time.Time `json:"pick_up_at" binding:"required" validate:"required"`
+		Status     string    `json:"status" binding:"required" validate:"required"`
+	}
+	PickUpStatus string
+)
 
-type PickUpDTO struct {
-	ShippingID uuid.UUID `json:"ShippingID" binding:"required" validate:"required"`
-	CarrierID  uuid.UUID `json:"CarrierID" binding:"required" validate:"required"`
-	PickUpAt   time.Time `json:"PickUpAt" binding:"required" validate:"required"`
-	Status     string    `json:"Status" binding:"required" validate:"required"`
-}
-
-func (pickUp *PickUp) BuildNewPickUp(pick PickUpDTO) *PickUp {
+func (pickUp *PickUp) BuildNewPickUp(pick PickUpDto) *PickUp {
 	return &PickUp{
 		ID:         uuid.New(),
 		ShippingID: pick.ShippingID,

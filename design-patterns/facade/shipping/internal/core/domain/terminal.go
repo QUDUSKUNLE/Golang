@@ -2,23 +2,40 @@ package domain
 
 import "fmt"
 
-type PackagingDto struct {
-	Height      float32      `json:"height" binding:"required" validate:"required"`
-	Length      float32      `json:"length" binding:"required" validate:"required"`
-	Name        string       `json:"name" binding:"required" validate:"required"`
-	Size_Unit   string       `json:"size_unit" binding:"required" validate:"required"`
-	Type        PACKAGE_TYPE `json:"type" binding:"required" validate:"required"`
-	Width       float32      `json:"width" binding:"required" validate:"required"`
-	Weight      float32      `json:"weight" binding:"required" validate:"required"`
-	Weight_Unit string       `json:"weight_unit" binding:"required" validate:"required"`
-}
+type (
+	Terminal struct {}
+	TerminalPackagingDto struct {
+		Height      float32      `json:"height" binding:"required" validate:"required"`
+		Length      float32      `json:"length" binding:"required" validate:"required"`
+		Name        string       `json:"name" binding:"required" validate:"required"`
+		Size_Unit   string       `json:"size_unit" binding:"required" validate:"required"`
+		Type        PACKAGE_TYPE `json:"type" binding:"required" validate:"required"`
+		Width       float32      `json:"width" binding:"required" validate:"required"`
+		Weight      float32      `json:"weight" binding:"required" validate:"required"`
+		Weight_Unit string       `json:"weight_unit" binding:"required" validate:"required"`
+	}
+	TerminalParcelDto struct {
+		Description       string                  `json:"description" validate:"required"`
+		Items             []TerminalParcelItemDto `json:"items" binding:"required" validate:"required,dive,required"`
+		Metadata          map[string]interface{}  `json:"metadata"`
+		Packaging         string                  `json:"packaging" validate:"required"`
+		Proof_Of_Payments []string                `json:"proof_of_payments" binding:"required" validate:"required,dive,required"`
+		Rec_docs          []string                `json:"rec_docs" binding:"required" validate:"required,dive,required"`
+		Weight_unit       WEIGHT_UNIT             `json:"weight_unit" binding:"required" validate:"required"`
+	}
+	TerminalParcelItemDto struct {
+		Description string    `json:"description" validate:"required"`
+		HS_CODE     string    `json:"hs_code"`
+		Name        string    `json:"name" validate:"required"`
+		Type        ITEM_TYPE `json:"type" validate:"required"`
+		Currency    string    `json:"currency" validate:"required"`
+		Value       float32   `json:"value" validate:"required"`
+		Quantity    int       `json:"quantity" validate:"required"`
+		Weight      float32   `json:"weight" validate:"required"`
+	}
+)
 
-type TerminalAddressDto struct {
-	Address
-	Is_residential *bool `json:"Is_residential" binding:"required" validate:"required"`
-}
-
-func (packaging *PackagingDto) BuildNewPackaging(pack PackagingDto) map[string]interface{} {
+func (packaging *Terminal) BuildNewTerminalPackaging(pack TerminalPackagingDto) map[string]interface{} {
 	return map[string]interface{}{
 		"height":      pack.Height,
 		"length":      pack.Length,
@@ -31,19 +48,31 @@ func (packaging *PackagingDto) BuildNewPackaging(pack PackagingDto) map[string]i
 	}
 }
 
-func (address *PackagingDto) BuildNewAddress(addr Address) map[string]interface{} {
+func (address *Terminal) BuildNewTerminalAddress(addr Address) map[string]interface{} {
 	return map[string]interface{}{
-		"city": addr.City,
-		"country": addr.Country.PrintCountry(),
-		"email": addr.Email,
-		"first_name": addr.FirstName,
+		"city":           addr.City,
+		"country":        addr.Country.PrintCountry(),
+		"email":          addr.Email,
+		"first_name":     addr.FirstName,
 		"is_residential": true,
-		"last_name": addr.LastName,
-		"line1": addr.StreetNo,
-		"line2": addr.StreetName,
-		"name": fmt.Sprintf("%s %s", addr.FirstName, addr.LastName),
-		"phone": addr.PhoneNo,
-		"state": addr.State,
-		"zip": addr.Zip,
+		"last_name":      addr.LastName,
+		"line1":          addr.StreetNo,
+		"line2":          addr.StreetName,
+		"name":           fmt.Sprintf("%s %s", addr.FirstName, addr.LastName),
+		"phone":          addr.PhoneNo,
+		"state":          addr.State,
+		"zip":            addr.Zip,
+	}
+}
+
+func (parcel *Terminal) BuildNewTerminalParcel(parse TerminalParcelDto) map[string]interface{} {
+	return map[string]interface{}{
+		"description": parse.Description,
+		"items": parse.Items,
+		"metadata": parse.Metadata,
+		"packaging": parse.Packaging,
+		"proof_of_payments": parse.Proof_Of_Payments,
+		"rec_docs": parse.Rec_docs,
+		"weight_unit": parse.Weight_unit,
 	}
 }

@@ -6,13 +6,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (handler *HTTPHandler) NewShipping(context echo.Context) error {
-	shippingDto := new(domain.ShippingDTO)
+func (handler *HTTPHandler) PostShipping(context echo.Context) error {
+	shippingDto := new(domain.ShippingDto)
 	if err := handler.ValidateStruct(context, shippingDto); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err,
 			context)
 	}
-
 	// Validate carrier
 	user, err := handler.ParseUserID(context)
 	if err != nil {

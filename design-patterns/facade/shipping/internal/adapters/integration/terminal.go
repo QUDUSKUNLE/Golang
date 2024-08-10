@@ -10,20 +10,19 @@ import (
 	"os"
 )
 
-func (terminal *ExternalRepository) TerminalGetPackagingRates() (interface{}, error) {
-	fmt.Println("Get Terminal Shipping rates...")
+func (terminal *ExternalRepository) TerminalGetRates() (map[string]interface{}, error) {
 	req, err := buildNewTerminalRequest(GET.PrintMethod(), RATES.PrintEndpoint(), nil)
-	var data map[string]interface{}
+	var rates map[string]interface{}
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return rates, err
 	}
-	data, err = result(req, data)
+	rates, err = result(req, rates)
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return rates, err
 	}
-	return data, nil
+	return rates, nil
 }
 
 func (terminal *ExternalRepository) Rate(rateID string) error {
@@ -31,60 +30,79 @@ func (terminal *ExternalRepository) Rate(rateID string) error {
 	return nil
 }
 
-func (terminal *ExternalRepository) RatesForShipment() (interface{}, error) {
-	fmt.Println("Get Terminal Shipping rate...")
+func (terminal *ExternalRepository) RatesForShipment() (map[string]interface{}, error) {
 	req, err := buildNewTerminalRequest(GET.PrintMethod(), fmt.Sprintf("%s/%s", RATES.PrintEndpoint(), SHIPMENTS.PrintEndpoint()), nil)
-	var data map[string]interface{}
+	var shipments map[string]interface{}
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return shipments, err
 	}
-	data, err = result(req, data)
+	shipments, err = result(req, shipments)
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return shipments, err
 	}
-	return data, nil
+	return shipments, nil
 }
 
-func (terminal *ExternalRepository) TerminalCreatePackaging(packaging interface{}) (interface{}, error) {
-	fmt.Println("Create a new package for shipping")
-	var data map[string]interface{}
-	bodyReader, err := byteReader(packaging)
+func (terminal *ExternalRepository) TerminalCreatePackaging(pack interface{}) (map[string]interface{}, error) {
+	var packaging map[string]interface{}
+	bodyReader, err := byteReader(pack)
 	if err != nil {
 		log.Fatal(err)
+		return packaging, err
 	}
 	req, err := buildNewTerminalRequest(POST.PrintMethod(), PACKAGING.PrintEndpoint(), bodyReader)
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return packaging, err
 	}
-	data, err = result(req, data)
+	packaging, err = result(req, packaging)
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return packaging, err
 	}
-	return data, nil
+	return packaging, nil
 }
 
-func (terminal *ExternalRepository) TerminalCreateAddress(address interface{}) (map[string]interface{}, error) {
-	fmt.Println("Create a new address for shipping")
-	var data map[string]interface{}
-	bodyReader, err := byteReader(address)
+func (terminal *ExternalRepository) TerminalCreateAddress(add interface{}) (map[string]interface{}, error) {
+	var address map[string]interface{}
+	bodyReader, err := byteReader(add)
 	if err != nil {
 		log.Fatal(err)
+		return address, err
 	}
 	req, err := buildNewTerminalRequest(POST.PrintMethod(), ADDRESSES.PrintEndpoint(), bodyReader)
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return address, err
 	}
-	data, err = result(req, data)
+	address, err = result(req, address)
 	if err != nil {
 		log.Fatal(err)
-		return data, err
+		return address, err
 	}
-	return data, nil
+	return address, nil
+}
+
+func (terminal *ExternalRepository) TerminalCreateParcel(parce interface{}) (map[string]interface{}, error) {
+	var parcel map[string]interface{}
+	bodyReader, err := byteReader(parce)
+	if err != nil {
+		log.Fatal(err)
+		return parcel, err
+	}
+	req, err := buildNewTerminalRequest(POST.PrintMethod(), PARCELS.PrintEndpoint(), bodyReader)
+	if err != nil {
+		log.Fatal(err)
+		return parcel, err
+	}
+	parcel, err = result(req, parcel)
+	if err != nil {
+		log.Fatal(err)
+		return parcel, err
+	}
+	return parcel, nil
 }
 
 func byteReader(reader interface{}) (*bytes.Reader, error) {

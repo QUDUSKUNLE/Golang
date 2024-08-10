@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (handler *HTTPHandler) NewAddress(context echo.Context) error {
+func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	location := new(domain.LocationDto)
 	if err := handler.ValidateStruct(context, location); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err,
@@ -23,18 +23,20 @@ func (handler *HTTPHandler) NewAddress(context echo.Context) error {
 	if user.UserType != string(domain.USER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
-	// To Do
+	// Make call to external adapter to register address
 	for i, address := range location.Address {
-		externalAddress, err := handler.externalServicesAdapter.TerminalAddressAdaptor(address)
+		externalAddress, err := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
 		if err != nil {
 			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 		}
 		if externalAddress["data"] != nil {
 			result := externalAddress["data"].(map[string]interface{})
-			location.Address[i].ExternalAddressID = result["address_id"].(string)
+			address_id := result["address_id"].(string)
+			location.TerminalAddressID = address_id
+			location.Address[i].ExternalAddressID = address_id
 		}
 	}
-	// Call externalServiceAdapter here
+	// Make call to internal adapter to save register
 	location.UserID = user.ID
 	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
 	if err != nil {

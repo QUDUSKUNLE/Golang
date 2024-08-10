@@ -1,14 +1,12 @@
 package services
 
 import (
-	"fmt"
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *InternalServicesHandler) LogInUserAdaptor(loginDto domain.LogInDto) (*domain.User, error) {
-	fmt.Println("Initiate a new login")
-	systemsHandler := httpHandler.NewInternalServicesFacade()
-	user, err := httpHandler.internal.ReadUserByEmailAdaptor(loginDto.Email)
+func (internalHandler *InternalServicesHandler) LogInUserAdaptor(loginDto domain.LogInDto) (*domain.User, error) {
+	systemsHandler := internalHandler.NewInternalServicesFacade()
+	user, err := internalHandler.internal.ReadUserByEmailAdaptor(loginDto.Email)
 	if err != nil {
 		return &domain.User{}, err
 	}

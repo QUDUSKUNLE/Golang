@@ -6,13 +6,15 @@ type InternalServicesFacade struct {
 	userService *domain.User
 	notificationService *Notification
 	locationService *domain.Location
+	packagingService *domain.Packaging
+	parcelService *domain.Parcel
 	labelService *LabelService
 	pickUpService *domain.PickUp
 	shippingService *domain.Shipping
 }
 
 type ExternalServicesFacade struct {
-	terminalService *domain.PackagingDto
+	terminalService *domain.Terminal
 }
 
 func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacade() *InternalServicesFacade {
@@ -20,6 +22,8 @@ func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacad
 		shippingService: &domain.Shipping{},
 		pickUpService: &domain.PickUp{},
 		labelService: &LabelService{},
+		packagingService: &domain.Packaging{},
+		parcelService: &domain.Parcel{},
 		userService: &domain.User{},
 		notificationService: &Notification{},
 		locationService: &domain.Location{},
@@ -28,6 +32,6 @@ func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacad
 
 func (externalServicesHandler *ExternalServicesHandler) NewExternalServicesFacade() *ExternalServicesFacade {
 	return &ExternalServicesFacade{
-		terminalService: &domain.PackagingDto{},
+		terminalService: &domain.Terminal{},
 	}
 }

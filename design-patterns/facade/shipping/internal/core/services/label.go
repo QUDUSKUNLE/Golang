@@ -10,7 +10,6 @@ import (
 type LabelService struct {}
 
 func (label *LabelService) CreateShippingLabel(name string) error {
-	fmt.Println("Creating shipping label...")
 	var pdFile gopdf.GoPdf
 	pdFile.Start(gopdf.Config{
 		PageSize: gopdf.Rect{W: 50, H: 75},
@@ -195,6 +194,5 @@ func (label *LabelService) CreateShippingLabel(name string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Shipping Label created successfully.")
 	return nil
 }

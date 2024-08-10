@@ -75,14 +75,14 @@ func (util *HTTPHandler) GenerateAccessToken(user CurrentUser) (string, error) {
 
 func (util *HTTPHandler) ComputeErrorResponse(status int, message interface{}, context echo.Context) error {
 	return context.JSON(status, echo.Map{
-		"Error": message,
-		"Success": false,
+		"error": message,
+		"success": false,
 	})
 }
 
 func (util *HTTPHandler) ComputeResponseMessage(status int, message interface{}, context echo.Context) error {
 	return context.JSON(status, echo.Map{
-		"Result": message,
-		"Success": true,
+		"result": message,
+		"success": true,
 	})
 }

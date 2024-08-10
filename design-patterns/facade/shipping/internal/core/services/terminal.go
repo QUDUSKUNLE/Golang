@@ -1,41 +1,43 @@
 package services
 
 import (
-	"fmt"
-
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (httpHandler *ExternalServicesHandler) TerminalPackagingAdaptor(packaging domain.PackagingDto) (interface{}, error ){
-	fmt.Println("Initiate a new packaging")
-	var result interface{}
-	serviceHandler := httpHandler.NewExternalServicesFacade()
-	buildPackaging := serviceHandler.terminalService.BuildNewPackaging(packaging)
-
-	result, err := httpHandler.external.TerminalCreatePackaging(buildPackaging)
-	if err != nil {
-		return result, err
-	}
-	return result, nil
-}
-
-func (httpHandler *ExternalServicesHandler) TerminalAddressAdaptor(address domain.Address) (map[string]interface{}, error ){
-	fmt.Println("Initiate a new address")
+func (externalHandler *ExternalServicesHandler) TerminalCreatePackagingAdaptor(packaging domain.TerminalPackagingDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	serviceHandler := httpHandler.NewExternalServicesFacade()
-	buildAddress := serviceHandler.terminalService.BuildNewAddress(address)
-
-	result, err := httpHandler.external.TerminalCreateAddress(buildAddress)
+	serviceHandler := externalHandler.NewExternalServicesFacade()
+	buildPackaging := serviceHandler.terminalService.BuildNewTerminalPackaging(packaging)
+	result, err := externalHandler.external.TerminalCreatePackaging(buildPackaging)
 	if err != nil {
 		return result, err
 	}
 	return result, nil
 }
 
-func (httpHandler *ExternalServicesHandler) TerminalGetRatesAdaptor() (interface{}, error ){
-	fmt.Println("Initiate a new rates")
-	var result interface{}
-	result, err := httpHandler.external.TerminalGetPackagingRates()
+func (externalHandler *ExternalServicesHandler) TerminalCreateAddressAdaptor(address domain.Address) (map[string]interface{}, error ){
+	var result map[string]interface{}
+	serviceHandler := externalHandler.NewExternalServicesFacade()
+	buildAddress := serviceHandler.terminalService.BuildNewTerminalAddress(address)
+	result, err := externalHandler.external.TerminalCreateAddress(buildAddress)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
+func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor() (map[string]interface{}, error ){
+	var result map[string]interface{}
+	result, err := externalHandler.external.TerminalGetRates()
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
+func (externalHandler *ExternalServicesHandler) TerminalCreateParcelAdaptor(parcel interface{}) (map[string]interface{}, error ){
+	var result map[string]interface{}
+	result, err := externalHandler.external.TerminalCreateParcel(parcel)
 	if err != nil {
 		return result, err
 	}

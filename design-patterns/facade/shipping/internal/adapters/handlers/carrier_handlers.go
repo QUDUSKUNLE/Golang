@@ -11,7 +11,6 @@ func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, err, context)
 	}
-
 	if user.UserType != string(domain.CARRIER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
@@ -20,6 +19,5 @@ func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
 	}
-
 	return handler.ComputeResponseMessage(http.StatusOK, pickUps, context)
 }

@@ -26,16 +26,21 @@ func PostgresSQLConnection() (*PostgresRepository, error) {
 	maxIdleConn, _ := strconv.Atoi(os.Getenv("DB_MAX_IDLE_CONNECTIONS"))
 	maxLifetimeConn, _ := strconv.Atoi(os.Getenv("DB_MAX_LIFETIME_CONNECTIONS"))
 
-	DB, err := gorm.Open(postgres.Open(fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), port, os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))), &gorm.Config{})
+	DB, err := gorm.Open(postgres.Open(fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), port, os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt: true,
+	})
 	if err != nil {
 		return nil, fmt.Errorf("error, not connected to database: %w", err)
 	}
 	if err := DB.AutoMigrate(
 		&domain.User{},
-		&domain.Shipping{},
-		&domain.PickUp{},
 		&domain.Carrier{},
 		&domain.Location{},
+		&domain.Packaging{},
+		&domain.Parcel{},
+		&domain.Shipping{},
+		&domain.PickUp{},
 	); err != nil {
 		log.Fatalf("Error running struct model migration: %s", err.Error())
 	}

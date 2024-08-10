@@ -6,34 +6,35 @@ import (
 	"time"
 )
 
-type Shipping struct {
-	gorm.Model
-	ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"ID"`
-	CreatedAt time.Time  `json:"CreatedAt"`
-	UpdatedAt *time.Time `json:"UpdatedAt"`
-	DeletedAt *time.Time `json:"DeletedAt"`
+type (
+	Shipping struct {
+		gorm.Model
+		ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"id"`
+		CreatedAt time.Time  `json:"created_at"`
+		UpdatedAt *time.Time `json:"updated_at"`
+		DeletedAt *time.Time `json:"deleted_at"`
 
-	UserID          uuid.UUID   `json:"-"`
-	User            *User       `json:"-"`
-	CarrierID       uuid.UUID   `json:"CarrierID"`
-	Carrier         *Carrier    `json:"-"`
-	Description     string      `gorm:"size=150" json:"Description"`
-	PickUpAddress   Address     `gorm:"embedded" json:"PickUpAddress"`
-	DeliveryAddress Address     `gorm:"embedded" json:"DeliveryAddress"`
-	ProductType     ProductType `json:"ProductType"`
-	PickUp          PickUp      `json:"-"`
-}
+		UserID          uuid.UUID   `json:"-"`
+		User            *User       `json:"-"`
+		CarrierID       uuid.UUID   `json:"carrier_id"`
+		Carrier         *Carrier    `json:"-"`
+		Description     string      `gorm:"size=150" json:"description"`
+		PickUpAddress   Address     `gorm:"embedded" json:"pick_up_address"`
+		DeliveryAddress Address     `gorm:"embedded" json:"delivery_address"`
+		ProductType     ProductType `json:"Product_type"`
+		PickUp          PickUp      `json:"-"`
+	}
+	ShippingDto struct {
+		Description     string      `json:"description" binding:"required" validate:"required,gte=6,lte=1000"`
+		PickUpAddress   Address     `json:"pick_up_address" binding:"required" validate:"required,dive,required"`
+		DeliveryAddress Address     `json:"delivery_address" binding:"required" validate:"required,dive,required"`
+		ProductType     ProductType `json:"product_type" binding:"required" validate:"required"`
+		CarrierID       uuid.UUID   `json:"carrier_id" binding:"required" validate:"required"`
+		UserID          uuid.UUID
+	}
+)
 
-type ShippingDTO struct {
-	Description     string      `json:"Description" binding:"required" validate:"required,gte=6,lte=1000"`
-	PickUpAddress   Address     `json:"PickUpAddress" binding:"required" validate:"required,dive,required"`
-	DeliveryAddress Address     `json:"DeliveryAddress" binding:"required" validate:"required,dive,required"`
-	ProductType     ProductType `json:"ProductType" binding:"required" validate:"required"`
-	CarrierID       uuid.UUID   `json:"CarrierID" binding:"required" validate:"required"`
-	UserID          uuid.UUID
-}
-
-func (shipping *Shipping) BuildNewShipping(ship ShippingDTO) *Shipping {
+func (shipping *Shipping) BuildNewShipping(ship ShippingDto) *Shipping {
 	return &Shipping{
 		ID:              uuid.New(),
 		UserID:          ship.UserID,

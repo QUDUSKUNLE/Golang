@@ -6,28 +6,29 @@ import (
 	"time"
 )
 
-type Carrier struct {
-	gorm.Model
-	ID        uuid.UUID      `json:"ID" gorm:"uuid;primaryKey"`
-	CreatedAt time.Time      `json:"CreatedAt"`
-	UpdatedAt time.Time      `json:"UpdatedAt"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+type (
+	Carrier struct {
+		gorm.Model
+		ID        uuid.UUID      `json:"id" gorm:"uuid;primaryKey"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
+		DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	CompanyName    string    `json:"CompanyName"`
-	CompanyAddress Address   `gorm:"embedded" json:"CompanyAddress"`
-	Contact        Contact   `gorm:"embedded" json:"Address"`
-	UserID         uuid.UUID `json:"-"`
-	User           *User
+		CompanyName    string    `json:"company_name"`
+		CompanyAddress Address   `gorm:"embedded" json:"company_address"`
+		Contact        Contact   `gorm:"embedded" json:"contact"`
+		UserID         uuid.UUID `json:"-"`
+		User           *User
 
-	PickUps []PickUp `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-}
-
-type CarrierDto struct {
-	CompanyName    string  `json:"CompanyName" binding:"required" validate:"required,gte=6,lte=1000"`
-	CompanyAddress Address `json:"CompanyAddress" binding:"required" validate:"required"`
-	Contact        Contact `json:"Contact" binding:"required" validate:"required,dive,required"`
-	UserID         uuid.UUID
-}
+		PickUps []PickUp `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	}
+	CarrierDto struct {
+		CompanyName    string  `json:"company_name" binding:"required" validate:"required,gte=6,lte=1000"`
+		CompanyAddress Address `json:"company_address" binding:"required" validate:"required"`
+		Contact        Contact `json:"contact" binding:"required" validate:"required,dive,required"`
+		UserID         uuid.UUID
+	}
+)
 
 func (carrier *Carrier) BeforeCreate(scope *gorm.DB) error {
 	carrier.ID = uuid.New()

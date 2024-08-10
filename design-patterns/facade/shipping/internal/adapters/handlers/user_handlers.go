@@ -13,13 +13,11 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 	if err := handler.ValidateStruct(context, user); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
-
 	err := handler.internalServicesAdapter.SaveUser(*user);
 	if err != nil {
 		if err.Error() == string(USER_ALREADY_EXIST) {
 			return handler.ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 		}
-
 		if err.Error() == string(INCORRECT_PASSWORDS) {
 			return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 		}

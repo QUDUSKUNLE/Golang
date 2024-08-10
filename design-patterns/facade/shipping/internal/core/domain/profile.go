@@ -8,14 +8,14 @@ import (
 
 type Profile struct {
 	gorm.Model
-	ID        uuid.UUID      `json:"ID" gorm:"uuid;primaryKey"`
-	CreatedAt time.Time      `json:"CreatedAt"`
-	UpdatedAt time.Time      `json:"UpdatedAt"`
+	ID        uuid.UUID      `json:"id" gorm:"uuid;primaryKey"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	FullName string    `json:"FullName"`
-	Address  Address   `gorm:"embedded" json:"CompanyAddress"`
-	Contact  Contact   `gorm:"embedded" json:"ContactAddress"`
-	UserID   uuid.UUID `json:"CarrierID"`
+	FullName string    `json:"full_name"`
+	Address  Address   `gorm:"embedded" json:"company_address"`
+	Contact  Contact   `gorm:"embedded" json:"contact_address"`
+	UserID   uuid.UUID `json:"carrier_id"`
 	User     *User
 }

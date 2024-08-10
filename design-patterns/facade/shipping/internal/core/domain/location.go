@@ -9,19 +9,20 @@ import (
 type (
 	Location struct {
 		gorm.Model
-		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"ID"`
-		CreatedAt time.Time      `json:"CreatedAt"`
-		UpdatedAt time.Time      `json:"UpdatedAt"`
+		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"id"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
 		DeletedAt gorm.DeletedAt `gorm:"index"`
 
-		TerminalAddressID *string   `json:"TerminalAddressID"`
-		Address           Address   `gorm:"embedded" json:"Address"`
+		TerminalAddressID string    `json:"terminal_address_id"`
+		Address           Address   `gorm:"embedded" json:"address"`
 		UserID            uuid.UUID `json:"-"`
 		User              *User     `json:"-"`
 	}
 	LocationDto struct {
-		Address []Address `json:"Address" binding:"required" validate:"required,dive,required"`
-		UserID  uuid.UUID
+		Address           []Address `json:"address" binding:"required" validate:"required,dive,required"`
+		UserID            uuid.UUID
+		TerminalAddressID string `json:"terminal_address_id"`
 	}
 )
 
@@ -34,8 +35,9 @@ func (location *Location) BuildNewLocation(locationDto LocationDto) []*Location 
 	locations := []*Location{}
 	for _, address := range locationDto.Address {
 		locations = append(locations, &Location{
-			UserID:  locationDto.UserID,
-			Address: address,
+			UserID:            locationDto.UserID,
+			Address:           address,
+			TerminalAddressID: locationDto.TerminalAddressID,
 		})
 	}
 	return locations

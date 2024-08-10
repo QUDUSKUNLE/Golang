@@ -18,30 +18,31 @@ const (
 type (
 	User struct {
 		gorm.Model
-		ID        uuid.UUID      `json:"ID" gorm:"uuid;primaryKey"`
-		Email     string         `json:"Email" gorm:"unique"`
-		Password  string         `json:"Password"`
-		UserType  UserType       `json:"UserType"`
-		CreatedAt time.Time      `json:"CreatedAt"`
-		UpdatedAt time.Time      `json:"UpdatedAt"`
+		ID        uuid.UUID      `json:"id" gorm:"uuid;primaryKey"`
+		Email     string         `json:"email" gorm:"unique"`
+		Password  string         `json:"password"`
+		UserType  UserType       `json:"user_type"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
 		DeletedAt gorm.DeletedAt `gorm:"index"`
 
-		Shippings []Shipping `json:"Shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-
+		Shippings []Shipping `json:"shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 		Addresses []Location `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+		Packagings []Packaging `json:"packagings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+		Parcels []Parcel `json:"parcels" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	}
 	UserDto struct {
-		Email           string `json:"Email" binding:"required,email,lte=100" validate:"required"`
-		Password        string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
-		ConfirmPassword string `json:"ConfirmPassword" binding:"required,gte=6,lte=20" validate:"required"`
-		UserType        UserType `json:"UserType" binding:"required" validate:"required"`
+		Email           string   `json:"email" binding:"required,email,lte=100" validate:"required"`
+		Password        string   `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
+		ConfirmPassword string   `json:"confirm_password" binding:"required,gte=6,lte=20" validate:"required"`
+		UserType        UserType `json:"user_type" binding:"required" validate:"required"`
 	}
 	LogInDto struct {
-		Email    string `json:"Email" binding:"required,email,lte=100" validate:"required"`
-		Password string `json:"Password" binding:"required,gte=6,lte=20" validate:"required"`
+		Email    string `json:"email" binding:"required,email,lte=100" validate:"required"`
+		Password string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
 	}
 	ResetPasswordDto struct {
-		Email string `json:"Email" binding:"required" validate:"required,email"`
+		Email string `json:"email" binding:"required" validate:"required,email"`
 	}
 	UserType string
 )

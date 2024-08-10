@@ -9,9 +9,9 @@ type HTTPHandler struct {
 	externalServicesAdapter services.ExternalServicesHandler
 }
 
-func HttpAdapter(serviceHandlers services.InternalServicesHandler, externalServicesHandler services.ExternalServicesHandler) *HTTPHandler {
+func HttpAdapter(internalServiceHandler services.InternalServicesHandler, externalServicesHandler services.ExternalServicesHandler) *HTTPHandler {
 	return &HTTPHandler{
-		internalServicesAdapter: serviceHandlers,
+		internalServicesAdapter: internalServiceHandler,
 		externalServicesAdapter: externalServicesHandler,
 	}
 }

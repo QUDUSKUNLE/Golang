@@ -3,22 +3,31 @@ package domain
 type (
 	ProductType string
   PACKAGE_TYPE string
+	WEIGHT_UNIT string
+	ITEM_TYPE string
 )
 
 const (
-	Animal      ProductType = "Animal"
-	Plant       ProductType = "Plant"
-	Appareal    ProductType = "Appareal"
-	Book        ProductType = "Book"
-	Cosmetics   ProductType = "Cosmetics"
-	Electronics ProductType = "Electronics"
-	Watery      ProductType = "Watery"
-	Ammunition  ProductType = "Ammunition"
+	Animal      ProductType = "animal"
+	Plant       ProductType = "plant"
+	Appareal    ProductType = "appareal"
+	Book        ProductType = "book"
+	Cosmetics   ProductType = "cosmetics"
+	Electronics ProductType = "electronics"
+	Watery      ProductType = "watery"
+	Ammunition  ProductType = "ammunition"
 
 	// PACKAGE_TYPE
 	BOX            PACKAGE_TYPE = "box"
 	ENVELOPE       PACKAGE_TYPE = "envelope"
 	SOFT_PACKAGING PACKAGE_TYPE = "soft_packaging"
+
+	// WEIGHT_UNIT
+	KG WEIGHT_UNIT = "kg"
+
+	// ITEM_TYPE
+	DOCUMENT ITEM_TYPE = "document"
+	PARCEL ITEM_TYPE = "parcel"
 )
 
 func (product ProductType) PrintProduct() string {
