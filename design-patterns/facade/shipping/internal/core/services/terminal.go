@@ -4,7 +4,7 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 )
 
-func (externalHandler *ExternalServicesHandler) TerminalCreatePackagingAdaptor(packaging domain.TerminalPackagingDto) (map[string]interface{}, error ){
+func (externalHandler *ExternalServicesHandler) TerminalCreatePackagingAdaptor(packaging domain.SingleTerminalPackagingDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
 	serviceHandler := externalHandler.NewExternalServicesFacade()
 	buildPackaging := serviceHandler.terminalService.BuildNewTerminalPackaging(packaging)
@@ -35,9 +35,11 @@ func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor() (map[s
 	return result, nil
 }
 
-func (externalHandler *ExternalServicesHandler) TerminalCreateParcelAdaptor(parcel interface{}) (map[string]interface{}, error ){
+func (externalHandler *ExternalServicesHandler) TerminalCreateParcelAdaptor(parcel domain.SingleTerminalParcelDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	result, err := externalHandler.external.TerminalCreateParcel(parcel)
+	serviceHandler := externalHandler.NewExternalServicesFacade()
+	builtParcel := serviceHandler.terminalService.BuildNewTerminalParcel(parcel)
+	result, err := externalHandler.external.TerminalCreateParcel(builtParcel)
 	if err != nil {
 		return result, err
 	}

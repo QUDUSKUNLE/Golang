@@ -10,4 +10,6 @@ const (
 	PRODUCT_IS_DELIVERED ResponseMessage = "Product is delivered."
 	UPDATE_PARCEL_SUCCESSFULLY ResponseMessage = "Update parcel successfully."
 	ADDRESSES_SUBMITTED_SUCCESSFULLY ResponseMessage = "User addresses submitted successfully."
+	PACKAGES_SUBMITTED_SUCCESSFULLY ResponseMessage = "Packages submitted successfully."
+	PARCEL_SUBMITTED_SUCCESSFULLY ResponseMessage = "Parcels submitted successfully."
 )

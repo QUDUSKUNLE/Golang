@@ -20,7 +20,7 @@ type (
 	}
 	PackagingDto struct {
 		UserID              uuid.UUID
-		TerminalPackagingID string `json:"terminal_packaging_id"`
+		PackagingID []string `json:"packaging_ids"`
 	}
 )
 
@@ -29,9 +29,13 @@ func (packaging *Packaging) BeforeCreate(scope *gorm.DB) error {
 	return nil
 }
 
-func (packaging *Packaging) BuildNewPackaging(packageDto PackagingDto) *PackagingDto {
-	return &PackagingDto{
-		UserID:              packageDto.UserID,
-		TerminalPackagingID: packageDto.TerminalPackagingID,
+func (packaging *Packaging) BuildNewPackaging(packageDto PackagingDto) []*Packaging {
+	pack := []*Packaging{}
+	for _, terminal_id := range packageDto.PackagingID {
+		pack = append(pack, &Packaging{
+			UserID: packageDto.UserID,
+			TerminalPackagingID: terminal_id,
+		})
 	}
+	return pack
 }

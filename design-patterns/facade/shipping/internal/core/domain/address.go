@@ -9,7 +9,7 @@ import (
 type Address struct {
 	Email             string `json:"email" validate:"required,email"`
 	Province          string `json:"province"`
-	ExternalAddressID string `json:"external_address_id"`
+	TerminalAddressID string `json:"terminal_address_id"`
 	Description       string `json:"description"`
 	FirstName         string  `json:"first_name" validate:"required"`
 	LastName          string  `json:"last_name" binding:"required,max=50" validate:"required"`

@@ -25,15 +25,13 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	}
 	// Make call to external adapter to register address
 	for i, address := range location.Address {
-		externalAddress, err := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
-		if err != nil {
-			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
-		}
+		externalAddress, _ := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
 		if externalAddress["data"] != nil {
 			result := externalAddress["data"].(map[string]interface{})
 			address_id := result["address_id"].(string)
-			location.TerminalAddressID = address_id
-			location.Address[i].ExternalAddressID = address_id
+			location.Address[i].TerminalAddressID = address_id
+		} else {
+			return handler.ComputeErrorResponse(http.StatusBadRequest, externalAddress["message"], context)
 		}
 	}
 	// Make call to internal adapter to save register

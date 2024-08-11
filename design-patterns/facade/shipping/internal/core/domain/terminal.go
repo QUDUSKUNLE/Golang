@@ -5,6 +5,22 @@ import "fmt"
 type (
 	Terminal struct {}
 	TerminalPackagingDto struct {
+		Packagings  []SingleTerminalPackagingDto `json:"Packagings" binding:"required" validate:"required,dive,required"`
+	}
+	TerminalParcelDto struct {
+		Parcels []SingleTerminalParcelDto `json:"Parcels" binding:"required" validate:"required,dive,required"`
+	}
+	TerminalParcelItemDto struct {
+		Description string    `json:"description" validate:"required"`
+		HS_CODE     string    `json:"hs_code"`
+		Name        string    `json:"name" validate:"required"`
+		Type        ITEM_TYPE `json:"type" validate:"required"`
+		Currency    Currency    `json:"currency" validate:"required"`
+		Value       float32   `json:"value" validate:"required"`
+		Quantity    int       `json:"quantity" validate:"required"`
+		Weight      float32   `json:"weight" validate:"required"`
+	}
+	SingleTerminalPackagingDto struct {
 		Height      float32      `json:"height" binding:"required" validate:"required"`
 		Length      float32      `json:"length" binding:"required" validate:"required"`
 		Name        string       `json:"name" binding:"required" validate:"required"`
@@ -14,7 +30,7 @@ type (
 		Weight      float32      `json:"weight" binding:"required" validate:"required"`
 		Weight_Unit string       `json:"weight_unit" binding:"required" validate:"required"`
 	}
-	TerminalParcelDto struct {
+	SingleTerminalParcelDto struct {
 		Description       string                  `json:"description" validate:"required"`
 		Items             []TerminalParcelItemDto `json:"items" binding:"required" validate:"required,dive,required"`
 		Metadata          map[string]interface{}  `json:"metadata"`
@@ -23,19 +39,9 @@ type (
 		Rec_docs          []string                `json:"rec_docs" binding:"required" validate:"required,dive,required"`
 		Weight_unit       WEIGHT_UNIT             `json:"weight_unit" binding:"required" validate:"required"`
 	}
-	TerminalParcelItemDto struct {
-		Description string    `json:"description" validate:"required"`
-		HS_CODE     string    `json:"hs_code"`
-		Name        string    `json:"name" validate:"required"`
-		Type        ITEM_TYPE `json:"type" validate:"required"`
-		Currency    string    `json:"currency" validate:"required"`
-		Value       float32   `json:"value" validate:"required"`
-		Quantity    int       `json:"quantity" validate:"required"`
-		Weight      float32   `json:"weight" validate:"required"`
-	}
 )
 
-func (packaging *Terminal) BuildNewTerminalPackaging(pack TerminalPackagingDto) map[string]interface{} {
+func (packaging *Terminal) BuildNewTerminalPackaging(pack SingleTerminalPackagingDto) map[string]interface{} {
 	return map[string]interface{}{
 		"height":      pack.Height,
 		"length":      pack.Length,
@@ -65,14 +71,31 @@ func (address *Terminal) BuildNewTerminalAddress(addr Address) map[string]interf
 	}
 }
 
-func (parcel *Terminal) BuildNewTerminalParcel(parse TerminalParcelDto) map[string]interface{} {
+func (parcel *Terminal) BuildNewTerminalParcel(parse SingleTerminalParcelDto) map[string]interface{} {
 	return map[string]interface{}{
 		"description": parse.Description,
-		"items": parse.Items,
+		"items": buildNewTerminalParcelItem(parse.Items),
 		"metadata": parse.Metadata,
 		"packaging": parse.Packaging,
 		"proof_of_payments": parse.Proof_Of_Payments,
 		"rec_docs": parse.Rec_docs,
 		"weight_unit": parse.Weight_unit,
 	}
+}
+
+func buildNewTerminalParcelItem(parse []TerminalParcelItemDto) []map[string]interface{} {
+	result := []map[string]interface{}{}
+	for _, parcelItem := range parse {
+		result = append(result, map[string]interface{}{
+			"description": parcelItem.Description,
+			"hs_code": parcelItem.HS_CODE,
+			"name": parcelItem.Name,
+			"type": parcelItem.Type,
+			"currency": parcelItem.Currency.PrintCurrency(),
+			"value": parcelItem.Value,
+			"quantity": parcelItem.Quantity,
+			"weight": parcelItem.Weight,
+		})
+	}
+	return result
 }

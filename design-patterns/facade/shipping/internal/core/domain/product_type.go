@@ -5,6 +5,7 @@ type (
   PACKAGE_TYPE string
 	WEIGHT_UNIT string
 	ITEM_TYPE string
+	Currency string
 )
 
 const (
@@ -28,6 +29,22 @@ const (
 	// ITEM_TYPE
 	DOCUMENT ITEM_TYPE = "document"
 	PARCEL ITEM_TYPE = "parcel"
+
+	// Currency
+	AED Currency = "AED"
+	AUD Currency = "AUD"
+	CAD Currency = "CAD"
+	CNY Currency = "CNY"
+	EUR Currency = "EUR"
+	GBP Currency = "GBP"
+	GHS Currency = "GHS"
+	HKD Currency = "HKD"
+	KES Currency = "KES"
+	NGN Currency = "NGN"
+	TZS Currency = "TZS"
+	UGX Currency = "UGX"
+	USD Currency = "USD"
+	ZAR Currency = "ZAR"
 )
 
 func (product ProductType) PrintProduct() string {
@@ -60,6 +77,16 @@ func (packageType PACKAGE_TYPE) PrintPackageType() string {
 		return string(ENVELOPE)
 	case SOFT_PACKAGING:
 		return string(SOFT_PACKAGING)
+	}
+	return "Unknown"
+}
+
+func (currency Currency) PrintCurrency() string {
+	switch currency {
+	case NGN:
+		return string(NGN)
+	case USD:
+		return string(USD)
 	}
 	return "Unknown"
 }

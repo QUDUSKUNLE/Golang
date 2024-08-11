@@ -22,7 +22,6 @@ type (
 	LocationDto struct {
 		Address           []Address `json:"address" binding:"required" validate:"required,dive,required"`
 		UserID            uuid.UUID
-		TerminalAddressID string `json:"terminal_address_id"`
 	}
 )
 
@@ -37,7 +36,7 @@ func (location *Location) BuildNewLocation(locationDto LocationDto) []*Location 
 		locations = append(locations, &Location{
 			UserID:            locationDto.UserID,
 			Address:           address,
-			TerminalAddressID: locationDto.TerminalAddressID,
+			TerminalAddressID: address.TerminalAddressID,
 		})
 	}
 	return locations

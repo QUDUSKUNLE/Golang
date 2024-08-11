@@ -14,13 +14,13 @@ type (
 		UpdatedAt time.Time      `json:"updated_at"`
 		DeletedAt gorm.DeletedAt `json:"deleted_at"`
 
+		TerminalParcelID string    `json:"terminal_parcel_id"`
 		UserID           uuid.UUID `json:"-"`
 		User             *User     `json:"-"`
-		TerminalParcelID string    `json:"terminal_parcel_id"`
 	}
 	ParcelDto struct {
 		UserID           uuid.UUID
-		TerminalParcelID string `json:"terminal_parcel_id"`
+		ParcelID []string `json:"parcel_id"`
 	}
 )
 
@@ -29,9 +29,13 @@ func (parcel *Parcel) BeforeCreate(scope *gorm.DB) error {
 	return nil
 }
 
-func (parcel *Parcel) BuildNewParcel(packageDto ParcelDto) *ParcelDto {
-	return &ParcelDto{
-		UserID:           packageDto.UserID,
-		TerminalParcelID: packageDto.TerminalParcelID,
+func (parcel *Parcel) BuildNewParcel(parcelDto ParcelDto) []*Parcel {
+	parc := []*Parcel{}
+	for _, parcelID := range parcelDto.ParcelID {
+		parc = append(parc, &Parcel{
+			UserID: parcelDto.UserID,
+			TerminalParcelID: parcelID,
+		})
 	}
+	return parc
 }

@@ -1,19 +1,46 @@
 package handlers
 
 import (
+	// "fmt"
 	"net/http"
+
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/labstack/echo/v4"
 )
 
 func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
-	packaging := new(domain.TerminalPackagingDto)
-	if err := handler.ValidateStruct(context, packaging); err != nil {
+	terminalPackaging := new(domain.TerminalPackagingDto)
+	if err := handler.ValidateStruct(context, terminalPackaging); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
-	response, err := handler.externalServicesAdapter.TerminalCreatePackagingAdaptor(*packaging)
+	// Validate user
+	user, err := handler.ParseUserID(context)
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusOK, err, context)
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, response, context)
+
+	if user.UserType != string(domain.USER) {
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+	packaging := new(domain.PackagingDto)
+	// Make call to external adapter to register packaging
+	for _, pack := range terminalPackaging.Packagings {
+		externalPackaging, err := handler.externalServicesAdapter.TerminalCreatePackagingAdaptor(pack)
+		if err != nil {
+			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+		}
+		if externalPackaging["data"] != nil {
+			result := externalPackaging["data"].(map[string]interface{})
+			packaging_id := result["packaging_id"].(string)
+			packaging.PackagingID = append(packaging.PackagingID, packaging_id)
+		} else {
+			return handler.ComputeErrorResponse(http.StatusBadRequest, externalPackaging["message"], context)
+		}
+	}
+	packaging.UserID = user.ID
+	err = handler.internalServicesAdapter.NewPackagingAdaptor(*packaging)
+	if err != nil {
+		return handler.ComputeErrorResponse(http.StatusConflict, "Package error", context)
+	}
+	return handler.ComputeResponseMessage(http.StatusOK, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
 }

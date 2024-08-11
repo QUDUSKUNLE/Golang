@@ -2,11 +2,8 @@ package repository
 
 import "github.com/QUDUSKUNLE/shipping/internal/core/domain"
 
-func (database *PostgresRepository) SavePackagingAdaptor(pack domain.PackagingDto) error {
-	result := database.db.Create(&domain.Packaging{
-		UserID:    pack.UserID,
-		TerminalPackagingID: pack.TerminalPackagingID,
-	})
+func (database *PostgresRepository) SavePackagingAdaptor(packages []*domain.Packaging) error {
+	result := database.db.Create(packages)
 	if result.Error != nil {
 		return result.Error
 	}
