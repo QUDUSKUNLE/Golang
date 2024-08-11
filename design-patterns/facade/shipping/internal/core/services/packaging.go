@@ -11,6 +11,6 @@ func (internalHandler *InternalServicesHandler) NewPackagingAdaptor(packageDto d
 	if err != nil {
 		return err
 	}
-	systemsHandler.notificationService.SendAddressNotification()
+	systemsHandler.notificationService.SendPackagingNotification()
 	return nil
 }

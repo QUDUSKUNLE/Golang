@@ -26,6 +26,6 @@ func (internalHandler *InternalServicesHandler) ResetPassword(userDto domain.Res
 		return fmt.Errorf("user %s with the email: %s", err.Error(), userDto.Email)
 	}
 	servicesHandler := internalHandler.NewInternalServicesFacade()
-	servicesHandler.notificationService.SendRegistrationNotification()
+	servicesHandler.notificationService.SendResetPasswordNotification()
 	return nil
 }

@@ -10,9 +10,9 @@ type (
 	Location struct {
 		gorm.Model
 		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"id"`
-		CreatedAt time.Time      `json:"created_at"`
-		UpdatedAt time.Time      `json:"updated_at"`
-		DeletedAt gorm.DeletedAt `gorm:"index"`
+		CreatedAt *time.Time      `json:"created_at"`
+		UpdatedAt *time.Time      `json:"updated_at"`
+		DeletedAt *gorm.DeletedAt `gorm:"index" json:"-"`
 
 		TerminalAddressID string    `json:"terminal_address_id"`
 		Address           Address   `gorm:"embedded" json:"address"`

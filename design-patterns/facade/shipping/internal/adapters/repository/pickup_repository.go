@@ -6,6 +6,7 @@ import (
 )
 
 func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp domain.PickUp) error {
+	_ = database.db.AutoMigrate(&domain.PickUp{})
 	result := database.db.Create(&domain.PickUp{
 		ID:            pickUp.ID,
 		ShippingID:    pickUp.ShippingID,

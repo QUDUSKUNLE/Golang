@@ -10,9 +10,9 @@ type (
 	Carrier struct {
 		gorm.Model
 		ID        uuid.UUID      `json:"id" gorm:"uuid;primaryKey"`
-		CreatedAt time.Time      `json:"created_at"`
-		UpdatedAt time.Time      `json:"updated_at"`
-		DeletedAt gorm.DeletedAt `gorm:"index"`
+		CreatedAt *time.Time      `json:"created_at"`
+		UpdatedAt *time.Time      `json:"updated_at"`
+		DeletedAt *gorm.DeletedAt `gorm:"index" json:"-"`
 
 		CompanyName    string    `json:"company_name"`
 		CompanyAddress Address   `gorm:"embedded" json:"company_address"`

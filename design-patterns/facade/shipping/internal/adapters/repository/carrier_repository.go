@@ -6,6 +6,7 @@ import (
 )
 
 func (database *PostgresRepository) SaveCarrierAdaptor(carrier domain.Carrier) error {
+	_ = database.db.AutoMigrate(&domain.Carrier{})
 	result := database.db.Create(&domain.Carrier{
 		ID:         carrier.ID,
 		UserID:    carrier.UserID,

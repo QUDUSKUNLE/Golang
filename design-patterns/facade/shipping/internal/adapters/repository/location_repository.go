@@ -24,6 +24,7 @@ func (database *PostgresRepository) ReadAddressesAdaptor(userID uuid.UUID) ([]do
 }
 
 func (database *PostgresRepository) SaveAddressAdaptor(locations []*domain.Location) error {
+	_ = database.db.AutoMigrate(&domain.Location{})
 	result := database.db.Create(locations)
 	if result.Error != nil {
 		return result.Error

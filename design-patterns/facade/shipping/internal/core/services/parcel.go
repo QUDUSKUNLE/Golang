@@ -9,6 +9,6 @@ func (internalHandler *InternalServicesHandler) NewParcelAdaptor(packageDto doma
 	if err != nil {
 		return err
 	}
-	systemsHandler.notificationService.SendAddressNotification()
+	systemsHandler.notificationService.SendParcelNotification()
 	return nil
 }

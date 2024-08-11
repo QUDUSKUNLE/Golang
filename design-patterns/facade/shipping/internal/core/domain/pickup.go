@@ -21,7 +21,7 @@ type (
 		PickUpAt  time.Time    `json:"pick_up_at"`
 		CreatedAt time.Time    `json:"created_at"`
 		UpdatedAt *time.Time   `json:"updated_at"`
-		DeletedAt *time.Time   `json:"deleted_at"`
+		DeletedAt *time.Time   `json:"-"`
 		Status    PickUpStatus `json:"status"`
 
 		ShippingID uuid.UUID `json:"-"`

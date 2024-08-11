@@ -16,6 +16,8 @@ func (internalHandler *InternalServicesHandler) NewPickUpAdaptor(pick domain.Pic
 	if err := systemsHandler.labelService.CreateShippingLabel(pickUp.ShippingID.String()); err != nil {
 		log.Fatal(err)
 	}
+	// Send pick up notification
+	systemsHandler.notificationService.SendPickUpNotification()
 	return nil
 }
 

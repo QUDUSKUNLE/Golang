@@ -36,3 +36,14 @@ func (notification *Notification) SendRegistrationNotification() {
 	fmt.Println("Sending registration notification")
 }
 
+func (notification *Notification) SendParcelNotification() {
+	fmt.Println("Sending parcel notification")
+}
+
+func (notification *Notification) SendPackagingNotification() {
+	fmt.Println("Sending packaging notification")
+}
+
+func (notification *Notification) SendResetPasswordNotification() {
+	fmt.Println("Sending password reset notification")
+}

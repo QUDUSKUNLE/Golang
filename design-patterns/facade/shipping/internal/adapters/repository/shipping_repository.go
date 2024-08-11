@@ -6,6 +6,7 @@ import (
 )
 
 func (database *PostgresRepository) CreateShippingAdaptor(shipping domain.Shipping) error {
+	_ = database.db.AutoMigrate(&domain.Shipping{})
 	result := database.db.Create(&domain.Shipping{
 		ID:              shipping.ID,
 		UserID:          shipping.UserID,

@@ -10,9 +10,9 @@ type (
 	Packaging struct {
 		gorm.Model
 		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"id"`
-		CreatedAt time.Time      `json:"created_at"`
-		UpdatedAt time.Time      `json:"updated_at"`
-		DeletedAt gorm.DeletedAt `json:"deleted_at"`
+		CreatedAt *time.Time      `json:"created_at"`
+		UpdatedAt *time.Time      `json:"updated_at"`
+		DeletedAt *gorm.DeletedAt `json:"-"`
 
 		UserID              uuid.UUID `json:"-"`
 		User                *User     `json:"-"`

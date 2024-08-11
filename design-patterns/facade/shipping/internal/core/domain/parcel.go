@@ -10,9 +10,9 @@ type (
 	Parcel struct {
 		gorm.Model
 		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"id"`
-		CreatedAt time.Time      `json:"created_at"`
-		UpdatedAt time.Time      `json:"updated_at"`
-		DeletedAt gorm.DeletedAt `json:"deleted_at"`
+		CreatedAt *time.Time      `json:"created_at"`
+		UpdatedAt *time.Time      `json:"updated_at"`
+		DeletedAt *gorm.DeletedAt `json:"-"`
 
 		TerminalParcelID string    `json:"terminal_parcel_id"`
 		UserID           uuid.UUID `json:"-"`

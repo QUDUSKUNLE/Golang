@@ -33,6 +33,7 @@ func (database *PostgresRepository) ReadUserByEmailAdaptor(email string) (*domai
 }
 
 func (database *PostgresRepository) SaveUserAdaptor(user domain.User) error {
+	_ = database.db.AutoMigrate(&domain.User{})
 	query := domain.User{
 		Email:    user.Email,
 		Password: user.Password,

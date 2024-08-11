@@ -10,9 +10,9 @@ type (
 	Shipping struct {
 		gorm.Model
 		ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"id"`
-		CreatedAt time.Time  `json:"created_at"`
+		CreatedAt *time.Time  `json:"created_at"`
 		UpdatedAt *time.Time `json:"updated_at"`
-		DeletedAt *time.Time `json:"deleted_at"`
+		DeletedAt *time.Time `json:"-"`
 
 		UserID          uuid.UUID   `json:"-"`
 		User            *User       `json:"-"`

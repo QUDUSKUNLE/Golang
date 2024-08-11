@@ -6,8 +6,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -33,23 +31,10 @@ func PostgresSQLConnection() (*PostgresRepository, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error, not connected to database: %w", err)
 	}
-	if err := DB.AutoMigrate(
-		&domain.User{},
-		&domain.Carrier{},
-		&domain.Location{},
-		&domain.Packaging{},
-		&domain.Parcel{},
-		&domain.Shipping{},
-		&domain.PickUp{},
-	); err != nil {
-		log.Fatalf("Error running struct model migration: %s", err.Error())
-	}
-
 	postgresDB, err := DB.DB()
 	if err != nil {
 		log.Fatalf("Error: %s", err.Error())
 	}
-
 	// Set database connection settings.
 	postgresDB.SetMaxOpenConns(maxConn)
 	postgresDB.SetMaxIdleConns(maxIdleConn)
