@@ -8,6 +8,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Register a new user
+// @Description Register a new user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param Request body domain.UserDto true "Register a user"
+// @failure 409 {object} domain.RegisterResponse
+// @Success 201 {object} domain.RegisterResponse
+// @Router /register [post]
 func (handler *HTTPHandler) Register(context echo.Context) error {
 	user := new(domain.UserDto)
 	if err := handler.ValidateStruct(context, user); err != nil {
@@ -24,9 +33,18 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 	}
 	// Process valid user data
-	return handler.ComputeResponseMessage(http.StatusOK,USER_REGISTERED_SUCCESSFULLY, context)
+	return handler.ComputeResponseMessage(http.StatusCreated,USER_REGISTERED_SUCCESSFULLY, context)
 }
 
+// @Summary Sign in a user
+// @Description Sign in a user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param Request body domain.LogInDto true "Sign in a user"
+// @failure 400 {object} domain.RegisterResponse
+// @Success 200 {object} domain.RegisterResponse
+// @Router /login [post]
 func (handler *HTTPHandler) Login(context echo.Context) error {
 	loginDto := new(domain.LogInDto)
 	if err := handler.ValidateStruct(context, loginDto); err != nil {
@@ -52,6 +70,15 @@ func (handler *HTTPHandler) Restricted(c echo.Context) error {
 	return handler.ComputeResponseMessage(http.StatusOK, ID.String(), c)
 }
 
+// @Summary Reset a user password
+// @Description Reset a user password
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param Request body domain.ResetPasswordDto true "Reset password"
+// @failure 400 {object} domain.RegisterResponse
+// @Success 200 {object} domain.RegisterResponse
+// @Router /reset_password [post]
 func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
 	resetPasswordDto := new(domain.ResetPasswordDto)
 	if err := handler.ValidateStruct(context, resetPasswordDto); err != nil {

@@ -32,9 +32,9 @@ type (
 		Parcels    []Parcel    `json:"parcels" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	}
 	UserDto struct {
-		Email           string   `json:"email" binding:"required,email,lte=100" validate:"required"`
-		Password        string   `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
-		ConfirmPassword string   `json:"confirm_password" binding:"required,gte=6,lte=20" validate:"required"`
+		Email           string   `json:"email" binding:"required,email,lte=100" validate:"required,email"`
+		Password        string   `json:"password" binding:"required,gte=6,lte=20" validate:"required,gte=6,lte=20"`
+		ConfirmPassword string   `json:"confirm_password" binding:"required,gte=6,lte=20" validate:"required,gte=6,lte=20"`
 		UserType        UserType `json:"user_type" binding:"required" validate:"required"`
 	}
 	LogInDto struct {
@@ -45,6 +45,10 @@ type (
 		Email string `json:"email" binding:"required" validate:"required,email"`
 	}
 	UserType string
+	RegisterResponse struct {
+		Result interface{} `json:"result"`
+		Success bool	`json:"success"`
+	}
 )
 
 func (user UserType) ReturnUserString() string {

@@ -15,7 +15,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internal/core/services"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/swaggo/echo-swagger"
 	"github.com/labstack/echo/v4/middleware"
+	_ "github.com/QUDUSKUNLE/shipping/docs"
 )
 
 var (
@@ -30,6 +32,11 @@ func init() {
 	}
 }
 
+// @title Cloud Shipping API
+// @version 1.0
+// @description Cloud Shipping API
+// @host localhost:8080
+// @BasePath /v1
 func main() {
 	// Get Port number from the loaded .env file
 	port := os.Getenv("PORT")
@@ -63,6 +70,8 @@ func main() {
 
 	// Plug echo into PrivateRoutesAdaptor
 	routes.PrivateRoutesAdaptor(privateRoutes, httpHandler)
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	// Start the server on port 8080
 	if err := e.Start(fmt.Sprintf(":%s", port)); err != http.ErrServerClosed {
 		log.Fatal(err)

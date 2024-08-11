@@ -8,9 +8,9 @@ import (
 func PublicRoutesAdaptor(public *echo.Group, handler *handlers.HTTPHandler) *echo.Group {
 	public.POST("/delivery", handler.DeliveryProduct)
 	public.POST("/reject", handler.RejectProduct)
-	public.POST("/users", handler.Register)
+	public.POST("/register", handler.Register)
 	public.POST("/login", handler.Login)
-	public.POST("/resetPassword", handler.ResetPassword)
+	public.POST("/reset_password", handler.ResetPassword)
 	public.GET("/rates", handler.Rates)
 	return public
 }

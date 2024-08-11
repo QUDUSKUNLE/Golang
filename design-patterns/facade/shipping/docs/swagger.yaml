@@ -1,0 +1,143 @@
+basePath: /v1
+definitions:
+  domain.LogInDto:
+    properties:
+      email:
+        maxLength: 100
+        type: string
+      password:
+        maxLength: 20
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  domain.RegisterResponse:
+    properties:
+      result: {}
+      success:
+        type: boolean
+    type: object
+  domain.ResetPasswordDto:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  domain.UserDto:
+    properties:
+      confirm_password:
+        maxLength: 20
+        minLength: 6
+        type: string
+      email:
+        maxLength: 100
+        type: string
+      password:
+        maxLength: 20
+        minLength: 6
+        type: string
+      user_type:
+        $ref: '#/definitions/domain.UserType'
+    required:
+    - confirm_password
+    - email
+    - password
+    - user_type
+    type: object
+  domain.UserType:
+    enum:
+    - USER
+    - CARRIER
+    type: string
+    x-enum-varnames:
+    - USER
+    - CARRIER
+host: localhost:8080
+info:
+  contact: {}
+  description: Cloud Shipping API
+  title: Cloud Shipping API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Sign in a user
+      parameters:
+      - description: Sign in a user
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LogInDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.RegisterResponse'
+      summary: Sign in a user
+      tags:
+      - User
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user
+      parameters:
+      - description: Register a user
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UserDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.RegisterResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.RegisterResponse'
+      summary: Register a new user
+      tags:
+      - User
+  /reset_password:
+    post:
+      consumes:
+      - application/json
+      description: Reset a user password
+      parameters:
+      - description: Reset password
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ResetPasswordDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.RegisterResponse'
+      summary: Reset a user password
+      tags:
+      - User
+swagger: "2.0"
