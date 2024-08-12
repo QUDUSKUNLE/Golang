@@ -45,7 +45,7 @@ type (
 		Email string `json:"email" binding:"required" validate:"required,email"`
 	}
 	UserType string
-	RegisterResponse struct {
+	Response struct {
 		Result interface{} `json:"result"`
 		Success bool	`json:"success"`
 	}

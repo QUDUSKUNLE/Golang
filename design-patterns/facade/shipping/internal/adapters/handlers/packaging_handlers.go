@@ -8,6 +8,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+
+// @Summary Submit packagings
+// @Description Create packagings
+// @Tags Packaging
+// @Accept json
+// @Produce json
+// @Param Body body domain.TerminalPackagingDto true "Create packagings"
+// @Param Authorization header string true "Bearer token"
+// @Failure 409 {object} domain.Response
+// @Success 201 {object} domain.Response
+// @Router /packagings [post]
 func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	terminalPackaging := new(domain.TerminalPackagingDto)
 	if err := handler.ValidateStruct(context, terminalPackaging); err != nil {
@@ -42,5 +53,5 @@ func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, "Package error", context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
+	return handler.ComputeResponseMessage(http.StatusCreated, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
 }

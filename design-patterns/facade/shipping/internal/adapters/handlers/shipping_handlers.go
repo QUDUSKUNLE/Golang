@@ -6,6 +6,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Submit a shipment
+// @Description Create a shipment
+// @Tags Shipment
+// @Accept json
+// @Produce json
+// @Param Body body domain.ShippingDto true "Create a shipment"
+// @Param Authorization header string true "Bearer token"
+// @Failure 409 {object} domain.Response
+// @Success 201 {object} domain.Response
+// @Router /shipments [post]
 func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 	shippingDto := new(domain.ShippingDto)
 	if err := handler.ValidateStruct(context, shippingDto); err != nil {
@@ -34,6 +44,15 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 	return handler.ComputeResponseMessage(http.StatusOK, PRODUCT_SCHEDULED_FOR_SHIPPING, context)
 }
 
+// @Summary Get shipments
+// @Description Get parcel rates
+// @Tags Shipment
+// @Accept json
+// @Produce json
+// @Failure 401 {object} domain.Response
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} domain.Response
+// @Router /shipments [get]
 func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 	user, err := handler.ParseUserID(context)
 	if err != nil {
@@ -48,7 +67,7 @@ func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, shippings, context)
+	return handler.ComputeResponseMessage(http.StatusCreated, shippings, context)
 }
 
 func (handler *HTTPHandler) RejectProduct(context echo.Context) error {

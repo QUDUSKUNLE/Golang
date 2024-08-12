@@ -13,9 +13,9 @@ import (
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param Request body domain.UserDto true "Register a user"
-// @failure 409 {object} domain.RegisterResponse
-// @Success 201 {object} domain.RegisterResponse
+// @Param Body body domain.UserDto true "Register a user"
+// @Failure 409 {object} domain.Response
+// @Success 201 {object} domain.Response
 // @Router /register [post]
 func (handler *HTTPHandler) Register(context echo.Context) error {
 	user := new(domain.UserDto)
@@ -41,9 +41,9 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param Request body domain.LogInDto true "Sign in a user"
-// @failure 400 {object} domain.RegisterResponse
-// @Success 200 {object} domain.RegisterResponse
+// @Param Body body domain.LogInDto true "Sign in a user"
+// @failure 400 {object} domain.Response
+// @Success 200 {object} domain.Response
 // @Router /login [post]
 func (handler *HTTPHandler) Login(context echo.Context) error {
 	loginDto := new(domain.LogInDto)
@@ -75,9 +75,9 @@ func (handler *HTTPHandler) Restricted(c echo.Context) error {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param Request body domain.ResetPasswordDto true "Reset password"
-// @failure 400 {object} domain.RegisterResponse
-// @Success 200 {object} domain.RegisterResponse
+// @Param Body body domain.ResetPasswordDto true "Reset password"
+// @failure 400 {object} domain.Response
+// @Success 200 {object} domain.Response
 // @Router /reset_password [post]
 func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
 	resetPasswordDto := new(domain.ResetPasswordDto)

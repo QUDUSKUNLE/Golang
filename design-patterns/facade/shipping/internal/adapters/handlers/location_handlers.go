@@ -8,6 +8,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Submit addresses
+// @Description Create addresses
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param Body body domain.LocationDto true "Create addresses"
+// @Param Authorization header string true "Bearer token"
+// @Failure 409 {object} domain.Response
+// @Success 201 {object} domain.Response
+// @Router /addresses [post]
 func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	location := new(domain.LocationDto)
 	if err := handler.ValidateStruct(context, location); err != nil {
@@ -41,9 +51,19 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
 	// Process valid location data
-	return handler.ComputeResponseMessage(http.StatusOK, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
+	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
 }
 
+// @Summary Get a address
+// @Description get a address
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param addressID path string true "Address ID"
+// @Param Authorization header string true "Bearer token"
+// @Failure 400 {object} domain.Response
+// @Success 201 {object} domain.Response
+// @Router /addresses/:addressID [get]
 func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 	user, err := handler.ParseUserID(context)
 	if err != nil {
@@ -66,6 +86,15 @@ func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 	return handler.ComputeResponseMessage(http.StatusOK, location, context)
 }
 
+// @Summary Get addresses
+// @Description get addresses
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Failure 400 {object} domain.Response
+// @Success 201 {object} domain.Response
+// @Router /addresses [get]
 func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 	user, err := handler.ParseUserID(context)
 	if err != nil {

@@ -21,7 +21,7 @@ func (internalHandler *InternalServicesHandler) NewPickUpAdaptor(pick domain.Pic
 	return nil
 }
 
-func (internalHandler *InternalServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUp) error {
+func (internalHandler *InternalServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUpDto) error {
 	systemsHandler := internalHandler.NewInternalServicesFacade()
 	// build a new pick up
 	pick := systemsHandler.pickUpService.BuildUpdatePickUp(pickUp)

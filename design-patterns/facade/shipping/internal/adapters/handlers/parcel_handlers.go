@@ -8,6 +8,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Submit parcels
+// @Description Create parcels
+// @Tags Parcel
+// @Accept json
+// @Produce json
+// @Param Body body domain.TerminalParcelDto true "Create parcels"
+// @Param Authorization header string true "Bearer token"
+// @Failure 409 {object} domain.Response
+// @Success 201 {object} domain.Response
+// @Router /parcels [post]
 func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 	terminalParcel := new(domain.TerminalParcelDto)
 	if err := handler.ValidateStruct(context, terminalParcel); err != nil {
@@ -42,5 +52,5 @@ func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 	if err := handler.internalServicesAdapter.NewParcelAdaptor(*parcel); err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, "Parcel error", context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, PARCEL_SUBMITTED_SUCCESSFULLY, context)
+	return handler.ComputeResponseMessage(http.StatusCreated, PARCEL_SUBMITTED_SUCCESSFULLY, context)
 }

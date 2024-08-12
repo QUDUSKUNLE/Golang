@@ -15,6 +15,134 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/addresses": {
+            "get": {
+                "description": "get addresses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Get addresses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create addresses",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Submit addresses",
+                "parameters": [
+                    {
+                        "description": "Create addresses",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.LocationDto"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/addresses/:addressID": {
+            "get": {
+                "description": "get a address",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Get a address",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Address ID",
+                        "name": "addressID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Sign in a user",
@@ -31,7 +159,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Sign in a user",
-                        "name": "Request",
+                        "name": "Body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -43,13 +171,228 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterResponse"
+                            "$ref": "#/definitions/domain.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterResponse"
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/packagings": {
+            "post": {
+                "description": "Create packagings",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packaging"
+                ],
+                "summary": "Submit packagings",
+                "parameters": [
+                    {
+                        "description": "Create packagings",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.TerminalPackagingDto"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/parcels": {
+            "post": {
+                "description": "Create parcels",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parcel"
+                ],
+                "summary": "Submit parcels",
+                "parameters": [
+                    {
+                        "description": "Create parcels",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.TerminalParcelDto"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/pickups": {
+            "get": {
+                "description": "Get carrier pickups",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Carrier Pickup"
+                ],
+                "summary": "Get carrier pickups",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a pickup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Carrier Pickup"
+                ],
+                "summary": "Update a pickup",
+                "parameters": [
+                    {
+                        "description": "Update a pickup",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.PickUpDto"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/rates": {
+            "get": {
+                "description": "Get parcel rates",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parcel"
+                ],
+                "summary": "Get parcel rates",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
                         }
                     }
                 }
@@ -71,7 +414,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Register a user",
-                        "name": "Request",
+                        "name": "Body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -83,13 +426,13 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterResponse"
+                            "$ref": "#/definitions/domain.Response"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterResponse"
+                            "$ref": "#/definitions/domain.Response"
                         }
                     }
                 }
@@ -111,7 +454,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Reset password",
-                        "name": "Request",
+                        "name": "Body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -123,13 +466,96 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterResponse"
+                            "$ref": "#/definitions/domain.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterResponse"
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/shipments": {
+            "get": {
+                "description": "Get parcel rates",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Shipment"
+                ],
+                "summary": "Get shipments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a shipment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Shipment"
+                ],
+                "summary": "Submit a shipment",
+                "parameters": [
+                    {
+                        "description": "Create a shipment",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.ShippingDto"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
                         }
                     }
                 }
@@ -137,6 +563,154 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.Address": {
+            "type": "object",
+            "required": [
+                "city",
+                "country",
+                "email",
+                "first_name",
+                "last_name",
+                "phone_no",
+                "state",
+                "street_name",
+                "street_no",
+                "zip"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "country": {
+                    "maxLength": 50,
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/domain.Country"
+                        }
+                    ]
+                },
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "phone_no": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "province": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "street_name": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "street_no": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "terminal_address_id": {
+                    "type": "string"
+                },
+                "zip": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "domain.Country": {
+            "type": "string",
+            "enum": [
+                "NG",
+                "US",
+                "UK",
+                "UAE",
+                "NG"
+            ],
+            "x-enum-varnames": [
+                "NG",
+                "US",
+                "UK",
+                "UAE",
+                "NIGERIA"
+            ]
+        },
+        "domain.Currency": {
+            "type": "string",
+            "enum": [
+                "AED",
+                "AUD",
+                "CAD",
+                "CNY",
+                "EUR",
+                "GBP",
+                "GHS",
+                "HKD",
+                "KES",
+                "NGN",
+                "TZS",
+                "UGX",
+                "USD",
+                "ZAR"
+            ],
+            "x-enum-varnames": [
+                "AED",
+                "AUD",
+                "CAD",
+                "CNY",
+                "EUR",
+                "GBP",
+                "GHS",
+                "HKD",
+                "KES",
+                "NGN",
+                "TZS",
+                "UGX",
+                "USD",
+                "ZAR"
+            ]
+        },
+        "domain.ITEM_TYPE": {
+            "type": "string",
+            "enum": [
+                "document",
+                "parcel"
+            ],
+            "x-enum-varnames": [
+                "DOCUMENT",
+                "PARCEL"
+            ]
+        },
+        "domain.LocationDto": {
+            "type": "object",
+            "required": [
+                "address"
+            ],
+            "properties": {
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Address"
+                    }
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.LogInDto": {
             "type": "object",
             "required": [
@@ -155,14 +729,67 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.RegisterResponse": {
+        "domain.PACKAGE_TYPE": {
+            "type": "string",
+            "enum": [
+                "box",
+                "envelope",
+                "soft_packaging"
+            ],
+            "x-enum-varnames": [
+                "BOX",
+                "ENVELOPE",
+                "SOFT_PACKAGING"
+            ]
+        },
+        "domain.PickUpDto": {
             "type": "object",
+            "required": [
+                "carrier_id",
+                "pick_up_at",
+                "shipping_id",
+                "status"
+            ],
             "properties": {
-                "result": {},
-                "success": {
-                    "type": "boolean"
+                "carrier_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "pick_up_at": {
+                    "type": "string"
+                },
+                "shipping_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
                 }
             }
+        },
+        "domain.ProductType": {
+            "type": "string",
+            "enum": [
+                "animal",
+                "plant",
+                "appareal",
+                "book",
+                "cosmetics",
+                "electronics",
+                "watery",
+                "ammunition"
+            ],
+            "x-enum-varnames": [
+                "Animal",
+                "Plant",
+                "Appareal",
+                "Book",
+                "Cosmetics",
+                "Electronics",
+                "Watery",
+                "Ammunition"
+            ]
         },
         "domain.ResetPasswordDto": {
             "type": "object",
@@ -172,6 +799,196 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.Response": {
+            "type": "object",
+            "properties": {
+                "result": {},
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "domain.ShippingDto": {
+            "type": "object",
+            "required": [
+                "carrier_id",
+                "delivery_address",
+                "description",
+                "pick_up_address",
+                "product_type"
+            ],
+            "properties": {
+                "carrier_id": {
+                    "type": "string"
+                },
+                "delivery_address": {
+                    "$ref": "#/definitions/domain.Address"
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "minLength": 6
+                },
+                "pick_up_address": {
+                    "$ref": "#/definitions/domain.Address"
+                },
+                "product_type": {
+                    "$ref": "#/definitions/domain.ProductType"
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.SingleTerminalPackagingDto": {
+            "type": "object",
+            "required": [
+                "height",
+                "length",
+                "name",
+                "size_unit",
+                "type",
+                "weight",
+                "weight_unit",
+                "width"
+            ],
+            "properties": {
+                "height": {
+                    "type": "number"
+                },
+                "length": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "size_unit": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/domain.PACKAGE_TYPE"
+                },
+                "weight": {
+                    "type": "number"
+                },
+                "weight_unit": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.SingleTerminalParcelDto": {
+            "type": "object",
+            "required": [
+                "description",
+                "items",
+                "packaging",
+                "proof_of_payments",
+                "rec_docs",
+                "weight_unit"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.TerminalParcelItemDto"
+                    }
+                },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "packaging": {
+                    "type": "string"
+                },
+                "proof_of_payments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "rec_docs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "weight_unit": {
+                    "$ref": "#/definitions/domain.WEIGHT_UNIT"
+                }
+            }
+        },
+        "domain.TerminalPackagingDto": {
+            "type": "object",
+            "required": [
+                "Packagings"
+            ],
+            "properties": {
+                "Packagings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.SingleTerminalPackagingDto"
+                    }
+                }
+            }
+        },
+        "domain.TerminalParcelDto": {
+            "type": "object",
+            "required": [
+                "Parcels"
+            ],
+            "properties": {
+                "Parcels": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.SingleTerminalParcelDto"
+                    }
+                }
+            }
+        },
+        "domain.TerminalParcelItemDto": {
+            "type": "object",
+            "required": [
+                "currency",
+                "description",
+                "name",
+                "quantity",
+                "type",
+                "value",
+                "weight"
+            ],
+            "properties": {
+                "currency": {
+                    "$ref": "#/definitions/domain.Currency"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hs_code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "type": {
+                    "$ref": "#/definitions/domain.ITEM_TYPE"
+                },
+                "value": {
+                    "type": "number"
+                },
+                "weight": {
+                    "type": "number"
                 }
             }
         },
@@ -212,6 +1029,15 @@ const docTemplate = `{
             "x-enum-varnames": [
                 "USER",
                 "CARRIER"
+            ]
+        },
+        "domain.WEIGHT_UNIT": {
+            "type": "string",
+            "enum": [
+                "kg"
+            ],
+            "x-enum-varnames": [
+                "KG"
             ]
         }
     }

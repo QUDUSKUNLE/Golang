@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 func PrivateRoutesAdaptor(private *echo.Group, handler *handlers.HTTPHandler) *echo.Group {
-	private.POST("/shippings", handler.PostShipping)
-	private.GET("/shippings", handler.GetShippings)
+	private.POST("/shipments", handler.PostShipping)
+	private.GET("/shipments", handler.GetShippings)
 	private.PUT("/pickups", handler.UpdatePickUp)
 	private.GET("/pickups", handler.CarrierPickUps)
 	private.POST("/addresses", handler.PostAddress)

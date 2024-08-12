@@ -30,6 +30,7 @@ type (
 		Carrier    *Carrier  `json:"-"`
 	}
 	PickUpDto struct {
+		ID        uuid.UUID  `json:"id"`
 		ShippingID uuid.UUID `json:"shipping_id" binding:"required" validate:"required"`
 		CarrierID  uuid.UUID `json:"carrier_id" binding:"required" validate:"required"`
 		PickUpAt   time.Time `json:"pick_up_at" binding:"required" validate:"required"`
@@ -48,7 +49,7 @@ func (pickUp *PickUp) BuildNewPickUp(pick PickUpDto) *PickUp {
 	}
 }
 
-func (pi *PickUp) BuildUpdatePickUp(pick PickUp) *PickUp {
+func (pi *PickUp) BuildUpdatePickUp(pick PickUpDto) *PickUp {
 	return &PickUp{
 		ID:         pick.ID,
 		ShippingID: pick.ShippingID,

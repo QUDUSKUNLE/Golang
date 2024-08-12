@@ -1,5 +1,119 @@
 basePath: /v1
 definitions:
+  domain.Address:
+    properties:
+      city:
+        maxLength: 50
+        type: string
+      country:
+        allOf:
+        - $ref: '#/definitions/domain.Country'
+        maxLength: 50
+      description:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        maxLength: 50
+        type: string
+      phone_no:
+        maxLength: 50
+        type: string
+      province:
+        type: string
+      state:
+        maxLength: 50
+        type: string
+      street_name:
+        maxLength: 50
+        type: string
+      street_no:
+        maxLength: 50
+        type: string
+      terminal_address_id:
+        type: string
+      zip:
+        maxLength: 50
+        type: string
+    required:
+    - city
+    - country
+    - email
+    - first_name
+    - last_name
+    - phone_no
+    - state
+    - street_name
+    - street_no
+    - zip
+    type: object
+  domain.Country:
+    enum:
+    - NG
+    - US
+    - UK
+    - UAE
+    - NG
+    type: string
+    x-enum-varnames:
+    - NG
+    - US
+    - UK
+    - UAE
+    - NIGERIA
+  domain.Currency:
+    enum:
+    - AED
+    - AUD
+    - CAD
+    - CNY
+    - EUR
+    - GBP
+    - GHS
+    - HKD
+    - KES
+    - NGN
+    - TZS
+    - UGX
+    - USD
+    - ZAR
+    type: string
+    x-enum-varnames:
+    - AED
+    - AUD
+    - CAD
+    - CNY
+    - EUR
+    - GBP
+    - GHS
+    - HKD
+    - KES
+    - NGN
+    - TZS
+    - UGX
+    - USD
+    - ZAR
+  domain.ITEM_TYPE:
+    enum:
+    - document
+    - parcel
+    type: string
+    x-enum-varnames:
+    - DOCUMENT
+    - PARCEL
+  domain.LocationDto:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/domain.Address'
+        type: array
+      userID:
+        type: string
+    required:
+    - address
+    type: object
   domain.LogInDto:
     properties:
       email:
@@ -13,18 +127,193 @@ definitions:
     - email
     - password
     type: object
-  domain.RegisterResponse:
+  domain.PACKAGE_TYPE:
+    enum:
+    - box
+    - envelope
+    - soft_packaging
+    type: string
+    x-enum-varnames:
+    - BOX
+    - ENVELOPE
+    - SOFT_PACKAGING
+  domain.PickUpDto:
     properties:
-      result: {}
-      success:
-        type: boolean
+      carrier_id:
+        type: string
+      id:
+        type: string
+      pick_up_at:
+        type: string
+      shipping_id:
+        type: string
+      status:
+        type: string
+    required:
+    - carrier_id
+    - pick_up_at
+    - shipping_id
+    - status
     type: object
+  domain.ProductType:
+    enum:
+    - animal
+    - plant
+    - appareal
+    - book
+    - cosmetics
+    - electronics
+    - watery
+    - ammunition
+    type: string
+    x-enum-varnames:
+    - Animal
+    - Plant
+    - Appareal
+    - Book
+    - Cosmetics
+    - Electronics
+    - Watery
+    - Ammunition
   domain.ResetPasswordDto:
     properties:
       email:
         type: string
     required:
     - email
+    type: object
+  domain.Response:
+    properties:
+      result: {}
+      success:
+        type: boolean
+    type: object
+  domain.ShippingDto:
+    properties:
+      carrier_id:
+        type: string
+      delivery_address:
+        $ref: '#/definitions/domain.Address'
+      description:
+        maxLength: 1000
+        minLength: 6
+        type: string
+      pick_up_address:
+        $ref: '#/definitions/domain.Address'
+      product_type:
+        $ref: '#/definitions/domain.ProductType'
+      userID:
+        type: string
+    required:
+    - carrier_id
+    - delivery_address
+    - description
+    - pick_up_address
+    - product_type
+    type: object
+  domain.SingleTerminalPackagingDto:
+    properties:
+      height:
+        type: number
+      length:
+        type: number
+      name:
+        type: string
+      size_unit:
+        type: string
+      type:
+        $ref: '#/definitions/domain.PACKAGE_TYPE'
+      weight:
+        type: number
+      weight_unit:
+        type: string
+      width:
+        type: number
+    required:
+    - height
+    - length
+    - name
+    - size_unit
+    - type
+    - weight
+    - weight_unit
+    - width
+    type: object
+  domain.SingleTerminalParcelDto:
+    properties:
+      description:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/domain.TerminalParcelItemDto'
+        type: array
+      metadata:
+        additionalProperties: true
+        type: object
+      packaging:
+        type: string
+      proof_of_payments:
+        items:
+          type: string
+        type: array
+      rec_docs:
+        items:
+          type: string
+        type: array
+      weight_unit:
+        $ref: '#/definitions/domain.WEIGHT_UNIT'
+    required:
+    - description
+    - items
+    - packaging
+    - proof_of_payments
+    - rec_docs
+    - weight_unit
+    type: object
+  domain.TerminalPackagingDto:
+    properties:
+      Packagings:
+        items:
+          $ref: '#/definitions/domain.SingleTerminalPackagingDto'
+        type: array
+    required:
+    - Packagings
+    type: object
+  domain.TerminalParcelDto:
+    properties:
+      Parcels:
+        items:
+          $ref: '#/definitions/domain.SingleTerminalParcelDto'
+        type: array
+    required:
+    - Parcels
+    type: object
+  domain.TerminalParcelItemDto:
+    properties:
+      currency:
+        $ref: '#/definitions/domain.Currency'
+      description:
+        type: string
+      hs_code:
+        type: string
+      name:
+        type: string
+      quantity:
+        type: integer
+      type:
+        $ref: '#/definitions/domain.ITEM_TYPE'
+      value:
+        type: number
+      weight:
+        type: number
+    required:
+    - currency
+    - description
+    - name
+    - quantity
+    - type
+    - value
+    - weight
     type: object
   domain.UserDto:
     properties:
@@ -55,6 +344,12 @@ definitions:
     x-enum-varnames:
     - USER
     - CARRIER
+  domain.WEIGHT_UNIT:
+    enum:
+    - kg
+    type: string
+    x-enum-varnames:
+    - KG
 host: localhost:8080
 info:
   contact: {}
@@ -62,6 +357,91 @@ info:
   title: Cloud Shipping API
   version: "1.0"
 paths:
+  /addresses:
+    get:
+      consumes:
+      - application/json
+      description: get addresses
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get addresses
+      tags:
+      - Address
+    post:
+      consumes:
+      - application/json
+      description: Create addresses
+      parameters:
+      - description: Create addresses
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LocationDto'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Submit addresses
+      tags:
+      - Address
+  /addresses/:addressID:
+    get:
+      consumes:
+      - application/json
+      description: get a address
+      parameters:
+      - description: Address ID
+        in: path
+        name: addressID
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get a address
+      tags:
+      - Address
   /login:
     post:
       consumes:
@@ -70,7 +450,7 @@ paths:
       parameters:
       - description: Sign in a user
         in: body
-        name: Request
+        name: Body
         required: true
         schema:
           $ref: '#/definitions/domain.LogInDto'
@@ -80,14 +460,156 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.RegisterResponse'
+            $ref: '#/definitions/domain.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.RegisterResponse'
+            $ref: '#/definitions/domain.Response'
       summary: Sign in a user
       tags:
       - User
+  /packagings:
+    post:
+      consumes:
+      - application/json
+      description: Create packagings
+      parameters:
+      - description: Create packagings
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.TerminalPackagingDto'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Submit packagings
+      tags:
+      - Packaging
+  /parcels:
+    post:
+      consumes:
+      - application/json
+      description: Create parcels
+      parameters:
+      - description: Create parcels
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.TerminalParcelDto'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Submit parcels
+      tags:
+      - Parcel
+  /pickups:
+    get:
+      consumes:
+      - application/json
+      description: Get carrier pickups
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get carrier pickups
+      tags:
+      - Carrier Pickup
+    put:
+      consumes:
+      - application/json
+      description: Update a pickup
+      parameters:
+      - description: Update a pickup
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PickUpDto'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Update a pickup
+      tags:
+      - Carrier Pickup
+  /rates:
+    get:
+      consumes:
+      - application/json
+      description: Get parcel rates
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get parcel rates
+      tags:
+      - Parcel
   /register:
     post:
       consumes:
@@ -96,7 +618,7 @@ paths:
       parameters:
       - description: Register a user
         in: body
-        name: Request
+        name: Body
         required: true
         schema:
           $ref: '#/definitions/domain.UserDto'
@@ -106,11 +628,11 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/domain.RegisterResponse'
+            $ref: '#/definitions/domain.Response'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/domain.RegisterResponse'
+            $ref: '#/definitions/domain.Response'
       summary: Register a new user
       tags:
       - User
@@ -122,7 +644,7 @@ paths:
       parameters:
       - description: Reset password
         in: body
-        name: Request
+        name: Body
         required: true
         schema:
           $ref: '#/definitions/domain.ResetPasswordDto'
@@ -132,12 +654,67 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.RegisterResponse'
+            $ref: '#/definitions/domain.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.RegisterResponse'
+            $ref: '#/definitions/domain.Response'
       summary: Reset a user password
       tags:
       - User
+  /shipments:
+    get:
+      consumes:
+      - application/json
+      description: Get parcel rates
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get shipments
+      tags:
+      - Shipment
+    post:
+      consumes:
+      - application/json
+      description: Create a shipment
+      parameters:
+      - description: Create a shipment
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ShippingDto'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Submit a shipment
+      tags:
+      - Shipment
 swagger: "2.0"
