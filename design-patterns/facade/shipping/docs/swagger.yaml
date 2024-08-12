@@ -385,7 +385,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create addresses
+      description: create addresses
       parameters:
       - description: Create addresses
         in: body
@@ -446,7 +446,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Sign in a user
+      description: sign in a user
       parameters:
       - description: Sign in a user
         in: body
@@ -472,7 +472,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create packagings
+      description: create packagings
       parameters:
       - description: Create packagings
         in: body
@@ -503,7 +503,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create parcels
+      description: create parcels
       parameters:
       - description: Create parcels
         in: body
@@ -534,7 +534,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get carrier pickups
+      description: get carrier pickups
       parameters:
       - description: Bearer token
         in: header
@@ -558,7 +558,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Update a pickup
+      description: update a pickup
       parameters:
       - description: Update a pickup
         in: body
@@ -589,11 +589,42 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get parcel rates
+      description: get rates
       parameters:
-      - description: Bearer token
+      - description: Bearer Token
         in: header
         name: Authorization
+        required: true
+        type: string
+      - description: Currency
+        enum:
+        - NGN
+        - USD
+        in: query
+        name: currency
+        required: true
+        type: string
+      - description: Pickup Address ID
+        in: query
+        name: pickup_address_id
+        required: true
+        type: string
+      - description: Delivery Address ID
+        in: query
+        name: delivery_address_id
+        required: true
+        type: string
+      - description: Parcel ID
+        in: query
+        name: parcel_id
+        required: true
+        type: string
+      - description: Cash On Delivery
+        enum:
+        - "false"
+        - "true"
+        in: query
+        name: cash_on_delivery
         required: true
         type: string
       produces:
@@ -603,18 +634,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/domain.Response'
-        "409":
-          description: Conflict
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/domain.Response'
-      summary: Get parcel rates
+      summary: Get rates
       tags:
-      - Parcel
+      - Rates
   /register:
     post:
       consumes:
       - application/json
-      description: Register a new user
+      description: register a new user
       parameters:
       - description: Register a user
         in: body
@@ -666,7 +697,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get parcel rates
+      description: get shipments
       parameters:
       - description: Bearer token
         in: header
@@ -690,7 +721,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a shipment
+      description: create a shipment
       parameters:
       - description: Create a shipment
         in: body

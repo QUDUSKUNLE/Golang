@@ -6,6 +6,7 @@ type (
 	WEIGHT_UNIT string
 	ITEM_TYPE string
 	Currency string
+	CASH_ON_DELIVERY string
 )
 
 const (
@@ -45,6 +46,10 @@ const (
 	UGX Currency = "UGX"
 	USD Currency = "USD"
 	ZAR Currency = "ZAR"
+
+	// Cash on delivery
+	false CASH_ON_DELIVERY = "false"
+	true CASH_ON_DELIVERY = "true"
 )
 
 func (product ProductType) PrintProduct() string {
@@ -87,6 +92,17 @@ func (currency Currency) PrintCurrency() string {
 		return string(NGN)
 	case USD:
 		return string(USD)
+	}
+	return "Unknown"
+}
+
+
+func (catch CASH_ON_DELIVERY) PrintCashOnDelivery() string {
+	switch catch {
+	case false:
+		return string(false)
+	case true:
+		return string(true)
 	}
 	return "Unknown"
 }

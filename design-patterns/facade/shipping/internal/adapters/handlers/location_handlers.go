@@ -9,7 +9,7 @@ import (
 )
 
 // @Summary Submit addresses
-// @Description Create addresses
+// @Description create addresses
 // @Tags Address
 // @Accept json
 // @Produce json

@@ -7,7 +7,7 @@ import (
 )
 
 // @Summary Update a pickup
-// @Description Update a pickup
+// @Description update a pickup
 // @Tags Carrier Pickup
 // @Accept json
 // @Produce json

@@ -10,7 +10,7 @@ import (
 
 
 // @Summary Submit packagings
-// @Description Create packagings
+// @Description create packagings
 // @Tags Packaging
 // @Accept json
 // @Produce json

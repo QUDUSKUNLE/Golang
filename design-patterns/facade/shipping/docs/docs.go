@@ -53,7 +53,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create addresses",
+                "description": "create addresses",
                 "consumes": [
                     "application/json"
                 ],
@@ -145,7 +145,7 @@ const docTemplate = `{
         },
         "/login": {
             "post": {
-                "description": "Sign in a user",
+                "description": "sign in a user",
                 "consumes": [
                     "application/json"
                 ],
@@ -185,7 +185,7 @@ const docTemplate = `{
         },
         "/packagings": {
             "post": {
-                "description": "Create packagings",
+                "description": "create packagings",
                 "consumes": [
                     "application/json"
                 ],
@@ -232,7 +232,7 @@ const docTemplate = `{
         },
         "/parcels": {
             "post": {
-                "description": "Create parcels",
+                "description": "create parcels",
                 "consumes": [
                     "application/json"
                 ],
@@ -279,7 +279,7 @@ const docTemplate = `{
         },
         "/pickups": {
             "get": {
-                "description": "Get carrier pickups",
+                "description": "get carrier pickups",
                 "consumes": [
                     "application/json"
                 ],
@@ -315,7 +315,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update a pickup",
+                "description": "update a pickup",
                 "consumes": [
                     "application/json"
                 ],
@@ -362,7 +362,7 @@ const docTemplate = `{
         },
         "/rates": {
             "get": {
-                "description": "Get parcel rates",
+                "description": "get rates",
                 "consumes": [
                     "application/json"
                 ],
@@ -370,15 +370,58 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Parcel"
+                    "Rates"
                 ],
-                "summary": "Get parcel rates",
+                "summary": "Get rates",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Bearer token",
+                        "description": "Bearer Token",
                         "name": "Authorization",
                         "in": "header",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "NGN",
+                            "USD"
+                        ],
+                        "type": "string",
+                        "description": "Currency",
+                        "name": "currency",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pickup Address ID",
+                        "name": "pickup_address_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Delivery Address ID",
+                        "name": "delivery_address_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Parcel ID",
+                        "name": "parcel_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "false",
+                            "true"
+                        ],
+                        "type": "string",
+                        "description": "Cash On Delivery",
+                        "name": "cash_on_delivery",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -389,8 +432,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.Response"
                         }
                     },
-                    "409": {
-                        "description": "Conflict",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/domain.Response"
                         }
@@ -400,7 +443,7 @@ const docTemplate = `{
         },
         "/register": {
             "post": {
-                "description": "Register a new user",
+                "description": "register a new user",
                 "consumes": [
                     "application/json"
                 ],
@@ -480,7 +523,7 @@ const docTemplate = `{
         },
         "/shipments": {
             "get": {
-                "description": "Get parcel rates",
+                "description": "get shipments",
                 "consumes": [
                     "application/json"
                 ],
@@ -516,7 +559,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a shipment",
+                "description": "create a shipment",
                 "consumes": [
                     "application/json"
                 ],

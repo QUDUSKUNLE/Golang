@@ -7,7 +7,7 @@ import (
 )
 
 // @Summary Get carrier pickups
-// @Description Get carrier pickups
+// @Description get carrier pickups
 // @Tags Carrier Pickup
 // @Accept json
 // @Produce json

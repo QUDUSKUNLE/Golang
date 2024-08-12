@@ -10,8 +10,8 @@ import (
 	"os"
 )
 
-func (terminal *ExternalRepository) TerminalGetRates() (map[string]interface{}, error) {
-	req, err := buildNewTerminalRequest(GET.PrintMethod(), RATES.PrintEndpoint(), nil)
+func (terminal *ExternalRepository) TerminalGetRates(query string) (map[string]interface{}, error) {
+	req, err := buildNewTerminalRequest(GET.PrintMethod(), fmt.Sprintf("%s/%s?%s", RATES.PrintEndpoint(), SHIPMENT.PrintEndpoint(), query), nil)
 	var rates map[string]interface{}
 	if err != nil {
 		log.Fatal(err)

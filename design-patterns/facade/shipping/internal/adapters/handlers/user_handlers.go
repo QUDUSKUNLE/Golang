@@ -9,7 +9,7 @@ import (
 )
 
 // @Summary Register a new user
-// @Description Register a new user
+// @Description register a new user
 // @Tags User
 // @Accept json
 // @Produce json
@@ -37,7 +37,7 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 }
 
 // @Summary Sign in a user
-// @Description Sign in a user
+// @Description sign in a user
 // @Tags User
 // @Accept json
 // @Produce json

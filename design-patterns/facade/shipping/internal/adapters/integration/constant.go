@@ -19,6 +19,7 @@ const (
 	PICKUP ENDPOINTS = "pickups"
 	ADDRESSES ENDPOINTS = "addresses"
 	PARCELS  ENDPOINTS = "parcels"
+	SHIPMENT ENDPOINTS = "shipment"
 
 	// PACKAGE_TYPE
 	BOX PACKAGE_TYPE = "box"
@@ -52,6 +53,8 @@ func (endpoint ENDPOINTS) PrintEndpoint() string {
 		return string(ADDRESSES)
 	case PARCELS:
 		return string(PARCELS)
+	case SHIPMENT:
+		return string(SHIPMENT)
 	}
 	return "Unknown"
 }

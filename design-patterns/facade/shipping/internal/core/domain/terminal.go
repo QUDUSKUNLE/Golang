@@ -3,9 +3,9 @@ package domain
 import "fmt"
 
 type (
-	Terminal struct {}
+	Terminal             struct{}
 	TerminalPackagingDto struct {
-		Packagings  []SingleTerminalPackagingDto `json:"Packagings" binding:"required" validate:"required,dive,required"`
+		Packagings []SingleTerminalPackagingDto `json:"Packagings" binding:"required" validate:"required,dive,required"`
 	}
 	TerminalParcelDto struct {
 		Parcels []SingleTerminalParcelDto `json:"Parcels" binding:"required" validate:"required,dive,required"`
@@ -15,7 +15,7 @@ type (
 		HS_CODE     string    `json:"hs_code"`
 		Name        string    `json:"name" validate:"required"`
 		Type        ITEM_TYPE `json:"type" validate:"required"`
-		Currency    Currency    `json:"currency" validate:"required"`
+		Currency    Currency  `json:"currency" validate:"required"`
 		Value       float32   `json:"value" validate:"required"`
 		Quantity    int       `json:"quantity" validate:"required"`
 		Weight      float32   `json:"weight" validate:"required"`
@@ -38,6 +38,14 @@ type (
 		Proof_Of_Payments []string                `json:"proof_of_payments" binding:"required" validate:"required,dive,required"`
 		Rec_docs          []string                `json:"rec_docs" binding:"required" validate:"required,dive,required"`
 		Weight_unit       WEIGHT_UNIT             `json:"weight_unit" binding:"required" validate:"required"`
+	}
+	TerminalRatesQueryDto struct {
+		Currency          Currency         `json:"currency"`
+		PickUpAddressID   string           `json:"pickup_address_id"`
+		DeliveryAddressID string           `json:"delivery_address_id"`
+		ShipmentID        *string          `json:"shipment_id"`
+		ParcelID          string           `json:"parcel_id"`
+		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery"`
 	}
 )
 
@@ -73,13 +81,13 @@ func (address *Terminal) BuildNewTerminalAddress(addr Address) map[string]interf
 
 func (parcel *Terminal) BuildNewTerminalParcel(parse SingleTerminalParcelDto) map[string]interface{} {
 	return map[string]interface{}{
-		"description": parse.Description,
-		"items": buildNewTerminalParcelItem(parse.Items),
-		"metadata": parse.Metadata,
-		"packaging": parse.Packaging,
+		"description":       parse.Description,
+		"items":             buildNewTerminalParcelItem(parse.Items),
+		"metadata":          parse.Metadata,
+		"packaging":         parse.Packaging,
 		"proof_of_payments": parse.Proof_Of_Payments,
-		"rec_docs": parse.Rec_docs,
-		"weight_unit": parse.Weight_unit,
+		"rec_docs":          parse.Rec_docs,
+		"weight_unit":       parse.Weight_unit,
 	}
 }
 
@@ -88,14 +96,18 @@ func buildNewTerminalParcelItem(parse []TerminalParcelItemDto) []map[string]inte
 	for _, parcelItem := range parse {
 		result = append(result, map[string]interface{}{
 			"description": parcelItem.Description,
-			"hs_code": parcelItem.HS_CODE,
-			"name": parcelItem.Name,
-			"type": parcelItem.Type,
-			"currency": parcelItem.Currency.PrintCurrency(),
-			"value": parcelItem.Value,
-			"quantity": parcelItem.Quantity,
-			"weight": parcelItem.Weight,
+			"hs_code":     parcelItem.HS_CODE,
+			"name":        parcelItem.Name,
+			"type":        parcelItem.Type,
+			"currency":    parcelItem.Currency.PrintCurrency(),
+			"value":       parcelItem.Value,
+			"quantity":    parcelItem.Quantity,
+			"weight":      parcelItem.Weight,
 		})
 	}
 	return result
+}
+
+func (rates *Terminal) BuildNewTerminalRatesQuery(query TerminalRatesQueryDto) string {
+	return fmt.Sprintf("currency=%s&pickup_address=%s&delivery_address=%s&cash_on_delivery=%s&parcel_id=%s", query.Currency.PrintCurrency(), query.PickUpAddressID, query.DeliveryAddressID, query.CashOnDelivery.PrintCashOnDelivery(), query.ParcelID)
 }

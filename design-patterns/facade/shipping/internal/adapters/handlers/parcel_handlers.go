@@ -9,7 +9,7 @@ import (
 )
 
 // @Summary Submit parcels
-// @Description Create parcels
+// @Description create parcels
 // @Tags Parcel
 // @Accept json
 // @Produce json

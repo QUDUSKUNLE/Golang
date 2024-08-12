@@ -7,7 +7,7 @@ import (
 )
 
 // @Summary Submit a shipment
-// @Description Create a shipment
+// @Description create a shipment
 // @Tags Shipment
 // @Accept json
 // @Produce json
@@ -45,7 +45,7 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 }
 
 // @Summary Get shipments
-// @Description Get parcel rates
+// @Description get shipments
 // @Tags Shipment
 // @Accept json
 // @Produce json

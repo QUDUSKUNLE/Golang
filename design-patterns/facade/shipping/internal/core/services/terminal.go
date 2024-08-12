@@ -26,9 +26,11 @@ func (externalHandler *ExternalServicesHandler) TerminalCreateAddressAdaptor(add
 	return result, nil
 }
 
-func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor() (map[string]interface{}, error ){
+func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor(query domain.TerminalRatesQueryDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	result, err := externalHandler.external.TerminalGetRates()
+	serviceHandler := externalHandler.NewExternalServicesFacade()
+	buildQuery := serviceHandler.terminalService.BuildNewTerminalRatesQuery(query)
+	result, err := externalHandler.external.TerminalGetRates(buildQuery)
 	if err != nil {
 		return result, err
 	}
