@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm"
 )
 
@@ -23,10 +24,20 @@ func PostgresSQLConnection() (*PostgresRepository, error) {
 	maxConn, _ := strconv.Atoi(os.Getenv("DB_MAX_CONNECTIONS"))
 	maxIdleConn, _ := strconv.Atoi(os.Getenv("DB_MAX_IDLE_CONNECTIONS"))
 	maxLifetimeConn, _ := strconv.Atoi(os.Getenv("DB_MAX_LIFETIME_CONNECTIONS"))
-
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			LogLevel: logger.Info,
+			IgnoreRecordNotFoundError: true,
+			ParameterizedQueries: true,
+			Colorful: true,
+		},
+	)
 	DB, err := gorm.Open(postgres.Open(fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), port, os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))), &gorm.Config{
 		SkipDefaultTransaction: true,
 		PrepareStmt: true,
+		Logger: newLogger,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error, not connected to database: %w", err)

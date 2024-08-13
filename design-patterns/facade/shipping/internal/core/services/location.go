@@ -31,3 +31,11 @@ func (internalHandler *InternalServicesHandler) GetLocationsAdaptor(userID uuid.
 	}
 	return location, nil
 }
+
+func (internalHandler *InternalServicesHandler) TerminalUpdateAddressAdaptor(location domain.Location) error {
+	err := internalHandler.internal.TerminalUpdateAddressAdaptor(location);
+	if err != nil {
+		return err
+	}
+	return nil
+}

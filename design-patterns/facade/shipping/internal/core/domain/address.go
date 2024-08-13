@@ -7,10 +7,10 @@ import (
 )
 
 type Address struct {
-	Email             string `json:"email" validate:"required,email"`
-	Province          string `json:"province"`
-	TerminalAddressID string `json:"terminal_address_id"`
-	Description       string `json:"description"`
+	Email             string  `json:"email" validate:"required,email"`
+	Province          string  `json:"province"`
+	TerminalAddressID string  `json:"terminal_address_id"`
+	Description       string  `json:"description" validate:"required"`
 	FirstName         string  `json:"first_name" validate:"required"`
 	LastName          string  `json:"last_name" binding:"required,max=50" validate:"required"`
 	StreetNo          string  `json:"street_no" binding:"required,max=50" validate:"required"`

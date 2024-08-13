@@ -40,6 +40,7 @@ definitions:
     required:
     - city
     - country
+    - description
     - email
     - first_name
     - last_name
@@ -353,8 +354,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Cloud Shipping API
-  title: Cloud Shipping API
+  description: Bahsoon API
+  title: Bahsoon API
   version: "1.0"
 paths:
   /addresses:

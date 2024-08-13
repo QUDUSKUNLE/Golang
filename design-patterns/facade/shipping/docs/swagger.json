@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Cloud Shipping API",
-        "title": "Cloud Shipping API",
+        "description": "Bahsoon API",
+        "title": "Bahsoon API",
         "contact": {},
         "version": "1.0"
     },
@@ -605,6 +605,7 @@
             "required": [
                 "city",
                 "country",
+                "description",
                 "email",
                 "first_name",
                 "last_name",

@@ -26,9 +26,9 @@ type RepositoryPorts interface {
 	SaveAddressAdaptor(location []*domain.Location) error
 	UpdateAddressAdaptor(addressID uuid.UUID, location domain.Location) error
 	DeleteAddressAdaptor(addressID uuid.UUID) error
+	TerminalUpdateAddressAdaptor(location domain.Location) error
 	// Packaging Ports
 	SavePackagingAdaptor(pack []*domain.Packaging) error
 	// Parcel Ports
 	SaveParcelAdaptor(parcel []*domain.Parcel) error
 }
-

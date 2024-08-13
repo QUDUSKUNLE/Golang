@@ -611,6 +611,7 @@ const docTemplate = `{
             "required": [
                 "city",
                 "country",
+                "description",
                 "email",
                 "first_name",
                 "last_name",
@@ -1092,8 +1093,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/v1",
 	Schemes:          []string{},
-	Title:            "Cloud Shipping API",
-	Description:      "Cloud Shipping API",
+	Title:            "Bahsoon API",
+	Description:      "Bahsoon API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

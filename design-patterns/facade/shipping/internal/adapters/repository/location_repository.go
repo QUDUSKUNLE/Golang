@@ -41,3 +41,8 @@ func (database *PostgresRepository) DeleteAddressAdaptor(addressID uuid.UUID) er
 	database.db.Delete(&domain.Location{}, addressID)
 	return nil
 }
+
+func (database *PostgresRepository) TerminalUpdateAddressAdaptor(location domain.Location) error {
+	database.db.Model(&domain.Location{}).Where(&domain.Location{Description: location.Description, UserID: location.UserID}).Updates(map[string]interface{}{"terminal_address_id": location.TerminalAddressID, "address": location.Address})
+	return nil
+}

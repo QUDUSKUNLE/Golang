@@ -21,8 +21,8 @@ import (
 )
 
 var (
-	svc *services.InternalServicesHandler
-	ext *services.ExternalServicesHandler
+	internal *services.InternalServicesHandler
+	external *services.ExternalServicesHandler
 )
 
 func init() {
@@ -32,9 +32,9 @@ func init() {
 	}
 }
 
-// @title Cloud Shipping API
+// @title Bahsoon API
 // @version 1.0
-// @description Cloud Shipping API
+// @description Bahsoon API
 // @host localhost:8080
 // @BasePath /v1
 func main() {
@@ -47,17 +47,18 @@ func main() {
 	
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover()) // Recover servers when break down
+	e.Use(middleware.CORS())
 
 
-	store, err := repository.OpenDBConnection()
-
+	internalStore, err := repository.OpenDBConnection()
 	if err != nil {
 		log.Fatalf("Error connecting to the databse: %s", err.Error())
 	}
-	extStore := integration.OpenExternalConnection()
-	svc = services.InternalServicesAdapter(store)
-	ext = services.ExternalServicesAdapter(extStore)
-	httpHandler := handlers.HttpAdapter(*svc, *ext)
+
+	externalStore := integration.OpenExternalConnection()
+	internal = services.InternalServicesAdapter(internalStore)
+	external = services.ExternalServicesAdapter(externalStore)
+	httpHandler := handlers.HttpAdapter(*internal, *external)
 
 	// Plug echo into PublicRoutesAdaptor
 	public := e.Group("/v1")
