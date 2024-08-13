@@ -42,6 +42,7 @@ func (location *Location) BuildNewLocation(locationDto LocationDto) []*Location 
 			UserID:  locationDto.UserID,
 			Address: address,
 			Description: address.Description,
+			TerminalAddressID: address.TerminalAddressID,
 		})
 	}
 	return locations
