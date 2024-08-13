@@ -33,22 +33,29 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	if user.UserType != string(domain.USER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
-	// Make call to external adapter to register address
+
+	// Make call to internal adapter to save register
+	location.UserID = user.ID
+	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
+	if err != nil {
+		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
+	}
+	// Need to run this with goroutine, working on this
 	for index, address := range location.Address {
 		externalAddress, _ := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
 		if externalAddress["data"] != nil {
 			result := externalAddress["data"].(map[string]interface{})
 			address_id := result["address_id"].(string)
 			location.Address[index].TerminalAddressID = address_id
+			terminalLocation := &domain.Location{
+				TerminalAddressID: location.Address[index].TerminalAddressID,
+				Address: location.Address[index],
+				UserID: location.UserID,
+			}
+			handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(*terminalLocation)
 		} else {
 			return handler.ComputeErrorResponse(http.StatusBadRequest, externalAddress["message"], context)
 		}
-	}
-	// Make call to internal adapter to save register
-	location.UserID = user.ID
-	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
-	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
 	// Process valid location data
 	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
