@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/config"
 	"github.com/QUDUSKUNLE/shipping/internal/adapters/handlers"
 	validationMiddleware "github.com/QUDUSKUNLE/shipping/internal/adapters/middleware"
