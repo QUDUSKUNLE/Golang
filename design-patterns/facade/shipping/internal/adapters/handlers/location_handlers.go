@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	"fmt"
+	"sync"
 	"net/http"
-
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
+
+var wg sync.WaitGroup
 
 // @Summary Submit addresses
 // @Description create addresses
@@ -40,25 +43,81 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
-	// Need to run this with goroutine, working on this
-	for index, address := range location.Address {
-		externalAddress, _ := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
-		if externalAddress["data"] != nil {
-			result := externalAddress["data"].(map[string]interface{})
-			address_id := result["address_id"].(string)
-			location.Address[index].TerminalAddressID = address_id
-			terminalLocation := &domain.Location{
-				TerminalAddressID: location.Address[index].TerminalAddressID,
-				Address: location.Address[index],
-				UserID: location.UserID,
-			}
-			handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(*terminalLocation)
-		} else {
-			return handler.ComputeErrorResponse(http.StatusBadRequest, externalAddress["message"], context)
-		}
+	workers := 3
+	result := make(chan domain.Location)
+	addressChannel := make(chan []domain.Address)
+
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go handler.worker(i, user.ID, addressChannel, result)
 	}
+
+	for a := 0; a < 10; a++ {
+		defer wg.Done()
+		addressChannel <- location.Address
+	}
+	close(addressChannel)
+
+	for x := 0; x < 10; x++ {
+		defer wg.Done()
+		results := <- result
+		fmt.Println(results, "Hurray")
+	}
+	close(result)
+
+	// Need to run this with goroutine, working on this
+	// for index, address := range location.Address {
+	// 	externalAddress, _ := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
+	// 	if externalAddress["data"] != nil {
+	// 		result := externalAddress["data"].(map[string]interface{})
+	// 		address_id := result["address_id"].(string)
+	// 		location.Address[index].TerminalAddressID = address_id
+	// 		terminalLocation := &domain.Location{
+	// 			TerminalAddressID: location.Address[index].TerminalAddressID,
+	// 			Address: location.Address[index],
+	// 			UserID: location.UserID,
+	// 		}
+	// 		handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(*terminalLocation)
+	// 	} else {
+	// 		return handler.ComputeErrorResponse(http.StatusBadRequest, externalAddress["message"], context)
+	// 	}
+	// }
 	// Process valid location data
 	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
+}
+
+
+func (handler *HTTPHandler) processAddres(address []domain.Address, location uuid.UUID, result chan <- domain.Location) {
+	for index, add := range address {
+		externalAddress, err := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(add)
+		if err != nil {
+			fmt.Println(err)
+		}
+		resul := externalAddress["data"].(map[string]interface{})
+		address_id := resul["address_id"].(string)
+		address[index].TerminalAddressID = address_id
+		terminalLocation := &domain.Location{
+			TerminalAddressID: address[index].TerminalAddressID,
+			Address: address[index],
+			UserID: location,
+		}
+		// terminal = append(terminal, externalAddress)
+		result <- *terminalLocation
+	}
+}
+
+func (handler *HTTPHandler) processUpdates(terminalLocation domain.Location) {
+	err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(terminalLocation)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func (handler *HTTPHandler) worker(_ int, location uuid.UUID, addressChannel <- chan []domain.Address, res chan <- domain.Location) {
+	defer wg.Done()
+	for address := range addressChannel {
+		handler.processAddres(address, location, res)
+	}
 }
 
 // @Summary Get a address
