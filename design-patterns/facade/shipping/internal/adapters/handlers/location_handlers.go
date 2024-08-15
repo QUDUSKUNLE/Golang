@@ -48,12 +48,18 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
 
-	// var sharedLock sync.Mutex
+	// Need to run this with goroutine, working on this
 	var externalAddress map[string]interface{}
 	var terminalLocation *domain.Location
+	internalTerminalAdaptor := func (location domain.Location) {
+		defer wg.Done()
+		err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(location)
+		if err != nil {
+			panic(err)
+		}
+	}
 	externalTerminalAdaptor := func (address domain.Address, index int, location domain.LocationDto)   {
 		defer wg.Done()
-		// sharedLock.Lock()
 		externalAddress, _ = handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
 		if externalAddress["data"] != nil {
 			result := externalAddress["data"].(map[string]interface{})
@@ -64,29 +70,14 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 				Address: location.Address[index],
 				UserID: location.UserID,
 			}
-			// sharedLock.Unlock()
-			err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(*terminalLocation)
-			if err != nil {
-				panic(err)
-			}
+			wg.Add(1)
+			go internalTerminalAdaptor(*terminalLocation)
 		}
 	}
-	// internalTerminalAdaptor := func (location domain.Location) {
-	// 	defer wg.Done()
-	// 	sharedLock.Lock()
-	// 	err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(location)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// 	sharedLock.Unlock()
-	// }
-	// Need to run this with goroutine, working on this
 	for index, address := range location.Address {
-			wg.Add(1)
-			go externalTerminalAdaptor(address, index, *location)
+		wg.Add(1)
+		go externalTerminalAdaptor(address, index, *location)
 	}
-	// wg.Add(1)
-	// go internalTerminalAdaptor(*terminalLocation)
 	wg.Wait()
 	// Process valid location data
 	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
