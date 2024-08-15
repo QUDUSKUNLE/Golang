@@ -1,9 +1,13 @@
 package handlers
 
 import (
+	"bytes"
 	"fmt"
-	"sync"
 	"net/http"
+	"sync"
+	"sync/atomic"
+	"time"
+
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -43,67 +47,49 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
-	var data int
-	go func() {
-		data++
-	}()
-	if data == 0 {
-		fmt.Printf("The value is %v.\n", data)
-	}
 
-	// Need to run this with goroutine, working on this
-	// for index, address := range location.Address {
-	// 	externalAddress, _ := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
-	// 	if externalAddress["data"] != nil {
-	// 		result := externalAddress["data"].(map[string]interface{})
-	// 		address_id := result["address_id"].(string)
-	// 		location.Address[index].TerminalAddressID = address_id
-	// 		terminalLocation := &domain.Location{
-	// 			TerminalAddressID: location.Address[index].TerminalAddressID,
-	// 			Address: location.Address[index],
-	// 			UserID: location.UserID,
-	// 		}
-	// 		handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(*terminalLocation)
-	// 	} else {
-	// 		return handler.ComputeErrorResponse(http.StatusBadRequest, externalAddress["message"], context)
+	// var sharedLock sync.Mutex
+	var externalAddress map[string]interface{}
+	var terminalLocation *domain.Location
+	externalTerminalAdaptor := func (address domain.Address, index int, location domain.LocationDto)   {
+		defer wg.Done()
+		// sharedLock.Lock()
+		externalAddress, _ = handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
+		if externalAddress["data"] != nil {
+			result := externalAddress["data"].(map[string]interface{})
+			address_id := result["address_id"].(string)
+			location.Address[index].TerminalAddressID = address_id
+			terminalLocation = &domain.Location{
+				TerminalAddressID: location.Address[index].TerminalAddressID,
+				Address: location.Address[index],
+				UserID: location.UserID,
+			}
+			// sharedLock.Unlock()
+			err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(*terminalLocation)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
+	// internalTerminalAdaptor := func (location domain.Location) {
+	// 	defer wg.Done()
+	// 	sharedLock.Lock()
+	// 	err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(location)
+	// 	if err != nil {
+	// 		panic(err)
 	// 	}
+	// 	sharedLock.Unlock()
 	// }
+	// Need to run this with goroutine, working on this
+	for index, address := range location.Address {
+			wg.Add(1)
+			go externalTerminalAdaptor(address, index, *location)
+	}
+	// wg.Add(1)
+	// go internalTerminalAdaptor(*terminalLocation)
+	wg.Wait()
 	// Process valid location data
 	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
-}
-
-
-func (handler *HTTPHandler) processAddres(address []domain.Address, location uuid.UUID, result chan <- domain.Location) {
-	for index, add := range address {
-		externalAddress, err := handler.externalServicesAdapter.TerminalCreateAddressAdaptor(add)
-		if err != nil {
-			fmt.Println(err)
-		}
-		resul := externalAddress["data"].(map[string]interface{})
-		address_id := resul["address_id"].(string)
-		address[index].TerminalAddressID = address_id
-		terminalLocation := &domain.Location{
-			TerminalAddressID: address[index].TerminalAddressID,
-			Address: address[index],
-			UserID: location,
-		}
-		// terminal = append(terminal, externalAddress)
-		result <- *terminalLocation
-	}
-}
-
-func (handler *HTTPHandler) processUpdates(terminalLocation domain.Location) {
-	err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(terminalLocation)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (handler *HTTPHandler) worker(_ int, location uuid.UUID, addressChannel <- chan []domain.Address, res chan <- domain.Location) {
-	defer wg.Done()
-	for address := range addressChannel {
-		handler.processAddres(address, location, res)
-	}
 }
 
 // @Summary Get a address
@@ -162,4 +148,160 @@ func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusConflict, err.Error(), context)
 	}
 	return handler.ComputeResponseMessage(http.StatusOK, locations, context)
+}
+
+// Example of LiveLock
+func (handler *HTTPHandler) LiveLock(context echo.Context) error {
+	cadence := sync.NewCond(&sync.Mutex{})
+	go func() {
+		for range time.Tick(1 * time.Microsecond) {
+			cadence.Broadcast()
+		}
+	}()
+	takeStep := func(){
+		cadence.L.Lock()
+		cadence.Wait()
+		cadence.L.Unlock()
+	}
+	tryDir := func (dirName string, dir *int32, out *bytes.Buffer) bool  {
+		fmt.Fprintf(out, " %v", dirName)
+		atomic.AddInt32(dir, 1)
+		takeStep()
+		if atomic.LoadInt32(dir) == 1 {
+			fmt.Fprint(out, ". Success")
+			return true
+		}
+		takeStep()
+		atomic.AddInt32(dir, -1)
+		return false
+	}
+	var left, right int32
+	tryLeft := func (out *bytes.Buffer) bool { return tryDir("left", &left, out)}
+	tryRight := func (out *bytes.Buffer) bool { return tryDir("right", &right, out)}
+
+	walk := func (walking *sync.WaitGroup, name string) {
+		var out bytes.Buffer
+		defer func() { fmt.Println(out.String())}()
+		defer walking.Done()
+		fmt.Fprintf(&out, "%v is trying to scoot:", name)
+		for i := 0; i < 5; i++ {
+			if tryLeft(&out) || tryRight(&out) {
+				return
+			}
+		}
+		fmt.Fprintf(&out, "\n%v tosses her hands up in exasperation", name)
+	}
+	var peopleInHallway sync.WaitGroup
+	peopleInHallway.Add(2)
+	go walk(&peopleInHallway, "Alice")
+	go walk(&peopleInHallway, "Barbara")
+	peopleInHallway.Wait()
+	return handler.ComputeResponseMessage(http.StatusOK, "LiveLock", context)
+}
+
+// Example of DeadLock
+func (handler *HTTPHandler) DeadLock(context echo.Context) error {
+	type Value struct {
+		mu sync.Mutex // guards
+		value int
+	}
+	printSum := func(v1, v2 *Value) {
+		defer wg.Done()
+		v1.mu.Lock()
+		defer v1.mu.Unlock()
+
+		// time.Sleep(2 *time.Second)
+		v2.mu.Lock()
+		defer v2.mu.Unlock()
+		fmt.Printf("sum = %v\n", v1.value + v2.value)
+	}
+
+	var a, b Value
+	wg.Add(2)
+	go printSum(&a, &b)
+	go printSum(&b, &a)
+	wg.Wait()
+
+	return handler.ComputeResponseMessage(http.StatusOK, "DeadLock", context)
+}
+
+// Example of DeadLock
+func (handler *HTTPHandler) Starvation(context echo.Context) error {
+	var sharedLock sync.Mutex
+	const runtime = 1 * time.Second
+
+	greedyWorker := func() {
+		defer wg.Done()
+		var count int
+		for begin := time.Now(); time.Since(begin) <= runtime; {
+			sharedLock.Lock()
+			time.Sleep(3 * time.Nanosecond)
+			sharedLock.Unlock()
+			count++
+		}
+		fmt.Printf("Greedy worker was able to execute %v work loops.\n", count)
+	}
+	politeWorker := func ()  {
+		defer wg.Done()
+		var count int
+		for begin := time.Now(); time.Since(begin) <= runtime; {
+			sharedLock.Lock()
+			time.Sleep(1 * time.Nanosecond)
+			sharedLock.Unlock()
+
+			sharedLock.Lock()
+			time.Sleep(1 * time.Nanosecond)
+			sharedLock.Unlock()
+
+			sharedLock.Lock()
+			time.Sleep(1 * time.Nanosecond)
+			sharedLock.Unlock()
+
+			count++
+		}
+		fmt.Printf("Polite worker was able to execute %v work loops.\n", count)
+	}
+	niceWorker := func ()  {
+		defer wg.Done()
+		var count int
+		for begin := time.Now(); time.Since(begin) <= runtime; {
+			sharedLock.Lock()
+			time.Sleep(1 * time.Nanosecond)
+			sharedLock.Unlock()
+
+			sharedLock.Lock()
+			time.Sleep(1 * time.Nanosecond)
+			sharedLock.Unlock()
+
+			count++
+		}
+		fmt.Printf("Nice worker was able to execute %v work loops.\n", count)
+	}
+	wg.Add(3)
+	go greedyWorker()
+	go politeWorker()
+	go niceWorker()
+	wg.Wait()
+	return handler.ComputeResponseMessage(http.StatusOK, "Starvation", context)
+}
+
+func (handler *HTTPHandler) Example(context echo.Context) error {
+	salutation := "Hello"
+	sayHello := func() {
+		defer wg.Done()
+		salutation = fmt.Sprintf("%s, you are welcome.", salutation)
+	}
+	salutes := func(salute string) {
+		defer wg.Done()
+		fmt.Println(salute)
+	}
+	for _, salute := range []string{"Hello", "greetings", "good day"} {
+		wg.Add(1)
+		go salutes(salute)
+	}
+	wg.Add(1)
+	go sayHello()
+	wg.Wait()
+	fmt.Println(salutation)
+	return handler.ComputeResponseMessage(http.StatusOK, "Example", context)
 }
