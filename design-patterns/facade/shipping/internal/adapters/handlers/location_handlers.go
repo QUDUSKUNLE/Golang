@@ -43,27 +43,13 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
-	workers := 3
-	result := make(chan domain.Location)
-	addressChannel := make(chan []domain.Address)
-
-	for i := 0; i < workers; i++ {
-		wg.Add(1)
-		go handler.worker(i, user.ID, addressChannel, result)
+	var data int
+	go func() {
+		data++
+	}()
+	if data == 0 {
+		fmt.Printf("The value is %v.\n", data)
 	}
-
-	for a := 0; a < 10; a++ {
-		defer wg.Done()
-		addressChannel <- location.Address
-	}
-	close(addressChannel)
-
-	for x := 0; x < 10; x++ {
-		defer wg.Done()
-		results := <- result
-		fmt.Println(results, "Hurray")
-	}
-	close(result)
 
 	// Need to run this with goroutine, working on this
 	// for index, address := range location.Address {
