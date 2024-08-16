@@ -5,13 +5,14 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/config"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/handlers"
-	validationMiddleware "github.com/QUDUSKUNLE/shipping/internal/adapters/middleware"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/repository"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/integration"
-	"github.com/QUDUSKUNLE/shipping/internal/adapters/routes"
-	"github.com/QUDUSKUNLE/shipping/internal/core/services"
+	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/config"
+	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/handlers"
+	validationMiddleware "github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/middleware"
+	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/repository"
+	integration "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter/integration/terminals"
+	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/routes"
+	internalServices "github.com/QUDUSKUNLE/shipping/internals/core/services"
+	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter/integration"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/swaggo/echo-swagger"
@@ -20,8 +21,8 @@ import (
 )
 
 var (
-	internal *services.InternalServicesHandler
-	external *services.ExternalServicesHandler
+	internal *internalServices.InternalServicesHandler
+	external *externalServices.ExternalServicesHandler
 )
 
 func init() {
@@ -55,8 +56,8 @@ func main() {
 	}
 
 	externalStore := integration.OpenExternalConnection()
-	internal = services.InternalServicesAdapter(internalStore)
-	external = services.ExternalServicesAdapter(externalStore)
+	internal = internalServices.InternalServicesAdapter(internalStore)
+	external = externalServices.ExternalServicesAdapter(externalStore)
 	httpHandler := handlers.HttpAdapter(*internal, *external)
 
 	// Plug echo into PublicRoutesAdaptor
