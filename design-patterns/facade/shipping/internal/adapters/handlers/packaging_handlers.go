@@ -1,13 +1,11 @@
 package handlers
 
 import (
-	// "fmt"
 	"net/http"
-
+	"sync"
 	"github.com/QUDUSKUNLE/shipping/internal/core/domain"
 	"github.com/labstack/echo/v4"
 )
-
 
 // @Summary Submit packagings
 // @Description create packagings
@@ -33,25 +31,52 @@ func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	if user.UserType != string(domain.USER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
+	var packagingWaitGroup sync.WaitGroup
 	packaging := new(domain.PackagingDto)
+	packagingChan := make(chan domain.PackagingDto)
+	var externalPackaging map[string]interface{}
 	// Make call to external adapter to register packaging
-	for _, pack := range terminalPackaging.Packagings {
-		externalPackaging, err := handler.externalServicesAdapter.TerminalCreatePackagingAdaptor(pack)
+	externalTerminalAdaptor := func(packGroup *sync.WaitGroup, pack domain.SingleTerminalPackagingDto, packagingChannel chan <- domain.PackagingDto) {
+		defer packGroup.Done()
+		externalPackaging, err = handler.externalServicesAdapter.TerminalCreatePackagingAdaptor(pack)
 		if err != nil {
-			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+			panic(err)
 		}
 		if externalPackaging["data"] != nil {
 			result := externalPackaging["data"].(map[string]interface{})
 			packaging_id := result["packaging_id"].(string)
-			packaging.PackagingID = append(packaging.PackagingID, packaging_id)
-		} else {
-			return handler.ComputeErrorResponse(http.StatusBadRequest, externalPackaging["message"], context)
+			packs := &domain.PackagingDto{
+				PackagingID: []string{packaging_id},
+			}
+			packagingChannel <- *packs
 		}
 	}
-	packaging.UserID = user.ID
-	err = handler.internalServicesAdapter.NewPackagingAdaptor(*packaging)
-	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusConflict, "Package error", context)
+	internalTerminalAdaptor := func (packGroup *sync.WaitGroup, packs domain.PackagingDto) {
+		defer packGroup.Done()
+		err = handler.internalServicesAdapter.NewPackagingAdaptor(packs)
+		if err != nil {
+			panic(err)
+		}
 	}
+	for _, pack := range terminalPackaging.Packagings {
+		packagingWaitGroup.Add(1)
+		go externalTerminalAdaptor(&packagingWaitGroup, pack, packagingChan)
+	}
+	closeChannel := func(packGroup *sync.WaitGroup, packagingChannel chan <- domain.PackagingDto) {
+		packGroup.Wait()
+		close(packagingChannel)
+	}
+
+	// Close channel
+	go closeChannel(&packagingWaitGroup, packagingChan)
+
+	// Build packaging for internalAdaptor
+	packaging.UserID = user.ID
+	for c := range packagingChan {
+		packaging.PackagingID = append(packaging.PackagingID, (c.PackagingID)...)
+	}
+	packagingWaitGroup.Add(1)
+	go internalTerminalAdaptor(&packagingWaitGroup, *packaging)
+	packagingWaitGroup.Wait()
 	return handler.ComputeResponseMessage(http.StatusCreated, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
 }
