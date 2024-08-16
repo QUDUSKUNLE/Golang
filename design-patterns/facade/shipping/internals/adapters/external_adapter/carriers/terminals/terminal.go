@@ -65,6 +65,17 @@ func (terminal *ExternalRepository) TerminalCreatePackaging(pack interface{}) (m
 	return packaging, nil
 }
 
+func (terminal *ExternalRepository) TerminalUpdatePackaging(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"packaging": shipment}, nil
+}
+func (terminal *ExternalRepository) TerminalDeletePackaging(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"packaging": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalGetPackaging(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"packaging": shipment}, nil
+}
+
 func (terminal *ExternalRepository) TerminalCreateAddress(add interface{}) (map[string]interface{}, error) {
 	var address map[string]interface{}
 	bodyReader, err := byteReader(add)
@@ -103,6 +114,42 @@ func (terminal *ExternalRepository) TerminalCreateParcel(parce interface{}) (map
 		return parcel, err
 	}
 	return parcel, nil
+}
+
+func (terminal *ExternalRepository) TerminalGetParcels() (map[string]interface{}, error) {
+	return map[string]interface{}{}, nil
+}
+
+func (terminal *ExternalRepository) TerminalGetParcel(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalDeleteParcel(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalUpdateParcel(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalCreateShipment(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalTrackShipment(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalCancelShipment(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalDeleteShipment(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
+}
+
+func (terminal *ExternalRepository) TerminalGetShipment(shipment interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{"shipment": shipment}, nil
 }
 
 func byteReader(reader interface{}) (*bytes.Reader, error) {

@@ -25,13 +25,7 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 	// Validate carrier
 	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(),
-		context)
-	}
-
-	if user.UserType != string(domain.USER) {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION,
-		context)
+		return err
 	}
 
 	shippingDto.UserID = user.ID
