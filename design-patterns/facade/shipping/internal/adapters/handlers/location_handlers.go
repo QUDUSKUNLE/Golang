@@ -49,17 +49,18 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	}
 
 	// Need to run this with goroutine, working on this
+	var addressSync sync.WaitGroup
 	var externalAddress map[string]interface{}
 	var terminalLocation *domain.Location
-	internalTerminalAdaptor := func (location domain.Location) {
-		defer wg.Done()
+	internalTerminalAdaptor := func (addSync *sync.WaitGroup, location domain.Location) {
+		defer addSync.Done()
 		err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(location)
 		if err != nil {
 			panic(err)
 		}
 	}
-	externalTerminalAdaptor := func (address domain.Address, index int, location domain.LocationDto)   {
-		defer wg.Done()
+	externalTerminalAdaptor := func (addSync *sync.WaitGroup, address domain.Address, index int, location domain.LocationDto)   {
+		defer addSync.Done()
 		externalAddress, _ = handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
 		if externalAddress["data"] != nil {
 			result := externalAddress["data"].(map[string]interface{})
@@ -70,15 +71,15 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 				Address: location.Address[index],
 				UserID: location.UserID,
 			}
-			wg.Add(1)
-			go internalTerminalAdaptor(*terminalLocation)
+			addSync.Add(1)
+			go internalTerminalAdaptor(addSync, *terminalLocation)
 		}
 	}
 	for index, address := range location.Address {
-		wg.Add(1)
-		go externalTerminalAdaptor(address, index, *location)
+		addressSync.Add(1)
+		go externalTerminalAdaptor(&addressSync, address, index, *location)
 	}
-	wg.Wait()
+	addressSync.Wait()
 	// Process valid location data
 	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
 }
