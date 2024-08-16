@@ -42,14 +42,11 @@ func (handler *HTTPHandler) Rates(context echo.Context) error {
 	if rates.ParcelID == "" {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, "QueryParam parcel_id is rquired", context)
 	}
-	user, err := handler.ParseUserID(context)
+	_, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+		return err
 	}
 
-	if user.UserType != string(domain.USER) {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
-	}
 	response, err := handler.externalServicesAdapter.TerminalGetRatesAdaptor(*rates)
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusOK, err, context)

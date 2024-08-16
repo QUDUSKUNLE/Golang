@@ -32,11 +32,13 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 			context)
 	}
 
+	// Parse user
 	user, err := handler.ParseUserID(context)
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
 	}
 
+	// Check user type
 	if user.UserType != string(domain.USER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
@@ -52,6 +54,9 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	var addressSync sync.WaitGroup
 	var externalAddress map[string]interface{}
 	var terminalLocation *domain.Location
+	terminalLocationChannel := make(chan domain.Location)
+
+	// InternalTerminalAdaptor function
 	internalTerminalAdaptor := func (addSync *sync.WaitGroup, location domain.Location) {
 		defer addSync.Done()
 		err := handler.internalServicesAdapter.TerminalUpdateAddressAdaptor(location)
@@ -59,7 +64,8 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 			panic(err)
 		}
 	}
-	externalTerminalAdaptor := func (addSync *sync.WaitGroup, address domain.Address, index int, location domain.LocationDto)   {
+	// ExternalTerminalAdaptor function
+	externalTerminalAdaptor := func (addSync *sync.WaitGroup, address domain.Address, index int, location domain.LocationDto, locationChannel chan <- domain.Location)   {
 		defer addSync.Done()
 		externalAddress, _ = handler.externalServicesAdapter.TerminalCreateAddressAdaptor(address)
 		if externalAddress["data"] != nil {
@@ -71,15 +77,30 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 				Address: location.Address[index],
 				UserID: location.UserID,
 			}
-			addSync.Add(1)
-			go internalTerminalAdaptor(addSync, *terminalLocation)
+			// Send terminalLocation to the channel
+			locationChannel <- *terminalLocation
 		}
 	}
+	// Close channel function
+	closeTerminalChannel := func(terminalGroup *sync.WaitGroup, channel chan <- domain.Location) {
+		terminalGroup.Wait()
+		close(channel)
+	}
+	// Goroutine externalTerminalAdaptor
 	for index, address := range location.Address {
 		addressSync.Add(1)
-		go externalTerminalAdaptor(&addressSync, address, index, *location)
+		go externalTerminalAdaptor(&addressSync, address, index, *location, terminalLocationChannel)
+	}
+	// Goroutine close channel
+	go closeTerminalChannel(&addressSync, terminalLocationChannel)
+
+	// Goroutine internalTerminalAdaptor
+	for terminalChannel := range terminalLocationChannel {
+		addressSync.Add(1)
+		go internalTerminalAdaptor(&addressSync, terminalChannel)
 	}
 	addressSync.Wait()
+
 	// Process valid location data
 	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
 }

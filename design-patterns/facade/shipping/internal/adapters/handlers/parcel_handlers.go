@@ -24,14 +24,11 @@ func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 	// Validate user
-	user, err := handler.ParseUserID(context)
+	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+		return err
 	}
 
-	if user.UserType != string(domain.USER) {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
-	}
 	parcel := new(domain.ParcelDto)
 	// Make call to external adapter to register parcel
 	for _, terminal_parcel := range terminalParcel.Parcels {

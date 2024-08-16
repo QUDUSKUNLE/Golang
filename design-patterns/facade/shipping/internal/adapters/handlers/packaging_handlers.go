@@ -22,20 +22,25 @@ func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	if err := handler.ValidateStruct(context, terminalPackaging); err != nil {
 		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
-	// Validate user
-	user, err := handler.ParseUserID(context)
+	// Parse user
+	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+		return err
 	}
-
-	if user.UserType != string(domain.USER) {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
-	}
-	var packagingWaitGroup sync.WaitGroup
+	var packagingSync sync.WaitGroup
 	packaging := new(domain.PackagingDto)
-	packagingChan := make(chan domain.PackagingDto)
+	packagingChannel := make(chan domain.PackagingDto)
 	var externalPackaging map[string]interface{}
-	// Make call to external adapter to register packaging
+
+	// InternalTerminalAdaptor function
+	internalTerminalAdaptor := func (packGroup *sync.WaitGroup, packs domain.PackagingDto) {
+		defer packGroup.Done()
+		err = handler.internalServicesAdapter.NewPackagingAdaptor(packs)
+		if err != nil {
+			panic(err)
+		}
+	}
+	// ExternalTerminalAdaptor function
 	externalTerminalAdaptor := func(packGroup *sync.WaitGroup, pack domain.SingleTerminalPackagingDto, packagingChannel chan <- domain.PackagingDto) {
 		defer packGroup.Done()
 		externalPackaging, err = handler.externalServicesAdapter.TerminalCreatePackagingAdaptor(pack)
@@ -51,32 +56,29 @@ func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 			packagingChannel <- *packs
 		}
 	}
-	internalTerminalAdaptor := func (packGroup *sync.WaitGroup, packs domain.PackagingDto) {
-		defer packGroup.Done()
-		err = handler.internalServicesAdapter.NewPackagingAdaptor(packs)
-		if err != nil {
-			panic(err)
-		}
-	}
-	for _, pack := range terminalPackaging.Packagings {
-		packagingWaitGroup.Add(1)
-		go externalTerminalAdaptor(&packagingWaitGroup, pack, packagingChan)
-	}
-	closeChannel := func(packGroup *sync.WaitGroup, packagingChannel chan <- domain.PackagingDto) {
+	// Close channel function
+	closePackagingChannel := func(packGroup *sync.WaitGroup, packagingChannel chan <- domain.PackagingDto) {
 		packGroup.Wait()
 		close(packagingChannel)
 	}
+	// Goroutine externalTerminalAdaptor
+	for _, pack := range terminalPackaging.Packagings {
+		packagingSync.Add(1)
+		go externalTerminalAdaptor(&packagingSync, pack, packagingChannel)
+	}
 
-	// Close channel
-	go closeChannel(&packagingWaitGroup, packagingChan)
+	// Goroutine close channel
+	go closePackagingChannel(&packagingSync, packagingChannel)
 
 	// Build packaging for internalAdaptor
 	packaging.UserID = user.ID
-	for c := range packagingChan {
+	for c := range packagingChannel {
 		packaging.PackagingID = append(packaging.PackagingID, (c.PackagingID)...)
 	}
-	packagingWaitGroup.Add(1)
-	go internalTerminalAdaptor(&packagingWaitGroup, *packaging)
-	packagingWaitGroup.Wait()
+	packagingSync.Add(1)
+	go internalTerminalAdaptor(&packagingSync, *packaging)
+	packagingSync.Wait()
+
+	// Return response
 	return handler.ComputeResponseMessage(http.StatusCreated, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
 }

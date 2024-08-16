@@ -23,7 +23,7 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 			context)
 	}
 	// Validate carrier
-	user, err := handler.ParseUserID(context)
+	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(),
 		context)

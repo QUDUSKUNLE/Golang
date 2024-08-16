@@ -3,7 +3,7 @@ package handlers
 import (
 	"os"
 	"time"
-
+	"net/http"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -48,6 +48,18 @@ func (httpHandler *HTTPHandler) ParseUserID(context echo.Context) (*CurrentUser,
 		return &CurrentUser{}, err
 	}
 	return result, nil
+}
+
+func (httpHandler *HTTPHandler) PrivateMiddlewareContext(context echo.Context, userType string) (*CurrentUser, error) {
+	user, err := httpHandler.ParseUserID(context)
+	if err != nil {
+		return &CurrentUser{}, httpHandler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+	}
+	// Check user type
+	if user.UserType != userType {
+		return &CurrentUser{}, httpHandler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+	return user, nil
 }
 
 

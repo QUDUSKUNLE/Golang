@@ -23,15 +23,10 @@ func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	}
 
 	// Validate carrier
-	carrier, err := handler.ParseUserID(context)
+	_, err := handler.PrivateMiddlewareContext(context, string(domain.CARRIER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+		return err
 	}
-
-	if carrier.UserType != string(domain.CARRIER) {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
-	}
-
 	// Initiate a new pick up
 	err = handler.internalServicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
 	if err != nil {
