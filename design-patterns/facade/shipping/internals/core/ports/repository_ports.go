@@ -5,6 +5,7 @@ import (
 	domain "github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
 
+// Ports that connect internal services of the app
 type RepositoryPorts interface {
 	SaveUserAdaptor(user domain.User) (error)
 	ReadUserAdaptor(userID uuid.UUID) (*domain.User, error)

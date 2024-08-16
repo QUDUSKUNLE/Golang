@@ -2,7 +2,7 @@ package handlers
 
 import (
 	internalServices "github.com/QUDUSKUNLE/shipping/internals/core/services"
-	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter/integration"
+	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
 )
 
 type HTTPHandler struct {

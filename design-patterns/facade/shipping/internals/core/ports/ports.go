@@ -1,6 +1,6 @@
 package ports
 
-// Ports that connect external services
+// Ports that connect external services or third party services
 type ExternalPorts interface {
 	// Packaging
 	TerminalCreatePackaging(packaging interface{}) (map[string]interface{}, error)

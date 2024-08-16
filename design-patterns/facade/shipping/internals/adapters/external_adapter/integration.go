@@ -5,6 +5,12 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
 
+type ExternalRepository struct {}
+
+func OpenExternalConnection() *ExternalRepository {
+	return &ExternalRepository{}
+}
+
 type ExternalServicesHandler struct {
 	external ports.ExternalPorts
 }
@@ -18,7 +24,6 @@ func ExternalServicesAdapter(externalPorts ports.ExternalPorts) *ExternalService
 type ExternalServicesFacade struct {
 	terminalService *domain.Terminal
 }
-
 
 func (externalServicesHandler *ExternalServicesHandler) NewExternalServicesFacade() *ExternalServicesFacade {
 	return &ExternalServicesFacade{
