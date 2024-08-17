@@ -16,11 +16,8 @@ import (
 // @Param Authorization header string true "Bearer token"
 // @Router /pickups [get]
 func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
-	user, err := handler.ParseUserID(context)
+	user, err := handler.PrivateMiddlewareContext(context, string(domain.CARRIER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err, context)
-	}
-	if user.UserType != string(domain.CARRIER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 

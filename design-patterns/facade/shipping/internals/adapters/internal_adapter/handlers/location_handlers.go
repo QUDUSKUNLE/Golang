@@ -35,7 +35,7 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	// Parse user
 	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return err
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
 	// Make call to internal adapter to save register
@@ -109,7 +109,7 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 // @Param Authorization header string true "Bearer token"
 // @Failure 400 {object} domain.Response
 // @Success 201 {object} domain.Response
-// @Router /addresses/:addressID [get]
+// @Router /addresses/{addressID} [get]
 func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
@@ -134,13 +134,14 @@ func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer token"
+// @Param description query string false "Description"
 // @Failure 400 {object} domain.Response
 // @Success 201 {object} domain.Response
-// @Router /addresses?description={description} [get]
+// @Router /addresses [get]
 func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return err
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 	description := context.QueryParam("description")
 	if description == "" {
@@ -149,12 +150,13 @@ func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 			return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 		}
 		return handler.ComputeResponseMessage(http.StatusOK, locations, context)
+	} else {
+		location, err := handler.internalServicesAdapter.QueryLocationAdaptor(user.ID, description);
+			if err != nil {
+				return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+			}
+			return handler.ComputeResponseMessage(http.StatusOK, location, context)
 	}
-	location, err := handler.internalServicesAdapter.QueryLocationAdaptor(user.ID, description);
-		if err != nil {
-			return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
-		}
-		return handler.ComputeResponseMessage(http.StatusOK, location, context)
 }
 
 // Example of LiveLock

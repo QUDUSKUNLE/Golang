@@ -35,6 +35,12 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Description",
+                        "name": "description",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -98,7 +104,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/addresses/:addressID": {
+        "/addresses/{addressID}": {
             "get": {
                 "description": "get a address",
                 "consumes": [

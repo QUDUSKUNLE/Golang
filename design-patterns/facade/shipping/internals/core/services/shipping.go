@@ -1,7 +1,6 @@
 package services
 
 import (
-	"time"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 	"github.com/google/uuid"
 )
@@ -9,15 +8,10 @@ import (
 func (internalHandler *InternalServicesHandler) NewShippingAdaptor(shippingDto *domain.ShippingDto) error {
 	systemsHandler := internalHandler.NewInternalServicesFacade()
 	newShipping := systemsHandler.shippingService.BuildNewShipping(*shippingDto)
-	if err := internalHandler.internal.CreateShippingAdaptor(*newShipping); err != nil {
+	if err := internalHandler.internal.CreateShippingAdaptor(newShipping); err != nil {
 		return err
 	}
-	pickUpDTO := domain.PickUpDto{
-		ShippingID: newShipping.ID,
-		CarrierID: newShipping.CarrierID,
-		Status: string(domain.SCHEDULED),
-		PickUpAt: time.Now(),
-	}
+	pickUpDTO := systemsHandler.shippingService.BuildPickUp(newShipping)
 	if err := internalHandler.NewPickUpAdaptor(pickUpDTO); err != nil {
 		return err
 	}

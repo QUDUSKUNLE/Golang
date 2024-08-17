@@ -5,17 +5,9 @@ import (
 	"github.com/google/uuid"
 )
 
-func (database *PostgresRepository) CreateShippingAdaptor(shipping domain.Shipping) error {
+func (database *PostgresRepository) CreateShippingAdaptor(shipping []*domain.Shipping) error {
 	_ = database.db.AutoMigrate(&domain.Shipping{})
-	result := database.db.Create(&domain.Shipping{
-		ID:              shipping.ID,
-		UserID:          shipping.UserID,
-		CarrierID:       shipping.CarrierID,
-		Description:     shipping.Description,
-		PickUpAddress:   shipping.PickUpAddress,
-		DeliveryAddress: shipping.DeliveryAddress,
-		ProductType:     shipping.ProductType,
-	})
+	result := database.db.Create(shipping)
 	if result.Error != nil {
 		return result.Error
 	}

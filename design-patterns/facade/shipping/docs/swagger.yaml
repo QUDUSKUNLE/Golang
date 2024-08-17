@@ -369,6 +369,10 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: Description
+        in: query
+        name: description
+        type: string
       produces:
       - application/json
       responses:
@@ -413,7 +417,7 @@ paths:
       summary: Submit addresses
       tags:
       - Address
-  /addresses/:addressID:
+  /addresses/{addressID}:
     get:
       consumes:
       - application/json

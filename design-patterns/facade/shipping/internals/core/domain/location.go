@@ -24,10 +24,6 @@ type (
 		Address []Address `json:"address" binding:"required" validate:"required,dive,required"`
 		UserID  uuid.UUID
 	}
-	LocationResult struct {
-		ExternalAddress map[string]interface{}
-		Index           int
-	}
 )
 
 func (location *Location) BeforeCreate(scope *gorm.DB) error {

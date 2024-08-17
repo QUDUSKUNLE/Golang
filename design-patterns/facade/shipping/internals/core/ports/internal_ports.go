@@ -12,11 +12,11 @@ type RepositoryPorts interface {
 	ReadUserByEmailAdaptor(email string) (*domain.User, error)
 	// SaveUser(user domain.User) error
 
-	InitiatePickUpAdaptor(pickUp domain.PickUp) error
+	InitiatePickUpAdaptor(pickUp []*domain.PickUp) error
 	UpdatePickUpAdaptor(pickUp domain.PickUp) error
 	SaveCarrierAdaptor(carrier domain.Carrier) error
 
-	CreateShippingAdaptor(shipping domain.Shipping) error
+	CreateShippingAdaptor(shipping []*domain.Shipping) error
 	GetShippingsAdaptor(shippingID uuid.UUID, status string) ([]domain.Shipping, error)
 
 	CarrierPickUps(carrierID uuid.UUID) ([]domain.PickUp, error)

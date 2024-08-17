@@ -30,31 +30,46 @@ type (
 		Carrier    *Carrier  `json:"-"`
 	}
 	PickUpDto struct {
+		PickUps  []SinglePickUpDto `json:"pick_ups" binding:"required" validate:"required,dive,required"`
+	}
+	SinglePickUpDto struct {
 		ID        uuid.UUID  `json:"id"`
-		ShippingID uuid.UUID `json:"shipping_id" binding:"required" validate:"required"`
-		CarrierID  uuid.UUID `json:"carrier_id" binding:"required" validate:"required"`
-		PickUpAt   time.Time `json:"pick_up_at" binding:"required" validate:"required"`
-		Status     string    `json:"status" binding:"required" validate:"required"`
+		ShippingID uuid.UUID `json:"shipping_id" validate:"required"`
+		CarrierID  uuid.UUID `json:"carrier_id" validate:"required"`
+		PickUpAt   time.Time `json:"pick_up_at" validate:"required"`
+		Status     string    `json:"status" validate:"required"`
 	}
 	PickUpStatus string
 )
 
-func (pickUp *PickUp) BuildNewPickUp(pick PickUpDto) *PickUp {
-	return &PickUp{
-		ID:         uuid.New(),
-		ShippingID: pick.ShippingID,
-		CarrierID:  pick.CarrierID,
-		PickUpAt:   pick.PickUpAt,
-		Status:     PickUpStatus(pick.Status),
-	}
+func (pickUp *PickUp) BeforeCreate(scope *gorm.DB) error {
+	pickUp.ID = uuid.New()
+	return nil
 }
 
-func (pi *PickUp) BuildUpdatePickUp(pick PickUpDto) *PickUp {
-	return &PickUp{
-		ID:         pick.ID,
-		ShippingID: pick.ShippingID,
-		CarrierID:  pick.CarrierID,
-		PickUpAt:   time.Now(),
-		Status:     PickUpStatus(pick.Status),
+func (pickUp *PickUp) BuildNewPickUp(pick PickUpDto) []*PickUp {
+	pickUps := []*PickUp{}
+	for _, p := range pick.PickUps {
+		pickUps = append(pickUps, &PickUp{
+			ShippingID: p.ShippingID,
+			CarrierID:  p.CarrierID,
+			PickUpAt:   p.PickUpAt,
+			Status:     PickUpStatus(p.Status),
+		})
 	}
+	return pickUps
+}
+
+func (pickUp *PickUp) BuildUpdatePickUp(pick PickUpDto) []*PickUp {
+	pickUps := []*PickUp{}
+	for _, p := range pick.PickUps {
+		pickUps = append(pickUps, &PickUp{
+			ID: p.ID,
+			ShippingID: p.ShippingID,
+			CarrierID:  p.CarrierID,
+			PickUpAt:   time.Now(),
+			Status:     PickUpStatus(p.Status),
+		})
+	}
+	return pickUps
 }

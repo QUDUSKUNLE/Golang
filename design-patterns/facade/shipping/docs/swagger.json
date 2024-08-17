@@ -29,6 +29,12 @@
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Description",
+                        "name": "description",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -92,7 +98,7 @@
                 }
             }
         },
-        "/addresses/:addressID": {
+        "/addresses/{addressID}": {
             "get": {
                 "description": "get a address",
                 "consumes": [

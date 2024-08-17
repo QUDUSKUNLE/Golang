@@ -1,9 +1,11 @@
 package domain
 
 import (
+	"time"
+
+	// "github.com/QUDUSKUNLE/shipping/internals/core/domain"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"time"
 )
 
 type (
@@ -25,23 +27,43 @@ type (
 		PickUp          PickUp      `json:"-"`
 	}
 	ShippingDto struct {
-		Description     string      `json:"description" binding:"required" validate:"required,gte=6,lte=1000"`
-		PickUpAddress   Address     `json:"pick_up_address" binding:"required" validate:"required,dive,required"`
-		DeliveryAddress Address     `json:"delivery_address" binding:"required" validate:"required,dive,required"`
-		ProductType     ProductType `json:"product_type" binding:"required" validate:"required"`
-		CarrierID       uuid.UUID   `json:"carrier_id" binding:"required" validate:"required"`
+	Shipments []SingleShippingDto `json:"shipments" binding:"required" validate:"required,dive,required"`
+	}
+	SingleShippingDto struct {
+		Description     string      `json:"description" validate:"required,gte=6,lte=100"`
+		PickUpAddress   Address     `json:"pick_up_address" validate:"required"`
+		DeliveryAddress Address     `json:"delivery_address" validate:"required"`
+		ProductType     ProductType `json:"product_type" validate:"required"`
+		CarrierID       uuid.UUID   `json:"carrier_id" validate:"required"`
 		UserID          uuid.UUID
 	}
 )
 
-func (shipping *Shipping) BuildNewShipping(ship ShippingDto) *Shipping {
-	return &Shipping{
-		ID:              uuid.New(),
-		UserID:          ship.UserID,
-		CarrierID:       ship.CarrierID,
-		Description:     ship.Description,
-		PickUpAddress:   ship.PickUpAddress,
-		DeliveryAddress: ship.DeliveryAddress,
-		ProductType:     ship.ProductType,
+func (shipping *Shipping) BuildNewShipping(ship ShippingDto) []*Shipping {
+	shipments := []*Shipping{}
+	for _, shipment := range ship.Shipments {
+		shipments = append(shipments, &Shipping{
+			ID: 						 uuid.New(),
+			UserID:       	 shipment.UserID,
+			CarrierID:       shipment.CarrierID,
+			Description:     shipment.Description,
+			PickUpAddress:   shipment.PickUpAddress,
+			DeliveryAddress: shipment.DeliveryAddress,
+			ProductType:     shipment.ProductType,
+		})
 	}
+	return shipments
+}
+
+func (shipping *Shipping) BuildPickUp(shipments []*Shipping) PickUpDto {
+	shippings := PickUpDto{}
+	for _, shipment := range shipments {
+		shippings.PickUps = append(shippings.PickUps, SinglePickUpDto{
+			CarrierID: shipment.CarrierID,
+			ShippingID: shipment.ID,
+			PickUpAt: time.Now(),
+			Status: string(SCHEDULED),
+		})
+	}
+	return shippings
 }

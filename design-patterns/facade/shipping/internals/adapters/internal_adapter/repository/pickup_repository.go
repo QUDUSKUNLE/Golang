@@ -5,15 +5,9 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
 
-func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp domain.PickUp) error {
+func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp []*domain.PickUp) error {
 	_ = database.db.AutoMigrate(&domain.PickUp{})
-	result := database.db.Create(&domain.PickUp{
-		ID:            pickUp.ID,
-		ShippingID:    pickUp.ShippingID,
-		CarrierID:     pickUp.CarrierID,
-		PickUpAt:      pickUp.PickUpAt,
-		Status:        pickUp.Status,
-	})
+	result := database.db.Create(pickUp)
 	if result.Error != nil {
 		return result.Error
 	}

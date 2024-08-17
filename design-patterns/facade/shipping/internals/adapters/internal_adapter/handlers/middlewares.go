@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"errors"
 	"os"
 	"time"
-	"net/http"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -20,7 +21,7 @@ type JwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func (httpHandler *HTTPHandler) CurrentUser(context echo.Context) *CurrentUser {
+func (httpHandler *HTTPHandler) currentUser(context echo.Context) *CurrentUser {
 	user := context.Get("user").(*jwt.Token)
 	claims := user.Claims.(*JwtCustomClaims)
 	return &CurrentUser{
@@ -41,8 +42,8 @@ func (httpHandler *HTTPHandler) ValidateStruct(context echo.Context, obj interfa
 	return nil
 }
 
-func (httpHandler *HTTPHandler) ParseUserID(context echo.Context) (*CurrentUser, error) {
-	result := httpHandler.CurrentUser(context)
+func (httpHandler *HTTPHandler) parseUserID(context echo.Context) (*CurrentUser, error) {
+	result := httpHandler.currentUser(context)
 	_, err := uuid.Parse(result.ID.String())
 	if err != nil {
 		return &CurrentUser{}, err
@@ -51,13 +52,13 @@ func (httpHandler *HTTPHandler) ParseUserID(context echo.Context) (*CurrentUser,
 }
 
 func (httpHandler *HTTPHandler) PrivateMiddlewareContext(context echo.Context, userType string) (*CurrentUser, error) {
-	user, err := httpHandler.ParseUserID(context)
+	user, err := httpHandler.parseUserID(context)
 	if err != nil {
-		return &CurrentUser{}, httpHandler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
+		return &CurrentUser{}, err
 	}
 	// Check user type
 	if user.UserType != userType {
-		return &CurrentUser{}, httpHandler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+		return &CurrentUser{}, errors.New("unauthorized to perform this operation")
 	}
 	return user, nil
 }

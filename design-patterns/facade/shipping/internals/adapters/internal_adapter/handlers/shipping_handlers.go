@@ -25,11 +25,12 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 	// Validate carrier
 	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return err
+		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
-	shippingDto.UserID = user.ID
-	// Initiate a new shipping
+	for index := range shippingDto.Shipments {
+		shippingDto.Shipments[index].UserID = user.ID
+	}
 	err = handler.internalServicesAdapter.NewShippingAdaptor(shippingDto);
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
@@ -48,12 +49,8 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 // @Success 200 {object} domain.Response
 // @Router /shipments [get]
 func (handler *HTTPHandler) GetShippings(context echo.Context) error {
-	user, err := handler.ParseUserID(context)
+	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, err.Error(), context)
-	}
-
-	if user.UserType != string(domain.USER) {
 		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
@@ -61,7 +58,7 @@ func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 	if err != nil {
 		return handler.ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
 	}
-	return handler.ComputeResponseMessage(http.StatusCreated, shippings, context)
+	return handler.ComputeResponseMessage(http.StatusOK, shippings, context)
 }
 
 func (handler *HTTPHandler) RejectProduct(context echo.Context) error {

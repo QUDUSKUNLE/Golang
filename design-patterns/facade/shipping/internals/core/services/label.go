@@ -21,12 +21,12 @@ func (label *LabelService) CreateShippingLabel(name string) error {
 		log.Fatal(err)
 	}
 
-	err = pdFile.AddTTFFont("graphik-bold", fmt.Sprintf("%s/internal/core/fonts/image-master-font-gofont-ttfs/Go-Mono.ttf", workingDir))
+	err = pdFile.AddTTFFont("graphik-bold", fmt.Sprintf("%s/internals/core/fonts/image-master-font-gofont-ttfs/Go-Mono.ttf", workingDir))
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
-	err = pdFile.AddTTFFont("regular", fmt.Sprintf("%s/internal/core/fonts/image-master-font-gofont-ttfs/Go-Regular.ttf", workingDir))
+	err = pdFile.AddTTFFont("regular", fmt.Sprintf("%s/internals/core/fonts/image-master-font-gofont-ttfs/Go-Regular.ttf", workingDir))
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -190,7 +190,7 @@ func (label *LabelService) CreateShippingLabel(name string) error {
 	})
 	pdFile.AddPage()
 	// pdFile.AddFooter()
-	err = pdFile.WritePdf(fmt.Sprintf("%s/internal/pdf/%s.pdf", workingDir, name))
+	err = pdFile.WritePdf(fmt.Sprintf("%s/internals/pdf/%s.pdf", workingDir, name))
 	if err != nil {
 		log.Fatal(err)
 	}
