@@ -5,12 +5,10 @@ import (
 
 	// "github.com/QUDUSKUNLE/shipping/internals/core/domain"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type (
 	Shipping struct {
-		gorm.Model
 		ID        uuid.UUID  `gorm:"primaryKey;->;<-:create" json:"id"`
 		CreatedAt *time.Time  `json:"created_at"`
 		UpdatedAt *time.Time `json:"updated_at"`

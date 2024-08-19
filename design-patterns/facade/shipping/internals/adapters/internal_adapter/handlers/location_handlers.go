@@ -27,22 +27,22 @@ var wg sync.WaitGroup
 // @Router /addresses [post]
 func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	location := new(domain.LocationDto)
-	if err := handler.ValidateStruct(context, location); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err,
+	if err := ValidateStruct(context, location); err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, err,
 			context)
 	}
 
 	// Parse user
-	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
 	// Make call to internal adapter to save register
 	location.UserID = user.ID
 	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
+		return ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
 
 	// Need to run this with goroutine, working on this
@@ -97,7 +97,7 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	addressSync.Wait()
 
 	// Process valid location data
-	return handler.ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
+	return ComputeResponseMessage(http.StatusCreated, ADDRESSES_SUBMITTED_SUCCESSFULLY, context)
 }
 
 // @Summary Get a address
@@ -111,7 +111,7 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 // @Success 201 {object} domain.Response
 // @Router /addresses/{addressID} [get]
 func (handler *HTTPHandler) GetAddress(context echo.Context) error {
-	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
 		return err
 	}
@@ -119,13 +119,13 @@ func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 	ID := context.Param("addressID")
 	addressID, err := uuid.Parse(ID)
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+		return ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 	}
 	location, err := handler.internalServicesAdapter.GetLocationAdaptor(addressID, user.ID);
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusConflict, err.Error(), context)
+		return ComputeErrorResponse(http.StatusConflict, err.Error(), context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, location, context)
+	return ComputeResponseMessage(http.StatusOK, location, context)
 }
 
 // @Summary Get addresses
@@ -139,23 +139,23 @@ func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 // @Success 201 {object} domain.Response
 // @Router /addresses [get]
 func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
-	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 	description := context.QueryParam("description")
 	if description == "" {
 		locations, err := handler.internalServicesAdapter.GetLocationsAdaptor(user.ID);
 		if err != nil {
-			return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+			return ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 		}
-		return handler.ComputeResponseMessage(http.StatusOK, locations, context)
+		return ComputeResponseMessage(http.StatusOK, locations, context)
 	} else {
 		location, err := handler.internalServicesAdapter.QueryLocationAdaptor(user.ID, description);
 			if err != nil {
-				return handler.ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+				return ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
 			}
-			return handler.ComputeResponseMessage(http.StatusOK, location, context)
+			return ComputeResponseMessage(http.StatusOK, location, context)
 	}
 }
 
@@ -205,7 +205,7 @@ func (handler *HTTPHandler) LiveLock(context echo.Context) error {
 	go walk(&peopleInHallway, "Alice")
 	go walk(&peopleInHallway, "Barbara")
 	peopleInHallway.Wait()
-	return handler.ComputeResponseMessage(http.StatusOK, "LiveLock", context)
+	return ComputeResponseMessage(http.StatusOK, "LiveLock", context)
 }
 
 // Example of DeadLock
@@ -231,7 +231,7 @@ func (handler *HTTPHandler) DeadLock(context echo.Context) error {
 	go printSum(&b, &a)
 	wg.Wait()
 
-	return handler.ComputeResponseMessage(http.StatusOK, "DeadLock", context)
+	return ComputeResponseMessage(http.StatusOK, "DeadLock", context)
 }
 
 // Example of DeadLock
@@ -291,7 +291,7 @@ func (handler *HTTPHandler) Starvation(context echo.Context) error {
 	go politeWorker()
 	go niceWorker()
 	wg.Wait()
-	return handler.ComputeResponseMessage(http.StatusOK, "Starvation", context)
+	return ComputeResponseMessage(http.StatusOK, "Starvation", context)
 }
 
 func (handler *HTTPHandler) Example(context echo.Context) error {
@@ -312,5 +312,5 @@ func (handler *HTTPHandler) Example(context echo.Context) error {
 	go sayHello()
 	wg.Wait()
 	fmt.Println(salutation)
-	return handler.ComputeResponseMessage(http.StatusOK, "Example", context)
+	return ComputeResponseMessage(http.StatusOK, "Example", context)
 }

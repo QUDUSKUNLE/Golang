@@ -7,7 +7,6 @@ import (
 )
 
 type Profile struct {
-	gorm.Model
 	ID        uuid.UUID      `json:"id" gorm:"uuid;primaryKey"`
 	CreatedAt *time.Time      `json:"created_at"`
 	UpdatedAt *time.Time      `json:"updated_at"`

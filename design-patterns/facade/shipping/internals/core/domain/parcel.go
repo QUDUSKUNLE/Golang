@@ -8,7 +8,6 @@ import (
 
 type (
 	Parcel struct {
-		gorm.Model
 		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"id"`
 		CreatedAt *time.Time      `json:"created_at"`
 		UpdatedAt *time.Time      `json:"updated_at"`

@@ -17,14 +17,13 @@ const (
 
 type (
 	User struct {
-		gorm.Model
 		ID        uuid.UUID       `json:"id" gorm:"uuid;primaryKey"`
-		Email     string          `json:"email" gorm:"unique"`
-		Password  string          `json:"password"`
-		UserType  UserType        `json:"user_type"`
 		CreatedAt *time.Time      `json:"created_at"`
 		UpdatedAt *time.Time      `json:"updated_at"`
 		DeletedAt *gorm.DeletedAt `gorm:"index" json:"-"`
+		Email     string          `json:"email" gorm:"unique"`
+		Password  string          `json:"password"`
+		UserType  UserType        `json:"user_type"`
 
 		Shippings  []Shipping  `json:"shippings" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 		Addresses  []Location  `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`

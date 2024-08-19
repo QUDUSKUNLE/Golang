@@ -19,11 +19,11 @@ import (
 // @Router /packagings [post]
 func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	terminalPackaging := new(domain.TerminalPackagingDto)
-	if err := handler.ValidateStruct(context, terminalPackaging); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
+	if err := ValidateStruct(context, terminalPackaging); err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 	// Parse user
-	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
 		return err
 	}
@@ -80,5 +80,5 @@ func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	packagingSync.Wait()
 
 	// Return response
-	return handler.ComputeResponseMessage(http.StatusCreated, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
+	return ComputeResponseMessage(http.StatusCreated, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
 }

@@ -31,25 +31,25 @@ func (handler *HTTPHandler) Rates(context echo.Context) error {
 		CashOnDelivery: domain.CASH_ON_DELIVERY(context.QueryParam("cash_on_delivery")),
 	}
 	if rates.Currency == "" {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, "QueryParam currency is rquired", context)
+		return ComputeErrorResponse(http.StatusBadRequest, "QueryParam currency is rquired", context)
 	}
 	if rates.PickUpAddressID == "" {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, "QueryParam pickup_address_id is rquired", context)
+		return ComputeErrorResponse(http.StatusBadRequest, "QueryParam pickup_address_id is rquired", context)
 	}
 	if rates.DeliveryAddressID == "" {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, "QueryParam delivery_address_id is rquired", context)
+		return ComputeErrorResponse(http.StatusBadRequest, "QueryParam delivery_address_id is rquired", context)
 	}
 	if rates.ParcelID == "" {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, "QueryParam parcel_id is rquired", context)
+		return ComputeErrorResponse(http.StatusBadRequest, "QueryParam parcel_id is rquired", context)
 	}
-	_, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
+	_, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
 		return err
 	}
 
 	response, err := handler.externalServicesAdapter.TerminalGetRatesAdaptor(*rates)
 	if err != nil {
-		return handler.ComputeErrorResponse(http.StatusOK, err, context)
+		return ComputeErrorResponse(http.StatusOK, err, context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, response, context)
+	return ComputeResponseMessage(http.StatusOK, response, context)
 }

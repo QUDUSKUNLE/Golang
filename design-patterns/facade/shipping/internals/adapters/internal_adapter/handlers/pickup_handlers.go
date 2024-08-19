@@ -18,12 +18,12 @@ import (
 // @Router /pickups [put]
 func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	pickUpDto := new(domain.PickUpDto)
-	if err := handler.ValidateStruct(context, pickUpDto); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
+	if err := ValidateStruct(context, pickUpDto); err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 
 	// Validate carrier
-	_, err := handler.PrivateMiddlewareContext(context, string(domain.CARRIER))
+	_, err := PrivateMiddlewareContext(context, string(domain.CARRIER))
 	if err != nil {
 		return err
 	}
@@ -31,9 +31,9 @@ func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 	err = handler.internalServicesAdapter.UpDatePickUpAdaptor(*pickUpDto);
 	if err != nil {
 		if err.Error() == string(RECORD_NOT_FOUND) {
-			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+			return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 		}
-		return handler.ComputeErrorResponse(http.StatusNotAcceptable, err.Error(), context)
+		return ComputeErrorResponse(http.StatusNotAcceptable, err.Error(), context)
 	}
-	return handler.ComputeResponseMessage(http.StatusOK, UPDATE_PARCEL_SUCCESSFULLY, context)
+	return ComputeResponseMessage(http.StatusOK, UPDATE_PARCEL_SUCCESSFULLY, context)
 }

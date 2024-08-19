@@ -21,7 +21,7 @@ type JwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func (httpHandler *HTTPHandler) currentUser(context echo.Context) *CurrentUser {
+func currentUser(context echo.Context) *CurrentUser {
 	user := context.Get("user").(*jwt.Token)
 	claims := user.Claims.(*JwtCustomClaims)
 	return &CurrentUser{
@@ -30,7 +30,7 @@ func (httpHandler *HTTPHandler) currentUser(context echo.Context) *CurrentUser {
 	}
 }
 
-func (httpHandler *HTTPHandler) ValidateStruct(context echo.Context, obj interface{}) error {
+func ValidateStruct(context echo.Context, obj interface{}) error {
 	// Bind userDto
 	if err := context.Bind(obj); err != nil {
 		return err
@@ -42,8 +42,8 @@ func (httpHandler *HTTPHandler) ValidateStruct(context echo.Context, obj interfa
 	return nil
 }
 
-func (httpHandler *HTTPHandler) parseUserID(context echo.Context) (*CurrentUser, error) {
-	result := httpHandler.currentUser(context)
+func parseUserID(context echo.Context) (*CurrentUser, error) {
+	result := currentUser(context)
 	_, err := uuid.Parse(result.ID.String())
 	if err != nil {
 		return &CurrentUser{}, err
@@ -51,8 +51,8 @@ func (httpHandler *HTTPHandler) parseUserID(context echo.Context) (*CurrentUser,
 	return result, nil
 }
 
-func (httpHandler *HTTPHandler) PrivateMiddlewareContext(context echo.Context, userType string) (*CurrentUser, error) {
-	user, err := httpHandler.parseUserID(context)
+func PrivateMiddlewareContext(context echo.Context, userType string) (*CurrentUser, error) {
+	user, err := parseUserID(context)
 	if err != nil {
 		return &CurrentUser{}, err
 	}
@@ -63,8 +63,7 @@ func (httpHandler *HTTPHandler) PrivateMiddlewareContext(context echo.Context, u
 	return user, nil
 }
 
-
-func (util *HTTPHandler) GenerateAccessToken(user CurrentUser) (string, error) {
+func GenerateAccessToken(user CurrentUser) (string, error) {
 	// Get JWT_SECRET_KEY
 	secret := os.Getenv("JWT_SECRET_KEY")
 	// Create a new claims
@@ -86,14 +85,14 @@ func (util *HTTPHandler) GenerateAccessToken(user CurrentUser) (string, error) {
 	return token, nil
 }
 
-func (util *HTTPHandler) ComputeErrorResponse(status int, message interface{}, context echo.Context) error {
+func ComputeErrorResponse(status int, message interface{}, context echo.Context) error {
 	return context.JSON(status, echo.Map{
 		"error": message,
 		"success": false,
 	})
 }
 
-func (util *HTTPHandler) ComputeResponseMessage(status int, message interface{}, context echo.Context) error {
+func ComputeResponseMessage(status int, message interface{}, context echo.Context) error {
 	return context.JSON(status, echo.Map{
 		"result": message,
 		"success": true,

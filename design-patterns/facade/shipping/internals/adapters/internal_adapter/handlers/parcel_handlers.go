@@ -20,11 +20,11 @@ import (
 // @Router /parcels [post]
 func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 	terminalParcel := new(domain.TerminalParcelDto)
-	if err := handler.ValidateStruct(context, terminalParcel); err != nil {
-		return handler.ComputeErrorResponse(http.StatusBadRequest, err, context)
+	if err := ValidateStruct(context, terminalParcel); err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 	// Validate user
-	user, err := handler.PrivateMiddlewareContext(context, string(domain.USER))
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 	for _, terminal_parcel := range terminalParcel.Parcels {
 		externalParcel, err := handler.externalServicesAdapter.TerminalCreateParcelAdaptor(terminal_parcel)
 		if err != nil {
-			return handler.ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+			return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 		}
 		if externalParcel["data"] != nil {
 			result := externalParcel["data"].(map[string]interface{})
@@ -42,12 +42,12 @@ func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 			parcel.ParcelID = append(parcel.ParcelID, parcel_id)
 		} else {
 				fmt.Print(externalParcel["data"])
-				return handler.ComputeErrorResponse(http.StatusBadRequest, externalParcel["message"], context)
+				return ComputeErrorResponse(http.StatusBadRequest, externalParcel["message"], context)
 		}
 	}
 	parcel.UserID = user.ID
 	if err := handler.internalServicesAdapter.NewParcelAdaptor(*parcel); err != nil {
-		return handler.ComputeErrorResponse(http.StatusConflict, "Parcel error", context)
+		return ComputeErrorResponse(http.StatusConflict, "Parcel error", context)
 	}
-	return handler.ComputeResponseMessage(http.StatusCreated, PARCEL_SUBMITTED_SUCCESSFULLY, context)
+	return ComputeResponseMessage(http.StatusCreated, PARCEL_SUBMITTED_SUCCESSFULLY, context)
 }

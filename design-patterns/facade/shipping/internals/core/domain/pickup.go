@@ -16,7 +16,6 @@ const (
 
 type (
 	PickUp struct {
-		gorm.Model
 		ID        uuid.UUID    `gorm:"primaryKey;->;<-:create" json:"id"`
 		PickUpAt  time.Time    `json:"pick_up_at"`
 		CreatedAt time.Time    `json:"created_at"`
