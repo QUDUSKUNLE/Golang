@@ -8,7 +8,7 @@ type ExternalPorts interface {
 	TerminalDeletePackaging(packaging interface{}) (map[string]interface{}, error)
 	TerminalGetPackaging(packaging interface{}) (map[string]interface{}, error)
 	// Get Rates
-	TerminalGetRates(query string) (map[string]interface{}, error)
+	TerminalGetRates(rates string) (map[string]interface{}, error)
 	// Save Addresses
 	TerminalCreateAddress(address interface{}) (map[string]interface{}, error)
 	// Save Parcel

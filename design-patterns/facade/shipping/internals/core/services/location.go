@@ -32,10 +32,10 @@ func (internalHandler *InternalServicesHandler) QueryLocationAdaptor(userID uuid
 	return location, nil
 }
 
-func (internalHandler *InternalServicesHandler) GetLocationsAdaptor(userID uuid.UUID) ([]domain.Location, error) {
+func (internalHandler *InternalServicesHandler) GetLocationsAdaptor(userID uuid.UUID) ([]*domain.Location, error) {
 	location, err := internalHandler.internal.ReadAddressesAdaptor(userID);
 	if err != nil {
-		return []domain.Location{}, err
+		return []*domain.Location{}, err
 	}
 	return location, nil
 }

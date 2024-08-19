@@ -10,6 +10,9 @@ type (
 	TerminalParcelDto struct {
 		Parcels []SingleTerminalParcelDto `json:"Parcels" binding:"required" validate:"required,dive,required"`
 	}
+	TerminalShipmentDto struct {
+		Shipments []SingleTerminalShipmentDto `json:"shipments" binding:"required" validate:"required,dive,required"`
+	}
 	TerminalParcelItemDto struct {
 		Description string    `json:"description" validate:"required"`
 		HS_CODE     string    `json:"hs_code"`
@@ -19,6 +22,22 @@ type (
 		Value       float32   `json:"value" validate:"required"`
 		Quantity    int       `json:"quantity" validate:"required"`
 		Weight      float32   `json:"weight" validate:"required"`
+	}
+	TerminalRatesQueryDto struct {
+		Currency          Currency         `json:"currency"`
+		PickUpAddressID   string           `json:"pickup_address_id"`
+		DeliveryAddressID string           `json:"delivery_address_id"`
+		ShipmentID        *string          `json:"shipment_id"`
+		ParcelID          string           `json:"parcel_id"`
+		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery"`
+	}
+	SingleTerminalShipmentDto struct {
+		PickUpAddressID   string           `json:"pick_up_address_id"`
+		DeliveryAddressID string           `json:"delivery_address_id"`
+		Parcels           []string         `json:"parcel_id"`
+		ReturnAddressID   string           `json:"return_address_id"`
+		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose"`
+		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type"`
 	}
 	SingleTerminalPackagingDto struct {
 		Height      float32      `json:"height" binding:"required" validate:"required"`
@@ -38,14 +57,6 @@ type (
 		Proof_Of_Payments []string                `json:"proof_of_payments" binding:"required" validate:"required,dive,required"`
 		Rec_docs          []string                `json:"rec_docs" binding:"required" validate:"required,dive,required"`
 		Weight_unit       WEIGHT_UNIT             `json:"weight_unit" binding:"required" validate:"required"`
-	}
-	TerminalRatesQueryDto struct {
-		Currency          Currency         `json:"currency"`
-		PickUpAddressID   string           `json:"pickup_address_id"`
-		DeliveryAddressID string           `json:"delivery_address_id"`
-		ShipmentID        *string          `json:"shipment_id"`
-		ParcelID          string           `json:"parcel_id"`
-		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery"`
 	}
 )
 
@@ -89,6 +100,19 @@ func (parcel *Terminal) BuildNewTerminalParcel(parse SingleTerminalParcelDto) ma
 		"rec_docs":          parse.Rec_docs,
 		"weight_unit":       parse.Weight_unit,
 	}
+}
+
+func (ship *Terminal) BuildNewTerminalShipment(shipment SingleTerminalShipmentDto) map[string]interface{} {
+	 return map[string]interface{}{
+			"address_from": shipment.PickUpAddressID,
+			"address_to": shipment.DeliveryAddressID,
+			"metadata": "",
+			"parcel": shipment.Parcels[0],
+			"address_return": shipment.PickUpAddressID,
+			"shipment_purpose": shipment.ShipmentPurpose.PrintShipmentPurpose(),
+			"parcels": shipment.Parcels,
+			"shipment_type": shipment.ShipmentType.PrintCashOnDelivery(),
+		}
 }
 
 func buildNewTerminalParcelItem(parse []TerminalParcelItemDto) []map[string]interface{} {

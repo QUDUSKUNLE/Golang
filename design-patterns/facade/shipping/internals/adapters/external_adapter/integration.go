@@ -1,7 +1,7 @@
 package integration
 
 import (
-	ports "github.com/QUDUSKUNLE/shipping/internals/core/ports"
+	"github.com/QUDUSKUNLE/shipping/internals/core/ports"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
 

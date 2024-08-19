@@ -47,3 +47,14 @@ func (externalHandler *ExternalServicesHandler) TerminalCreateParcelAdaptor(parc
 	}
 	return result, nil
 }
+
+func (externalHandler *ExternalServicesHandler) TerminalCreateShipmentAdaptor(shipment domain.SingleTerminalShipmentDto) (map[string]interface{}, error ){
+	var result map[string]interface{}
+	serviceHandler := NewExternalServicesFacade()
+	builtShipment := serviceHandler.terminalService.BuildNewTerminalShipment(shipment)
+	result, err := externalHandler.external.TerminalCreateShipment(builtShipment)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}

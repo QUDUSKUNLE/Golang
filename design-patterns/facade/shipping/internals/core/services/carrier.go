@@ -5,10 +5,10 @@ import (
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
 
-func (internalHandler *InternalServicesHandler) CarrierPickUpsAdaptor(ID uuid.UUID) ([]domain.PickUp, error) {
+func (internalHandler *InternalServicesHandler) CarrierPickUpsAdaptor(ID uuid.UUID) ([]*domain.PickUp, error) {
 	pickUps, err := internalHandler.internal.CarrierPickUps(ID)
 	if err != nil {
-		return []domain.PickUp{}, err
+		return []*domain.PickUp{}, err
 	}
 	return pickUps, nil
 }

@@ -1,30 +1,33 @@
 package repository
 
 import (
-	"github.com/google/uuid"
+	"errors"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-func (database *PostgresRepository) SaveCarrierAdaptor(carrier domain.Carrier) error {
+func (database *PostgresRepository) SaveCarrierAdaptor(carrier domain.Carrier) (err error) {
 	_ = database.db.AutoMigrate(&domain.Carrier{})
 	result := database.db.Create(&domain.Carrier{
-		ID:         carrier.ID,
-		UserID:    carrier.UserID,
-		CompanyName: carrier.CompanyName,
+		ID:             carrier.ID,
+		UserID:         carrier.UserID,
+		CompanyName:    carrier.CompanyName,
 		CompanyAddress: carrier.CompanyAddress,
-		Contact: carrier.Contact,
+		Contact:        carrier.Contact,
 	})
+
 	if result.Error != nil {
 		return result.Error
 	}
-	return nil
+	return
 }
 
 func (database *PostgresRepository) ReadCarrierAdaptor(ID uuid.UUID) (*domain.Carrier, error) {
-	carrier := domain.Carrier{UserID: ID}
-	result := database.db.First(&carrier)
-	if result.Error != nil {
-		return &domain.Carrier{}, result.Error
+	carrier := &domain.Carrier{UserID: ID}
+	err := database.db.First(carrier).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return &domain.Carrier{}, err
 	}
-	return &carrier, nil
+	return carrier, nil
 }

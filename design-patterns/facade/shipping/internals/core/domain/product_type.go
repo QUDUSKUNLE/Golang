@@ -7,6 +7,7 @@ type (
 	ITEM_TYPE string
 	Currency string
 	CASH_ON_DELIVERY string
+	SHIPMENT_PURPOSE string
 )
 
 const (
@@ -50,6 +51,13 @@ const (
 	// Cash on delivery
 	false CASH_ON_DELIVERY = "false"
 	true CASH_ON_DELIVERY = "true"
+
+	// Shipment Purpose
+	COMMERCIAL SHIPMENT_PURPOSE = "commercial"
+	PERSONAL SHIPMENT_PURPOSE = "personal"
+	SAMPLE    SHIPMENT_PURPOSE = "sample"
+	RETURN_AFTER_REPAIR SHIPMENT_PURPOSE = "return-after-repair"
+	RETURN_FOR_REPAIR SHIPMENT_PURPOSE = "return-for-repair"
 )
 
 func (product ProductType) PrintProduct() string {
@@ -103,6 +111,22 @@ func (catch CASH_ON_DELIVERY) PrintCashOnDelivery() string {
 		return string(false)
 	case true:
 		return string(true)
+	}
+	return "Unknown"
+}
+
+func (ship SHIPMENT_PURPOSE) PrintShipmentPurpose() string {
+	switch ship {
+	case COMMERCIAL:
+		return string(COMMERCIAL)
+	case PERSONAL:
+		return string(PERSONAL)
+	case SAMPLE:
+		return string(SAMPLE)
+	case RETURN_AFTER_REPAIR:
+		return string(RETURN_AFTER_REPAIR)
+	case RETURN_FOR_REPAIR:
+		return string(RETURN_FOR_REPAIR)
 	}
 	return "Unknown"
 }

@@ -132,8 +132,24 @@ func (terminal *ExternalRepository) TerminalUpdateParcel(shipment interface{}) (
 	return map[string]interface{}{"shipment": shipment}, nil
 }
 
-func (terminal *ExternalRepository) TerminalCreateShipment(shipment interface{}) (map[string]interface{}, error) {
-	return map[string]interface{}{"shipment": shipment}, nil
+func (terminal *ExternalRepository) TerminalCreateShipment(ship interface{}) (map[string]interface{}, error) {
+	var shipment map[string]interface{}
+	bodyReader, err := byteReader(ship)
+	if err != nil {
+		log.Fatal(err)
+		return shipment, err
+	}
+	req, err := buildNewTerminalRequest(POST.PrintMethod(), SHIPMENTS.PrintEndpoint(), bodyReader)
+	if err != nil {
+		log.Fatal(err)
+		return shipment, err
+	}
+	shipment, err = result(req, shipment)
+	if err != nil {
+		log.Fatal(err)
+		return shipment, err
+	}
+	return shipment, nil
 }
 
 func (terminal *ExternalRepository) TerminalTrackShipment(shipment interface{}) (map[string]interface{}, error) {

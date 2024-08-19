@@ -17,13 +17,13 @@ type RepositoryPorts interface {
 	SaveCarrierAdaptor(carrier domain.Carrier) error
 
 	CreateShippingAdaptor(shipping []*domain.Shipping) error
-	GetShippingsAdaptor(shippingID uuid.UUID, status string) ([]domain.Shipping, error)
+	GetShippingsAdaptor(shippingID uuid.UUID, status string) ([]*domain.Shipping, error)
 
-	CarrierPickUps(carrierID uuid.UUID) ([]domain.PickUp, error)
+	CarrierPickUps(carrierID uuid.UUID) ([]*domain.PickUp, error)
 
 	// Addresses Ports
 	ReadAddressAdaptor(addressID, userID uuid.UUID) (*domain.Location, error)
-	ReadAddressesAdaptor(userID uuid.UUID) ([]domain.Location, error)
+	ReadAddressesAdaptor(userID uuid.UUID) ([]*domain.Location, error)
 	SaveAddressAdaptor(location []*domain.Location) error
 	UpdateAddressAdaptor(addressID uuid.UUID, location domain.Location) error
 	DeleteAddressAdaptor(addressID uuid.UUID) error

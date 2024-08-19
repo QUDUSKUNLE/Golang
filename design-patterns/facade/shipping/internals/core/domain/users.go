@@ -13,6 +13,7 @@ import (
 const (
 	USER    UserType = "USER"
 	CARRIER UserType = "CARRIER"
+	ADMIN 	UserType = "ADMIN"
 )
 
 type (

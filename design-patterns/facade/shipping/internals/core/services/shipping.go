@@ -18,10 +18,10 @@ func (internalHandler *InternalServicesHandler) NewShippingAdaptor(shippingDto *
 	return nil
 }
 
-func (internalHandler *InternalServicesHandler) GetShippingsAdaptor(ID uuid.UUID) ([]domain.Shipping, error) {
+func (internalHandler *InternalServicesHandler) GetShippingsAdaptor(ID uuid.UUID) ([]*domain.Shipping, error) {
 	shippings, err := internalHandler.internal.GetShippingsAdaptor(ID, "SCHEDULED")
 	if err != nil {
-		return []domain.Shipping{}, err
+		return []*domain.Shipping{}, err
 	}
 	return shippings, nil
 }

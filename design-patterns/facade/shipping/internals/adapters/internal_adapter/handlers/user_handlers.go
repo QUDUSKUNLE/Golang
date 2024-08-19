@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -23,12 +22,13 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 		return ComputeErrorResponse(http.StatusBadRequest, err, context)
 	}
 	err := handler.internalServicesAdapter.SaveUser(*user);
+
 	if err != nil {
-		if err.Error() == string(USER_ALREADY_EXIST) {
-			return ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
-		}
 		if err.Error() == string(INCORRECT_PASSWORDS) {
 			return ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+		}
+		if err.Error() == string(USER_ALREADY_EXIST) {
+			return ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 		}
 		return ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 	}
