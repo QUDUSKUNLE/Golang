@@ -6,7 +6,7 @@ import (
 )
 
 func (internalHandler *InternalServicesHandler) NewLocationAdaptor(locationDto domain.LocationDto) error {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	locations := systemsHandler.locationService.BuildNewLocation(locationDto)
 	err := internalHandler.internal.SaveAddressAdaptor(locations);
 	if err != nil {

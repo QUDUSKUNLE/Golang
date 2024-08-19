@@ -6,7 +6,7 @@ import (
 )
 
 func (internalHandler *InternalServicesHandler) NewShippingAdaptor(shippingDto *domain.ShippingDto) error {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	newShipping := systemsHandler.shippingService.BuildNewShipping(*shippingDto)
 	if err := internalHandler.internal.CreateShippingAdaptor(newShipping); err != nil {
 		return err

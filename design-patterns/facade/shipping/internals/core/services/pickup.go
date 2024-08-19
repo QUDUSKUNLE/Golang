@@ -6,7 +6,7 @@ import (
 )
 
 func (internalHandler *InternalServicesHandler) NewPickUpAdaptor(pick domain.PickUpDto) error {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	pickUp := systemsHandler.pickUpService.BuildNewPickUp(pick)
 	err := internalHandler.internal.InitiatePickUpAdaptor(pickUp);
 	if err != nil {
@@ -22,7 +22,7 @@ func (internalHandler *InternalServicesHandler) NewPickUpAdaptor(pick domain.Pic
 }
 
 func (internalHandler *InternalServicesHandler) UpDatePickUpAdaptor(pickUp domain.PickUpDto) error {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	// build a new pick up
 	pick := systemsHandler.pickUpService.BuildUpdatePickUp(pickUp)
 

@@ -5,7 +5,7 @@ import (
 )
 
 func (internalHandler *InternalServicesHandler) LogInUserAdaptor(loginDto domain.LogInDto) (*domain.User, error) {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	user, err := internalHandler.internal.ReadUserByEmailAdaptor(loginDto.Email)
 	if err != nil {
 		return &domain.User{}, err

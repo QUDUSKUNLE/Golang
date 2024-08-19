@@ -6,7 +6,7 @@ import (
 )
 
 func (internalHandler *InternalServicesHandler) SaveUser(userDto domain.UserDto) error {
-	servicesHandler := internalHandler.NewInternalServicesFacade()
+	servicesHandler := NewInternalServicesFacade()
 	buildUser, err := servicesHandler.userService.BuildNewUser(userDto)
 	if err != nil {
 		return err
@@ -25,7 +25,7 @@ func (internalHandler *InternalServicesHandler) ResetPassword(userDto domain.Res
 	if err != nil {
 		return fmt.Errorf("user %s with the email: %s", err.Error(), userDto.Email)
 	}
-	servicesHandler := internalHandler.NewInternalServicesFacade()
+	servicesHandler := NewInternalServicesFacade()
 	servicesHandler.notificationService.SendResetPasswordNotification()
 	return nil
 }

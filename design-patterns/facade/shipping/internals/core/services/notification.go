@@ -2,48 +2,48 @@ package services
 
 import "fmt"
 
-type Notification struct {}
+type NotificationService struct {}
 
-func (notification *Notification) SendShippingNotification() {
+func (notification *NotificationService) SendShippingNotification() {
 	fmt.Println("Sending shipping notification.")
 }
 
-func (notification *Notification) SendPickUpNotification() {
+func (notification *NotificationService) SendPickUpNotification() {
 	fmt.Println("Sending pickup notification.")
 }
 
-func (notification *Notification) SendReturnNotification() {
+func (notification *NotificationService) SendReturnNotification() {
 	fmt.Println("Sending return notification.")
 }
 
-func (notification *Notification) SendAddressNotification() {
+func (notification *NotificationService) SendAddressNotification() {
 	fmt.Println("Sending address notification.")
 }
 
-func (notification *Notification) SendWalletCreditNotification() {
+func (notification *NotificationService) SendWalletCreditNotification() {
 	fmt.Println("Sending wallet credit notification")
 }
 
-func (notification *Notification) SendWalletDebitNotification() {
+func (notification *NotificationService) SendWalletDebitNotification() {
 	fmt.Println("Sending wallet debit notification")
 }
 
-func (notification *Notification) SendDeliveryNotification() {
+func (notification *NotificationService) SendDeliveryNotification() {
 	fmt.Println("Sending delivery notification")
 }
 
-func (notification *Notification) SendRegistrationNotification() {
+func (notification *NotificationService) SendRegistrationNotification() {
 	fmt.Println("Sending registration notification")
 }
 
-func (notification *Notification) SendParcelNotification() {
+func (notification *NotificationService) SendParcelNotification() {
 	fmt.Println("Sending parcel notification")
 }
 
-func (notification *Notification) SendPackagingNotification() {
+func (notification *NotificationService) SendPackagingNotification() {
 	fmt.Println("Sending packaging notification")
 }
 
-func (notification *Notification) SendResetPasswordNotification() {
+func (notification *NotificationService) SendResetPasswordNotification() {
 	fmt.Println("Sending password reset notification")
 }

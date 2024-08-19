@@ -6,7 +6,7 @@ import (
 
 func (externalHandler *ExternalServicesHandler) TerminalCreatePackagingAdaptor(packaging domain.SingleTerminalPackagingDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	serviceHandler := externalHandler.NewExternalServicesFacade()
+	serviceHandler := NewExternalServicesFacade()
 	buildPackaging := serviceHandler.terminalService.BuildNewTerminalPackaging(packaging)
 	result, err := externalHandler.external.TerminalCreatePackaging(buildPackaging)
 	if err != nil {
@@ -17,7 +17,7 @@ func (externalHandler *ExternalServicesHandler) TerminalCreatePackagingAdaptor(p
 
 func (externalHandler *ExternalServicesHandler) TerminalCreateAddressAdaptor(address domain.Address) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	serviceHandler := externalHandler.NewExternalServicesFacade()
+	serviceHandler := NewExternalServicesFacade()
 	buildAddress := serviceHandler.terminalService.BuildNewTerminalAddress(address)
 	result, err := externalHandler.external.TerminalCreateAddress(buildAddress)
 	if err != nil {
@@ -28,7 +28,7 @@ func (externalHandler *ExternalServicesHandler) TerminalCreateAddressAdaptor(add
 
 func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor(query domain.TerminalRatesQueryDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	serviceHandler := externalHandler.NewExternalServicesFacade()
+	serviceHandler := NewExternalServicesFacade()
 	buildQuery := serviceHandler.terminalService.BuildNewTerminalRatesQuery(query)
 	result, err := externalHandler.external.TerminalGetRates(buildQuery)
 	if err != nil {
@@ -39,7 +39,7 @@ func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor(query do
 
 func (externalHandler *ExternalServicesHandler) TerminalCreateParcelAdaptor(parcel domain.SingleTerminalParcelDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
-	serviceHandler := externalHandler.NewExternalServicesFacade()
+	serviceHandler := NewExternalServicesFacade()
 	builtParcel := serviceHandler.terminalService.BuildNewTerminalParcel(parcel)
 	result, err := externalHandler.external.TerminalCreateParcel(builtParcel)
 	if err != nil {

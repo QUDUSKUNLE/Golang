@@ -4,7 +4,7 @@ import "github.com/QUDUSKUNLE/shipping/internals/core/domain"
 
 type InternalServicesFacade struct {
 	userService *domain.User
-	notificationService *Notification
+	notificationService *NotificationService
 	locationService *domain.Location
 	packagingService *domain.Packaging
 	parcelService *domain.Parcel
@@ -13,7 +13,7 @@ type InternalServicesFacade struct {
 	shippingService *domain.Shipping
 }
 
-func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacade() *InternalServicesFacade {
+func NewInternalServicesFacade() *InternalServicesFacade {
 	return &InternalServicesFacade{
 		shippingService: &domain.Shipping{},
 		pickUpService: &domain.PickUp{},
@@ -21,7 +21,7 @@ func (internalServicesHandler *InternalServicesHandler) NewInternalServicesFacad
 		packagingService: &domain.Packaging{},
 		parcelService: &domain.Parcel{},
 		userService: &domain.User{},
-		notificationService: &Notification{},
+		notificationService: &NotificationService{},
 		locationService: &domain.Location{},
 	}
 }

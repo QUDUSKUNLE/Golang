@@ -10,7 +10,7 @@ func (internalHandler *InternalServicesHandler) NewDeliveryAdaptor(accountID uui
 }
 
 func (internalHandler *InternalServicesHandler) NewDelivery(accountID uuid.UUID, pickUpAddress, deliveryAddress, productType string) error {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	systemsHandler.notificationService.SendDeliveryNotification()
 	return nil
 }

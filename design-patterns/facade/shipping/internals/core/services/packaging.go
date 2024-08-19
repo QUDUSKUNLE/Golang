@@ -5,7 +5,7 @@ import (
 )
 
 func (internalHandler *InternalServicesHandler) NewPackagingAdaptor(packageDto domain.PackagingDto) error {
-	systemsHandler := internalHandler.NewInternalServicesFacade()
+	systemsHandler := NewInternalServicesFacade()
 	pack := systemsHandler.packagingService.BuildNewPackaging(packageDto)
 	err := internalHandler.internal.SavePackagingAdaptor(pack);
 	if err != nil {
