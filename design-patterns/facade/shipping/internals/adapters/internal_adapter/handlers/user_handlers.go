@@ -24,16 +24,13 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 	err := handler.internalServicesAdapter.SaveUser(*user);
 
 	if err != nil {
-		if err.Error() == string(INCORRECT_PASSWORDS) {
-			return ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
-		}
 		if err.Error() == string(USER_ALREADY_EXIST) {
 			return ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 		}
 		return ComputeErrorResponse(http.StatusConflict, USER_ALREADY_REGISTERED, context)
 	}
 	// Process valid user data
-	return ComputeResponseMessage(http.StatusCreated,USER_REGISTERED_SUCCESSFULLY, context)
+	return ComputeResponseMessage(http.StatusCreated, USER_REGISTERED_SUCCESSFULLY, context)
 }
 
 // @Summary Sign in a user
@@ -53,7 +50,7 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 	// Initiate a new login adaptor
 	user, err := handler.internalServicesAdapter.LogInUserAdaptor(*loginDto)
 	if err != nil {
-		return ComputeErrorResponse(http.StatusBadRequest, err.Error(), context)
+		return ComputeErrorResponse(http.StatusNotFound, err.Error(), context)
 	}
 	Token, err := GenerateAccessToken(CurrentUser{ID: user.ID, UserType: string(user.UserType)})
 	if err != nil {
