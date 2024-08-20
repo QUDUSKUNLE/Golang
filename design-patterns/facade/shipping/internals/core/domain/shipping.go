@@ -3,8 +3,6 @@ package domain
 import (
 	"github.com/google/uuid"
 	"time"
-	"errors"
-	"gorm.io/gorm"
 )
 
 type (
@@ -28,26 +26,19 @@ type (
 		Address           *Address  `json:"-"`
 	}
 	ShippingDto struct {
-		Shipments []SingleShippingDto `json:"shipments" binding:"required" validate:"required,dive,required"`
+		Shipments []SingleShippingDto `json:"shipments" validate:"gt=0,dive,required"`
 	}
 	SingleShippingDto struct {
 		Description       string      `json:"description" validate:"required,gte=6,lte=100"`
 		PickUpAddressID   uuid.UUID   `json:"pick_up_address_id" validate:"required"`
-		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"required"`
-		PickUpAddress     Address     `json:"pick_up_address"`
-		DeliveryAddress   Address     `json:"delivery_address"`
-		ProductType       ProductType `json:"product_type" validate:"required"`
+		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"required,nefield=PickUpAddressID"`
+		PickUpAddress     Address     `json:"pick_up_address" validate:"required_without=PickUpAddressID,"`
+		DeliveryAddress   Address     `json:"delivery_address" validate:"required_without=DeliveryAddressID,"`
+		ProductType       ProductType `json:"product_type" validate:"required, oneof=Animal Plant Appareal Book Cosmetics Electronics Watery Ammunition"`
 		CarrierID         uuid.UUID   `json:"carrier_id" validate:"required"`
 		UserID            uuid.UUID
 	}
 )
-
-func (shipping *Shipping) BeforeCreate(scope *gorm.DB) (err error){
-	if shipping.PickUpAddressID == shipping.DeliveryAddressID {
-		err = errors.New("pick_up_address_id can`t be same as delivery_address")
-	}
-	return
-}
 
 func (shipping *Shipping) BuildNewShipping(ship ShippingDto) []*Shipping {
 	shipments := []*Shipping{}
@@ -72,7 +63,7 @@ func (shipping *Shipping) BuildPickUp(shipments []*Shipping) PickUpDto {
 			CarrierID:  shipment.CarrierID,
 			ShippingID: shipment.ID,
 			PickUpAt:   time.Now(),
-			Status:     string(SCHEDULED),
+			Status:     SCHEDULED,
 		})
 	}
 	return shippings

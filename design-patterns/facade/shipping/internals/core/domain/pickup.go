@@ -29,14 +29,14 @@ type (
 		Carrier    *Carrier  `json:"-"`
 	}
 	PickUpDto struct {
-		PickUps  []SinglePickUpDto `json:"pick_ups" binding:"required" validate:"required,dive,required"`
+		PickUps []SinglePickUpDto `json:"pick_ups" validate:"gt=0,dive,required"`
 	}
 	SinglePickUpDto struct {
-		ID        uuid.UUID  `json:"id"`
-		ShippingID uuid.UUID `json:"shipping_id" validate:"required"`
-		CarrierID  uuid.UUID `json:"carrier_id" validate:"required"`
-		PickUpAt   time.Time `json:"pick_up_at" validate:"required"`
-		Status     string    `json:"status" validate:"required"`
+		ID         uuid.UUID    `json:"id"`
+		ShippingID uuid.UUID    `json:"shipping_id" validate:"uuid,required"`
+		CarrierID  uuid.UUID    `json:"carrier_id" validate:"uuid,required"`
+		PickUpAt   time.Time    `json:"pick_up_at" validate:"required"`
+		Status     PickUpStatus `json:"status" validate:"required"`
 	}
 	PickUpStatus string
 )
@@ -63,7 +63,7 @@ func (pickUp *PickUp) BuildUpdatePickUp(pick PickUpDto) []*PickUp {
 	pickUps := []*PickUp{}
 	for _, p := range pick.PickUps {
 		pickUps = append(pickUps, &PickUp{
-			ID: p.ID,
+			ID:         p.ID,
 			ShippingID: p.ShippingID,
 			CarrierID:  p.CarrierID,
 			PickUpAt:   time.Now(),

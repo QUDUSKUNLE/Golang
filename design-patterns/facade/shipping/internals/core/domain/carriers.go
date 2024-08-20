@@ -22,9 +22,9 @@ type (
 		PickUps []PickUp `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	}
 	CarrierDto struct {
-		CompanyName    string  `json:"company_name" binding:"required" validate:"required,gte=6,lte=1000"`
-		CompanyAddress Address `json:"company_address" binding:"required" validate:"required"`
-		Contact        Contact `json:"contact" binding:"required" validate:"required,dive,required"`
+		CompanyName    string  `json:"company_name" validate:"gte=6,lte=100,required"`
+		CompanyAddress Address `json:"company_address" validate:"required"`
+		Contact        Contact `json:"contact" binding:"required" validate:"required"`
 		UserID         uuid.UUID
 	}
 )

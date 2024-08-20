@@ -42,6 +42,7 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 	location.UserID = user.ID
 	err = handler.internalServicesAdapter.NewLocationAdaptor(*location);
 	if err != nil {
+		fmt.Println(err.Error(), "jkahjscmklsdlcadks.l;")
 		return ComputeErrorResponse(http.StatusConflict, ADDRESS_ALREADY_EXIST, context)
 	}
 
@@ -68,8 +69,9 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 			address_id := result["address_id"].(string)
 			location.Address[index].TerminalAddressID = address_id
 			terminalLocation = &domain.Location{
-				TerminalAddressID: location.Address[index].TerminalAddressID,
+				TerminalAddressID: address_id,
 				Address: location.Address[index],
+				Description: location.Address[index].Description,
 				UserID: location.UserID,
 			}
 			// Send terminalLocation to the channel

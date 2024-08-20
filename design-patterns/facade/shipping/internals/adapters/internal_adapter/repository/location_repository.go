@@ -38,13 +38,10 @@ func (database *PostgresRepository) ReadAddressesAdaptor(userID uuid.UUID) ([]*d
 func (database *PostgresRepository) SaveAddressAdaptor(locations []*domain.Location) (err error) {
 	_ = database.db.AutoMigrate(&domain.Location{})
 	result := database.db.Create(locations)
-	if errors.Is(result.Error, gorm.ErrForeignKeyViolated) {
+	if result.Error != nil {
 		return result.Error
 	}
-	if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
-		return result.Error
-	}
-	return
+	return nil
 }
 
 func (database *PostgresRepository) UpdateAddressAdaptor(addressID uuid.UUID, location domain.Location) (err error) {
@@ -58,6 +55,6 @@ func (database *PostgresRepository) DeleteAddressAdaptor(addressID uuid.UUID) (e
 }
 
 func (database *PostgresRepository) TerminalUpdateAddressAdaptor(location domain.Location) (err error) {
-	database.db.Model(&domain.Location{}).Where(&domain.Location{Description: location.Description, UserID: location.UserID}).Updates(map[string]interface{}{"terminal_address_id": location.TerminalAddressID, "address": location.Address})
+	database.db.Model(&domain.Location{Description: location.Description, UserID: location.UserID}).Where(&domain.Location{Description: location.Description, UserID: location.UserID}).Updates(map[string]interface{}{"terminal_address_id": location.TerminalAddressID, "address": location.Address})
 	return
 }

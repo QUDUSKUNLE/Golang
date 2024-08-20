@@ -5,13 +5,13 @@ import "fmt"
 type (
 	Terminal             struct{}
 	TerminalPackagingDto struct {
-		Packagings []SingleTerminalPackagingDto `json:"Packagings" binding:"required" validate:"required,dive,required"`
+		Packagings []SingleTerminalPackagingDto `json:"Packagings" validate:"gt=0,dive,required"`
 	}
 	TerminalParcelDto struct {
-		Parcels []SingleTerminalParcelDto `json:"Parcels" binding:"required" validate:"required,dive,required"`
+		Parcels []SingleTerminalParcelDto `json:"Parcels" validate:"gt=0,dive,required"`
 	}
 	TerminalShipmentDto struct {
-		Shipments []SingleTerminalShipmentDto `json:"shipments" binding:"required" validate:"required,dive,required"`
+		Shipments []SingleTerminalShipmentDto `json:"shipments" validate:"gt=0,dive,required"`
 	}
 	TerminalParcelItemDto struct {
 		Description string    `json:"description" validate:"required"`
