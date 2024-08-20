@@ -20,7 +20,7 @@ func (c *CustomValidator) Validate(inter interface{}) error {
 		}
 		var errorMessage []map[string]string
 		for _, er := range err.(validator.ValidationErrors) {
-			errorMessage = append(errorMessage, map[string]string{"field": er.Field(), "message": fmt.Sprintf("%s is %s", er.Field(), er.ActualTag())})
+			errorMessage = append(errorMessage, map[string]string{"field": er.Field(), "message": fmt.Sprintf("%s is an invalid input for field: %s", er.Value(), er.Field())})
 		}
 		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
