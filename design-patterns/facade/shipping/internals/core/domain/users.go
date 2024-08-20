@@ -2,7 +2,6 @@ package domain
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,17 +31,17 @@ type (
 		Parcels    []Parcel    `json:"parcels" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	}
 	UserDto struct {
-		Email           string   `json:"email" binding:"required,email,lte=100" validate:"required,email"`
-		Password        string   `json:"password" binding:"required,gte=6,lte=20" validate:"required,gte=6,lte=20"`
-		ConfirmPassword string   `json:"confirm_password" binding:"required,gte=6,lte=20" validate:"required,gte=6,lte=20"`
-		UserType        UserType `json:"user_type" binding:"required" validate:"required"`
+		Email           string   `json:"email" validate:"email,required"`
+		Password        string   `json:"password" validate:"gte=6,lte=20,required"`
+		ConfirmPassword string   `json:"confirm_password" validate:"eqfield=Password,gte=6,lte=20,required"`
+		UserType        UserType `json:"user_type" validate:"oneof=USER CARRIER,required"`
 	}
 	LogInDto struct {
-		Email    string `json:"email" binding:"required,email,lte=100" validate:"required"`
-		Password string `json:"password" binding:"required,gte=6,lte=20" validate:"required"`
+		Email    string `json:"email" validate:"email,required"`
+		Password string `json:"password" validate:"required"`
 	}
 	ResetPasswordDto struct {
-		Email string `json:"email" binding:"required" validate:"required,email"`
+		Email string `json:"email" validate:"email,required"`
 	}
 	UserType string
 	Response struct {
@@ -74,9 +73,6 @@ func (user *User) AfterCreate(scope *gorm.DB) error {
 }
 
 func (u *User) BuildNewUser(user UserDto) (*User, error) {
-	if err := compareBothPasswords(user.Password, user.ConfirmPassword); err != nil {
-		return &User{}, err
-	}
 	Password, err := hashPassword(user.Password)
 	if err != nil {
 		return &User{}, err
@@ -102,11 +98,4 @@ func hashPassword(password string) (string, error) {
 	}
 	password = string(hashPassword)
 	return password, nil
-}
-
-func compareBothPasswords(password, confirmPassword string) error {
-	if password != confirmPassword {
-		return fmt.Errorf("incorrect passwords")
-	}
-	return nil
 }
