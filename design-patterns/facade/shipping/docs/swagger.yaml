@@ -10,6 +10,8 @@ definitions:
         - $ref: '#/definitions/domain.Country'
         maxLength: 50
       description:
+        maxLength: 20
+        minLength: 3
         type: string
       email:
         type: string
@@ -76,9 +78,9 @@ definitions:
     - HKD
     - KES
     - NGN
+    - USD
     - TZS
     - UGX
-    - USD
     - ZAR
     type: string
     x-enum-varnames:
@@ -92,9 +94,9 @@ definitions:
     - HKD
     - KES
     - NGN
+    - USD
     - TZS
     - UGX
-    - USD
     - ZAR
   domain.ITEM_TYPE:
     enum:
@@ -118,11 +120,8 @@ definitions:
   domain.LogInDto:
     properties:
       email:
-        maxLength: 100
         type: string
       password:
-        maxLength: 20
-        minLength: 6
         type: string
     required:
     - email
@@ -135,37 +134,40 @@ definitions:
     - soft_packaging
     type: string
     x-enum-varnames:
-    - BOX
-    - ENVELOPE
-    - SOFT_PACKAGING
+    - box
+    - envelope
+    - soft_packaging
   domain.PickUpDto:
     properties:
-      carrier_id:
-        type: string
-      id:
-        type: string
-      pick_up_at:
-        type: string
-      shipping_id:
-        type: string
-      status:
-        type: string
+      pick_ups:
+        items:
+          $ref: '#/definitions/domain.SinglePickUpDto'
+        type: array
     required:
-    - carrier_id
-    - pick_up_at
-    - shipping_id
-    - status
+    - pick_ups
     type: object
+  domain.PickUpStatus:
+    enum:
+    - SCHEDULED
+    - PICKED
+    - RETURNED
+    - REJECTED
+    type: string
+    x-enum-varnames:
+    - SCHEDULED
+    - PICKED
+    - RETURNED
+    - REJECTED
   domain.ProductType:
     enum:
-    - animal
-    - plant
-    - appareal
-    - book
-    - cosmetics
-    - electronics
-    - watery
-    - ammunition
+    - Animal
+    - Plant
+    - Appareal
+    - Book
+    - Cosmetics
+    - Electronics
+    - Watery
+    - Ammunition
     type: string
     x-enum-varnames:
     - Animal
@@ -191,25 +193,54 @@ definitions:
     type: object
   domain.ShippingDto:
     properties:
+      shipments:
+        items:
+          $ref: '#/definitions/domain.SingleShippingDto'
+        type: array
+    required:
+    - shipments
+    type: object
+  domain.SinglePickUpDto:
+    properties:
+      carrier_id:
+        type: string
+      id:
+        type: string
+      pick_up_at:
+        type: string
+      shipping_id:
+        type: string
+      status:
+        $ref: '#/definitions/domain.PickUpStatus'
+    required:
+    - carrier_id
+    - pick_up_at
+    - shipping_id
+    - status
+    type: object
+  domain.SingleShippingDto:
+    properties:
       carrier_id:
         type: string
       delivery_address:
         $ref: '#/definitions/domain.Address'
+      delivery_address_id:
+        type: string
       description:
-        maxLength: 1000
+        maxLength: 100
         minLength: 6
         type: string
       pick_up_address:
         $ref: '#/definitions/domain.Address'
+      pick_up_address_id:
+        type: string
       product_type:
         $ref: '#/definitions/domain.ProductType'
       userID:
         type: string
     required:
     - carrier_id
-    - delivery_address
     - description
-    - pick_up_address
     - product_type
     type: object
   domain.SingleTerminalPackagingDto:
@@ -323,7 +354,6 @@ definitions:
         minLength: 6
         type: string
       email:
-        maxLength: 100
         type: string
       password:
         maxLength: 20
@@ -341,10 +371,12 @@ definitions:
     enum:
     - USER
     - CARRIER
+    - ADMIN
     type: string
     x-enum-varnames:
     - USER
     - CARRIER
+    - ADMIN
   domain.WEIGHT_UNIT:
     enum:
     - kg

@@ -11,19 +11,19 @@ type (
 )
 
 const (
-	Animal      ProductType = "animal"
-	Plant       ProductType = "plant"
-	Appareal    ProductType = "appareal"
-	Book        ProductType = "book"
-	Cosmetics   ProductType = "cosmetics"
-	Electronics ProductType = "electronics"
-	Watery      ProductType = "watery"
-	Ammunition  ProductType = "ammunition"
+	Animal      ProductType = "Animal"
+	Plant       ProductType = "Plant"
+	Appareal    ProductType = "Appareal"
+	Book        ProductType = "Book"
+	Cosmetics   ProductType = "Cosmetics"
+	Electronics ProductType = "Electronics"
+	Watery      ProductType = "Watery"
+	Ammunition  ProductType = "Ammunition"
 
 	// PACKAGE_TYPE
-	BOX            PACKAGE_TYPE = "box"
-	ENVELOPE       PACKAGE_TYPE = "envelope"
-	SOFT_PACKAGING PACKAGE_TYPE = "soft_packaging"
+	box            PACKAGE_TYPE = "box"
+	envelope       PACKAGE_TYPE = "envelope"
+	soft_packaging PACKAGE_TYPE = "soft_packaging"
 
 	// WEIGHT_UNIT
 	KG WEIGHT_UNIT = "kg"
@@ -84,12 +84,12 @@ func (product ProductType) PrintProduct() string {
 
 func (packageType PACKAGE_TYPE) PrintPackageType() string {
 	switch packageType {
-	case BOX:
-		return string(BOX)
-	case ENVELOPE:
-		return string(ENVELOPE)
-	case SOFT_PACKAGING:
-		return string(SOFT_PACKAGING)
+	case box:
+		return string(box)
+	case envelope:
+		return string(envelope)
+	case soft_packaging:
+		return string(soft_packaging)
 	}
 	return "Unknown"
 }

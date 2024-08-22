@@ -635,7 +635,9 @@
                     ]
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 3
                 },
                 "email": {
                     "type": "string"
@@ -705,9 +707,9 @@
                 "HKD",
                 "KES",
                 "NGN",
+                "USD",
                 "TZS",
                 "UGX",
-                "USD",
                 "ZAR"
             ],
             "x-enum-varnames": [
@@ -721,9 +723,9 @@
                 "HKD",
                 "KES",
                 "NGN",
+                "USD",
                 "TZS",
                 "UGX",
-                "USD",
                 "ZAR"
             ]
         },
@@ -763,13 +765,10 @@
             ],
             "properties": {
                 "email": {
-                    "type": "string",
-                    "maxLength": 100
+                    "type": "string"
                 },
                 "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 6
+                    "type": "string"
                 }
             }
         },
@@ -781,48 +780,51 @@
                 "soft_packaging"
             ],
             "x-enum-varnames": [
-                "BOX",
-                "ENVELOPE",
-                "SOFT_PACKAGING"
+                "box",
+                "envelope",
+                "soft_packaging"
             ]
         },
         "domain.PickUpDto": {
             "type": "object",
             "required": [
-                "carrier_id",
-                "pick_up_at",
-                "shipping_id",
-                "status"
+                "pick_ups"
             ],
             "properties": {
-                "carrier_id": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "pick_up_at": {
-                    "type": "string"
-                },
-                "shipping_id": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
+                "pick_ups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.SinglePickUpDto"
+                    }
                 }
             }
+        },
+        "domain.PickUpStatus": {
+            "type": "string",
+            "enum": [
+                "SCHEDULED",
+                "PICKED",
+                "RETURNED",
+                "REJECTED"
+            ],
+            "x-enum-varnames": [
+                "SCHEDULED",
+                "PICKED",
+                "RETURNED",
+                "REJECTED"
+            ]
         },
         "domain.ProductType": {
             "type": "string",
             "enum": [
-                "animal",
-                "plant",
-                "appareal",
-                "book",
-                "cosmetics",
-                "electronics",
-                "watery",
-                "ammunition"
+                "Animal",
+                "Plant",
+                "Appareal",
+                "Book",
+                "Cosmetics",
+                "Electronics",
+                "Watery",
+                "Ammunition"
             ],
             "x-enum-varnames": [
                 "Animal",
@@ -858,10 +860,48 @@
         "domain.ShippingDto": {
             "type": "object",
             "required": [
+                "shipments"
+            ],
+            "properties": {
+                "shipments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.SingleShippingDto"
+                    }
+                }
+            }
+        },
+        "domain.SinglePickUpDto": {
+            "type": "object",
+            "required": [
                 "carrier_id",
-                "delivery_address",
+                "pick_up_at",
+                "shipping_id",
+                "status"
+            ],
+            "properties": {
+                "carrier_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "pick_up_at": {
+                    "type": "string"
+                },
+                "shipping_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/domain.PickUpStatus"
+                }
+            }
+        },
+        "domain.SingleShippingDto": {
+            "type": "object",
+            "required": [
+                "carrier_id",
                 "description",
-                "pick_up_address",
                 "product_type"
             ],
             "properties": {
@@ -871,13 +911,19 @@
                 "delivery_address": {
                     "$ref": "#/definitions/domain.Address"
                 },
+                "delivery_address_id": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string",
-                    "maxLength": 1000,
+                    "maxLength": 100,
                     "minLength": 6
                 },
                 "pick_up_address": {
                     "$ref": "#/definitions/domain.Address"
+                },
+                "pick_up_address_id": {
+                    "type": "string"
                 },
                 "product_type": {
                     "$ref": "#/definitions/domain.ProductType"
@@ -1051,8 +1097,7 @@
                     "minLength": 6
                 },
                 "email": {
-                    "type": "string",
-                    "maxLength": 100
+                    "type": "string"
                 },
                 "password": {
                     "type": "string",
@@ -1068,11 +1113,13 @@
             "type": "string",
             "enum": [
                 "USER",
-                "CARRIER"
+                "CARRIER",
+                "ADMIN"
             ],
             "x-enum-varnames": [
                 "USER",
-                "CARRIER"
+                "CARRIER",
+                "ADMIN"
             ]
         },
         "domain.WEIGHT_UNIT": {

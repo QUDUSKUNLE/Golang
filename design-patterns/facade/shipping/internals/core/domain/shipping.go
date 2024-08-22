@@ -30,12 +30,12 @@ type (
 	}
 	SingleShippingDto struct {
 		Description       string      `json:"description" validate:"required,gte=6,lte=100"`
-		PickUpAddressID   uuid.UUID   `json:"pick_up_address_id" validate:"required"`
-		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"required,nefield=PickUpAddressID"`
-		PickUpAddress     Address     `json:"pick_up_address" validate:"required_without=PickUpAddressID,"`
-		DeliveryAddress   Address     `json:"delivery_address" validate:"required_without=DeliveryAddressID,"`
-		ProductType       ProductType `json:"product_type" validate:"required, oneof=Animal Plant Appareal Book Cosmetics Electronics Watery Ammunition"`
-		CarrierID         uuid.UUID   `json:"carrier_id" validate:"required"`
+		PickUpAddressID   uuid.UUID   `json:"pick_up_address_id" validate:"uuid"`
+		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"uuid,nefield=PickUpAddressID"`
+		PickUpAddress     Address     `json:"pick_up_address" validate:"required_without=PickUpAddressID"`
+		DeliveryAddress   Address     `json:"delivery_address" validate:"required_without=DeliveryAddressID"`
+		ProductType       ProductType `json:"product_type" validate:"required"`
+		CarrierID         uuid.UUID   `json:"carrier_id" validate:"uuid,required"`
 		UserID            uuid.UUID
 	}
 )

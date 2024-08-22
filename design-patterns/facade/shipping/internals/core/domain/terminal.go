@@ -17,34 +17,34 @@ type (
 		Description string    `json:"description" validate:"required"`
 		HS_CODE     string    `json:"hs_code"`
 		Name        string    `json:"name" validate:"required"`
-		Type        ITEM_TYPE `json:"type" validate:"oneof=DOCUMENT PARCEL,required"`
-		Currency    Currency  `json:"currency" validate:"oneof=NGN USD,required"`
+		Type        ITEM_TYPE `json:"type" validate:"required"`
+		Currency    Currency  `json:"currency" validate:"required"`
 		Value       float32   `json:"value" validate:"required"`
 		Quantity    int       `json:"quantity" validate:"required"`
 		Weight      float32   `json:"weight" validate:"required"`
 	}
 	TerminalRatesQueryDto struct {
-		Currency          Currency         `json:"currency" validate:"oneof=NGN USD,required"`
+		Currency          Currency         `json:"currency" validate:"required"`
 		PickUpAddressID   string           `json:"pickup_address_id"`
 		DeliveryAddressID string           `json:"delivery_address_id"`
 		ShipmentID        *string          `json:"shipment_id"`
 		ParcelID          string           `json:"parcel_id"`
-		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery" validate:"oneof=false true,required"`
+		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery" validate:"required"`
 	}
 	SingleTerminalShipmentDto struct {
 		PickUpAddressID   string           `json:"pick_up_address_id"`
 		DeliveryAddressID string           `json:"delivery_address_id"`
 		Parcels           []string         `json:"parcel_id"`
 		ReturnAddressID   string           `json:"return_address_id"`
-		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose" validate:"oneof=COMMERCIAL PERSONAL SAMPLE RETURN_AFTER_REPAIR RETURN_FOR_REPAIR,required"`
-		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type" validate:"oneof=false true,required"`
+		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose" validate:"required"`
+		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type" validate:"required"`
 	}
 	SingleTerminalPackagingDto struct {
 		Height      float32      `json:"height" validate:"required"`
 		Length      float32      `json:"length" validate:"required"`
 		Name        string       `json:"name" validate:"required"`
 		Size_Unit   string       `json:"size_unit" validate:"required"`
-		Type        PACKAGE_TYPE `json:"type" validate:"oneof=BOX ENVELOPE SOFT_PACKAGING,required"`
+		Type        PACKAGE_TYPE `json:"type" validate:"required"`
 		Width       float32      `json:"width" validate:"required"`
 		Weight      float32      `json:"weight" validate:"required"`
 		Weight_Unit string       `json:"weight_unit" validate:"required"`

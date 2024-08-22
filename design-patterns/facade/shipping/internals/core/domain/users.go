@@ -34,7 +34,7 @@ type (
 		Email           string   `json:"email" validate:"email,required"`
 		Password        string   `json:"password" validate:"gte=6,lte=20,required"`
 		ConfirmPassword string   `json:"confirm_password" validate:"eqfield=Password,gte=6,lte=20,required"`
-		UserType        UserType `json:"user_type" validate:"oneof=USER CARRIER,required"`
+		UserType        UserType `json:"user_type" validate:"required"`
 	}
 	LogInDto struct {
 		Email    string `json:"email" validate:"email,required"`
