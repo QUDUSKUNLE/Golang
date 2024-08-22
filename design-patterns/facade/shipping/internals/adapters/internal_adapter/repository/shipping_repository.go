@@ -3,17 +3,12 @@ package repository
 import (
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
-	"errors"
 )
 
 func (database *PostgresRepository) CreateShippingAdaptor(shipping []*domain.Shipping) error {
 	_ = database.db.AutoMigrate(&domain.Shipping{})
 	result := database.db.Create(shipping)
-	if errors.Is(result.Error, gorm.ErrForeignKeyViolated) {
-		return result.Error
-	}
-	if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
+	if result.Error != nil {
 		return result.Error
 	}
 	return nil

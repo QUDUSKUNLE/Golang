@@ -5,8 +5,8 @@ import (
 )
 
 type DeliveryDto struct {
-	AccountID string  `json:"account_id" binding:"required" validate:"required"`
-	PickUpAddress string `json:"pick_up_address" binding:"required" validate:"required"`
-	DeliveryAddress string `json:"delivery_address" binding:"required" validate:"required"`
-	ProductType domain.ProductType `json:"product_type" binding:"required" validate:"required"`
+	AccountID string  `json:"account_id" validate:"required"`
+	PickUpAddress string `json:"pick_up_address" validate:"required"`
+	DeliveryAddress string `json:"delivery_address" validate:"required"`
+	ProductType domain.ProductType `json:"product_type" validate:"required"`
 }

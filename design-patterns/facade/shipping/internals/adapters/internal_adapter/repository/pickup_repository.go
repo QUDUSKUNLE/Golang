@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"errors"
-	"gorm.io/gorm"
 	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
@@ -10,10 +8,7 @@ import (
 func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp []*domain.PickUp) error {
 	_ = database.db.AutoMigrate(&domain.PickUp{})
 	result := database.db.Create(pickUp)
-	if errors.Is(result.Error, gorm.ErrForeignKeyViolated) {
-		return result.Error
-	}
-	if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
+	if result.Error != nil {
 		return result.Error
 	}
 	return nil
