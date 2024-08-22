@@ -24,7 +24,7 @@ type (
 	CarrierDto struct {
 		CompanyName    string  `json:"company_name" validate:"gte=6,lte=100,required"`
 		CompanyAddress Address `json:"company_address" validate:"required"`
-		Contact        Contact `json:"contact" binding:"required" validate:"required"`
+		Contact        Contact `json:"contact" validate:"required"`
 		UserID         uuid.UUID
 	}
 )

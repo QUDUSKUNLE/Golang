@@ -43,9 +43,9 @@ const (
 	HKD Currency = "HKD"
 	KES Currency = "KES"
 	NGN Currency = "NGN"
+	USD Currency = "USD"
 	TZS Currency = "TZS"
 	UGX Currency = "UGX"
-	USD Currency = "USD"
 	ZAR Currency = "ZAR"
 
 	// Cash on delivery

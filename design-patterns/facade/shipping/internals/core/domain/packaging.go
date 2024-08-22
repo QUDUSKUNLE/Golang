@@ -8,7 +8,7 @@ import (
 
 type (
 	Packaging struct {
-		ID        uuid.UUID      `gorm:"primaryKey;->;<-:create" json:"id"`
+		ID        uuid.UUID       `gorm:"primaryKey;->;<-:create" json:"id"`
 		CreatedAt *time.Time      `json:"created_at"`
 		UpdatedAt *time.Time      `json:"updated_at"`
 		DeletedAt *gorm.DeletedAt `json:"-"`
@@ -18,7 +18,7 @@ type (
 		TerminalPackagingID string    `json:"terminal_packaging_id"`
 	}
 	PackagingDto struct {
-		UserID              uuid.UUID
+		UserID      uuid.UUID
 		PackagingID []string `json:"packaging_ids"`
 	}
 )
@@ -32,7 +32,7 @@ func (packaging *Packaging) BuildNewPackaging(packageDto PackagingDto) []*Packag
 	pack := []*Packaging{}
 	for _, terminal_id := range packageDto.PackagingID {
 		pack = append(pack, &Packaging{
-			UserID: packageDto.UserID,
+			UserID:              packageDto.UserID,
 			TerminalPackagingID: terminal_id,
 		})
 	}

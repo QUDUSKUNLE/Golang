@@ -1,8 +1,27 @@
 package services
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+
+	"github.com/wneessen/go-mail"
+)
 
 type NotificationService struct {}
+
+func (notification *NotificationService) emailNotification() (err error){
+	msg := mail.NewMsg()
+	if err := msg.From("okay@tester.com"); err != nil {
+		log.Fatalf("failed to set FROM address: %s", err)
+	}
+	if err := msg.To("quduskunle@fgmail.com"); err != nil {
+		log.Fatalf("failed to set To address: %s", err)
+	}
+	msg.Subject("This is my first test mail with go-mail")
+	msg.SetBodyString(mail.TypeTextPlain, "This will be content of the mail.")
+	fmt.Println("Sening.... email")
+	return
+}
 
 func (notification *NotificationService) SendShippingNotification() {
 	fmt.Println("Sending shipping notification.")
@@ -17,6 +36,9 @@ func (notification *NotificationService) SendReturnNotification() {
 }
 
 func (notification *NotificationService) SendAddressNotification() {
+	if err := notification.emailNotification(); err != nil {
+		log.Fatalf("%s", err)
+	}
 	fmt.Println("Sending address notification.")
 }
 
@@ -45,5 +67,8 @@ func (notification *NotificationService) SendPackagingNotification() {
 }
 
 func (notification *NotificationService) SendResetPasswordNotification() {
-	fmt.Println("Sending password reset notification")
+	if err := notification.emailNotification(); err != nil {
+		log.Fatalf("%s", err)
+	}
+	fmt.Println("Sending password reset notification...")
 }

@@ -17,46 +17,46 @@ type (
 		Description string    `json:"description" validate:"required"`
 		HS_CODE     string    `json:"hs_code"`
 		Name        string    `json:"name" validate:"required"`
-		Type        ITEM_TYPE `json:"type" validate:"required"`
-		Currency    Currency  `json:"currency" validate:"required"`
+		Type        ITEM_TYPE `json:"type" validate:"oneof=DOCUMENT PARCEL,required"`
+		Currency    Currency  `json:"currency" validate:"oneof=NGN USD,required"`
 		Value       float32   `json:"value" validate:"required"`
 		Quantity    int       `json:"quantity" validate:"required"`
 		Weight      float32   `json:"weight" validate:"required"`
 	}
 	TerminalRatesQueryDto struct {
-		Currency          Currency         `json:"currency"`
+		Currency          Currency         `json:"currency" validate:"oneof=NGN USD,required"`
 		PickUpAddressID   string           `json:"pickup_address_id"`
 		DeliveryAddressID string           `json:"delivery_address_id"`
 		ShipmentID        *string          `json:"shipment_id"`
 		ParcelID          string           `json:"parcel_id"`
-		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery"`
+		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery" validate:"oneof=false true,required"`
 	}
 	SingleTerminalShipmentDto struct {
 		PickUpAddressID   string           `json:"pick_up_address_id"`
 		DeliveryAddressID string           `json:"delivery_address_id"`
 		Parcels           []string         `json:"parcel_id"`
 		ReturnAddressID   string           `json:"return_address_id"`
-		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose"`
-		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type"`
+		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose" validate:"oneof=COMMERCIAL PERSONAL SAMPLE RETURN_AFTER_REPAIR RETURN_FOR_REPAIR,required"`
+		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type" validate:"oneof=false true,required"`
 	}
 	SingleTerminalPackagingDto struct {
-		Height      float32      `json:"height" binding:"required" validate:"required"`
-		Length      float32      `json:"length" binding:"required" validate:"required"`
-		Name        string       `json:"name" binding:"required" validate:"required"`
-		Size_Unit   string       `json:"size_unit" binding:"required" validate:"required"`
-		Type        PACKAGE_TYPE `json:"type" binding:"required" validate:"required"`
-		Width       float32      `json:"width" binding:"required" validate:"required"`
-		Weight      float32      `json:"weight" binding:"required" validate:"required"`
-		Weight_Unit string       `json:"weight_unit" binding:"required" validate:"required"`
+		Height      float32      `json:"height" validate:"required"`
+		Length      float32      `json:"length" validate:"required"`
+		Name        string       `json:"name" validate:"required"`
+		Size_Unit   string       `json:"size_unit" validate:"required"`
+		Type        PACKAGE_TYPE `json:"type" validate:"oneof=BOX ENVELOPE SOFT_PACKAGING,required"`
+		Width       float32      `json:"width" validate:"required"`
+		Weight      float32      `json:"weight" validate:"required"`
+		Weight_Unit string       `json:"weight_unit" validate:"required"`
 	}
 	SingleTerminalParcelDto struct {
 		Description       string                  `json:"description" validate:"required"`
-		Items             []TerminalParcelItemDto `json:"items" binding:"required" validate:"required,dive,required"`
+		Items             []TerminalParcelItemDto `json:"items" validate:"required,dive,required"`
 		Metadata          map[string]interface{}  `json:"metadata"`
 		Packaging         string                  `json:"packaging" validate:"required"`
-		Proof_Of_Payments []string                `json:"proof_of_payments" binding:"required" validate:"required,dive,required"`
-		Rec_docs          []string                `json:"rec_docs" binding:"required" validate:"required,dive,required"`
-		Weight_unit       WEIGHT_UNIT             `json:"weight_unit" binding:"required" validate:"required"`
+		Proof_Of_Payments []string                `json:"proof_of_payments" validate:"required,dive,required"`
+		Rec_docs          []string                `json:"rec_docs" validate:"required,dive,required"`
+		Weight_unit       WEIGHT_UNIT             `json:"weight_unit" validate:"required"`
 	}
 )
 
@@ -103,16 +103,16 @@ func (parcel *Terminal) BuildNewTerminalParcel(parse SingleTerminalParcelDto) ma
 }
 
 func (ship *Terminal) BuildNewTerminalShipment(shipment SingleTerminalShipmentDto) map[string]interface{} {
-	 return map[string]interface{}{
-			"address_from": shipment.PickUpAddressID,
-			"address_to": shipment.DeliveryAddressID,
-			"metadata": "",
-			"parcel": shipment.Parcels[0],
-			"address_return": shipment.PickUpAddressID,
-			"shipment_purpose": shipment.ShipmentPurpose.PrintShipmentPurpose(),
-			"parcels": shipment.Parcels,
-			"shipment_type": shipment.ShipmentType.PrintCashOnDelivery(),
-		}
+	return map[string]interface{}{
+		"address_from":     shipment.PickUpAddressID,
+		"address_to":       shipment.DeliveryAddressID,
+		"metadata":         "",
+		"parcel":           shipment.Parcels[0],
+		"address_return":   shipment.PickUpAddressID,
+		"shipment_purpose": shipment.ShipmentPurpose.PrintShipmentPurpose(),
+		"parcels":          shipment.Parcels,
+		"shipment_type":    shipment.ShipmentType.PrintCashOnDelivery(),
+	}
 }
 
 func buildNewTerminalParcelItem(parse []TerminalParcelItemDto) []map[string]interface{} {

@@ -21,6 +21,7 @@ require (
 	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/swaggo/echo-swagger v1.4.1
 	github.com/swaggo/swag v1.16.3
+	github.com/wneessen/go-mail v0.4.3
 	golang.org/x/crypto v0.26.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10

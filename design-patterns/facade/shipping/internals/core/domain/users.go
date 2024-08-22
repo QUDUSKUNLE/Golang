@@ -12,7 +12,7 @@ import (
 const (
 	USER    UserType = "USER"
 	CARRIER UserType = "CARRIER"
-	ADMIN 	UserType = "ADMIN"
+	ADMIN   UserType = "ADMIN"
 )
 
 type (
@@ -45,8 +45,8 @@ type (
 	}
 	UserType string
 	Response struct {
-		Result interface{} `json:"result"`
-		Success bool	`json:"success"`
+		Result  interface{} `json:"result"`
+		Success bool        `json:"success"`
 	}
 )
 
