@@ -15,7 +15,5 @@ func PrivateRoutesAdaptor(private *echo.Group, handler *handlers.HTTPHandler) *e
 	private.POST("/packagings", handler.PostPackaging)
 	private.POST("/parcels", handler.PostParcel)
 	private.GET("/rates", handler.Rates)
-
-	private.GET("", handler.Restricted)
 	return private
 }

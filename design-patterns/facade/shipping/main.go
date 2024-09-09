@@ -1,23 +1,27 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/QUDUSKUNLE/shipping/docs"
+	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
+	integration "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter/carriers/terminals"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/config"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/handlers"
 	validationMiddleware "github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/middleware"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/repository"
-	integration "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter/carriers/terminals"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/routes"
 	internalServices "github.com/QUDUSKUNLE/shipping/internals/core/services"
-	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
-	"github.com/swaggo/echo-swagger"
 	"github.com/labstack/echo/v4/middleware"
-	_ "github.com/QUDUSKUNLE/shipping/docs"
+	"github.com/swaggo/echo-swagger"
+	"golang.org/x/time/rate"
 )
 
 var (
@@ -45,10 +49,21 @@ func main() {
 	// Plug echo int validationAdaptor
 	e = validationMiddleware.ValidationAdaptor(e)
 	
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover()) // Recover servers when break down
-	e.Use(middleware.CORS())
-
+	e.Use(echoprometheus.NewMiddleware("shipping"))
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "time=${time}, remote_ip=${remote_ip}, latency=${latency}, method=${method}, uri=${uri}, status=${status}, host=${host}\n",
+	}))
+	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
+		StackSize: 4 << 10,
+		LogLevel: 0,
+	}))
+	// Recover servers when break down
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{os.Getenv("ALLOW_ORIGIN")},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	}))
+ e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(rate.Limit(20))))
 
 	internalStore, err := repository.OpenDBConnection()
 	if err != nil {
@@ -73,8 +88,9 @@ func main() {
 	routes.PrivateRoutesAdaptor(privateRoutes, httpHandler)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/metrics", echoprometheus.NewHandler())
 	// Start the server on port 8080
-	if err := e.Start(fmt.Sprintf(":%s", port)); err != http.ErrServerClosed {
+	if err := e.Start(fmt.Sprintf(":%s", port)); err != nil && !errors.Is(err, http.ErrServerClosed){
 		log.Fatal(err)
 	}
 }

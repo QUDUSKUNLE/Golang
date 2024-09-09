@@ -19,7 +19,7 @@ func (database *PostgresRepository) ReadUserAdaptor(ID uuid.UUID) (*domain.User,
 
 func (database *PostgresRepository) QueryUsers() ([]*domain.User, error) {
 	users := []*domain.User{}
-	if err := database.db.Find(&users); err != nil {
+	if err := database.db.Find(&users).Limit(10); err != nil {
 		return []*domain.User{}, nil
 	}
 	return users, nil
@@ -27,7 +27,7 @@ func (database *PostgresRepository) QueryUsers() ([]*domain.User, error) {
 
 func (database *PostgresRepository) ReadUserByEmailAdaptor(email string) (*domain.User, error) {
 	user := domain.User{}
-	result := database.db.Where(&domain.User{Email: email}).First(&user)
+	result := database.db.Where(&domain.User{Email: email}).First(&user).Limit(1)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return &user, result.Error
 	}

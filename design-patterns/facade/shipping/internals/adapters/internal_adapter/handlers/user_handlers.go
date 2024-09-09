@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -58,13 +57,6 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 	}
 	// Process valid user data
 	return ComputeResponseMessage(http.StatusOK, Token, context)
-}
-
-func (handler *HTTPHandler) Restricted(context echo.Context) error {
-	user := context.Get("user").(*jwt.Token)
-	claims := user.Claims.(*JwtCustomClaims)
-	ID := claims.ID
-	return ComputeResponseMessage(http.StatusOK, ID.String(), context)
 }
 
 // @Summary Reset a user password
