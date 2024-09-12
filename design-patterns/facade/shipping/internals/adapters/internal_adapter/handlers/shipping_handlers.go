@@ -60,7 +60,3 @@ func (handler *HTTPHandler) GetShippings(context echo.Context) error {
 	}
 	return ComputeResponseMessage(http.StatusOK, shippings, context)
 }
-
-func (handler *HTTPHandler) RejectProduct(context echo.Context) error {
-	return ComputeResponseMessage(http.StatusOK, PRODUCT_IS_DELIVERED, context)
-}

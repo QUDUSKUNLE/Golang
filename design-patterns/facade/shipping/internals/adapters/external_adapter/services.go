@@ -2,13 +2,14 @@ package integration
 
 import (
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
+	"github.com/QUDUSKUNLE/shipping/internals/core/ports"
 )
 
 func (externalHandler *ExternalServicesHandler) TerminalCreatePackagingAdaptor(packaging domain.SingleTerminalPackagingDto) (map[string]interface{}, error ){
 	var result map[string]interface{}
 	serviceHandler := NewExternalServicesFacade()
 	buildPackaging := serviceHandler.terminalService.BuildNewTerminalPackaging(packaging)
-	result, err := externalHandler.external.TerminalCreatePackaging(buildPackaging)
+	result, err := externalHandler.external.TerminalRequest(ports.PACKAGING, ports.POST, buildPackaging)
 	if err != nil {
 		return result, err
 	}
@@ -19,7 +20,7 @@ func (externalHandler *ExternalServicesHandler) TerminalCreateAddressAdaptor(add
 	var result map[string]interface{}
 	serviceHandler := NewExternalServicesFacade()
 	buildAddress := serviceHandler.terminalService.BuildNewTerminalAddress(address)
-	result, err := externalHandler.external.TerminalCreateAddress(buildAddress)
+	result, err := externalHandler.external.TerminalRequest(ports.ADDRESSES, ports.POST, buildAddress)
 	if err != nil {
 		return result, err
 	}
@@ -30,7 +31,7 @@ func (externalHandler *ExternalServicesHandler) TerminalGetRatesAdaptor(query do
 	var result map[string]interface{}
 	serviceHandler := NewExternalServicesFacade()
 	buildQuery := serviceHandler.terminalService.BuildNewTerminalRatesQuery(query)
-	result, err := externalHandler.external.TerminalGetRates(buildQuery)
+	result, err := externalHandler.external.TerminalRequest(ports.SHIPMENT, ports.GET, buildQuery)
 	if err != nil {
 		return result, err
 	}
@@ -41,7 +42,7 @@ func (externalHandler *ExternalServicesHandler) TerminalCreateParcelAdaptor(parc
 	var result map[string]interface{}
 	serviceHandler := NewExternalServicesFacade()
 	builtParcel := serviceHandler.terminalService.BuildNewTerminalParcel(parcel)
-	result, err := externalHandler.external.TerminalCreateParcel(builtParcel)
+	result, err := externalHandler.external.TerminalRequest(ports.PARCELS, ports.POST, builtParcel)
 	if err != nil {
 		return result, err
 	}
@@ -52,7 +53,7 @@ func (externalHandler *ExternalServicesHandler) TerminalCreateShipmentAdaptor(sh
 	var result map[string]interface{}
 	serviceHandler := NewExternalServicesFacade()
 	builtShipment := serviceHandler.terminalService.BuildNewTerminalShipment(shipment)
-	result, err := externalHandler.external.TerminalCreateShipment(builtShipment)
+	result, err := externalHandler.external.TerminalRequest(ports.SHIPMENTS, ports.POST, builtShipment)
 	if err != nil {
 		return result, err
 	}

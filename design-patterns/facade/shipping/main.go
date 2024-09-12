@@ -9,7 +9,7 @@ import (
 
 	_ "github.com/QUDUSKUNLE/shipping/docs"
 	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
-	integration "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter/carriers/terminals"
+	integration "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/config"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/handlers"
 	validationMiddleware "github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/middleware"
