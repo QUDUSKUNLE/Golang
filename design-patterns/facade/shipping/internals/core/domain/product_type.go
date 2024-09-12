@@ -49,8 +49,8 @@ const (
 	ZAR Currency = "ZAR"
 
 	// Cash on delivery
-	false CASH_ON_DELIVERY = "false"
-	true CASH_ON_DELIVERY = "true"
+	False CASH_ON_DELIVERY = "false"
+	True CASH_ON_DELIVERY = "true"
 
 	// Shipment Purpose
 	COMMERCIAL SHIPMENT_PURPOSE = "commercial"
@@ -107,10 +107,10 @@ func (currency Currency) PrintCurrency() string {
 
 func (catch CASH_ON_DELIVERY) PrintCashOnDelivery() string {
 	switch catch {
-	case false:
-		return string(false)
-	case true:
-		return string(true)
+	case False:
+		return string(False)
+	case True:
+		return string(True)
 	}
 	return "Unknown"
 }

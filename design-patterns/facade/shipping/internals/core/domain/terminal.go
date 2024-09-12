@@ -32,12 +32,12 @@ type (
 		CashOnDelivery    CASH_ON_DELIVERY `json:"cash_on_delivery" validate:"required"`
 	}
 	SingleTerminalShipmentDto struct {
-		PickUpAddressID   string           `json:"pick_up_address_id"`
+		PickUpAddressID   string           `json:"pickup_address_id"`
 		DeliveryAddressID string           `json:"delivery_address_id"`
-		Parcels           []string         `json:"parcel_id"`
+		Parcels           []string         `json:"parcel_id" validate:"gt=0,dive,required"`
 		ReturnAddressID   string           `json:"return_address_id"`
 		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose" validate:"required"`
-		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type" validate:"required"`
+		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type"`
 	}
 	SingleTerminalPackagingDto struct {
 		Height      float32      `json:"height" validate:"required"`

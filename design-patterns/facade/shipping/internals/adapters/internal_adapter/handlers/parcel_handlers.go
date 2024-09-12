@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
@@ -41,7 +40,6 @@ func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 			parcel_id := result["parcel_id"].(string)
 			parcel.ParcelID = append(parcel.ParcelID, parcel_id)
 		} else {
-				fmt.Print(externalParcel["data"])
 				return ComputeErrorResponse(http.StatusBadRequest, externalParcel["message"], context)
 		}
 	}

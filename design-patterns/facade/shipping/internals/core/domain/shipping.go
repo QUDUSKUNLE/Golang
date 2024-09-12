@@ -21,7 +21,7 @@ type (
 		ProductType        ProductType `json:"Product_type"`
 		PickUp             PickUp      `json:"-"`
 
-		PickUpAddressID   uuid.UUID `json:"pick_up_address_id"`
+		PickUpAddressID   uuid.UUID `json:"pickup_address_id"`
 		DeliveryAddressID uuid.UUID `json:"delivery_address_id"`
 		Address           *Address  `json:"-"`
 	}
@@ -30,9 +30,10 @@ type (
 	}
 	SingleShippingDto struct {
 		Description       string      `json:"description" validate:"required,gte=6,lte=100"`
-		PickUpAddressID   uuid.UUID   `json:"pick_up_address_id" validate:"uuid"`
-		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"uuid,nefield=PickUpAddressID"`
-		PickUpAddress     Address     `json:"pick_up_address" validate:"required_without=PickUpAddressID"`
+		PickUpAddressID   uuid.UUID   `json:"pickup_address_id" validate:"uuid"`
+		// Need to work PickUpAddressID should not be equal to DeliveryAddressID
+		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"uuid,nefield=PickUpAddressID,required"`
+		PickUpAddress     Address     `json:"pickup_address" validate:"required_without=PickUpAddressID"`
 		DeliveryAddress   Address     `json:"delivery_address" validate:"required_without=DeliveryAddressID"`
 		ProductType       ProductType `json:"product_type" validate:"required"`
 		CarrierID         uuid.UUID   `json:"carrier_id" validate:"uuid,required"`
