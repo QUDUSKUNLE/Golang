@@ -24,6 +24,7 @@ require (
 	github.com/swaggo/swag v1.16.3
 	github.com/wneessen/go-mail v0.4.3
 	golang.org/x/crypto v0.26.0
+	golang.org/x/time v0.5.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10
 )
@@ -63,7 +64,6 @@ require (
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
-	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
