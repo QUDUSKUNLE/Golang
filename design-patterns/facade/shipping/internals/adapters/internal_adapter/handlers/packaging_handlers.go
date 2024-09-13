@@ -82,3 +82,85 @@ func (handler *HTTPHandler) PostPackaging(context echo.Context) error {
 	// Return response
 	return ComputeResponseMessage(http.StatusCreated, PACKAGES_SUBMITTED_SUCCESSFULLY, context)
 }
+
+// @Summary Get packagings
+// @Description get packagings
+// @Tags Packaging
+// @Accept json
+// @Produce json
+// @Param authorization header string true "Bearer token"
+// @Failure 400 {object} domain.Response
+// @Success 200 {object} domain.Response
+// @Router /packagings [get]
+func (handler *HTTPHandler) GetPackagings(context echo.Context) error {
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return err
+	}
+	parcels, err := handler.internalServicesAdapter.GetParcelsAdaptor(user.ID); 		if err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, "Parcel error", context)
+	}
+	return ComputeResponseMessage(http.StatusOK, parcels, context)
+}
+
+// @Summary Get a packaging
+// @Description get a packaging
+// @Tags Packaging
+// @Accept json
+// @Produce json
+// @Param authorization header string true "Bearer token"
+// @Param packaging_id path string true "Packaging ID"
+// @Failure 400 {object} domain.Response
+// @Success 200 {object} domain.Response
+// @Router /packagings/{packaging_id} [get]
+func (handler *HTTPHandler) GetPackaging(context echo.Context) error {
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return err
+	}
+	parcels, err := handler.internalServicesAdapter.GetParcelsAdaptor(user.ID); 		if err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, "Parcel error", context)
+	}
+	return ComputeResponseMessage(http.StatusOK, parcels, context)
+}
+
+// @Summary Update a packaging
+// @Description update a packaging
+// @Tags Packaging
+// @Accept json
+// @Produce json
+// @Param authorization header string true "Bearer token"
+// @Param packaging_id path string true "Packaging ID"
+// @Param body body domain.LocationDto true "Update a packaging"
+// @Failure 400 {object} domain.Response
+// @Success 200 {object} domain.Response
+// @Router /packagings/{packaging_id} [put]
+func (handler *HTTPHandler) PutPackaging(context echo.Context) error {
+	_, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+	description := context.QueryParam("description")
+	
+	return ComputeResponseMessage(http.StatusOK, description, context)
+}
+
+// @Summary Delete a packaging
+// @Description delete a packaging
+// @Tags Packaging
+// @Accept json
+// @Produce json
+// @Param authorization header string true "Bearer token"
+// @Param packaging_id path string true "Packaging ID"
+// @Failure 400 {object} domain.Response
+// @Success 204 {object} domain.Response
+// @Router /packagings/{packaging_id} [delete]
+func (handler *HTTPHandler) DeletePackaging(context echo.Context) error {
+	_, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+	description := context.QueryParam("description")
+	
+	return ComputeResponseMessage(http.StatusOK, description, context)
+}

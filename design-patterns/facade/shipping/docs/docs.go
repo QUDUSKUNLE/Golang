@@ -44,8 +44,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.Response"
                         }
@@ -72,6 +72,13 @@ const docTemplate = `{
                 "summary": "Submit addresses",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Create addresses",
                         "name": "body",
                         "in": "body",
@@ -79,13 +86,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.LocationDto"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Bearer token",
-                        "name": "authorization",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -120,16 +120,16 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Address ID",
-                        "name": "address_id",
-                        "in": "path",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Bearer token",
-                        "name": "authorization",
-                        "in": "header",
+                        "description": "Address ID",
+                        "name": "address_id",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -163,6 +163,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Address ID",
                         "name": "address_id",
                         "in": "path",
@@ -176,13 +183,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.LocationDto"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Bearer token",
-                        "name": "authorization",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -215,16 +215,16 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Address ID",
-                        "name": "address_id",
-                        "in": "path",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Bearer token",
-                        "name": "authorization",
-                        "in": "header",
+                        "description": "Address ID",
+                        "name": "address_id",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -285,6 +285,42 @@ const docTemplate = `{
             }
         },
         "/packagings": {
+            "get": {
+                "description": "get packagings",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packaging"
+                ],
+                "summary": "Get packagings",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create packagings",
                 "consumes": [
@@ -331,7 +367,183 @@ const docTemplate = `{
                 }
             }
         },
+        "/packagings/{packaging_id}": {
+            "get": {
+                "description": "get a packaging",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packaging"
+                ],
+                "summary": "Get a packaging",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Packaging ID",
+                        "name": "packaging_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update a packaging",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packaging"
+                ],
+                "summary": "Update a packaging",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Packaging ID",
+                        "name": "packaging_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update a packaging",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.LocationDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete a packaging",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packaging"
+                ],
+                "summary": "Delete a packaging",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Packaging ID",
+                        "name": "packaging_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/parcels": {
+            "get": {
+                "description": "get parcels",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parcel"
+                ],
+                "summary": "Get parcels",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create parcels",
                 "consumes": [
@@ -378,9 +590,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/pickups": {
+        "/parcels/{parcel_id}": {
             "get": {
-                "description": "get carrier pickups",
+                "description": "get a parcel",
                 "consumes": [
                     "application/json"
                 ],
@@ -388,9 +600,149 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Carrier Pickup"
+                    "Parcel"
                 ],
-                "summary": "Get carrier pickups",
+                "summary": "Get a parcel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Parcel ID",
+                        "name": "parcel_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update a parcel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parcel"
+                ],
+                "summary": "Update a parcel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Parcel ID",
+                        "name": "parcel_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update a parcel",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.LocationDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete a parcel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parcel"
+                ],
+                "summary": "Delete a parcel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Parcel ID",
+                        "name": "parcel_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/pickups": {
+            "get": {
+                "description": "get pickups",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pickup"
+                ],
+                "summary": "Get pickups",
                 "parameters": [
                     {
                         "type": "string",
@@ -424,7 +776,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Carrier Pickup"
+                    "Pickup"
                 ],
                 "summary": "Update a pickup",
                 "parameters": [
@@ -471,7 +823,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Carrier Pickup"
+                    "Pickup"
                 ],
                 "summary": "Get a pickup",
                 "parameters": [

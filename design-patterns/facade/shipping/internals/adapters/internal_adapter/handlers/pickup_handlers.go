@@ -7,9 +7,31 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary Get pickups
+// @Description get pickups
+// @Tags Pickup
+// @Accept json
+// @Produce json
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.Response
+// @Param authorization header string true "Bearer token"
+// @Router /pickups [get]
+func (handler *HTTPHandler) GetPickUps(context echo.Context) error {
+	user, err := PrivateMiddlewareContext(context, string(domain.CARRIER))
+	if err != nil {
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+
+	pickUps, err := handler.internalServicesAdapter.CarrierPickUpsAdaptor(user.ID);
+	if err != nil {
+		return ComputeErrorResponse(http.StatusNotImplemented, err.Error(), context)
+	}
+	return ComputeResponseMessage(http.StatusOK, pickUps, context)
+}
+
 // @Summary Update a pickup
 // @Description update a pickup
-// @Tags Carrier Pickup
+// @Tags Pickup
 // @Accept json
 // @Produce json
 // @Param body body domain.PickUpDto true "Update a pickup"
@@ -17,7 +39,7 @@ import (
 // @Failure 409 {object} domain.Response
 // @Success 201 {object} domain.Response
 // @Router /pickups [put]
-func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
+func (handler *HTTPHandler) PutPickUp(context echo.Context) error {
 	pickUpDto := new(domain.PickUpDto)
 	if err := ValidateStruct(context, pickUpDto); err != nil {
 		return ComputeErrorResponse(http.StatusBadRequest, err, context)
@@ -41,7 +63,7 @@ func (handler *HTTPHandler) UpdatePickUp(context echo.Context) error {
 
 // @Summary Get a pickup
 // @Description get a pickup
-// @Tags Carrier Pickup
+// @Tags Pickup
 // @Accept json
 // @Produce json
 // @Param pick_up_id path string true "PickUp ID"

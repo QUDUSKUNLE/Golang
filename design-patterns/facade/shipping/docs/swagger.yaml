@@ -412,8 +412,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/domain.Response'
         "400":
@@ -428,17 +428,17 @@ paths:
       - application/json
       description: create addresses
       parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
       - description: Create addresses
         in: body
         name: body
         required: true
         schema:
           $ref: '#/definitions/domain.LocationDto'
-      - description: Bearer token
-        in: header
-        name: authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -459,14 +459,14 @@ paths:
       - application/json
       description: delete an address
       parameters:
-      - description: Address ID
-        in: path
-        name: address_id
-        required: true
-        type: string
       - description: Bearer token
         in: header
         name: authorization
+        required: true
+        type: string
+      - description: Address ID
+        in: path
+        name: address_id
         required: true
         type: string
       produces:
@@ -488,14 +488,14 @@ paths:
       - application/json
       description: get a address
       parameters:
-      - description: Address ID
-        in: path
-        name: address_id
-        required: true
-        type: string
       - description: Bearer token
         in: header
         name: authorization
+        required: true
+        type: string
+      - description: Address ID
+        in: path
+        name: address_id
         required: true
         type: string
       produces:
@@ -517,6 +517,11 @@ paths:
       - application/json
       description: update an address
       parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
       - description: Address ID
         in: path
         name: address_id
@@ -528,11 +533,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/domain.LocationDto'
-      - description: Bearer token
-        in: header
-        name: authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -574,6 +574,30 @@ paths:
       tags:
       - User
   /packagings:
+    get:
+      consumes:
+      - application/json
+      description: get packagings
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get packagings
+      tags:
+      - Packaging
     post:
       consumes:
       - application/json
@@ -604,7 +628,125 @@ paths:
       summary: Submit packagings
       tags:
       - Packaging
+  /packagings/{packaging_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a packaging
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Packaging ID
+        in: path
+        name: packaging_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Delete a packaging
+      tags:
+      - Packaging
+    get:
+      consumes:
+      - application/json
+      description: get a packaging
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Packaging ID
+        in: path
+        name: packaging_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get a packaging
+      tags:
+      - Packaging
+    put:
+      consumes:
+      - application/json
+      description: update a packaging
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Packaging ID
+        in: path
+        name: packaging_id
+        required: true
+        type: string
+      - description: Update a packaging
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LocationDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Update a packaging
+      tags:
+      - Packaging
   /parcels:
+    get:
+      consumes:
+      - application/json
+      description: get parcels
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get parcels
+      tags:
+      - Parcel
     post:
       consumes:
       - application/json
@@ -635,11 +777,105 @@ paths:
       summary: Submit parcels
       tags:
       - Parcel
+  /parcels/{parcel_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a parcel
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Parcel ID
+        in: path
+        name: parcel_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Delete a parcel
+      tags:
+      - Parcel
+    get:
+      consumes:
+      - application/json
+      description: get a parcel
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Parcel ID
+        in: path
+        name: parcel_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get a parcel
+      tags:
+      - Parcel
+    put:
+      consumes:
+      - application/json
+      description: update a parcel
+      parameters:
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Parcel ID
+        in: path
+        name: parcel_id
+        required: true
+        type: string
+      - description: Update a parcel
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LocationDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Update a parcel
+      tags:
+      - Parcel
   /pickups:
     get:
       consumes:
       - application/json
-      description: get carrier pickups
+      description: get pickups
       parameters:
       - description: Bearer token
         in: header
@@ -657,9 +893,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.Response'
-      summary: Get carrier pickups
+      summary: Get pickups
       tags:
-      - Carrier Pickup
+      - Pickup
     put:
       consumes:
       - application/json
@@ -689,7 +925,7 @@ paths:
             $ref: '#/definitions/domain.Response'
       summary: Update a pickup
       tags:
-      - Carrier Pickup
+      - Pickup
   /pickups/{pick_up_id}:
     get:
       consumes:
@@ -719,7 +955,7 @@ paths:
             $ref: '#/definitions/domain.Response'
       summary: Get a pickup
       tags:
-      - Carrier Pickup
+      - Pickup
   /rates:
     get:
       consumes:

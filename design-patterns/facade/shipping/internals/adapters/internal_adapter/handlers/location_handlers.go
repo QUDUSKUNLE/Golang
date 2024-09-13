@@ -14,8 +14,8 @@ import (
 // @Tags Address
 // @Accept json
 // @Produce json
-// @Param body body domain.LocationDto true "Create addresses"
 // @Param authorization header string true "Bearer token"
+// @Param body body domain.LocationDto true "Create addresses"
 // @Failure 409 {object} domain.Response
 // @Success 201 {object} domain.Response
 // @Router /addresses [post]
@@ -100,8 +100,8 @@ func (handler *HTTPHandler) PostAddress(context echo.Context) error {
 // @Tags Address
 // @Accept json
 // @Produce json
-// @Param address_id path string true "Address ID"
 // @Param authorization header string true "Bearer token"
+// @Param address_id path string true "Address ID"
 // @Failure 400 {object} domain.Response
 // @Success 200 {object} domain.Response
 // @Router /addresses/{address_id} [get]
@@ -131,7 +131,7 @@ func (handler *HTTPHandler) GetAddress(context echo.Context) error {
 // @Param authorization header string true "Bearer token"
 // @Param description query string false "Description"
 // @Failure 400 {object} domain.Response
-// @Success 201 {object} domain.Response
+// @Success 200 {object} domain.Response
 // @Router /addresses [get]
 func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 	user, err := PrivateMiddlewareContext(context, string(domain.USER))
@@ -159,13 +159,13 @@ func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 // @Tags Address
 // @Accept json
 // @Produce json
+// @Param authorization header string true "Bearer token"
 // @Param address_id path string true "Address ID"
 // @Param body body domain.LocationDto true "Update an address"
-// @Param authorization header string true "Bearer token"
 // @Failure 400 {object} domain.Response
 // @Success 200 {object} domain.Response
 // @Router /addresses/{address_id} [put]
-func (handler *HTTPHandler) UpdateAddress(context echo.Context) error {
+func (handler *HTTPHandler) PutAddress(context echo.Context) error {
 	_, err := PrivateMiddlewareContext(context, string(domain.USER))
 	if err != nil {
 		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
@@ -180,8 +180,8 @@ func (handler *HTTPHandler) UpdateAddress(context echo.Context) error {
 // @Tags Address
 // @Accept json
 // @Produce json
-// @Param address_id path string true "Address ID"
 // @Param authorization header string true "Bearer token"
+// @Param address_id path string true "Address ID"
 // @Failure 400 {object} domain.Response
 // @Success 204 {object} domain.Response
 // @Router /addresses/{address_id} [delete]
