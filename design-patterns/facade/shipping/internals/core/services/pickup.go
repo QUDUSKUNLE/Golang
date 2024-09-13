@@ -2,6 +2,7 @@ package services
 
 import (
 	"log"
+	"github.com/google/uuid"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
 )
 
@@ -36,4 +37,13 @@ func (internalHandler *InternalServicesHandler) UpDatePickUpAdaptor(pickUp domai
 	// Send pick up notification
 	systemsHandler.notificationService.SendPickUpNotification()
 	return nil
+}
+
+func (internalHandler *InternalServicesHandler) GetPickUpAdaptor(pickUpID, userID uuid.UUID) (*domain.PickUp, error) {
+	// build a new pick up
+	pickUp, err := internalHandler.internal.GetPickUp(pickUpID, userID)
+	if err != nil {
+		return &domain.PickUp{}, err
+	}
+	return &pickUp, nil
 }

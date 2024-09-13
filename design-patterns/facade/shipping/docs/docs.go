@@ -32,7 +32,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     },
@@ -73,7 +73,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Create addresses",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -83,7 +83,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -104,7 +104,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/addresses/{addressID}": {
+        "/addresses/{address_id}": {
             "get": {
                 "description": "get a address",
                 "consumes": [
@@ -121,21 +121,21 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Address ID",
-                        "name": "addressID",
+                        "name": "address_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.Response"
                         }
@@ -165,7 +165,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Sign in a user",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -205,7 +205,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Create packagings",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -215,7 +215,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -252,7 +252,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Create parcels",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -262,7 +262,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -300,7 +300,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -335,7 +335,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Update a pickup",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -345,7 +345,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -359,6 +359,51 @@ const docTemplate = `{
                     },
                     "409": {
                         "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/pickups/{pick_up_id}": {
+            "get": {
+                "description": "get a pickup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Carrier Pickup"
+                ],
+                "summary": "Get a pickup",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "PickUp ID",
+                        "name": "pick_up_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/domain.Response"
                         }
@@ -383,7 +428,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer Token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     },
@@ -463,7 +508,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Register a user",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -487,7 +532,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/reset_password": {
+        "/resetpassword": {
             "post": {
                 "description": "Reset a user password",
                 "consumes": [
@@ -503,7 +548,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Reset password",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -544,7 +589,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -579,7 +624,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Create a shipment",
-                        "name": "Body",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -589,7 +634,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Bearer token",
-                        "name": "Authorization",
+                        "name": "authorization",
                         "in": "header",
                         "required": true
                     }
@@ -907,6 +952,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "carrier_id",
+                "delivery_address_id",
                 "description",
                 "product_type"
             ],
@@ -918,6 +964,7 @@ const docTemplate = `{
                     "$ref": "#/definitions/domain.Address"
                 },
                 "delivery_address_id": {
+                    "description": "Need to work PickUpAddressID should not be equal to DeliveryAddressID",
                     "type": "string"
                 },
                 "description": {
@@ -925,14 +972,17 @@ const docTemplate = `{
                     "maxLength": 100,
                     "minLength": 6
                 },
-                "pick_up_address": {
+                "pickup_address": {
                     "$ref": "#/definitions/domain.Address"
                 },
-                "pick_up_address_id": {
+                "pickup_address_id": {
                     "type": "string"
                 },
                 "product_type": {
                     "$ref": "#/definitions/domain.ProductType"
+                },
+                "terminal_shipment_id": {
+                    "type": "string"
                 },
                 "userID": {
                     "type": "string"

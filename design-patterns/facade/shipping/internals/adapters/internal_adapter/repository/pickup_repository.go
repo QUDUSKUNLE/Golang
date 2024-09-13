@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"github.com/google/uuid"
+	"errors"
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
+	"github.com/google/uuid"
 )
 
 func (database *PostgresRepository) InitiatePickUpAdaptor(pickUp []*domain.PickUp) error {
@@ -25,14 +26,29 @@ func (database *PostgresRepository) UpdatePickUpAdaptor(pickUp domain.PickUp) er
 }
 
 func (database *PostgresRepository) CarrierPickUps(userID uuid.UUID) ([]*domain.PickUp, error) {
-	var shippings []*domain.PickUp
-	carrier, err := database.ReadCarrierAdaptor(userID)
-	if err != nil {
-		return []*domain.PickUp{}, err
+	var pickUps []*domain.PickUp
+	carrier := &domain.Carrier{}
+	result := database.db.Where("user_id = ?", userID).Find(carrier)
+	if result.RowsAffected == 0 {
+		return []*domain.PickUp{}, errors.New("record not found")
 	}
-	result := database.db.Preload("Shipping").Find(&shippings, domain.PickUp{CarrierID: carrier.ID}).Limit(10)
+	result = database.db.Preload("Shipping").Order("created_at desc").Limit(20).Find(&pickUps, domain.PickUp{CarrierID: carrier.ID})
 	if result.Error != nil {
 		return []*domain.PickUp{}, result.Error
 	}
-	return shippings, nil
+	return pickUps, nil
+}
+
+func (database *PostgresRepository) GetPickUp(pickUpID, userID uuid.UUID) (domain.PickUp, error) {
+	var pickUp domain.PickUp
+	carrier := &domain.Carrier{}
+	result := database.db.Where("user_id = ?", userID).Find(carrier)
+	if result.RowsAffected == 0 {
+		return domain.PickUp{}, errors.New("record not found")
+	}
+	result = database.db.Preload("Shipping").Find(&pickUp, domain.PickUp{CarrierID: carrier.ID, ID: pickUpID})
+	if result.Error != nil {
+		return domain.PickUp{}, result.Error
+	}
+	return pickUp, nil
 }

@@ -20,6 +20,7 @@ type RepositoryPorts interface {
 	GetShippingsAdaptor(shippingID uuid.UUID, status string) ([]*domain.Shipping, error)
 
 	CarrierPickUps(carrierID uuid.UUID) ([]*domain.PickUp, error)
+	GetPickUp(pickUpID, userID uuid.UUID) (domain.PickUp, error)
 
 	// Addresses Ports
 	ReadAddressAdaptor(addressID, userID uuid.UUID) (*domain.Location, error)

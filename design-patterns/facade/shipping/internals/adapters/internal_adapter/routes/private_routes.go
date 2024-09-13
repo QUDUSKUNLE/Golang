@@ -10,10 +10,11 @@ func PrivateRoutesAdaptor(private *echo.Group, handler *handlers.HTTPHandler) *e
 
 	private.PUT("/pickups", handler.UpdatePickUp)
 	private.GET("/pickups", handler.CarrierPickUps)
+	private.GET("/pickups/:pick_up_id", handler.GetPickUp)
 
 	private.POST("/addresses", handler.PostAddress)
 	private.GET("/addresses", handler.GetAddresses)
-	private.GET("/addresses/:addressID", handler.GetAddress)
+	private.GET("/addresses/:address_id", handler.GetAddress)
 
 	private.POST("/packagings", handler.PostPackaging)
 

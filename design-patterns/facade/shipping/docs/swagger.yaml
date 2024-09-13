@@ -225,21 +225,25 @@ definitions:
       delivery_address:
         $ref: '#/definitions/domain.Address'
       delivery_address_id:
+        description: Need to work PickUpAddressID should not be equal to DeliveryAddressID
         type: string
       description:
         maxLength: 100
         minLength: 6
         type: string
-      pick_up_address:
+      pickup_address:
         $ref: '#/definitions/domain.Address'
-      pick_up_address_id:
+      pickup_address_id:
         type: string
       product_type:
         $ref: '#/definitions/domain.ProductType'
+      terminal_shipment_id:
+        type: string
       userID:
         type: string
     required:
     - carrier_id
+    - delivery_address_id
     - description
     - product_type
     type: object
@@ -398,7 +402,7 @@ paths:
       parameters:
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       - description: Description
@@ -426,13 +430,13 @@ paths:
       parameters:
       - description: Create addresses
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.LocationDto'
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
@@ -449,7 +453,7 @@ paths:
       summary: Submit addresses
       tags:
       - Address
-  /addresses/{addressID}:
+  /addresses/{address_id}:
     get:
       consumes:
       - application/json
@@ -457,19 +461,19 @@ paths:
       parameters:
       - description: Address ID
         in: path
-        name: addressID
+        name: address_id
         required: true
         type: string
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/domain.Response'
         "400":
@@ -487,7 +491,7 @@ paths:
       parameters:
       - description: Sign in a user
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.LogInDto'
@@ -513,13 +517,13 @@ paths:
       parameters:
       - description: Create packagings
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.TerminalPackagingDto'
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
@@ -544,13 +548,13 @@ paths:
       parameters:
       - description: Create parcels
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.TerminalParcelDto'
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
@@ -575,7 +579,7 @@ paths:
       parameters:
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
@@ -599,13 +603,13 @@ paths:
       parameters:
       - description: Update a pickup
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.PickUpDto'
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
@@ -622,6 +626,36 @@ paths:
       summary: Update a pickup
       tags:
       - Carrier Pickup
+  /pickups/{pick_up_id}:
+    get:
+      consumes:
+      - application/json
+      description: get a pickup
+      parameters:
+      - description: PickUp ID
+        in: path
+        name: pick_up_id
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Get a pickup
+      tags:
+      - Carrier Pickup
   /rates:
     get:
       consumes:
@@ -630,7 +664,7 @@ paths:
       parameters:
       - description: Bearer Token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       - description: Currency
@@ -686,7 +720,7 @@ paths:
       parameters:
       - description: Register a user
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.UserDto'
@@ -704,7 +738,7 @@ paths:
       summary: Register a new user
       tags:
       - User
-  /reset_password:
+  /resetpassword:
     post:
       consumes:
       - application/json
@@ -712,7 +746,7 @@ paths:
       parameters:
       - description: Reset password
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.ResetPasswordDto'
@@ -738,7 +772,7 @@ paths:
       parameters:
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:
@@ -762,13 +796,13 @@ paths:
       parameters:
       - description: Create a shipment
         in: body
-        name: Body
+        name: body
         required: true
         schema:
           $ref: '#/definitions/domain.ShippingDto'
       - description: Bearer token
         in: header
-        name: Authorization
+        name: authorization
         required: true
         type: string
       produces:

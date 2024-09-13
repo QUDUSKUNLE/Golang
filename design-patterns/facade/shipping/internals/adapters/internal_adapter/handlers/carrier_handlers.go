@@ -13,7 +13,7 @@ import (
 // @Produce json
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.Response
-// @Param Authorization header string true "Bearer token"
+// @Param authorization header string true "Bearer token"
 // @Router /pickups [get]
 func (handler *HTTPHandler) CarrierPickUps(context echo.Context) error {
 	user, err := PrivateMiddlewareContext(context, string(domain.CARRIER))

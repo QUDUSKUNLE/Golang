@@ -12,8 +12,8 @@ import (
 // @Tags Parcel
 // @Accept json
 // @Produce json
-// @Param Body body domain.TerminalParcelDto true "Create parcels"
-// @Param Authorization header string true "Bearer token"
+// @Param body body domain.TerminalParcelDto true "Create parcels"
+// @Param authorization header string true "Bearer token"
 // @Failure 409 {object} domain.Response
 // @Success 201 {object} domain.Response
 // @Router /parcels [post]

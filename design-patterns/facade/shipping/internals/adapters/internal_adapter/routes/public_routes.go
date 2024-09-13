@@ -9,11 +9,6 @@ func PublicRoutesAdaptor(public *echo.Group, handler *handlers.HTTPHandler) *ech
 	public.POST("/register", handler.Register)
 	public.POST("/login", handler.Login)
 	public.POST("/delivery", handler.DeliveryProduct)
-	public.POST("/reset_password", handler.ResetPassword)
-
-	public.POST("/starvation", handler.Starvation)
-	public.POST("/example", handler.Example)
-	public.POST("/live_lock", handler.LiveLock)
-	public.POST("/dead_lock", handler.DeadLock)
+	public.POST("/resetpassword", handler.ResetPassword)
 	return public
 }

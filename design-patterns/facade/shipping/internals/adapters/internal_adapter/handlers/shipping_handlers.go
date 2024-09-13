@@ -13,8 +13,8 @@ import (
 // @Tags Shipment
 // @Accept json
 // @Produce json
-// @Param Body body domain.ShippingDto true "Create a shipment"
-// @Param Authorization header string true "Bearer token"
+// @Param body body domain.ShippingDto true "Create a shipment"
+// @Param authorization header string true "Bearer token"
 // @Failure 409 {object} domain.Response
 // @Success 201 {object} domain.Response
 // @Router /shipments [post]
@@ -80,7 +80,7 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 // @Accept json
 // @Produce json
 // @Failure 401 {object} domain.Response
-// @Param Authorization header string true "Bearer token"
+// @Param authorization header string true "Bearer token"
 // @Success 200 {object} domain.Response
 // @Router /shipments [get]
 func (handler *HTTPHandler) GetShippings(context echo.Context) error {

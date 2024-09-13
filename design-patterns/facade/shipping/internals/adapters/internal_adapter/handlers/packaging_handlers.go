@@ -12,8 +12,8 @@ import (
 // @Tags Packaging
 // @Accept json
 // @Produce json
-// @Param Body body domain.TerminalPackagingDto true "Create packagings"
-// @Param Authorization header string true "Bearer token"
+// @Param body body domain.TerminalPackagingDto true "Create packagings"
+// @Param authorization header string true "Bearer token"
 // @Failure 409 {object} domain.Response
 // @Success 201 {object} domain.Response
 // @Router /packagings [post]

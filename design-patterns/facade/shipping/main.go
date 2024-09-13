@@ -25,7 +25,7 @@ import (
 
 var (
 	internal *internalServices.InternalServicesHandler
-	external *integration.ExternalServicesHandler
+	externalIntegration *integration.ExternalServicesHandler
 )
 
 func init() {
@@ -67,8 +67,8 @@ func main() {
 
 	externalStore := integration.OpenExternalConnection()
 	internal = internalServices.InternalServicesAdapter(internalStore)
-	external = integration.ExternalServicesAdapter(externalStore)
-	httpHandler := handlers.HttpAdapter(*internal, *external)
+	externalIntegration = integration.ExternalServicesAdapter(externalStore)
+	httpHandler := handlers.HttpAdapter(*internal, *externalIntegration)
 
 	// Plug echo into PublicRoutesAdaptor
 	public := e.Group("/v1")

@@ -13,7 +13,7 @@ import (
 // @Accept json
 // @Produce json
 // @Failure 400 {object} domain.Response
-// @Param Authorization header string true "Bearer Token"
+// @Param authorization header string true "Bearer Token"
 // @Param currency query string true "Currency" Enums(NGN, USD)
 // @Param pickup_address_id query string true "Pickup Address ID"
 // @Param delivery_address_id query string true "Delivery Address ID"

@@ -11,7 +11,7 @@ import (
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param Body body domain.UserDto true "Register a user"
+// @Param body body domain.UserDto true "Register a user"
 // @Failure 409 {object} domain.Response
 // @Success 201 {object} domain.Response
 // @Router /register [post]
@@ -37,7 +37,7 @@ func (handler *HTTPHandler) Register(context echo.Context) error {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param Body body domain.LogInDto true "Sign in a user"
+// @Param body body domain.LogInDto true "Sign in a user"
 // @failure 400 {object} domain.Response
 // @Success 200 {object} domain.Response
 // @Router /login [post]
@@ -64,10 +64,10 @@ func (handler *HTTPHandler) Login(context echo.Context) error {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param Body body domain.ResetPasswordDto true "Reset password"
+// @Param body body domain.ResetPasswordDto true "Reset password"
 // @failure 400 {object} domain.Response
 // @Success 200 {object} domain.Response
-// @Router /reset_password [post]
+// @Router /resetpassword [post]
 func (handler *HTTPHandler) ResetPassword(context echo.Context) error {
 	resetPasswordDto := new(domain.ResetPasswordDto)
 	if err := ValidateStruct(context, resetPasswordDto); err != nil {
