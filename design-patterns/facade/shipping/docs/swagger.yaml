@@ -454,6 +454,35 @@ paths:
       tags:
       - Address
   /addresses/{address_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete an address
+      parameters:
+      - description: Address ID
+        in: path
+        name: address_id
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Delete an address
+      tags:
+      - Address
     get:
       consumes:
       - application/json
@@ -481,6 +510,41 @@ paths:
           schema:
             $ref: '#/definitions/domain.Response'
       summary: Get a address
+      tags:
+      - Address
+    put:
+      consumes:
+      - application/json
+      description: update an address
+      parameters:
+      - description: Address ID
+        in: path
+        name: address_id
+        required: true
+        type: string
+      - description: Update an address
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LocationDto'
+      - description: Bearer token
+        in: header
+        name: authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.Response'
+      summary: Update an address
       tags:
       - Address
   /login:

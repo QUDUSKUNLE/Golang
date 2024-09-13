@@ -153,3 +153,44 @@ func (handler *HTTPHandler) GetAddresses(context echo.Context) error {
 			return ComputeResponseMessage(http.StatusOK, location, context)
 	}
 }
+
+// @Summary Update an address
+// @Description update an address
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param address_id path string true "Address ID"
+// @Param body body domain.LocationDto true "Update an address"
+// @Param authorization header string true "Bearer token"
+// @Failure 400 {object} domain.Response
+// @Success 200 {object} domain.Response
+// @Router /addresses/{address_id} [put]
+func (handler *HTTPHandler) UpdateAddress(context echo.Context) error {
+	_, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+	description := context.QueryParam("description")
+	
+	return ComputeResponseMessage(http.StatusOK, description, context)
+}
+
+// @Summary Delete an address
+// @Description delete an address
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param address_id path string true "Address ID"
+// @Param authorization header string true "Bearer token"
+// @Failure 400 {object} domain.Response
+// @Success 204 {object} domain.Response
+// @Router /addresses/{address_id} [delete]
+func (handler *HTTPHandler) DeleteAddress(context echo.Context) error {
+	_, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
+	}
+	description := context.QueryParam("description")
+	
+	return ComputeResponseMessage(http.StatusOK, description, context)
+}

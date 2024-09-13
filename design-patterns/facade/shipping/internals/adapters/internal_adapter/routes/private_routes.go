@@ -15,6 +15,8 @@ func PrivateRoutesAdaptor(private *echo.Group, handler *handlers.HTTPHandler) *e
 	private.POST("/addresses", handler.PostAddress)
 	private.GET("/addresses", handler.GetAddresses)
 	private.GET("/addresses/:address_id", handler.GetAddress)
+	private.PUT("addresses/:address_id", handler.UpdateAddress)
+	private.DELETE("addresses/:address_id", handler.DeleteAddress)
 
 	private.POST("/packagings", handler.PostPackaging)
 
