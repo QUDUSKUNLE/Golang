@@ -35,6 +35,7 @@ type (
 		DeliveryAddressID uuid.UUID   `json:"delivery_address_id" validate:"uuid,nefield=PickUpAddressID,required"`
 		PickUpAddress     Address     `json:"pickup_address" validate:"required_without=PickUpAddressID"`
 		DeliveryAddress   Address     `json:"delivery_address" validate:"required_without=DeliveryAddressID"`
+		TerminalShipmentID  string    `json:"terminal_shipment_id"`
 		ProductType       ProductType `json:"product_type" validate:"required"`
 		CarrierID         uuid.UUID   `json:"carrier_id" validate:"uuid,required"`
 		UserID            uuid.UUID
@@ -52,6 +53,7 @@ func (shipping *Shipping) BuildNewShipping(ship ShippingDto) []*Shipping {
 			PickUpAddressID:   shipment.PickUpAddressID,
 			DeliveryAddressID: shipment.DeliveryAddressID,
 			ProductType:       shipment.ProductType,
+			TerminalShipmentID: shipment.TerminalShipmentID,
 		})
 	}
 	return shipments

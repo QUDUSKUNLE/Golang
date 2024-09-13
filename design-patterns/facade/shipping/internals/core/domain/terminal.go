@@ -1,6 +1,9 @@
 package domain
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/google/uuid"
+)
 
 type (
 	Terminal             struct{}
@@ -36,6 +39,9 @@ type (
 		DeliveryAddressID string           `json:"delivery_address_id"`
 		Parcels           []string         `json:"parcel_id" validate:"gt=0,dive,required"`
 		ReturnAddressID   string           `json:"return_address_id"`
+		CarrierID         uuid.UUID        `json:"carrier_id" validate:"uuid,required"`
+		ProductType       ProductType      `json:"product_type" validate:"required"`
+		Description       string           `json:"description" validate:"required,gte=6,lte=100"`
 		ShipmentPurpose   SHIPMENT_PURPOSE `json:"shipment_purpose" validate:"required"`
 		ShipmentType      CASH_ON_DELIVERY `json:"shipment_type"`
 	}
@@ -104,10 +110,10 @@ func (parcel *Terminal) BuildNewTerminalParcel(parse SingleTerminalParcelDto) ma
 
 func (ship *Terminal) BuildNewTerminalShipment(shipment SingleTerminalShipmentDto) map[string]interface{} {
 	return map[string]interface{}{
-		"address_from":     shipment.PickUpAddressID,
-		"address_to":       shipment.DeliveryAddressID,
-		"metadata":         "",
-		"parcel":           shipment.Parcels[0],
+		"address_from": shipment.PickUpAddressID,
+		"address_to":   shipment.DeliveryAddressID,
+		"metadata":     "",
+		// "parcel":           shipment.Parcels[0],
 		"address_return":   shipment.PickUpAddressID,
 		"shipment_purpose": shipment.ShipmentPurpose.PrintShipmentPurpose(),
 		"parcels":          shipment.Parcels,

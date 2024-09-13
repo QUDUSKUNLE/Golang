@@ -16,7 +16,7 @@ func (database *PostgresRepository) CreateShippingAdaptor(shipping []*domain.Shi
 
 func (database *PostgresRepository) GetShippingsAdaptor(userID uuid.UUID, status string) ([]*domain.Shipping, error) {
 	var shippings []*domain.Shipping
-	result := database.db.Preload("Carrier").Find(&shippings, domain.Shipping{UserID: userID}).Limit(10)
+	result := database.db.Order("created_at desc").Limit(20).Find(&shippings, domain.Shipping{UserID: userID})
 	if result.Error != nil {
 		return []*domain.Shipping{}, result.Error
 	}

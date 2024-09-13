@@ -49,3 +49,14 @@ func (handler *HTTPHandler) PostParcel(context echo.Context) error {
 	}
 	return ComputeResponseMessage(http.StatusCreated, PARCEL_SUBMITTED_SUCCESSFULLY, context)
 }
+
+func (handler *HTTPHandler) GetParcel(context echo.Context) error {
+	user, err := PrivateMiddlewareContext(context, string(domain.USER))
+	if err != nil {
+		return err
+	}
+	parcels, err := handler.internalServicesAdapter.GetParcelsAdaptor(user.ID); 		if err != nil {
+		return ComputeErrorResponse(http.StatusBadRequest, "Parcel error", context)
+	}
+	return ComputeResponseMessage(http.StatusOK, parcels, context)
+}

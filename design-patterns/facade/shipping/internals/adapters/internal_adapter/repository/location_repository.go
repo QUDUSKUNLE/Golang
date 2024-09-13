@@ -35,6 +35,15 @@ func (database *PostgresRepository) ReadAddressesAdaptor(userID uuid.UUID) ([]*d
 	return locations, nil
 }
 
+func (database *PostgresRepository) ReadMultipleAddressesAdaptor(locationIDs []uuid.UUID, userID uuid.UUID) ([]*domain.Location, error) {
+	var locations []*domain.Location
+	result := database.db.Where("user_id = ? AND id IN ?", userID, locationIDs).Find(&locations);
+	if result.Error != nil {
+		return []*domain.Location{}, result.Error
+	}
+	return locations, nil
+}
+
 func (database *PostgresRepository) SaveAddressAdaptor(locations []*domain.Location) (err error) {
 	_ = database.db.AutoMigrate(&domain.Location{})
 	result := database.db.Create(locations)

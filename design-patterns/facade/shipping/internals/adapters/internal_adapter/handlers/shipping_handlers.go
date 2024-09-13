@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/QUDUSKUNLE/shipping/internals/core/domain"
@@ -31,41 +30,47 @@ func (handler *HTTPHandler) PostShipping(context echo.Context) error {
 		return ComputeErrorResponse(http.StatusUnauthorized, UNAUTHORIZED_TO_PERFORM_OPERATION, context)
 	}
 
-	// shippingDto := new(domain.ShippingDto)
+	shippingDto := new(domain.ShippingDto)
 	// Make call to external adapter to log a shipment
 	for _, terminal_shipment := range terminalShipment.Shipments {
 		terminal_shipment.ShipmentType = domain.False
-		// Implement IN Query....
 		PickUpAddressID, _ := uuid.Parse(terminal_shipment.PickUpAddressID)
 		DeliveryAddressID, _ := uuid.Parse(terminal_shipment.DeliveryAddressID)
-		terminalPickUpAddress, err := handler.internalServicesAdapter.GetLocationAdaptor(PickUpAddressID, user.ID)
+		terminalPickUpAddress, err := handler.internalServicesAdapter.GetMultipleLocationAdaptor([]uuid.UUID{PickUpAddressID, DeliveryAddressID}, user.ID)
 		if err != nil {
 			return ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
 		context)
 		}
-		terminalDeliveryAddress, err := handler.internalServicesAdapter.GetLocationAdaptor(DeliveryAddressID, user.ID)
-		if err != nil {
-			return ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
-		context)
+		for _, address := range terminalPickUpAddress {
+			if (address.ID == PickUpAddressID) {
+				terminal_shipment.PickUpAddressID = address.TerminalAddressID
+			}
+			if (address.ID == DeliveryAddressID) {
+				terminal_shipment.DeliveryAddressID = address.TerminalAddressID
+			}
 		}
-		terminal_shipment.PickUpAddressID = terminalPickUpAddress.TerminalAddressID
-		terminal_shipment.DeliveryAddressID = terminalDeliveryAddress.TerminalAddressID
 		externalShipment, _ := handler.externalServicesAdapter.TerminalCreateShipmentAdaptor(terminal_shipment)
 		if externalShipment["data"] == nil {
 			return ComputeErrorResponse(http.StatusBadRequest, externalShipment["message"], context)
 		}
 		result := externalShipment["data"].(map[string]interface{})
-		fmt.Println(result, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+		terminalShipmentID := result["shipment_id"].(string)
+		shippingDto.Shipments = append(shippingDto.Shipments, domain.SingleShippingDto{
+			PickUpAddressID: PickUpAddressID,
+			DeliveryAddressID: DeliveryAddressID,
+			UserID: user.ID,
+			CarrierID: terminal_shipment.CarrierID,
+			Description: terminal_shipment.Description,
+			ProductType: terminal_shipment.ProductType,
+			TerminalShipmentID: terminalShipmentID,
+		})
 	}
 
-	// for index := range shippingDto.Shipments {
-	// 	shippingDto.Shipments[index].UserID = user.ID
-	// }
-	// err = handler.internalServicesAdapter.NewShippingAdaptor(shippingDto);
-	// if err != nil {
-	// 	return ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
-	// 	context)
-	// }
+	err = handler.internalServicesAdapter.NewShippingAdaptor(shippingDto);
+	if err != nil {
+		return ComputeErrorResponse(http.StatusNotAcceptable, err.Error(),
+		context)
+	}
 	return ComputeResponseMessage(http.StatusOK, PRODUCT_SCHEDULED_FOR_SHIPPING, context)
 }
 

@@ -32,6 +32,7 @@ func (terminal *ExternalRepository) TerminalRequest(endpoint ports.ENDPOINTS, me
 					log.Fatal(err)
 					return requestResult, err
 				}
+				fmt.Println(requestBody, "**********")
 				req, err = buildNewTerminalRequest(ports.POST.PrintMethod(), ports.SHIPMENTS.PrintEndpoint(), bodyReader)
 		}
 	case ports.PACKAGING:

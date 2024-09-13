@@ -24,6 +24,14 @@ func (internalHandler *InternalServicesHandler) GetLocationAdaptor(addressID, us
 	return location, nil
 }
 
+func (internalHandler *InternalServicesHandler) GetMultipleLocationAdaptor(locationIDs []uuid.UUID, userID uuid.UUID) ([]*domain.Location, error) {
+	locations, err := internalHandler.internal.ReadMultipleAddressesAdaptor(locationIDs, userID);
+	if err != nil {
+		return []*domain.Location{}, err
+	}
+	return locations, nil
+}
+
 func (internalHandler *InternalServicesHandler) QueryLocationAdaptor(userID uuid.UUID, description string) (*domain.Location, error) {
 	location, err := internalHandler.internal.QueryAddressAdaptor(userID, description);
 	if err != nil {

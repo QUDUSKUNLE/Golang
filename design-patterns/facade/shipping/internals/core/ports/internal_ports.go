@@ -24,6 +24,7 @@ type RepositoryPorts interface {
 	// Addresses Ports
 	ReadAddressAdaptor(addressID, userID uuid.UUID) (*domain.Location, error)
 	ReadAddressesAdaptor(userID uuid.UUID) ([]*domain.Location, error)
+	ReadMultipleAddressesAdaptor(locationIDs []uuid.UUID, userID uuid.UUID) ([]*domain.Location, error)
 	SaveAddressAdaptor(location []*domain.Location) error
 	UpdateAddressAdaptor(addressID uuid.UUID, location domain.Location) error
 	DeleteAddressAdaptor(addressID uuid.UUID) error
@@ -33,4 +34,5 @@ type RepositoryPorts interface {
 	SavePackagingAdaptor(pack []*domain.Packaging) error
 	// Parcel Ports
 	SaveParcelAdaptor(parcel []*domain.Parcel) error
+	GetParcelsAdaptor(userID uuid.UUID) ([]*domain.Parcel, error)
 }

@@ -8,7 +8,6 @@ import (
 	"os"
 
 	_ "github.com/QUDUSKUNLE/shipping/docs"
-	externalServices "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
 	integration "github.com/QUDUSKUNLE/shipping/internals/adapters/external_adapter"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/config"
 	"github.com/QUDUSKUNLE/shipping/internals/adapters/internal_adapter/handlers"
@@ -26,7 +25,7 @@ import (
 
 var (
 	internal *internalServices.InternalServicesHandler
-	external *externalServices.ExternalServicesHandler
+	external *integration.ExternalServicesHandler
 )
 
 func init() {
@@ -53,17 +52,13 @@ func main() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "time=${time}, remote_ip=${remote_ip}, latency=${latency}, method=${method}, uri=${uri}, status=${status}, host=${host}\n",
 	}))
-	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
-		StackSize: 4 << 10,
-		LogLevel: 0,
-	}))
 	// Recover servers when break down
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{os.Getenv("ALLOW_ORIGIN")},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 	}))
- e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(rate.Limit(20))))
+ e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(rate.Limit(10))))
 
 	internalStore, err := repository.OpenDBConnection()
 	if err != nil {
@@ -72,7 +67,7 @@ func main() {
 
 	externalStore := integration.OpenExternalConnection()
 	internal = internalServices.InternalServicesAdapter(internalStore)
-	external = externalServices.ExternalServicesAdapter(externalStore)
+	external = integration.ExternalServicesAdapter(externalStore)
 	httpHandler := handlers.HttpAdapter(*internal, *external)
 
 	// Plug echo into PublicRoutesAdaptor
