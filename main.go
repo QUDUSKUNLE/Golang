@@ -2,14 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/QUDUSKUNLE/Golang/tutorial/closures"
+	"github.com/QUDUSKUNLE/Golang/tutorial/recursion"
 	// "strings"
 )
 
 func main() {
-	nextInt := closures.InitSequence()
-	for i := range 10 {
-		i++
-		fmt.Println(nextInt())
-	}
+	fmt.Println(recursion.Factorial(7))
 }
