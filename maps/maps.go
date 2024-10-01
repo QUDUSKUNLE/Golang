@@ -57,6 +57,6 @@ func (dictionary Dictionary) Delete(word string) {
 }
 
 type LangCategory struct {
-	dynamic bool
-	strong bool
+	Dynamic bool
+	Strong bool
 }
