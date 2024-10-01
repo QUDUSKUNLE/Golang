@@ -3,29 +3,28 @@ package main
 import (
 	"fmt"
 	"github.com/QUDUSKUNLE/Golang/tutorial/slice"
-	"slices"
+	"maps"
+	"strings"
 )
 
 func main() {
-	fmt.Println("uninit:", slice.S, slice.S == nil, len(slice.S) == 0, cap(slice.S))
-	slice.S = make([]string, 3)
-	fmt.Println("emp", slice.S, "len:", len(slice.S), "cap:", cap(slice.S))
+	fmt.Println("uninit:", slice.S, slice.S == nil, len(slice.S) == 0)
 
-	slice.S[0] = "a"; slice.S[1] = "b"; slice.S[2] = "c";
-	fmt.Printf("set: %s\n", slice.S)
-	fmt.Printf("get: %s\n", slice.S[2])
-	fmt.Printf("len: %d and cap: %d\n", len(slice.S), cap(slice.S))
+	m := make(map[string]int)
+	m["k1"] = 7; m["k2"] = 13
+	fmt.Printf("map: %v\ntype: %T\n", m, m)
 
-	slice.S = append(slice.S, "d")
-	slice.S = append(slice.S, "e", "f")
-	fmt.Println(slice.S)
-	t := []string{"g", "h", "i"}
-	t2 := []string{"g", "h", "i"}
-	
-	if slices.Equal(t, t2) {
-		fmt.Println("t == t2")
+	v1, v3 := m["k1"], m["k3"];
+	fmt.Println(v1, v3)
+	fmt.Println("len:", len(m))
+	clear(m)
+	fmt.Println("len:", len(m))
+
+	n := map[string]int{"foo": 1, "bar": 2}
+	n2 := map[string]int{"foo": 1, "bar": 2, "car": 3}
+
+	if maps.Equal(n, n2) {
+		fmt.Println("n == n2")
 	}
-	d := slices.Clone(slice.S)
-	fmt.Println(d)
-	fmt.Printf("i has value: %v and type: %T\n", d, d)
+	fmt.Println(strings.EqualFold("Boluwatife08971@", "BOLUWATIFE08971@"))
 }
