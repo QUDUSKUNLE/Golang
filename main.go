@@ -1,14 +1,15 @@
 package main
 
 import (
-	// "fmt"
-	"github.com/QUDUSKUNLE/Golang/tutorial/variadic"
+	"fmt"
+	"github.com/QUDUSKUNLE/Golang/tutorial/closures"
 	// "strings"
 )
 
 func main() {
-	variadic.Sum(1, 2)
-	variadic.Sum(1, 2, 3)
-	nums := []int{1, 2, 3, 4}
-	variadic.Sum(nums...)
+	nextInt := closures.InitSequence()
+	for i := range 10 {
+		i++
+		fmt.Println(nextInt())
+	}
 }
