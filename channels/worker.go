@@ -13,6 +13,7 @@ type city struct {
 }
 
 func createCity(record city) {
+	fmt.Println(record)
 	time.Sleep(10 * time.Millisecond)
 }
 
