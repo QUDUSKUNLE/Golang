@@ -35,9 +35,9 @@ func init() {
 	}
 }
 
-// @title Bahsoon API
+// @title Bahsoon Africa API
 // @version 1.0
-// @description Bahsoon API
+// @description Bahsoon Africa API
 // @host localhost:8080
 // @BasePath /v1
 func main() {

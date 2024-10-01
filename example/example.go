@@ -11,5 +11,3 @@ func Hello() string {
 func Convert(str string) (int, error) {
 	return strconv.Atoi(str)
 }
-
-

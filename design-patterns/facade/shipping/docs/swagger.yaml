@@ -390,8 +390,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Bahsoon API
-  title: Bahsoon API
+  description: Bahsoon Africa API
+  title: Bahsoon Africa API
   version: "1.0"
 paths:
   /addresses:

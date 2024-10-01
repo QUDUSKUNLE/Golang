@@ -1,3 +1,3 @@
 #! bin/bash
 
-go run main.go
+go build main.go

@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Bahsoon API",
-        "title": "Bahsoon API",
+        "description": "Bahsoon Africa API",
+        "title": "Bahsoon Africa API",
         "contact": {},
         "version": "1.0"
     },
