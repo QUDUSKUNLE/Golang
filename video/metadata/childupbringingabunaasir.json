@@ -1,0 +1,56 @@
+{
+    "streams": [
+        {
+            "index": 0,
+            "codec_name": "amr_nb",
+            "codec_long_name": "AMR-NB (Adaptive Multi-Rate NarrowBand)",
+            "codec_type": "audio",
+            "codec_tag_string": "samr",
+            "codec_tag": "0x726d6173",
+            "sample_fmt": "fltp",
+            "sample_rate": "8000",
+            "channels": 1,
+            "channel_layout": "mono",
+            "bits_per_sample": 0,
+            "initial_padding": 0,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/8000",
+            "duration_ts": 85829203,
+            "duration": "10728.650375",
+            "bit_rate": "12400",
+            "disposition": {
+                "default": 0,
+                "dub": 0,
+                "original": 0,
+                "comment": 0,
+                "lyrics": 0,
+                "karaoke": 0,
+                "forced": 0,
+                "hearing_impaired": 0,
+                "visual_impaired": 0,
+                "clean_effects": 0,
+                "attached_pic": 0,
+                "timed_thumbnails": 0,
+                "non_diegetic": 0,
+                "captions": 0,
+                "descriptions": 0,
+                "metadata": 0,
+                "dependent": 0,
+                "still_image": 0
+            }
+        }
+    ],
+    "format": {
+        "filename": "/Users/andeladeveloper/Downloads/ChildupbringingAbuNaasir.amr",
+        "nb_streams": 1,
+        "nb_programs": 0,
+        "nb_stream_groups": 0,
+        "format_name": "amr",
+        "format_long_name": "3GPP AMR",
+        "duration": "10728.650375",
+        "size": "16629414",
+        "bit_rate": "12400",
+        "probe_score": 100
+    }
+}
