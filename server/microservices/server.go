@@ -30,6 +30,7 @@ func main() {
 	userUseCase := dbconfig.InitUserServer(db)
 	handler.NewServer(grpcServer, userUseCase)
 
+	log.Printf("Server listening at %v", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
