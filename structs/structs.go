@@ -27,9 +27,9 @@ type Rectangle struct {
 // Nested structs
 type Square struct {
 	Width float32
-		Geometry struct {
-			Area int
-			Perimeter int
+	Geometry struct {
+		Area int
+		Perimeter int
 	}
 }
 

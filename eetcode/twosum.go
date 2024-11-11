@@ -4,7 +4,7 @@ You may assume that each input would have exactly one solution, and you may not 
 You can return the answer in any order.
 */
 
-package leetcode
+package eetcode
 
 func TwoSum(nums []int, target int) []int {
 	lens := len(nums)
