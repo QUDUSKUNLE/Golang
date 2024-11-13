@@ -30,11 +30,11 @@ func main() {
 	mux := runtime.NewServeMux()
 
 	if err = user.RegisterUserServiceHandler(context.Background(), mux, auth_conn); err != nil {
-		log.Fatalf("failed to register the user service handler: %v", err)
+		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
 
 	if err := orders.RegisterOrderServiceHandler(context.Background(), mux, order_conn); err != nil {
-		log.Fatalf("failed to register the order service handler: %v", err)
+		log.Fatalf("Failed to register the order service handler: %v", err)
 	}
 
 	addr := "0.0.0.0:7556"
