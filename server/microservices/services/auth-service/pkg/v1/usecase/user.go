@@ -23,12 +23,12 @@ func (use *UseCase) Delete(id string) error {
 }
 
 // Get implements v1.RepoInterface.
-func (use *UseCase) Get(id string) (models.User, error) {
+func (use *UseCase) Read(id string) (models.User, error) {
 	var (
 		user models.User
 		err  error
 	)
-	if user, err = use.repo.Get(id); err != nil {
+	if user, err = use.repo.Read(id); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return models.User{}, errors.New("no such user with the id supplied")
 		}

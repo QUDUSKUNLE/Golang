@@ -17,7 +17,7 @@ func (repository *Repository) GetAll() ([]models.User, error) {
 }
 
 // Get implements v1.RepoInterface.
-func (repository *Repository) Get(id string) (models.User, error) {
+func (repository *Repository) Read(id string) (models.User, error) {
 	var user models.User
 	err := repository.database.Where("id = ?", id).First(&user).Error
 	return user, err

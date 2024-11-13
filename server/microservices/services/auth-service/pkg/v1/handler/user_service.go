@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	u "github.com/QUDUSKUNLE/microservices/services/auth-service/protogen/golang/user"
 )
@@ -19,15 +20,16 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *u.CreateUserReque
 	return srv.transformUser(), nil
 }
 
-func (srv *UserServiceStruct) Get(ctx context.Context, req *u.SingleUserRequest) (*u.UserProfileResponse, error) {
+func (srv *UserServiceStruct) Read(ctx context.Context, req *u.SingleUserRequest) (*u.UserProfileResponse, error) {
+	fmt.Println("Read user details")
 	id := req.GetId()
 	if id == "" {
 		return &u.UserProfileResponse{}, errors.New("id cannot be blank")
 	}
 
-	user, err := srv.useCase.Get(id)
+	user, err := srv.useCase.Read(id)
 	if err != nil {
-		return &u.UserProfileResponse{}, err
+		return &u.UserProfileResponse{}, errors.New("user not found")
 	}
 	return srv.transformUserModel(user), nil
 }
