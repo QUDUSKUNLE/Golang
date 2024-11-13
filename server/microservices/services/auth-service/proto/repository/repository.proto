@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "./proto";
+
+service RepositoryService {
+  rpc Add(Repository) returns (AddRepositoryResponse);
+}
+
+message Repository {
+  int64 id = 1;
+  string name = 2;
+  int64 userId = 3;
+  bool isPrivate = 4;
+}
+
+message AddRepositoryResponse {
+  Repository addedRepository = 1;
+  Error error = 2;
+}
+
+message Error {
+  string code = 1;
+  string message = 2;
+}

@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "github.com/QUDUSKUNLE/microservices/proto"
+	greet_client "github.com/QUDUSKUNLE/microservices/services/auth-service/protogen/golang/greet"
 )
 
 func main() {
@@ -18,12 +18,12 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := pb.NewGreetServiceClient(conn)
+	client := greet_client.NewGreetServiceClient(conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	response, err := client.Greet(ctx, &pb.GreetRequest{Name: "Hello world"})
+	response, err := client.Greet(ctx, &greet_client.GreetRequest{Name: "Hello world"})
 	if err != nil {
 		log.Fatalf("Could not send greeting: %v", err)
 	}
