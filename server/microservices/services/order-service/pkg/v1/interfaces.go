@@ -1,0 +1,13 @@
+package v1
+
+import (
+	"github.com/QUDUSKUNLE/microservices/services/order-service/protogen/golang/orders"
+)
+
+type RepositoryInterface interface {
+	AddOrder(order *orders.Order) error
+}
+
+type UseCaseInterface interface {
+	AddOrder(order *orders.Order) error
+}

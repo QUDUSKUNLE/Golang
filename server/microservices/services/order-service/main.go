@@ -6,9 +6,9 @@ import (
 	"net"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/services/auth-service/internal/config"
-	dbconfig "github.com/QUDUSKUNLE/microservices/services/auth-service/internal/db"
-	handler "github.com/QUDUSKUNLE/microservices/services/auth-service/pkg/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/services/order-service/internal/config"
+	dbconfig "github.com/QUDUSKUNLE/microservices/services/order-service/internal/db"
+	handler "github.com/QUDUSKUNLE/microservices/services/order-service/pkg/v1/handler"
 	"google.golang.org/grpc"
 )
 
@@ -22,7 +22,7 @@ func main() {
 
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
-		log.Fatalf("Error starting auth service: %v", err)
+		log.Fatalf("Error STARTING THE SERVER : %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
@@ -30,8 +30,8 @@ func main() {
 	userUseCase := dbconfig.InitUserServer(db)
 	handler.NewServer(grpcServer, userUseCase)
 
-	log.Printf("Auth Service listening at %v", listen.Addr())
+	log.Printf("Order Service listening at %v", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {
-		log.Fatalf("failed to serve auth service: %v", err)
+		log.Fatalf("failed to serve: %v", err)
 	}
 }

@@ -1,11 +1,31 @@
 syntax = "proto3";
-option go_package = "./proto";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/auth-service/protogen/golang/user";
+
+import "google/api/annotations.proto";
 
 service UserService {
-  rpc Create(CreateUserRequest) returns (SuccessResponse);
-  rpc Read(SingleUserRequest) returns (UserProfileResponse);
-  rpc Update(SingleUserRequest) returns (SuccessResponse);
-  rpc Delete(SingleUserRequest) returns (SuccessResponse);
+  rpc Create(CreateUserRequest) returns (SuccessResponse) {
+    option (google.api.http) = {
+      post: "/v1/users",
+      body: "*"
+    };
+  }
+  rpc Read(SingleUserRequest) returns (UserProfileResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}",
+    };
+  }
+  rpc Update(SingleUserRequest) returns (SuccessResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}",
+      body: "*"
+    };
+  }
+  rpc Delete(SingleUserRequest) returns (SuccessResponse) {
+    option (google.api.http) = {
+      post: "/v1/users/{id}",
+    };
+  }
 }
 
 message CreateUserRequest{

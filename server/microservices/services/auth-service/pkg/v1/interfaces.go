@@ -10,7 +10,6 @@ type RepositoryInterface interface {
 	Update(models.User) error
 	Delete(id string) error
 	GetByEmail(email string) (models.User, error)
-	// GetAll() ([]models.User, error)
 }
 
 type UseCaseInterface interface {
@@ -18,5 +17,4 @@ type UseCaseInterface interface {
 	Get(id string) (models.User, error)
 	Update(user models.User) error
 	Delete(id string) error
-	// GetAll() ([]models.User, error)
 }
