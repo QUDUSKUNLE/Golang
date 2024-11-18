@@ -5,16 +5,20 @@ import (
 )
 
 type RepositoryInterface interface {
-	Create(models.User) error
-	Read(id string) (models.User, error)
+	CreateUser(models.User) error
+	GetUsers() ([]*models.User, error)
+	GetUser(id string) (models.User, error)
 	Update(models.User) error
 	Delete(id string) error
 	GetByEmail(email string) (models.User, error)
+	LogIn(user models.LogInDto) (models.User, error)
 }
 
 type UseCaseInterface interface {
-	Create(user models.User) error
-	Read(id string) (models.User, error)
+	CreateUser(user models.User) error
+	GetUsers() ([]*models.User, error)
+	GetUser(id string) (models.User, error)
 	Update(user models.User) error
 	Delete(id string) error
+	LogIn(user models.LogInDto) (models.User, error)
 }

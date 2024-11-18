@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_Create_FullMethodName = "/UserService/Create"
-	UserService_Read_FullMethodName   = "/UserService/Read"
-	UserService_Update_FullMethodName = "/UserService/Update"
-	UserService_Delete_FullMethodName = "/UserService/Delete"
+	UserService_Create_FullMethodName    = "/UserService/Create"
+	UserService_ReadUsers_FullMethodName = "/UserService/ReadUsers"
+	UserService_Read_FullMethodName      = "/UserService/Read"
+	UserService_Signin_FullMethodName    = "/UserService/Signin"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -30,9 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
-	Update(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	Delete(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	ReadUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
+	Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	Signin(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 }
 
 type userServiceClient struct {
@@ -52,8 +52,17 @@ func (c *userServiceClient) Create(ctx context.Context, in *CreateUserRequest, o
 	return out, nil
 }
 
-func (c *userServiceClient) Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*UserProfileResponse, error) {
-	out := new(UserProfileResponse)
+func (c *userServiceClient) ReadUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error) {
+	out := new(GetUsersResponse)
+	err := c.cc.Invoke(ctx, UserService_ReadUsers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
 	err := c.cc.Invoke(ctx, UserService_Read_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -61,18 +70,9 @@ func (c *userServiceClient) Read(ctx context.Context, in *SingleUserRequest, opt
 	return out, nil
 }
 
-func (c *userServiceClient) Update(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
-	err := c.cc.Invoke(ctx, UserService_Update_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) Delete(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
-	err := c.cc.Invoke(ctx, UserService_Delete_FullMethodName, in, out, opts...)
+func (c *userServiceClient) Signin(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error) {
+	out := new(SignInResponse)
+	err := c.cc.Invoke(ctx, UserService_Signin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,9 +84,9 @@ func (c *userServiceClient) Delete(ctx context.Context, in *SingleUserRequest, o
 // for forward compatibility
 type UserServiceServer interface {
 	Create(context.Context, *CreateUserRequest) (*SuccessResponse, error)
-	Read(context.Context, *SingleUserRequest) (*UserProfileResponse, error)
-	Update(context.Context, *SingleUserRequest) (*SuccessResponse, error)
-	Delete(context.Context, *SingleUserRequest) (*SuccessResponse, error)
+	ReadUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
+	Read(context.Context, *SingleUserRequest) (*GetUserResponse, error)
+	Signin(context.Context, *SignInRequest) (*SignInResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -97,14 +97,14 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) Create(context.Context, *CreateUserRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedUserServiceServer) Read(context.Context, *SingleUserRequest) (*UserProfileResponse, error) {
+func (UnimplementedUserServiceServer) ReadUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadUsers not implemented")
+}
+func (UnimplementedUserServiceServer) Read(context.Context, *SingleUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
 }
-func (UnimplementedUserServiceServer) Update(context.Context, *SingleUserRequest) (*SuccessResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
-}
-func (UnimplementedUserServiceServer) Delete(context.Context, *SingleUserRequest) (*SuccessResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedUserServiceServer) Signin(context.Context, *SignInRequest) (*SignInResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -137,6 +137,24 @@ func _UserService_Create_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_ReadUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ReadUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ReadUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ReadUsers(ctx, req.(*GetUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_Read_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SingleUserRequest)
 	if err := dec(in); err != nil {
@@ -155,38 +173,20 @@ func _UserService_Read_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SingleUserRequest)
+func _UserService_Signin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SignInRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).Update(ctx, in)
+		return srv.(UserServiceServer).Signin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_Update_FullMethodName,
+		FullMethod: UserService_Signin_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Update(ctx, req.(*SingleUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SingleUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).Delete(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_Delete_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Delete(ctx, req.(*SingleUserRequest))
+		return srv.(UserServiceServer).Signin(ctx, req.(*SignInRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -203,16 +203,16 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_Create_Handler,
 		},
 		{
+			MethodName: "ReadUsers",
+			Handler:    _UserService_ReadUsers_Handler,
+		},
+		{
 			MethodName: "Read",
 			Handler:    _UserService_Read_Handler,
 		},
 		{
-			MethodName: "Update",
-			Handler:    _UserService_Update_Handler,
-		},
-		{
-			MethodName: "Delete",
-			Handler:    _UserService_Delete_Handler,
+			MethodName: "Signin",
+			Handler:    _UserService_Signin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

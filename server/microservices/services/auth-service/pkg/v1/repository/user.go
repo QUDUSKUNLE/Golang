@@ -5,21 +5,33 @@ import (
 )
 
 // Create implements v1.RepoInterface.
-func (repository *Repository) Create(user models.User) error {
+func (repository *Repository) CreateUser(user models.User) error {
 	return repository.database.Create(&user).Error
 }
 
 // Get implements v1.RepoInterface.
-func (repository *Repository) GetAll() ([]models.User, error) {
-	var user []models.User
+func (repository *Repository) GetUsers() ([]*models.User, error) {
+	var user []*models.User
 	err := repository.database.Limit(50).Find(&user).Error
 	return user, err
 }
 
 // Get implements v1.RepoInterface.
-func (repository *Repository) Read(id string) (models.User, error) {
+func (repository *Repository) GetUser(id string) (models.User, error) {
 	var user models.User
 	err := repository.database.Where("id = ?", id).First(&user).Error
+	return user, err
+}
+
+// Get implements v1.RepoInterface.
+func (repository *Repository) LogIn(user models.LogInDto) (models.User, error) {	
+	return repository.GetByEmail(user.Email)
+}
+
+// Get implements v1.RepoInterface.
+func (repository *Repository) Reads() ([]models.User, error) {
+	var user []models.User
+	err := repository.database.Limit(10).Find(&user).Error
 	return user, err
 }
 
