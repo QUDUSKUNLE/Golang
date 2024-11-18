@@ -10,7 +10,7 @@ import (
 
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
 	data := srv.transformUserRPC(req)
-	if data.Email == "" || data.Password == "" {
+	if data.Email == "" || data.Password == "" || data.UserType == "" {
 		return &userProtoc.SuccessResponse{}, errors.New("please provide all fields")
 	} else if data.Password != req.GetConfirmPassword() {
 		return &userProtoc.SuccessResponse{}, errors.New("incorrect passwords")

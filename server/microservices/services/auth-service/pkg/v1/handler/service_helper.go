@@ -20,7 +20,7 @@ type JwtCustomClaims struct {
 }
 
 func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) models.User {
-	return models.User{Password: req.GetPassword(), Email: req.GetEmail(), UserType: models.UserType(models.USER.ReturnUserString())}
+	return models.User{Password: req.GetPassword(), Email: req.GetEmail(), UserType: models.UserType(req.GetUserType())}
 }
 
 func (srv *UserServiceStruct) transformUsers(us []*models.User) *userProtoc.GetUsersResponse {
