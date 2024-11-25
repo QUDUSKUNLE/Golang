@@ -1,0 +1,94 @@
+syntax = "proto3";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/auth-service/protogen/golang/user";
+
+import "google/api/annotations.proto";
+
+enum UserType {
+  USER = 0;
+  CARRIER = 1;
+  ADMIN = 2;
+}
+
+service UserService {
+  rpc Create(CreateUserRequest) returns (SuccessResponse) {
+    option (google.api.http) = {
+      post: "/v1/users",
+      body: "*"
+    };
+  }
+  rpc ReadUsers(GetUsersRequest) returns (GetUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users",
+    };
+  }
+  rpc Read(SingleUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}",
+    };
+  }
+  rpc Signin(SignInRequest) returns (SignInResponse) {
+    option (google.api.http) = {
+      post: "/v1/login",
+      body: "*"
+    };
+  }
+  rpc Home(HomeRequest) returns (GetHomeResponse) {
+    option (google.api.http) = {
+      get: "/v1/home",
+    };
+  }
+}
+
+message CreateUserRequest {
+  string email = 1 [json_name = "email"];
+  string password = 2 [json_name = "password"];
+  string confirm_password = 3 [json_name = "confirm_password"];
+  UserType user_type = 4 [json_name = "user_type"];
+}
+
+message GetUsersRequest {}
+message HomeRequest {}
+
+message User {
+  string id = 1 [json_name = "id"];
+  string email = 2 [json_name = "email"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+
+message SignInRequest {
+  string email = 1 [json_name = "email"];
+  string password = 2 [json_name = "password"];
+}
+
+message SingleUserRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message CreateUserResponse {
+  string id = 1 [json_name = "id"];
+  string email = 2 [json_name = "email"];
+  string password = 3 [json_name = "password"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+
+message SuccessResponse {
+  string data = 1 [json_name = "response"];
+}
+
+message GetUsersResponse {
+  repeated User data = 1;
+}
+
+message GetUserResponse {
+  User data = 1;
+}
+
+message GetHomeResponse {
+  string message = 1;
+}
+
+message SignInResponse {
+  string token = 1;
+}
