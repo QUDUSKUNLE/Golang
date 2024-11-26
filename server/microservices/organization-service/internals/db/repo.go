@@ -1,4 +1,4 @@
-package repository
+package db
 
 import (
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
