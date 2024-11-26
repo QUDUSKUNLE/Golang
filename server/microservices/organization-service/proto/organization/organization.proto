@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/organization-service/protogen/golang/shipping";
+
+import "google/api/annotations.proto";
+
+service ShippingService {
+  rpc Create(CreateShippingRequest) returns (Response) {
+    option (google.api.http) = {
+      post: "/v1/organization",
+      body: "*"
+    };
+  }
+}
+
+message CreateShippingRequest {
+  string email = 1 [json_name = "email"];
+  string password = 2 [json_name = "password"];
+  string confirm_password = 3 [json_name = "confirm_password"];
+}
+
+message Response {
+  string data = 1 [json_name = "response"];
+}

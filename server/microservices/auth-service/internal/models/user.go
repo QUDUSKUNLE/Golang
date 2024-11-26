@@ -23,6 +23,7 @@ type (
 		UpdatedAt *time.Time      `json:"updated_at"`
 		DeletedAt *gorm.DeletedAt `gorm:"index" json:"-"`
 		Email     string          `json:"email" gorm:"unique"`
+		Nin       string          `json:"nin" gorm:"unique"`
 		Password  string          `json:"password"`
 		UserType  UserType        `json:"user_type"`
 	}
