@@ -1,32 +1,17 @@
 package db
 
 import (
-	"fmt"
+	"context"
 	"log"
+	"os"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/models"
-	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
-	repo "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/repository"
-	usecase "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func DbConn(host, user, dbname, password string) *gorm.DB {
-	db, err := gorm.Open(
-		postgres.Open(fmt.Sprintf("host=%s user=%s dbname=%s password=%s port=5432 sslmode=disable", host, user, dbname, password)), &gorm.Config{},
-	)
+func DbConn(host, user, dbname, password string) *Queries {
+	database, err := pgxpool.New(context.Background(), os.Getenv("DB_URL"))
 	if err != nil {
 		log.Fatalf("There was error connecting to the database: %v", err)
 	}
-	if err = db.AutoMigrate(&models.User{}); err != nil {
-		fmt.Println(err)
-	}
-	return db
-}
-
-func InitUserServer(db *gorm.DB) interfaces.UseCaseInterface {
-	userRepo := repo.NewRepository(db)
-	return usecase.New(userRepo)
+	return New(database)
 }

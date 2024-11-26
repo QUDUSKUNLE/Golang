@@ -14,10 +14,10 @@ import (
 type UserEnum string
 
 const (
-	UserEnumUser         UserEnum = "user"
-	UserEnumOrganization UserEnum = "organization"
-	UserEnumCarrier      UserEnum = "carrier"
-	UserEnumAdmin        UserEnum = "admin"
+	UserEnumUSER         UserEnum = "USER"
+	UserEnumORGANIZATION UserEnum = "ORGANIZATION"
+	UserEnumCARRIER      UserEnum = "CARRIER"
+	UserEnumADMIN        UserEnum = "ADMIN"
 )
 
 func (e *UserEnum) Scan(src interface{}) error {
@@ -33,8 +33,8 @@ func (e *UserEnum) Scan(src interface{}) error {
 }
 
 type NullUserEnum struct {
-	UserEnum UserEnum
-	Valid    bool // Valid is true if UserEnum is not NULL
+	UserEnum UserEnum `json:"user_enum"`
+	Valid    bool     `json:"valid"` // Valid is true if UserEnum is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -55,12 +55,32 @@ func (ns NullUserEnum) Value() (driver.Value, error) {
 	return string(ns.UserEnum), nil
 }
 
+func (e UserEnum) Valid() bool {
+	switch e {
+	case UserEnumUSER,
+		UserEnumORGANIZATION,
+		UserEnumCARRIER,
+		UserEnumADMIN:
+		return true
+	}
+	return false
+}
+
+func AllUserEnumValues() []UserEnum {
+	return []UserEnum{
+		UserEnumUSER,
+		UserEnumORGANIZATION,
+		UserEnumCARRIER,
+		UserEnumADMIN,
+	}
+}
+
 type User struct {
-	ID        pgtype.UUID
-	Email     pgtype.Text
-	Nin       pgtype.Text
-	Password  string
-	UserType  NullUserEnum
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ID        string             `db:"id" json:"id"`
+	Email     pgtype.Text        `db:"email" json:"email"`
+	Nin       pgtype.Text        `db:"nin" json:"nin"`
+	Password  string             `db:"password" json:"password"`
+	UserType  UserEnum           `db:"user_type" json:"user_type"`
+	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }

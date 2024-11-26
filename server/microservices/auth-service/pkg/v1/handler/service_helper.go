@@ -4,46 +4,45 @@ import (
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/models"
+	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 )
 
 type CustomContext struct {
-	User models.CurrentUser `json:"user"`
+	User dto.CurrentUser `json:"user"`
 }
 
 type JwtCustomClaims struct {
-	ID       uuid.UUID `json:"id"`
-	UserType string    `json:"user_type"`
+	ID       string          `json:"id"`
+	UserType db.NullUserEnum `json:"user_type"`
 	jwt.RegisteredClaims
 }
 
-func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) models.User {
-	return models.User{Password: req.GetPassword(), Email: req.GetEmail(), UserType: models.UserType(req.GetUserType())}
+func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
+	return dto.UserDto{Password: req.GetPassword(), Email: req.GetEmail(), ConfirmPassword: req.GetConfirmPassword(), UserType: db.UserEnum(req.GetUserType().String())}
 }
 
-func (srv *UserServiceStruct) transformUsers(us []*models.User) *userProtoc.GetUsersResponse {
+func (srv *UserServiceStruct) transformUsers(us []*db.User) *userProtoc.GetUsersResponse {
 	users := make([]*userProtoc.User, 0)
 	for _, user := range us {
 		users = append(users, &userProtoc.User{
-			Id:        user.ID.String(),
-			Email:     user.Email,
-			CreatedAt: user.CreatedAt.String(),
-			UpdatedAt: user.UpdatedAt.String(),
+			Email:     user.Email.String,
+			CreatedAt: user.CreatedAt.Time.String(),
+			UpdatedAt: user.UpdatedAt.Time.String(),
 		})
 	}
 	return &userProtoc.GetUsersResponse{Data: users}
 }
 
-func (srv *UserServiceStruct) transformToken(user models.CurrentUser) (string, error) {
+func (srv *UserServiceStruct) transformToken(user dto.CurrentUser) (string, error) {
 	// Get JWT_SECRET_KEY
 	secret := os.Getenv("JWT_SECRET_KEY")
 	// Create a new claims
 	claims := &JwtCustomClaims{
 		user.ID,
-		string(user.UserType),
+		user.UserType,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
 		},

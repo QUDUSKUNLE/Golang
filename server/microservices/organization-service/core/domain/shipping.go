@@ -59,16 +59,3 @@ func (shipping *Shipping) BuildNewShipping(ship ShippingDto) []*Shipping {
 	}
 	return shipments
 }
-
-// func (shipping *Shipping) BuildPickUp(shipments []*Shipping) pick_up.PickUpDto {
-// 	shippings := pick_up.PickUpDto{}
-// 	for _, shipment := range shipments {
-// 		shippings.PickUps = append(shippings.PickUps, pick_up.SinglePickUpDto{
-// 			CarrierID:  shipment.CarrierID,
-// 			ShippingID: shipment.ID,
-// 			PickUpAt:   time.Now(),
-// 			Status:     pick_up.SCHEDULED,
-// 		})
-// 	}
-// 	return shippings
-// }

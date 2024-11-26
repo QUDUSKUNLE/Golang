@@ -9,6 +9,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/config"
 	dbconfig "github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
 	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"
 	"google.golang.org/grpc"
 )
 
@@ -30,7 +31,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	userUseCase := dbconfig.InitUserServer(db)
+	userUseCase := usecase.InitUserServer(db)
 	handler.NewServer(grpcServer, userUseCase)
 
 	log.Printf("Auth Service listening at %v", listen.Addr())

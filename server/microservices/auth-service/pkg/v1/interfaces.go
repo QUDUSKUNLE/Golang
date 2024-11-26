@@ -1,24 +1,21 @@
 package v1
 
 import (
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/models"
+	"context"
+
+	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type RepositoryInterface interface {
-	CreateUser(models.User) error
-	GetUsers() ([]*models.User, error)
-	GetUser(id string) (models.User, error)
-	Update(models.User) error
-	Delete(id string) error
-	GetByEmail(email string) (models.User, error)
-	LogIn(user models.LogInDto) (models.User, error)
+	CreateUser(ctx context.Context, user db.CreateUserParams) (*db.User, error)
+	GetUser(ctx context.Context, id string) (*db.User, error)
+	GetUserByEmail(ctx context.Context, email pgtype.Text) (*db.User, error)
 }
 
 type UseCaseInterface interface {
-	CreateUser(user models.User) error
-	GetUsers() ([]*models.User, error)
-	GetUser(id string) (models.User, error)
-	Update(user models.User) error
-	Delete(id string) error
-	LogIn(user models.LogInDto) (models.User, error)
+	CreateUser(ctx context.Context, user db.CreateUserParams) (*db.User, error)
+	GetUser(ctx context.Context, id string) (*db.User, error)
+	Login(ctx context.Context, user dto.LogInDto) (*db.User, error)
 }

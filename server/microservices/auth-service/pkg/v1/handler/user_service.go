@@ -4,30 +4,34 @@ import (
 	"context"
 	"errors"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/models"
+	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
 	data := srv.transformUserRPC(req)
-	if data.Email == "" || data.Password == "" || data.UserType == "" {
+	if data.Email == "" || data.Password == "" || string(data.UserType) == "" {
 		return &userProtoc.SuccessResponse{}, errors.New("please provide all fields")
-	} else if data.Password != req.GetConfirmPassword() {
+	} else if data.Password != data.ConfirmPassword {
 		return &userProtoc.SuccessResponse{}, errors.New("incorrect passwords")
 	}
-
-	if err := srv.useCase.CreateUser(data); err != nil {
+	user, err := dto.BuildNewUser(data)
+	if err != nil {
+		return &userProtoc.SuccessResponse{}, err
+	}
+	_, err = srv.useCase.CreateUser(
+		ctx, db.CreateUserParams{
+			Email:    user.Email,
+			Nin:      pgtype.Text{String: "", Valid: true},
+			Password: user.Password,
+			UserType: user.UserType,
+		})
+	if err != nil {
 		return &userProtoc.SuccessResponse{}, err
 	}
 	return &userProtoc.SuccessResponse{Data: "User registered successfully."}, nil
-}
-
-func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.GetUsersRequest) (*userProtoc.GetUsersResponse, error) {
-	users, err := srv.useCase.GetUsers()
-	if err != nil {
-		return &userProtoc.GetUsersResponse{}, errors.New("users not found")
-	}
-	return srv.transformUsers(users), nil
 }
 
 func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUserRequest) (*userProtoc.GetUserResponse, error) {
@@ -35,12 +39,11 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 	if id == "" {
 		return &userProtoc.GetUserResponse{}, errors.New("id cannot be blank")
 	}
-
-	user, err := srv.useCase.GetUser(id)
+	user, err := srv.useCase.GetUser(ctx, id)
 	if err != nil {
 		return &userProtoc.GetUserResponse{}, errors.New("user not found")
 	}
-	data := &userProtoc.User{Id: user.ID.String(), Email: user.Email, CreatedAt: user.CreatedAt.String(), UpdatedAt: user.UpdatedAt.Local().String()}
+	data := &userProtoc.User{Id: user.ID, Email: user.Email.String, CreatedAt: user.CreatedAt.Time.String(), UpdatedAt: user.UpdatedAt.Time.String()}
 	return &userProtoc.GetUserResponse{
 		Data: data}, nil
 }
@@ -51,11 +54,18 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 	if email == "" || password == "" {
 		return &userProtoc.SignInResponse{}, errors.New("please provide all fields")
 	}
-	user, err := srv.useCase.LogIn(models.LogInDto{Email: email, Password: password})
+	user, err := srv.useCase.Login(ctx, dto.LogInDto{Email: email, Password: password})
 	if err != nil {
 		return &userProtoc.SignInResponse{}, err
 	}
-	token, err := srv.transformToken(models.CurrentUser{ID: user.ID, UserType: models.USER.ReturnUserString()})
+
+	if err = dto.ComparePassword(*user, password); err != nil {
+		return &userProtoc.SignInResponse{}, err
+	}
+	token, err := srv.transformToken(dto.CurrentUser{
+		ID:       user.ID,
+		UserType: db.NullUserEnum{UserEnum: user.UserType},
+	})
 	return &userProtoc.SignInResponse{Token: token}, nil
 }
 

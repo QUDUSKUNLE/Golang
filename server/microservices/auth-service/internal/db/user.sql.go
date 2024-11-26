@@ -11,11 +11,49 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createUser = `-- name: CreateUser :one
+INSERT INTO users (
+  email,
+  nin,
+  password,
+  user_type
+) VALUES  (
+  $1, $2, $3, $4
+) RETURNING id, email, nin, password, user_type, created_at, updated_at
+`
+
+type CreateUserParams struct {
+	Email    pgtype.Text `db:"email" json:"email"`
+	Nin      pgtype.Text `db:"nin" json:"nin"`
+	Password string      `db:"password" json:"password"`
+	UserType UserEnum    `db:"user_type" json:"user_type"`
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*User, error) {
+	row := q.db.QueryRow(ctx, createUser,
+		arg.Email,
+		arg.Nin,
+		arg.Password,
+		arg.UserType,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Nin,
+		&i.Password,
+		&i.UserType,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT id, email, nin, password, user_type, created_at, updated_at FROM users where id = $1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id pgtype.UUID) (User, error) {
+func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
 	row := q.db.QueryRow(ctx, getUser, id)
 	var i User
 	err := row.Scan(
@@ -27,5 +65,24 @@ func (q *Queries) GetUser(ctx context.Context, id pgtype.UUID) (User, error) {
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
-	return i, err
+	return &i, err
+}
+
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT id, email, nin, password, user_type, created_at, updated_at FROM users WHERE email = $1
+`
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User, error) {
+	row := q.db.QueryRow(ctx, getUserByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Nin,
+		&i.Password,
+		&i.UserType,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
 }
