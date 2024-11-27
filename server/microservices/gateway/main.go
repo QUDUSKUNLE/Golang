@@ -14,6 +14,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/QUDUSKUNLE/microservices/gateway/config"
+	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 )
 
 var request_count = prometheus.NewCounter(
@@ -50,12 +51,16 @@ func main() {
 		log.Fatalf("Did not connect: %v", err)
 	}
 	defer shipping_conn.Close()
-
 	mux := runtime.NewServeMux()
+
 
 	if err = user.RegisterUserServiceHandler(context.Background(), mux, auth_conn); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
+	if err = organization.RegisterOrganizationServiceHandler(context.Background(), mux, organization_conn); err != nil {
+		log.Fatalf("Failed to register the organizatin service handler: %v", err)
+	}
+
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
 	fmt.Println("Gateway server running on port: " + addr)
 	prometheus.MustRegister(request_count)

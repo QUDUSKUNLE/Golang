@@ -7,5 +7,5 @@ import (
 )
 
 func (handler *OrganizationServiceStruct) CreateOrganization(ctx context.Context, req *organization.CreateOrganizationRequest) (*organization.CreateOrganizationResponse, error) {
-	return nil, nil
+	return &organization.CreateOrganizationResponse{Id: "1", CreatedAt: "Okay"}, nil
 }
