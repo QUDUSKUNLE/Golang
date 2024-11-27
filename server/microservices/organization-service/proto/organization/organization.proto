@@ -1,10 +1,10 @@
 syntax = "proto3";
-option go_package = "github.com/QUDUSKUNLE/microservices/services/organization-service/protogen/golang/shipping";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/organization-service/protogen/golang/organization";
 
 import "google/api/annotations.proto";
 
-service ShippingService {
-  rpc Create(CreateShippingRequest) returns (Response) {
+service OrganizationService {
+  rpc CreateOrganization(CreateOrganizationRequest) returns (CreateOrganizationResponse) {
     option (google.api.http) = {
       post: "/v1/organization",
       body: "*"
@@ -12,12 +12,12 @@ service ShippingService {
   }
 }
 
-message CreateShippingRequest {
-  string email = 1 [json_name = "email"];
-  string password = 2 [json_name = "password"];
-  string confirm_password = 3 [json_name = "confirm_password"];
+message CreateOrganizationRequest {
+  string user_id = 1 [json_name = "user_id"];
 }
 
-message Response {
-  string data = 1 [json_name = "response"];
+message CreateOrganizationResponse {
+  string id = 1 [json_name = "id"];
+  string created_at = 2 [json_name = "created_at"];
+  string updated_at = 3 [json_name = "updated_at"];
 }

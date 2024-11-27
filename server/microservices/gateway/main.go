@@ -39,11 +39,11 @@ func main() {
 	}
 	defer auth_conn.Close()
 
-	order_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("ORDER_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	organization_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("ORGANIZATION_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
-	defer order_conn.Close()
+	defer organization_conn.Close()
 
 	shipping_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("SHIPPING_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {

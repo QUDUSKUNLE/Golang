@@ -21,10 +21,8 @@ func init() {
 }
 
 func main() {
-	host, user, dbname, password, port := os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), os.Getenv("DB_PASSWORD"), os.Getenv("PORT")
-	db := dbconfig.DbConn(host, user, dbname, password)
-
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	db := dbconfig.DbConn()
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("PORT")))
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
