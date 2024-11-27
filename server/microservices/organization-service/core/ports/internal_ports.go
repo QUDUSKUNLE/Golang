@@ -1,20 +1,18 @@
 package ports
 
 import (
-	shipping "github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
-	"github.com/google/uuid"
+	"context"
+
+	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
+	"github.com/QUDUSKUNLE/microservices/organization-service/internal/db"
 )
 
-// Ports that connect internal services of the app
 type RepositoryPorts interface {
-	CreateShipping(shipping []*shipping.Shipping) error
-	GetShippings(shippingID uuid.UUID, status string) ([]*shipping.Shipping, error)
-	GetShipping(shippingID, userID uuid.UUID) (*shipping.Shipping, error)
+	CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error)
+	GetOrganization(ctx context.Context, id string) (*db.Organization, error)
 }
 
-// Ports that connect internal services of the app
-type ShippingPorts interface {
-	CreateShipping(shipping []*shipping.Shipping) error
-	GetShippings(shippingID uuid.UUID, status string) ([]*shipping.Shipping, error)
-	GetShipping(shippingID, userID uuid.UUID) (*shipping.Shipping, error)
+type UseCasePorts interface {
+	CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error)
+	GetOrganization(ctx context.Context, id string) (*db.Organization, error)
 }
