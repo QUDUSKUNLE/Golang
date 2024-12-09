@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
@@ -18,6 +17,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	} else if data.Password != data.ConfirmPassword {
 		return nil, status.Error(codes.InvalidArgument, Incorrect_Password)
 	}
+
 	user, err := dto.BuildNewUser(data)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())

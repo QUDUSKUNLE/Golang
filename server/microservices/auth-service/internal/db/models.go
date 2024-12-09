@@ -16,7 +16,6 @@ type UserEnum string
 const (
 	UserEnumUSER         UserEnum = "USER"
 	UserEnumORGANIZATION UserEnum = "ORGANIZATION"
-	UserEnumCARRIER      UserEnum = "CARRIER"
 	UserEnumADMIN        UserEnum = "ADMIN"
 )
 
@@ -59,7 +58,6 @@ func (e UserEnum) Valid() bool {
 	switch e {
 	case UserEnumUSER,
 		UserEnumORGANIZATION,
-		UserEnumCARRIER,
 		UserEnumADMIN:
 		return true
 	}
@@ -70,7 +68,6 @@ func AllUserEnumValues() []UserEnum {
 	return []UserEnum{
 		UserEnumUSER,
 		UserEnumORGANIZATION,
-		UserEnumCARRIER,
 		UserEnumADMIN,
 	}
 }

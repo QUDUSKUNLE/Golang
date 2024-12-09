@@ -13,7 +13,7 @@ type (
 		Email           string      `json:"email" validate:"email,required"`
 		Password        string      `json:"password" validate:"min=8,required"`
 		ConfirmPassword string      `json:"confirm_password" validate:"eqfield=Password"`
-		UserType        db.UserEnum `json:"user_type" validate:"oneof=USER CARRIER,required"`
+		UserType        db.UserEnum `json:"user_type"`
 	}
 	LogInDto struct {
 		Email    string `json:"email" validate:"email,required"`

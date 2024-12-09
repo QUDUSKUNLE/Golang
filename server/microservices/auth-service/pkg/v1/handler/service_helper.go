@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -11,12 +12,12 @@ import (
 )
 
 const (
-	All_Fields         = "Please provide all fields"
-	Incorrect_Password = "Incorrect passwords"
-	Provide_ID  =  "Id is required"
-	Not_Found = "User`s not found"
+	All_Fields              = "Please provide all fields"
+	Incorrect_Password      = "Incorrect passwords"
+	Provide_ID              = "Id is required"
+	Not_Found               = "User`s not found"
 	Registered_Successfully = "User registered successfully."
-	Welcome_Home = "Welcome to Bahsoon Shipping Inc."
+	Welcome_Home            = "Welcome to Bahsoon Shipping Inc."
 )
 
 type CustomContext struct {
@@ -30,6 +31,7 @@ type JwtCustomClaims struct {
 }
 
 func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
+	fmt.Println(req.GetUserType(), "UserType")
 	return dto.UserDto{Password: req.GetPassword(), Email: req.GetEmail(), ConfirmPassword: req.GetConfirmPassword(), UserType: db.UserEnum(req.GetUserType().String())}
 }
 

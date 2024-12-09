@@ -5,12 +5,15 @@ import (
 	"log"
 	"net"
 	"os"
+	// "context"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/config"
 	dbconfig "github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
 	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	// "github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 )
 
 func init() {
@@ -26,6 +29,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
+
+	organization_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("ORGANIZATION_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+	}
+	defer organization_conn.Close()
 
 	grpcServer := grpc.NewServer()
 
