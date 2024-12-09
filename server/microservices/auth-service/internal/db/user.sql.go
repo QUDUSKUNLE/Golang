@@ -86,3 +86,32 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 	)
 	return &i, err
 }
+
+const updateNin = `-- name: UpdateNin :one
+UPDATE users
+SET
+  nin = COALESCE($1, nin),
+  updated_at = NOW()
+WHERE id = $2
+RETURNING id, email, nin, password, user_type, created_at, updated_at
+`
+
+type UpdateNinParams struct {
+	Nin pgtype.Text `db:"nin" json:"nin"`
+	ID  string      `db:"id" json:"id"`
+}
+
+func (q *Queries) UpdateNin(ctx context.Context, arg UpdateNinParams) (*User, error) {
+	row := q.db.QueryRow(ctx, updateNin, arg.Nin, arg.ID)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Nin,
+		&i.Password,
+		&i.UserType,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}

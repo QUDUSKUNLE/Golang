@@ -24,6 +24,7 @@ const (
 	UserService_Read_FullMethodName      = "/UserService/Read"
 	UserService_Signin_FullMethodName    = "/UserService/Signin"
 	UserService_Home_FullMethodName      = "/UserService/Home"
+	UserService_UpdateNin_FullMethodName = "/UserService/UpdateNin"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -35,6 +36,7 @@ type UserServiceClient interface {
 	Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	Signin(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	Home(ctx context.Context, in *HomeRequest, opts ...grpc.CallOption) (*GetHomeResponse, error)
+	UpdateNin(ctx context.Context, in *UpdateNinRequest, opts ...grpc.CallOption) (*UpdateNinResponse, error)
 }
 
 type userServiceClient struct {
@@ -90,6 +92,15 @@ func (c *userServiceClient) Home(ctx context.Context, in *HomeRequest, opts ...g
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateNin(ctx context.Context, in *UpdateNinRequest, opts ...grpc.CallOption) (*UpdateNinResponse, error) {
+	out := new(UpdateNinResponse)
+	err := c.cc.Invoke(ctx, UserService_UpdateNin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type UserServiceServer interface {
 	Read(context.Context, *SingleUserRequest) (*GetUserResponse, error)
 	Signin(context.Context, *SignInRequest) (*SignInResponse, error)
 	Home(context.Context, *HomeRequest) (*GetHomeResponse, error)
+	UpdateNin(context.Context, *UpdateNinRequest) (*UpdateNinResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedUserServiceServer) Signin(context.Context, *SignInRequest) (*
 }
 func (UnimplementedUserServiceServer) Home(context.Context, *HomeRequest) (*GetHomeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Home not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateNin(context.Context, *UpdateNinRequest) (*UpdateNinResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateNin not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -224,6 +239,24 @@ func _UserService_Home_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateNin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateNinRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateNin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UpdateNin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateNin(ctx, req.(*UpdateNinRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Home",
 			Handler:    _UserService_Home_Handler,
+		},
+		{
+			MethodName: "UpdateNin",
+			Handler:    _UserService_UpdateNin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

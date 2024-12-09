@@ -26,6 +26,10 @@ func (u *Repository) GetUserByEmail(ctx context.Context, email pgtype.Text) (*db
 	return u.database.GetUserByEmail(ctx, email)
 }
 
+func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.User, error) {
+	return u.database.UpdateNin(ctx, user)
+}
+
 func NewRepository(dbase *db.Queries) interfaces.RepositoryInterface {
 	return &Repository{database: dbase}
 }

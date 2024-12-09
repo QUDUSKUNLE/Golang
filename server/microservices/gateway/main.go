@@ -34,29 +34,28 @@ func main() {
 		request_count.Inc()
 	})
 
-	auth_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("AUTH_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// Auth service
+	auth_conn, err := grpc.NewClient(os.Getenv("AUTH"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
 	defer auth_conn.Close()
 
-	organization_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("ORGANIZATION_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// Organization service
+	organization_conn, err := grpc.NewClient(os.Getenv("ORGANIZATION"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 	}
 	defer organization_conn.Close()
 
-	shipping_conn, err := grpc.NewClient(fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("SHIPPING_PORT")), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	defer shipping_conn.Close()
+	// Initialize runtime server
 	mux := runtime.NewServeMux()
 
-
+	// Register AuthServiceHandler
 	if err = user.RegisterUserServiceHandler(context.Background(), mux, auth_conn); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
+	// Register OrganizationServiceHandler
 	if err = organization.RegisterOrganizationServiceHandler(context.Background(), mux, organization_conn); err != nil {
 		log.Fatalf("Failed to register the organizatin service handler: %v", err)
 	}

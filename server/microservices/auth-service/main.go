@@ -27,11 +27,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
-	conn := fmt.Sprintf("%v:%v", os.Getenv("HOST"), os.Getenv("ORGANIZATION_PORT"))
-	fmt.Println(conn)
 	userUseCase := usecase.InitUserServer(db)
 	grpcServer := grpc.NewServer()
-	handler.NewServer(grpcServer, userUseCase, conn)
+	handler.NewServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
 	log.Printf("Auth Service listening at %v", listen.Addr())

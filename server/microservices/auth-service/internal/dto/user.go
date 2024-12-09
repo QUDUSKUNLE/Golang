@@ -19,6 +19,10 @@ type (
 		Email    string `json:"email" validate:"email,required"`
 		Password string `json:"password" validate:"min=8,required"`
 	}
+	UpdateNinDto struct {
+		Nin string `json:"nin" validate:"required"`
+		UserID string `json:"user_id" validate:""`
+	}
 	ResetPasswordDto struct {
 		Email string `json:"email" validate:"email,required"`
 	}

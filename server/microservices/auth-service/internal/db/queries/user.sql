@@ -13,3 +13,11 @@ INSERT INTO users (
 
 -- name: GetUserByEmail :one
 SELECT * FROM users WHERE email = $1;
+
+-- name: UpdateNin :one
+UPDATE users
+SET
+  nin = COALESCE($1, nin),
+  updated_at = NOW()
+WHERE id = $2
+RETURNING *;
