@@ -3,10 +3,11 @@ option go_package = "github.com/QUDUSKUNLE/microservices/services/auth-service/p
 
 import "google/api/annotations.proto";
 
-enum Usertype {
-  USER = 0;
-  ORGANIZATION = 1;
-  ADMIN = 2;
+enum UserType {
+  UNSPECIFIED = 0;
+  USER = 1;
+  ORGANIZATION = 2;
+  ADMIN = 3;
 }
 
 service UserService {
@@ -43,7 +44,7 @@ message CreateUserRequest {
   string email = 1 [json_name = "email"];
   string password = 2 [json_name = "password"];
   string confirm_password = 3 [json_name = "confirm_password"];
-  Usertype user_type = 4 [json_name = "user_type"];
+  UserType user_type = 4 [json_name = "user_type"];
 }
 
 message GetUsersRequest {}

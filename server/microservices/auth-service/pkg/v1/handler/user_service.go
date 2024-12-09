@@ -2,9 +2,11 @@ package handler
 
 import (
 	"context"
+
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,19 +20,25 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 		return nil, status.Error(codes.InvalidArgument, Incorrect_Password)
 	}
 
-	user, err := dto.BuildNewUser(data)
+	built_user, err := dto.BuildNewUser(data)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	_, err = srv.useCase.CreateUser(
+	user, err := srv.useCase.CreateUser(
 		ctx, db.CreateUserParams{
-			Email:    user.Email,
+			Email:    built_user.Email,
 			Nin:      pgtype.Text{String: "", Valid: true},
-			Password: user.Password,
-			UserType: user.UserType,
+			Password: built_user.Password,
+			UserType: built_user.UserType,
 		})
 	if err != nil {
 		return nil, status.Error(codes.AlreadyExists, err.Error())
+	}
+	if data.UserType == db.UserEnumORGANIZATION {
+		_, err := srv.organizationService.CreateOrganization(ctx, domain.OrganizationDto{UserID: user.ID})
+		if err != nil {
+			return nil, status.Error(codes.Aborted, err.Error())
+		}
 	}
 	return &userProtoc.SuccessResponse{Data: Registered_Successfully}, nil
 }
