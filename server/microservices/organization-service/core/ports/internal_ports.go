@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
-	"github.com/QUDUSKUNLE/microservices/organization-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/organization-service/db"
 )
 
 type RepositoryPorts interface {

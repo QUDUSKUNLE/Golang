@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -31,7 +30,6 @@ type JwtCustomClaims struct {
 }
 
 func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
-	fmt.Println(req.GetUserType(), "UserType")
 	return dto.UserDto{Password: req.GetPassword(), Email: req.GetEmail(), ConfirmPassword: req.GetConfirmPassword(), UserType: db.UserEnum(req.GetUserType().String())}
 }
 

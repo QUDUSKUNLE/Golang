@@ -2,19 +2,19 @@ package handler
 
 import (
 	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/client"
 	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
-	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
+	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"google.golang.org/grpc"
 )
 
 type UserServiceStruct struct {
 	useCase interfaces.UseCaseInterface
+	organizationService ports.UseCasePorts
 	user.UnimplementedUserServiceServer
-	organization.UnimplementedOrganizationServiceServer
 }
 
-func NewServer(grpcServer *grpc.Server, usecase interfaces.UseCaseInterface) {
-	userGrpc := &UserServiceStruct{useCase: usecase}
-	user.RegisterUserServiceServer(grpcServer, userGrpc)
-	organization.RegisterOrganizationServiceServer(grpcServer, userGrpc)
+func NewServer(server *grpc.Server, usecase interfaces.UseCaseInterface, conn string) {
+	userServiceController := &UserServiceStruct{useCase: usecase, organizationService: client.NewGRPCOrganizationService(conn)}
+	user.RegisterUserServiceServer(server, userServiceController)
 }
