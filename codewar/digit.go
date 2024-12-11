@@ -1,4 +1,4 @@
-package codewars
+package codewar
 
 import (
 	"strconv"

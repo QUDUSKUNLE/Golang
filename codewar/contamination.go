@@ -1,4 +1,4 @@
-package codewars
+package codewar
 
 /*
 An AI has infected a text with a character!!
@@ -12,7 +12,7 @@ There will never be a case when both are empty as nothing is going on!!
 
 Note: The character is a string of length 1 or an empty string.
 
-*/ 
+*/
 
 import (
 	"strings"

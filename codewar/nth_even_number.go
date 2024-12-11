@@ -1,4 +1,4 @@
-package codewars
+package codewar
 
 /*
 Return the Nth Even Number

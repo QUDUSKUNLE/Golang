@@ -15,6 +15,7 @@ const (
 	Incorrect_Password      = "Incorrect passwords"
 	Provide_ID              = "Id is required"
 	Not_Found               = "User`s not found"
+	Nin_Required						= "Nin is required"
 	Registered_Successfully = "User registered successfully."
 	Welcome_Home            = "Welcome to Bahsoon Shipping Inc."
 )
@@ -24,6 +25,7 @@ type CustomContext struct {
 }
 
 type JwtCustomClaims struct {
+	// Authorized bool       `json:"authorized"`
 	ID       string          `json:"id"`
 	UserType db.NullUserEnum `json:"user_type"`
 	jwt.RegisteredClaims
@@ -50,6 +52,7 @@ func (srv *UserServiceStruct) transformToken(user dto.CurrentUser) (string, erro
 	secret := os.Getenv("JWT_SECRET_KEY")
 	// Create a new claims
 	claims := &JwtCustomClaims{
+		// Authorized: true,
 		user.ID,
 		user.UserType,
 		jwt.RegisteredClaims{

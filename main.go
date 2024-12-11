@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/QUDUSKUNLE/Golang/tutorial/codewars"
+	"github.com/QUDUSKUNLE/Golang/tutorial/codewar"
 )
 
 func Solve(s string, a, b int) string {
@@ -31,7 +31,8 @@ func main() {
 	// fmt.Println(Solve("codewars", 1,5))
 	// fmt.Println(len("Print"))
 	// fmt.Println(codewars.Contamination("abcd", "z"))
-	fmt.Println(codewars.Digitize(1234567))
+	fmt.Println(codewar.Digitize(1234567))
+	fmt.Println(codewar.MultiTable(3456))
 	// fmt.Println(codewars.)
 	// fmt.Println(codewars.)
 	// strings(strings)

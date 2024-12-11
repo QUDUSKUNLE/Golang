@@ -9,6 +9,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/auth-service/internal/config"
 	dbconfig "github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
 	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
+	middleware "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -28,7 +29,7 @@ func main() {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
 	userUseCase := usecase.InitUserServer(db)
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(middleware.UnaryServerInterceptor))
 	handler.NewServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 

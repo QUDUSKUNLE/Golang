@@ -40,7 +40,7 @@ service UserService {
   }
   rpc UpdateNin(UpdateNinRequest) returns (UpdateNinResponse) {
     option (google.api.http) = {
-      put: "/v1/update",
+      put: "/v1/users",
       body: "*"
     };
   }

@@ -65,7 +65,7 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 	}
 	user, err := srv.useCase.Login(ctx, dto.LogInDto{Email: email, Password: password})
 	if err != nil {
-		return nil, status.Error(codes.NotFound, err.Error())
+		return nil, status.Error(codes.NotFound, "incorrect log in credentials")
 	}
 
 	if err = dto.ComparePassword(*user, password); err != nil {
@@ -76,6 +76,26 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 		UserType: db.NullUserEnum{UserEnum: user.UserType},
 	})
 	return &userProtoc.SignInResponse{Token: token}, nil
+}
+
+func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.UpdateNinRequest) (*userProtoc.UpdateNinResponse, error) {
+	UserID, ok := ctx.Value("UserID").(string)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+	nin := req.GetNin()
+	if nin == "" {
+		return nil, status.Error(codes.InvalidArgument, Nin_Required)
+	}
+	_, err := srv.useCase.UpdateNin(ctx, db.UpdateNinParams{
+		Nin: pgtype.Text{
+			String: nin, Valid: true,
+		},
+		ID: UserID})
+	if err != nil {
+		return nil, status.Error(codes.Unimplemented, err.Error())
+	}
+	return &userProtoc.UpdateNinResponse{Data: "Nin updated successfully"}, nil
 }
 
 func (srv *UserServiceStruct) Home(ctx context.Context, req *userProtoc.HomeRequest) (*userProtoc.GetHomeResponse, error) {
