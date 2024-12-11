@@ -10,13 +10,11 @@ require (
 	golang.org/x/crypto v0.28.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20241021214115-324edc3d5d38
 	google.golang.org/protobuf v1.35.1
-	gorm.io/gorm v1.25.12
 )
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
@@ -32,11 +30,7 @@ require (
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/jackc/pgtype v1.14.4
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/text v0.19.0 // indirect
 	google.golang.org/grpc v1.68.0
-	gorm.io/driver/postgres v1.5.9
 )
