@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -24,7 +24,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	user, err := srv.useCase.CreateUser(
+	user, err := srv.userService.CreateUser(
 		ctx, db.CreateUserParams{
 			Email:    built_user.Email,
 			Nin:      pgtype.Text{String: "", Valid: true},
@@ -48,7 +48,7 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 	if id == "" {
 		return nil, status.Error(codes.InvalidArgument, Provide_ID)
 	}
-	user, err := srv.useCase.GetUser(ctx, id)
+	user, err := srv.userService.GetUser(ctx, id)
 	if err != nil {
 		return nil, status.Error(codes.NotFound, Not_Found)
 	}
@@ -63,7 +63,7 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 	if email == "" || password == "" {
 		return nil, status.Error(codes.InvalidArgument, All_Fields)
 	}
-	user, err := srv.useCase.Login(ctx, dto.LogInDto{Email: email, Password: password})
+	user, err := srv.userService.Login(ctx, dto.LogInDto{Email: email, Password: password})
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "incorrect log in credentials")
 	}
@@ -87,7 +87,7 @@ func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.Upd
 	if nin == "" {
 		return nil, status.Error(codes.InvalidArgument, Nin_Required)
 	}
-	_, err := srv.useCase.UpdateNin(ctx, db.UpdateNinParams{
+	_, err := srv.userService.UpdateNin(ctx, db.UpdateNinParams{
 		Nin: pgtype.Text{
 			String: nin, Valid: true,
 		},

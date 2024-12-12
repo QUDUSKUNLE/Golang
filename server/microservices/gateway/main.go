@@ -15,6 +15,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/QUDUSKUNLE/microservices/gateway/config"
 	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
+	"github.com/QUDUSKUNLE/microservices/record-service/protogen/golang/record"
 )
 
 var request_count = prometheus.NewCounter(
@@ -48,6 +49,13 @@ func main() {
 	}
 	defer organization_conn.Close()
 
+	// Record service
+	record_conn, err := grpc.NewClient(os.Getenv("RECORD"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+	}
+	defer record_conn.Close()
+
 	// Initialize runtime server
 	mux := runtime.NewServeMux()
 
@@ -55,9 +63,15 @@ func main() {
 	if err = user.RegisterUserServiceHandler(context.Background(), mux, auth_conn); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
+
 	// Register OrganizationServiceHandler
 	if err = organization.RegisterOrganizationServiceHandler(context.Background(), mux, organization_conn); err != nil {
 		log.Fatalf("Failed to register the organizatin service handler: %v", err)
+	}
+
+	// Register RecordServiceHandler
+	if err = record.RegisterRecordServiceHandler(context.Background(), mux, record_conn); err != nil {
+		log.Fatalf("Failed to register the record service handler: %v", err)
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))

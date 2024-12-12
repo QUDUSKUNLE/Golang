@@ -3,7 +3,7 @@ package dto
 import (
 	"errors"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/jackc/pgx/v5/pgtype"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -20,7 +20,7 @@ type (
 		Password string `json:"password" validate:"min=8,required"`
 	}
 	UpdateNinDto struct {
-		Nin string `json:"nin" validate:"required"`
+		Nin    string `json:"nin" validate:"required"`
 		UserID string `json:"user_id" validate:""`
 	}
 	ResetPasswordDto struct {

@@ -4,8 +4,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -15,7 +15,7 @@ const (
 	Incorrect_Password      = "Incorrect passwords"
 	Provide_ID              = "Id is required"
 	Not_Found               = "User`s not found"
-	Nin_Required						= "Nin is required"
+	Nin_Required            = "Nin is required"
 	Registered_Successfully = "User registered successfully."
 	Welcome_Home            = "Welcome to Bahsoon Shipping Inc."
 )

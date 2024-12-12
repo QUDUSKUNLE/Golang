@@ -3,7 +3,7 @@ package repo
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -13,7 +13,7 @@ type Repository struct {
 }
 
 // CreateUser implements v1.UseCaseInterface.
-func (u *Repository) CreateUser(ctx context.Context, user db.CreateUserParams) (*db.User, error) {
+func (u *Repository) CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error) {
 	return u.database.CreateUser(ctx, user)
 }
 
@@ -26,7 +26,7 @@ func (u *Repository) GetUserByEmail(ctx context.Context, email pgtype.Text) (*db
 	return u.database.GetUserByEmail(ctx, email)
 }
 
-func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.User, error) {
+func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error) {
 	return u.database.UpdateNin(ctx, user)
 }
 

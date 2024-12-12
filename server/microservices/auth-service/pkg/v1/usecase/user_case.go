@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/dto"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	repo "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/repository"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -15,7 +15,7 @@ type UseCase struct {
 }
 
 // UpdateNin implements v1.UseCaseInterface.
-func (u *UseCase) UpdateNin(ctx context.Context, data db.UpdateNinParams) (*db.User, error) {
+func (u *UseCase) UpdateNin(ctx context.Context, data db.UpdateNinParams) (*db.UpdateNinRow, error) {
 	return u.repo.UpdateNin(ctx, data)
 }
 
@@ -30,7 +30,7 @@ func (u *UseCase) Login(ctx context.Context, user dto.LogInDto) (*db.User, error
 }
 
 // CreateUser implements v1.UseCaseInterface.
-func (u *UseCase) CreateUser(ctx context.Context, user db.CreateUserParams) (*db.User, error) {
+func (u *UseCase) CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error) {
 	return u.repo.CreateUser(ctx, user)
 }
 

@@ -19,7 +19,7 @@ INSERT INTO users (
   user_type
 ) VALUES  (
   $1, $2, $3, $4
-) RETURNING id, email, nin, password, user_type, created_at, updated_at
+) RETURNING id, email, nin, user_type, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -29,19 +29,27 @@ type CreateUserParams struct {
 	UserType UserEnum    `db:"user_type" json:"user_type"`
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*User, error) {
+type CreateUserRow struct {
+	ID        string             `db:"id" json:"id"`
+	Email     pgtype.Text        `db:"email" json:"email"`
+	Nin       pgtype.Text        `db:"nin" json:"nin"`
+	UserType  UserEnum           `db:"user_type" json:"user_type"`
+	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*CreateUserRow, error) {
 	row := q.db.QueryRow(ctx, createUser,
 		arg.Email,
 		arg.Nin,
 		arg.Password,
 		arg.UserType,
 	)
-	var i User
+	var i CreateUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
 		&i.Nin,
-		&i.Password,
 		&i.UserType,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -93,7 +101,7 @@ SET
   nin = COALESCE($1, nin),
   updated_at = NOW()
 WHERE id = $2
-RETURNING id, email, nin, password, user_type, created_at, updated_at
+RETURNING id, email, user_type, created_at, updated_at
 `
 
 type UpdateNinParams struct {
@@ -101,14 +109,20 @@ type UpdateNinParams struct {
 	ID  string      `db:"id" json:"id"`
 }
 
-func (q *Queries) UpdateNin(ctx context.Context, arg UpdateNinParams) (*User, error) {
+type UpdateNinRow struct {
+	ID        string             `db:"id" json:"id"`
+	Email     pgtype.Text        `db:"email" json:"email"`
+	UserType  UserEnum           `db:"user_type" json:"user_type"`
+	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}
+
+func (q *Queries) UpdateNin(ctx context.Context, arg UpdateNinParams) (*UpdateNinRow, error) {
 	row := q.db.QueryRow(ctx, updateNin, arg.Nin, arg.ID)
-	var i User
+	var i UpdateNinRow
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.Nin,
-		&i.Password,
 		&i.UserType,
 		&i.CreatedAt,
 		&i.UpdatedAt,

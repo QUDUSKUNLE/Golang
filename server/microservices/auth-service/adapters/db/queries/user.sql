@@ -9,7 +9,7 @@ INSERT INTO users (
   user_type
 ) VALUES  (
   $1, $2, $3, $4
-) RETURNING *;
+) RETURNING id, email, nin, user_type, created_at, updated_at;
 
 -- name: GetUserByEmail :one
 SELECT * FROM users WHERE email = $1;
@@ -20,4 +20,4 @@ SET
   nin = COALESCE($1, nin),
   updated_at = NOW()
 WHERE id = $2
-RETURNING *;
+RETURNING id, email, user_type, created_at, updated_at;

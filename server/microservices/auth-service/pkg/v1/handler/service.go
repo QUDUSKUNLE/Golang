@@ -9,12 +9,15 @@ import (
 )
 
 type UserServiceStruct struct {
-	useCase interfaces.UseCaseInterface
+	userService         interfaces.UseCaseInterface
 	organizationService ports.UseCasePorts
 	user.UnimplementedUserServiceServer
 }
 
 func NewServer(server *grpc.Server, usecase interfaces.UseCaseInterface, conn string) {
-	userServiceController := &UserServiceStruct{useCase: usecase, organizationService: client.NewGRPCOrganizationService(conn)}
+	userServiceController := &UserServiceStruct{
+		userService:         usecase,
+		organizationService: client.NewGRPCOrganizationService(conn),
+	}
 	user.RegisterUserServiceServer(server, userServiceController)
 }

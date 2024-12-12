@@ -2,14 +2,14 @@ package client
 
 import (
 	"time"
+
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-const defaultRequestTimeout = time.Second * 10
-
+const DefaultRequestTimeout = time.Second * 10
 
 type organizationService struct {
 	grpcClient organization.OrganizationServiceClient

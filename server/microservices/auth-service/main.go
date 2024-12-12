@@ -6,8 +6,8 @@ import (
 	"net"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/internal/config"
-	dbconfig "github.com/QUDUSKUNLE/microservices/auth-service/internal/db"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/config"
+	dbconfig "github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
 	middleware "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"

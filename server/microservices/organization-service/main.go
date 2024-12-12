@@ -6,8 +6,8 @@ import (
 	"net"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/config"
+	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/usecase"
 	"github.com/QUDUSKUNLE/microservices/organization-service/db"
 	"google.golang.org/grpc"
