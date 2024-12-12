@@ -1,0 +1,45 @@
+syntax = "proto3";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/record-service/protogen/golang/record";
+
+import "google/api/annotations.proto";
+
+service RecordService {
+  rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse) {
+    option (google.api.http) = {
+      post: "/v1/records",
+      body: "*"
+    };
+  }
+  rpc GetRecord(GetRecordRequest) returns (GetRecordResponse) {
+    option (google.api.http) = {
+      get: "/v1/records/{id}",
+    };
+  }
+}
+
+message CreateRecordRequest {
+  string user_id = 1 [json_name = "user_id"];
+  string record = 2 [json_name = "record"];
+}
+
+message CreateRecordResponse {
+  string id = 1 [json_name = "id"];
+  string organization_id = 2 [json_name = "organization_id"];
+  string user_id = 3 [json_name = "user_id"];
+  string record = 4 [json_name = "record"];
+  string created_at = 5 [json_name = "created_at"];
+  string updated_at = 6 [json_name = "updated_at"];
+}
+
+message GetRecordRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message GetRecordResponse {
+  string id = 1 [json_name = "id"];
+  string organization_id = 2 [json_name = "organization_id"];
+  string user_id = 3 [json_name = "user_id"];
+  string record = 4 [json_name = "record"];
+  string created_at = 5 [json_name = "created_at"];
+  string updated_at = 6 [json_name = "updated_at"];
+}
