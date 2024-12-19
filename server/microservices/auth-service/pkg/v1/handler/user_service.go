@@ -14,12 +14,6 @@ import (
 
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
 	data := srv.transformUserRPC(req)
-	if data.Email == "" || data.Password == "" || string(data.UserType) == "" {
-		return nil, status.Error(codes.InvalidArgument, All_Fields)
-	} else if data.Password != data.ConfirmPassword {
-		return nil, status.Error(codes.InvalidArgument, Incorrect_Password)
-	}
-
 	built_user, err := dto.BuildNewUser(data)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -44,11 +38,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 }
 
 func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUserRequest) (*userProtoc.GetUserResponse, error) {
-	id := req.GetId()
-	if id == "" {
-		return nil, status.Error(codes.InvalidArgument, Provide_ID)
-	}
-	user, err := srv.userService.GetUser(ctx, id)
+	user, err := srv.userService.GetUser(ctx, req.GetId())
 	if err != nil {
 		return nil, status.Error(codes.NotFound, Not_Found)
 	}
@@ -59,10 +49,6 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 
 func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignInRequest) (*userProtoc.SignInResponse, error) {
 	email, password := req.GetEmail(), req.GetPassword()
-
-	if email == "" || password == "" {
-		return nil, status.Error(codes.InvalidArgument, All_Fields)
-	}
 	user, err := srv.userService.Login(ctx, dto.LogInDto{Email: email, Password: password})
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "incorrect log in credentials")
@@ -83,13 +69,9 @@ func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.Upd
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
-	nin := req.GetNin()
-	if nin == "" {
-		return nil, status.Error(codes.InvalidArgument, Nin_Required)
-	}
 	_, err := srv.userService.UpdateNin(ctx, db.UpdateNinParams{
 		Nin: pgtype.Text{
-			String: nin, Valid: true,
+			String: req.GetNin(), Valid: true,
 		},
 		ID: UserID})
 	if err != nil {

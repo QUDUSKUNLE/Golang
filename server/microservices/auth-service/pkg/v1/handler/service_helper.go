@@ -17,7 +17,7 @@ const (
 	Not_Found               = "User`s not found"
 	Nin_Required            = "Nin is required"
 	Registered_Successfully = "User registered successfully."
-	Welcome_Home            = "Welcome to Bahsoon Shipping Inc."
+	Welcome_Home            = "Welcome to Scan Records scanrecords.com."
 )
 
 type CustomContext struct {

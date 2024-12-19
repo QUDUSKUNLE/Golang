@@ -22,3 +22,13 @@ func (this *organizationService) CreateOrganization(ctx context.Context, user do
 func (this *organizationService) GetOrganization(ctx context.Context, id string) (*db.Organization, error) {
 	panic("unimplemented")
 }
+
+// GetOrganizationID implements ports.UseCasePorts.
+func (this *organizationService) GetOrganizationByUserID(ctx context.Context, user_id string) (*db.Organization, error) {
+	req := &organization.GetOrganizationByUserIDRequest{UserId: user_id}
+	res, err := this.organizationGrpcClient.GetOrganizationByUserID(ctx, req)
+	if err != nil {
+		return &db.Organization{}, nil
+	}
+	return &db.Organization{ID: res.Id, UserID: res.UserId}, nil
+}

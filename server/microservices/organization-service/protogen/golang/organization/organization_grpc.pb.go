@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OrganizationService_CreateOrganization_FullMethodName = "/OrganizationService/CreateOrganization"
-	OrganizationService_GetOrganization_FullMethodName    = "/OrganizationService/GetOrganization"
+	OrganizationService_CreateOrganization_FullMethodName      = "/OrganizationService/CreateOrganization"
+	OrganizationService_GetOrganization_FullMethodName         = "/OrganizationService/GetOrganization"
+	OrganizationService_GetOrganizationByUserID_FullMethodName = "/OrganizationService/GetOrganizationByUserID"
 )
 
 // OrganizationServiceClient is the client API for OrganizationService service.
@@ -29,6 +30,7 @@ const (
 type OrganizationServiceClient interface {
 	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*CreateOrganizationResponse, error)
 	GetOrganization(ctx context.Context, in *GetOrganizationRequest, opts ...grpc.CallOption) (*GetOrganizationResponse, error)
+	GetOrganizationByUserID(ctx context.Context, in *GetOrganizationByUserIDRequest, opts ...grpc.CallOption) (*GetOrganizationResponse, error)
 }
 
 type organizationServiceClient struct {
@@ -57,12 +59,22 @@ func (c *organizationServiceClient) GetOrganization(ctx context.Context, in *Get
 	return out, nil
 }
 
+func (c *organizationServiceClient) GetOrganizationByUserID(ctx context.Context, in *GetOrganizationByUserIDRequest, opts ...grpc.CallOption) (*GetOrganizationResponse, error) {
+	out := new(GetOrganizationResponse)
+	err := c.cc.Invoke(ctx, OrganizationService_GetOrganizationByUserID_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrganizationServiceServer is the server API for OrganizationService service.
 // All implementations must embed UnimplementedOrganizationServiceServer
 // for forward compatibility
 type OrganizationServiceServer interface {
 	CreateOrganization(context.Context, *CreateOrganizationRequest) (*CreateOrganizationResponse, error)
 	GetOrganization(context.Context, *GetOrganizationRequest) (*GetOrganizationResponse, error)
+	GetOrganizationByUserID(context.Context, *GetOrganizationByUserIDRequest) (*GetOrganizationResponse, error)
 	mustEmbedUnimplementedOrganizationServiceServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedOrganizationServiceServer) CreateOrganization(context.Context
 }
 func (UnimplementedOrganizationServiceServer) GetOrganization(context.Context, *GetOrganizationRequest) (*GetOrganizationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganization not implemented")
+}
+func (UnimplementedOrganizationServiceServer) GetOrganizationByUserID(context.Context, *GetOrganizationByUserIDRequest) (*GetOrganizationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationByUserID not implemented")
 }
 func (UnimplementedOrganizationServiceServer) mustEmbedUnimplementedOrganizationServiceServer() {}
 
@@ -125,6 +140,24 @@ func _OrganizationService_GetOrganization_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrganizationService_GetOrganizationByUserID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationByUserIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServiceServer).GetOrganizationByUserID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrganizationService_GetOrganizationByUserID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServiceServer).GetOrganizationByUserID(ctx, req.(*GetOrganizationByUserIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrganizationService_ServiceDesc is the grpc.ServiceDesc for OrganizationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var OrganizationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrganization",
 			Handler:    _OrganizationService_GetOrganization_Handler,
+		},
+		{
+			MethodName: "GetOrganizationByUserID",
+			Handler:    _OrganizationService_GetOrganizationByUserID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -15,6 +15,12 @@ service OrganizationService {
       get: "/v1/organizations/{id}",
     };
   }
+
+  rpc GetOrganizationByUserID(GetOrganizationByUserIDRequest) returns (GetOrganizationResponse) {
+    option (google.api.http) = {
+      get: "/v1/organizations/users/{user_id}",
+    };
+  }
 }
 
 message CreateOrganizationRequest {
@@ -30,6 +36,10 @@ message CreateOrganizationResponse {
 
 message GetOrganizationRequest {
   string id = 1 [json_name = "id"];
+}
+
+message GetOrganizationByUserIDRequest {
+  string user_id = 1 [json_name = "user_id"];
 }
 
 message GetOrganizationResponse {

@@ -8,6 +8,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/config"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/handler"
+	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/usecase"
 	"github.com/QUDUSKUNLE/microservices/record-service/db"
 	"google.golang.org/grpc"
@@ -27,7 +28,12 @@ func main() {
 		log.Fatalf("Error starting record service: %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			middleware.UnaryServerInterceptor(),
+			middleware.ValidationInterceptor(),
+		),
+	)
 	recordUseCase := usecase.InitializeRecordService(dbase)
 	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("AUTH"))
 	log.Printf("Record Service listening on %v", listen.Addr())

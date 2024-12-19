@@ -13,6 +13,11 @@ type UseCase struct {
 	usecase ports.RepositoryPorts
 }
 
+// GetOrganizationID implements ports.UseCasePorts.
+func (u *UseCase) GetOrganizationByUserID(ctx context.Context, user_id string) (*db.Organization, error) {
+	return u.usecase.GetOrganizationByUserID(ctx, user_id)
+}
+
 // CreateOrganization implements ports.UseCasePorts.
 func (u *UseCase) CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error) {
 	return u.usecase.CreateOrganization(ctx, user)

@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	CreateOrganization(ctx context.Context, userID string) (*Organization, error)
 	GetOrganization(ctx context.Context, id string) (*Organization, error)
+	GetOrganizationByUserID(ctx context.Context, userID string) (*Organization, error)
 }
 
 var _ Querier = (*Queries)(nil)

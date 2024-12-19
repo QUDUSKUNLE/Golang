@@ -44,3 +44,19 @@ func (q *Queries) GetOrganization(ctx context.Context, id string) (*Organization
 	)
 	return &i, err
 }
+
+const getOrganizationByUserID = `-- name: GetOrganizationByUserID :one
+SELECT id, user_id, created_at, updated_at FROM organizations WHERE user_id = $1
+`
+
+func (q *Queries) GetOrganizationByUserID(ctx context.Context, userID string) (*Organization, error) {
+	row := q.db.QueryRow(ctx, getOrganizationByUserID, userID)
+	var i Organization
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}

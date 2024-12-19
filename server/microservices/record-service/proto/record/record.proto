@@ -15,6 +15,26 @@ service RecordService {
       get: "/v1/records/{id}",
     };
   }
+  rpc GetRecords(GetRecordsRequest) returns (GetRecordsResponse) {
+    option (google.api.http) = {
+      get: "/v1/records/organizations",
+    };
+  }
+}
+
+message GetRecordsRequest {}
+
+message Record {
+  string id = 1 [json_name = "id"];
+  string organization_id = 2 [json_name = "organization_id"];
+  string user_id = 3 [json_name = "user_id"];
+  string record = 4 [json_name = "record"];
+  string created_at = 5 [json_name = "created_at"];
+  string updated_at = 6 [json_name = "updated_at"];
+}
+
+message GetRecordsResponse {
+  repeated Record records = 1 [json_name = "records"];
 }
 
 message CreateRecordRequest {

@@ -12,6 +12,11 @@ type Repository struct {
 	database *db.Queries
 }
 
+// GetOrganizationID implements ports.RepositoryPorts.
+func (r *Repository) GetOrganizationByUserID(ctx context.Context, user_id string) (*db.Organization, error) {
+	return r.database.GetOrganizationByUserID(ctx, user_id)
+}
+
 // CreateOrganization implements ports.RepositoryPorts.
 func (r *Repository) CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error) {
 	return r.database.CreateOrganization(ctx, user.UserID)

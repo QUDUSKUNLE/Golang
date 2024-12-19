@@ -8,6 +8,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/config"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
+	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/middleware"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/usecase"
 	"github.com/QUDUSKUNLE/microservices/organization-service/db"
 	"google.golang.org/grpc"
@@ -27,7 +28,9 @@ func main() {
 		log.Fatalf("Error starting organization service: %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
+		middleware.ValidationInterceptor,
+	))
 	organizationUseCase := usecase.InitOrganizationServer(dbase)
 	handler.NewOrganizationServer(grpcServer, organizationUseCase)
 	log.Printf("Organization Service listening at %v", listen.Addr())

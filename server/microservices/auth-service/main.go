@@ -29,7 +29,11 @@ func main() {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
 	userUseCase := usecase.InitUserServer(db)
-	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(middleware.UnaryServerInterceptor))
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			middleware.UnaryServerInterceptor(),
+			middleware.ValidationInterceptor(),
+		))
 	handler.NewServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 

@@ -21,3 +21,8 @@ func (o *organizationService) CreateOrganization(ctx context.Context, user domai
 func (o *organizationService) GetOrganization(ctx context.Context, id string) (*db.Organization, error) {
 	panic("unimplemented")
 }
+
+// GetOrganizationID implements ports.UseCasePorts.
+func (o *organizationService) GetOrganizationByUserID(ctx context.Context, user_id string) (*db.Organization, error) {
+	panic("unimplemented")
+}
