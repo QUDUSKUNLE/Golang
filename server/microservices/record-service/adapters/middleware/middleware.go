@@ -45,11 +45,9 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 				return nil, status.Errorf(codes.InvalidArgument, "Record or UserID cannot be empty")
 			}
 		}
-		if _, ok := req.(*record.GetRecordsRequest); ok {
-		}
 		organization_user := ctx.Value("user").(*UserType)
 		if organization_user.Type != "ORGANIZATION" {
-			return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+			return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform this operation.")
 		}
 		return handler(ctx, req)
 	}

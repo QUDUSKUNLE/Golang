@@ -2,7 +2,7 @@ package middleware
 
 const (
 	CreateRecord = "/RecordService/CreateRecord"
-	GetRecords = "/RecordsService/GetRecords"
+	GetRecords   = "/RecordService/GetRecords"
 )
 
 type UserType struct {
