@@ -23,9 +23,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 		switch info.FullMethod {
-		case CreateRecord:
-			return urinaryHelper(ctx, req, handler)
-		case GetRecords:
+		case CreateRecord, GetRecords, GetRecord, ScanUpload:
 			return urinaryHelper(ctx, req, handler)
 		default:
 			return handler(ctx, req)
@@ -43,6 +41,11 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		if r, ok := req.(*record.CreateRecordRequest); ok {
 			if r.Record == "" || r.UserId == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Record or UserID cannot be empty")
+			}
+		}
+		if r, ok := req.(*record.ScanUploadRequest); ok {
+			if r.ScanTitle == "" || r.FileName == "" || r.UserId == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "ScanTitle or FileName or UserID cannot be empty")
 			}
 		}
 		organization_user := ctx.Value("user").(*UserType)

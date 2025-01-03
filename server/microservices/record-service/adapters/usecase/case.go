@@ -13,6 +13,11 @@ type UseCase struct {
 	usecase ports.RepositoryPorts
 }
 
+// UploadRecord implements ports.UseCasePorts.
+func (u *UseCase) UploadRecord(ctx context.Context, record domain.UploadDto) (*db.Upload, error) {
+	return u.usecase.UploadRecord(ctx, record)
+}
+
 // GetRecords implements ports.UseCasePorts.
 func (u *UseCase) GetRecords(ctx context.Context, organizationID string) ([]*db.Record, error) {
 	return u.usecase.GetRecords(ctx, organizationID)

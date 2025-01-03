@@ -16,3 +16,13 @@ type Record struct {
 	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
+
+type Upload struct {
+	ID             string             `db:"id" json:"id"`
+	OrganizationID string             `db:"organization_id" json:"organization_id"`
+	UserID         string             `db:"user_id" json:"user_id"`
+	ScanTitle      string             `db:"scan_title" json:"scan_title"`
+	FileName       string             `db:"file_name" json:"file_name"`
+	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}

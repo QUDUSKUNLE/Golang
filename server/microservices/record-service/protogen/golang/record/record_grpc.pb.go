@@ -22,6 +22,7 @@ const (
 	RecordService_CreateRecord_FullMethodName = "/RecordService/CreateRecord"
 	RecordService_GetRecord_FullMethodName    = "/RecordService/GetRecord"
 	RecordService_GetRecords_FullMethodName   = "/RecordService/GetRecords"
+	RecordService_ScanUpload_FullMethodName   = "/RecordService/ScanUpload"
 )
 
 // RecordServiceClient is the client API for RecordService service.
@@ -31,6 +32,7 @@ type RecordServiceClient interface {
 	CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*CreateRecordResponse, error)
 	GetRecord(ctx context.Context, in *GetRecordRequest, opts ...grpc.CallOption) (*GetRecordResponse, error)
 	GetRecords(ctx context.Context, in *GetRecordsRequest, opts ...grpc.CallOption) (*GetRecordsResponse, error)
+	ScanUpload(ctx context.Context, opts ...grpc.CallOption) (RecordService_ScanUploadClient, error)
 }
 
 type recordServiceClient struct {
@@ -68,6 +70,40 @@ func (c *recordServiceClient) GetRecords(ctx context.Context, in *GetRecordsRequ
 	return out, nil
 }
 
+func (c *recordServiceClient) ScanUpload(ctx context.Context, opts ...grpc.CallOption) (RecordService_ScanUploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &RecordService_ServiceDesc.Streams[0], RecordService_ScanUpload_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &recordServiceScanUploadClient{stream}
+	return x, nil
+}
+
+type RecordService_ScanUploadClient interface {
+	Send(*ScanUploadRequest) error
+	CloseAndRecv() (*ScanUploadResponse, error)
+	grpc.ClientStream
+}
+
+type recordServiceScanUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *recordServiceScanUploadClient) Send(m *ScanUploadRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *recordServiceScanUploadClient) CloseAndRecv() (*ScanUploadResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(ScanUploadResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // RecordServiceServer is the server API for RecordService service.
 // All implementations must embed UnimplementedRecordServiceServer
 // for forward compatibility
@@ -75,6 +111,7 @@ type RecordServiceServer interface {
 	CreateRecord(context.Context, *CreateRecordRequest) (*CreateRecordResponse, error)
 	GetRecord(context.Context, *GetRecordRequest) (*GetRecordResponse, error)
 	GetRecords(context.Context, *GetRecordsRequest) (*GetRecordsResponse, error)
+	ScanUpload(RecordService_ScanUploadServer) error
 	mustEmbedUnimplementedRecordServiceServer()
 }
 
@@ -90,6 +127,9 @@ func (UnimplementedRecordServiceServer) GetRecord(context.Context, *GetRecordReq
 }
 func (UnimplementedRecordServiceServer) GetRecords(context.Context, *GetRecordsRequest) (*GetRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRecords not implemented")
+}
+func (UnimplementedRecordServiceServer) ScanUpload(RecordService_ScanUploadServer) error {
+	return status.Errorf(codes.Unimplemented, "method ScanUpload not implemented")
 }
 func (UnimplementedRecordServiceServer) mustEmbedUnimplementedRecordServiceServer() {}
 
@@ -158,6 +198,32 @@ func _RecordService_GetRecords_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecordService_ScanUpload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(RecordServiceServer).ScanUpload(&recordServiceScanUploadServer{stream})
+}
+
+type RecordService_ScanUploadServer interface {
+	SendAndClose(*ScanUploadResponse) error
+	Recv() (*ScanUploadRequest, error)
+	grpc.ServerStream
+}
+
+type recordServiceScanUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *recordServiceScanUploadServer) SendAndClose(m *ScanUploadResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *recordServiceScanUploadServer) Recv() (*ScanUploadRequest, error) {
+	m := new(ScanUploadRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // RecordService_ServiceDesc is the grpc.ServiceDesc for RecordService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -178,6 +244,12 @@ var RecordService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RecordService_GetRecords_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "ScanUpload",
+			Handler:       _RecordService_ScanUpload_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "record/record.proto",
 }

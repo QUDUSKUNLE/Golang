@@ -12,6 +12,7 @@ type Querier interface {
 	CreateRecord(ctx context.Context, arg CreateRecordParams) (*Record, error)
 	GetRecord(ctx context.Context, id string) (*Record, error)
 	GetRecords(ctx context.Context, organizationID string) ([]*Record, error)
+	UploadRecord(ctx context.Context, arg UploadRecordParams) (*Upload, error)
 }
 
 var _ Querier = (*Queries)(nil)

@@ -88,3 +88,41 @@ func (q *Queries) GetRecords(ctx context.Context, organizationID string) ([]*Rec
 	}
 	return items, nil
 }
+
+const uploadRecord = `-- name: UploadRecord :one
+INSERT INTO uploads (
+  organization_id,
+  user_id,
+  scan_title,
+  file_name
+) VALUES  (
+  $1, $2, $3, $4
+) RETURNING id, organization_id, user_id, scan_title, file_name, created_at, updated_at
+`
+
+type UploadRecordParams struct {
+	OrganizationID string `db:"organization_id" json:"organization_id"`
+	UserID         string `db:"user_id" json:"user_id"`
+	ScanTitle      string `db:"scan_title" json:"scan_title"`
+	FileName       string `db:"file_name" json:"file_name"`
+}
+
+func (q *Queries) UploadRecord(ctx context.Context, arg UploadRecordParams) (*Upload, error) {
+	row := q.db.QueryRow(ctx, uploadRecord,
+		arg.OrganizationID,
+		arg.UserID,
+		arg.ScanTitle,
+		arg.FileName,
+	)
+	var i Upload
+	err := row.Scan(
+		&i.ID,
+		&i.OrganizationID,
+		&i.UserID,
+		&i.ScanTitle,
+		&i.FileName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}

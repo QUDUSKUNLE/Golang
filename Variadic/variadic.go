@@ -1,4 +1,5 @@
 package variadic
+
 import (
 	"fmt"
 )

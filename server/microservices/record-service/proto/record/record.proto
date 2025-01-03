@@ -20,9 +20,33 @@ service RecordService {
       get: "/v1/records/organizations",
     };
   }
+  rpc ScanUpload(stream ScanUploadRequest) returns (ScanUploadResponse) {
+    option (google.api.http) = {
+      post: "/v1/records/scans",
+      body: "*"
+    };
+  }
 }
 
 message GetRecordsRequest {}
+
+message ScanUploadRequest {
+  string user_id = 1 [json_name = "user_id"];
+  string scan_title = 2 [json_name = "scan_title"];
+  string file_name = 3 [json_name = "file_name"];
+  int32 chunk_number = 4 [json_name = "chunk_number"];
+  bytes content = 5 [json_name = "content"];
+}
+
+message ScanUploadResponse {
+  string id = 1 [json_name = "id"];
+  string organization_id = 2 [json_name = "organization_id"];
+  string user_id = 3 [json_name = "user_id"];
+  string scan_title = 4 [json_name = "scan_title"];
+  string file_name = 5 [json_name = "file_name"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
+}
 
 message Record {
   string id = 1 [json_name = "id"];
