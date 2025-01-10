@@ -28,6 +28,8 @@ func main() {
 		log.Fatalf("Error starting record service: %v", err)
 	}
 
+	defer listen.Close()
+
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
 			middleware.UnaryServerInterceptor(),
