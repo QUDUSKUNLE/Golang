@@ -11,6 +11,12 @@ Tasks:
 	2. function: variance(town, strng) should return the variance of rainfall for the city town and the strng data or data1.
 */
 
-// func Mean(town, strng string) float64 {}
+func Mean(town, strng string) float64 {
+	// Add your code here
+	return 0.0
+}
 
-// func Variance(town, strng string) float64 {}
+func Variance(town, strng string) float64 {
+	// Add your code here
+	return 0.0
+}
