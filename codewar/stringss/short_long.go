@@ -1,4 +1,4 @@
-package codewar
+package stringss
 
 import (
 	"fmt"

@@ -21,7 +21,13 @@ func ForRange() {
 	for i := range 3 {
 		fmt.Println("Range", i)
 	}
+
+	for _, v := range "Ade" {
+		fmt.Println("Range", string(v))
+	}
 }
+
+
 
 // func ArrayIntRange() {
 // 	nums := []int{2, 3, 4}

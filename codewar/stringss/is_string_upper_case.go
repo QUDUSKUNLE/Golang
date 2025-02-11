@@ -1,4 +1,4 @@
-package codewar
+package stringss
 
 /*
 Is the string uppercase?

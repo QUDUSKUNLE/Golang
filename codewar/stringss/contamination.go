@@ -1,4 +1,4 @@
-package codewar
+package stringss
 
 /*
 An AI has infected a text with a character!!
