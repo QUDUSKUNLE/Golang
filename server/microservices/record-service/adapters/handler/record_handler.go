@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"os"
 
@@ -91,8 +90,9 @@ func (this *RecordServiceStruct) ScanUpload(stream record.RecordService_ScanUplo
 
 	for {
 		chunk, err := stream.Recv()
-		// con := chunk.GetContent()
-		fmt.Println("Herrrrrrrrrrrrrrrrrrrrrrr", chunk.GetContent())
+		fileName = chunk.GetFileName()
+		userID = chunk.GetUserId()
+		scanTitle = chunk.GetScanTitle()
 		if err == io.EOF {
 			return stream.SendAndClose(&record.ScanUploadResponse{
 				FileName:  chunk.GetFileName(),
@@ -123,7 +123,6 @@ func (this *RecordServiceStruct) ScanUpload(stream record.RecordService_ScanUplo
 				FileName:  fileName,
 				UserId:    userID,
 				ScanTitle: scanTitle,
-				// Content: f,
 			})
 		}
 	}

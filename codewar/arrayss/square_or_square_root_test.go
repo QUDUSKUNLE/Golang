@@ -11,7 +11,7 @@ func TestSquareOrSquareRoot(t *testing.T) {
 		for i := 0; i < len(got); i++ {
 			if got[i] != want[i] {
 				t.Errorf("got %v want %v", got, want)
-			}	
+			}
 		}
 	})
 	t.Run("Testing square or square root function method 2", func(t *testing.T) {
@@ -23,6 +23,10 @@ func TestSquareOrSquareRoot(t *testing.T) {
 				}
 			}
 		}
-		assertFunction(t, SquareOrSquareRoot([]int{4, 3, 9, 7, 2, 1}), []int{2, 9, 3, 49, 4, 1})
+		assertFunction(
+			t,
+			SquareOrSquareRoot([]int{4, 3, 9, 7, 2, 1}),
+			[]int{2, 9, 3, 49, 4, 1},
+		)
 	})
 }

@@ -1,5 +1,4 @@
-package codewar
-
+package arrayss
 
 /*
 Given an array of integers.
@@ -8,23 +7,19 @@ Return an array, where the first element is the count of positives numbers and t
 
 If the input is an empty array or is null, return an empty array.
 
-*/ 
-
+*/
 
 func CountPositiveSumNegatives(numbers []int) []int {
-	var res []int
+	res := []int{0,0}
 	if len(numbers) == 0 {
 		return res
 	}
-	count := 0; sum := 0
 	for _, n := range numbers {
 		if n < 0 {
-			sum += n
+			res[1] += n
 		} else if n > 0 {
-			count++
+			res[0]++
 		}
 	}
-	res = append(res, count)
-	res = append(res, sum)
 	return res
 }

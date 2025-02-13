@@ -22,48 +22,33 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	// Auth service
-	auth_conn, err := grpc.NewClient(os.Getenv("AUTH"), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	defer auth_conn.Close()
-
-	// Organization service
-	organization_conn, err := grpc.NewClient(os.Getenv("ORGANIZATION"), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	defer organization_conn.Close()
-
-	// Record service
-	record_conn, err := grpc.NewClient(os.Getenv("RECORD"), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-	}
-	defer record_conn.Close()
-
 	// Initialize runtime server
 	mux := runtime.NewServeMux()
 
 	// Register AuthServiceHandler
-	if err = user.RegisterUserServiceHandler(context.Background(), mux, auth_conn); err != nil {
+	if err := user.RegisterUserServiceHandlerFromEndpoint(
+		context.Background(),
+		mux,
+		os.Getenv("AUTH"),[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
+	); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
 
 	// Register OrganizationServiceHandler
-	if err = organization.RegisterOrganizationServiceHandler(context.Background(), mux, organization_conn); err != nil {
-		log.Fatalf("Failed to register the organizatin service handler: %v", err)
+	if err := organization.RegisterOrganizationServiceHandlerFromEndpoint(
+		context.Background(), mux, os.Getenv("ORGANIZATION"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}); err != nil {
+		log.Fatalf("Failed to register the organization service handler: %v", err)
 	}
 
-	// Register RecordServiceHandler
-	if err = record.RegisterRecordServiceHandler(context.Background(), mux, record_conn); err != nil {
+	// Register RecordServiceHandlerFromEndpoint
+	if err := record.RegisterRecordServiceHandlerFromEndpoint(context.Background(), mux, os.Getenv("RECORD"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}); err != nil {
 		log.Fatalf("Failed to register the record service handler: %v", err)
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
 	fmt.Println("Gateway server running on port: " + addr)
-	if err = http.ListenAndServe(addr, mux); err != nil {
+
+	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("Gateway server closed abruptly: %v", err)
 	}
 }
