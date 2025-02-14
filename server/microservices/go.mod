@@ -23,6 +23,7 @@ require (
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/text v0.19.0 // indirect
 	google.golang.org/grpc v1.68.0
