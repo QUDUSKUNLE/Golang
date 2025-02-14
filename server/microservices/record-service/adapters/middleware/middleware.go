@@ -23,7 +23,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 		switch info.FullMethod {
-		case CreateRecord, GetRecords, GetRecord, ScanUpload:
+		case CreateRecord, GetRecords, GetRecord:
 			return urinaryHelper(ctx, req, handler)
 		default:
 			return handler(ctx, req)
@@ -31,7 +31,51 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
-func ValidationInterceptor() grpc.UnaryServerInterceptor {
+type wrappedServerStream struct {
+	grpc.ServerStream
+	newCtx context.Context
+}
+
+// Context returns the new context
+func (w *wrappedServerStream) Context() context.Context {
+	return w.newCtx
+}
+
+func StreamInterceptor() grpc.StreamServerInterceptor {
+	return func(
+		srv interface{},
+		ss grpc.ServerStream,
+		info *grpc.StreamServerInfo,
+		handler grpc.StreamHandler,
+	) error {
+		ctx := ss.Context()
+		md, ok := metadata.FromIncomingContext(ctx)
+		if !ok {
+			return status.Error(codes.Unauthenticated, "Metatdata is not provided")
+		}
+
+		// extract token from the authorization header
+		token := md["authorization"]
+		if len(token) == 0 {
+			return status.Error(codes.Unauthenticated, "Authorization token is not provided")
+		}
+		user, err := validateToken(ctx, strings.Split(token[0], " ")[1])
+		if err != nil {
+			return status.Error(codes.Unauthenticated, err.Error())
+		}
+
+		ctx = context.WithValue(ctx, "user", user)
+		// Calls the handler
+		wrappedStream := &wrappedServerStream{
+			ServerStream: ss,
+			newCtx:       ctx,
+		}
+		err = handler(srv, wrappedStream)
+		return err
+	}
+}
+
+func ValidateUnaryInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req interface{},
@@ -63,12 +107,12 @@ func urinaryHelper(
 ) (interface{}, error) {
 	meta, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "metatdata is not provided")
+		return nil, status.Error(codes.Unauthenticated, "Metatdata is not provided")
 	}
 	// extract token from the authorization header
 	token := meta["authorization"]
 	if len(token) == 0 {
-		return nil, status.Error(codes.Unauthenticated, "authorization token is not provided")
+		return nil, status.Error(codes.Unauthenticated, "Authorization token is not provided")
 	}
 	user, err := validateToken(ctx, strings.Split(token[0], " ")[1])
 	if err != nil {

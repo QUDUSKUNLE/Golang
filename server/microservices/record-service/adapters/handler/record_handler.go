@@ -87,42 +87,40 @@ func (this *RecordServiceStruct) ScanUpload(stream record.RecordService_ScanUplo
 	var userID string
 	var scanTitle string
 	var file *os.File
+	var fileData []byte
+
+	// Obtain context
+	ctx := stream.Context()
+	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	if !ok {
+		return status.Error(codes.PermissionDenied, "Unauthorized to perform operation")
+	}
 
 	for {
 		chunk, err := stream.Recv()
 		fileName = chunk.GetFileName()
 		userID = chunk.GetUserId()
 		scanTitle = chunk.GetScanTitle()
+
 		if err == io.EOF {
 			return stream.SendAndClose(&record.ScanUploadResponse{
-				FileName:  chunk.GetFileName(),
-				UserId:    chunk.GetUserId(),
-				ScanTitle: chunk.GetScanTitle(),
+				FileName:       chunk.GetFileName(),
+				UserId:         chunk.GetUserId(),
+				ScanTitle:      chunk.GetScanTitle(),
+				OrganizationId: organization_user.UserID,
 			})
 		}
 		if err != nil {
 			return status.Error(codes.Internal, err.Error())
 		}
-		if fileName == "" {
-			fileName = chunk.GetFileName()
-			userID = chunk.GetUserId()
-			scanTitle = chunk.GetScanTitle()
-			file, err = os.Create(fileName)
-			if err != nil {
-				return stream.SendAndClose(&record.ScanUploadResponse{
-					FileName:  fileName,
-					UserId:    userID,
-					ScanTitle: scanTitle,
-				})
-			}
-			defer file.Close()
-		}
-		_, err = file.Write(chunk.GetContent())
+		fileData = append(fileData, chunk.GetContent()...)
+		_, err = file.Write(fileData)
 		if err != nil {
 			return stream.SendAndClose(&record.ScanUploadResponse{
-				FileName:  fileName,
-				UserId:    userID,
-				ScanTitle: scanTitle,
+				FileName:       fileName,
+				UserId:         userID,
+				ScanTitle:      scanTitle,
+				OrganizationId: organization_user.UserID,
 			})
 		}
 	}

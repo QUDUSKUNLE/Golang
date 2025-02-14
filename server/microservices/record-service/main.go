@@ -31,9 +31,10 @@ func main() {
 	defer listen.Close()
 
 	grpcServer := grpc.NewServer(
+		grpc.StreamInterceptor(middleware.StreamInterceptor()),
 		grpc.ChainUnaryInterceptor(
 			middleware.UnaryServerInterceptor(),
-			middleware.ValidationInterceptor(),
+			middleware.ValidateUnaryInterceptor(),
 		),
 	)
 	recordUseCase := usecase.InitializeRecordService(dbase)

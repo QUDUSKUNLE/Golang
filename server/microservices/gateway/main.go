@@ -29,19 +29,24 @@ func main() {
 	if err := user.RegisterUserServiceHandlerFromEndpoint(
 		context.Background(),
 		mux,
-		os.Getenv("AUTH"),[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
+		os.Getenv("AUTH"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
 	); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
 
 	// Register OrganizationServiceHandler
 	if err := organization.RegisterOrganizationServiceHandlerFromEndpoint(
-		context.Background(), mux, os.Getenv("ORGANIZATION"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}); err != nil {
+		context.Background(),
+		mux,
+		os.Getenv("ORGANIZATION"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}); err != nil {
 		log.Fatalf("Failed to register the organization service handler: %v", err)
 	}
 
 	// Register RecordServiceHandlerFromEndpoint
-	if err := record.RegisterRecordServiceHandlerFromEndpoint(context.Background(), mux, os.Getenv("RECORD"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}); err != nil {
+	if err := record.RegisterRecordServiceHandlerFromEndpoint(
+		context.Background(),
+		mux,
+		os.Getenv("RECORD"), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}); err != nil {
 		log.Fatalf("Failed to register the record service handler: %v", err)
 	}
 
