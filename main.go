@@ -7,9 +7,7 @@ import (
 
 	"github.com/QUDUSKUNLE/Golang/tutorial/base"
 	"github.com/QUDUSKUNLE/Golang/tutorial/codewar"
-	// "github.com/QUDUSKUNLE/Golang/tutorial/codewar/array"
-	// "github.com/QUDUSKUNLE/Golang/tutorial/codewar/strin"
-	// "github.com/QUDUSKUNLE/Golang/tutorial/mtn"
+	"github.com/QUDUSKUNLE/Golang/tutorial/variable"
 )
 
 func main() {
@@ -29,6 +27,21 @@ func main() {
 	// Print the base64 encoded string
 	fmt.Println("Base64 Encoded Data:")
 	fmt.Println(base64Data)
-	// fmt.Println(codewar.ArrayDiff([]int{1, 2, 2, 2, 3}, []int{2,3}))
-	// fmt.Println(strin.ToAlternatingCase("hello world"))
+
+	// Create a new Base object
+	co := variable.Container{
+		Base: variable.Base{
+			Num: 42,
+		},
+		Str: "Hello, World!",
+	}
+	fmt.Printf("Container: %+v\n", co.Base.Num)
+	fmt.Printf("Container: %+v\n", co.Describe())
+
+	type Describer interface {
+		Describe() string
+	}
+
+	var d Describer = co
+	fmt.Println(d.Describe())
 }

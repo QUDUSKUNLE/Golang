@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"regexp"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/golang-jwt/jwt/v5"
@@ -13,6 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"github.com/google/uuid"
 )
 
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
@@ -43,16 +45,22 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 				return nil, status.Errorf(codes.InvalidArgument, "Email, Password and UserType cannot be empty")
 			} else if r.Password != r.ConfirmPassword {
 				return nil, status.Errorf(codes.InvalidArgument, "Password and ConfirmPassword must match")
+			} else if !ValidateEmail(r.Email) {
+				return nil, status.Errorf(codes.InvalidArgument, "Invalid email addrress.")
 			}
 		}
 		if r, ok := req.(*user.SingleUserRequest); ok {
 			if r.Id == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Id cannot be empty")
+			} else if !ValidateUUID(r.Id) {
+				return nil, status.Errorf(codes.InvalidArgument, "Invalid user identity.")
 			}
 		}
 		if r, ok := req.(*user.SignInRequest); ok {
 			if r.Email == "" || r.Password == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Email and Password cannot be empty")
+			} else if !ValidateEmail(r.Email) {
+				return nil, status.Errorf(codes.InvalidArgument, "Invalid email addrress.")
 			}
 		}
 		if r, ok := req.(*user.UpdateNinRequest); ok {
@@ -104,4 +112,15 @@ func validateToken(_ context.Context, token string) (*UserType, error) {
 		return &UserType{UserID: id, Type: ty}, nil
 	}
 	return &UserType{}, errors.New("invalid token")
+}
+
+func ValidateUUID(input string) bool {
+	_, err := uuid.Parse(input)
+	return err == nil
+}
+
+func ValidateEmail(email string) bool {
+	// Define a regular expression for validating an email
+	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	return emailRegex.MatchString(email)
 }

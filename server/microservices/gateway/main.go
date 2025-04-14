@@ -60,6 +60,7 @@ func main() {
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
+	log.Printf("Gateway server listening on port :%v", os.Getenv("GATEWAY_PORT"))
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("Gateway server closed abruptly: %v", err)
 	}
