@@ -16,7 +16,8 @@ const (
 	Provide_ID              = "Id is required"
 	Not_Found               = "User`s not found"
 	Nin_Required            = "Nin is required"
-	Registered_Successfully = "User registered successfully."
+	User_Registered_Successfully = "User registered successfully."
+	Organization_Registered_Successfully = "Organization registered successfully."
 	Welcome_Home            = "Welcome to Scan Records scanrecords.com."
 )
 
@@ -27,12 +28,12 @@ type CustomContext struct {
 type JwtCustomClaims struct {
 	// Authorized bool       `json:"authorized"`
 	ID       string          `json:"id"`
-	UserType db.NullUserEnum `json:"user_type"`
+	UserType string `json:"user_type"`
 	jwt.RegisteredClaims
 }
 
 func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
-	return dto.UserDto{Password: req.GetPassword(), Email: req.GetEmail(), ConfirmPassword: req.GetConfirmPassword(), UserType: db.UserEnum(req.GetUserType().String())}
+	return dto.UserDto{Password: req.GetPassword(), Email: req.GetEmail(), ConfirmPassword: req.GetConfirmPassword(), UserType: db.UserEnum(req.GetUserType().Enum().String())}
 }
 
 func (srv *UserServiceStruct) transformUsers(us []*db.User) *userProtoc.GetUsersResponse {

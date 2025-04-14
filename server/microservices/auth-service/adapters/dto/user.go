@@ -28,7 +28,7 @@ type (
 	}
 	CurrentUser struct {
 		ID       string          `json:"id"`
-		UserType db.NullUserEnum `json:"user_type"`
+		UserType string 					`json:"user_type"`
 	}
 	Response struct {
 		Data    interface{} `json:"data"`

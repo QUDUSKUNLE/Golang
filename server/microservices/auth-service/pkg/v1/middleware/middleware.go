@@ -5,16 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strings"
 	"regexp"
+	"strings"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"github.com/google/uuid"
 )
 
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
@@ -41,30 +41,24 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 		if r, ok := req.(*user.CreateUserRequest); ok {
-			if r.Email == "" || r.Password == "" || string(r.UserType) == "" {
+			if !ValidateEmail(r.Email) || r.Password == "" || string(r.UserType) == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Email, Password and UserType cannot be empty")
 			} else if r.Password != r.ConfirmPassword {
 				return nil, status.Errorf(codes.InvalidArgument, "Password and ConfirmPassword must match")
-			} else if !ValidateEmail(r.Email) {
-				return nil, status.Errorf(codes.InvalidArgument, "Invalid email addrress.")
 			}
 		}
 		if r, ok := req.(*user.SingleUserRequest); ok {
-			if r.Id == "" {
+			if !ValidateUUID(r.Id) {
 				return nil, status.Errorf(codes.InvalidArgument, "Id cannot be empty")
-			} else if !ValidateUUID(r.Id) {
-				return nil, status.Errorf(codes.InvalidArgument, "Invalid user identity.")
 			}
 		}
 		if r, ok := req.(*user.SignInRequest); ok {
-			if r.Email == "" || r.Password == "" {
+			if !ValidateEmail(r.Email) || r.Password == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Email and Password cannot be empty")
-			} else if !ValidateEmail(r.Email) {
-				return nil, status.Errorf(codes.InvalidArgument, "Invalid email addrress.")
 			}
 		}
 		if r, ok := req.(*user.UpdateNinRequest); ok {
-			if r.Nin == "" {
+			if !ValidateNIN(r.Nin) {
 				return nil, status.Errorf(codes.InvalidArgument, "Nin cannot be empty")
 			}
 		}
@@ -105,11 +99,11 @@ func validateToken(_ context.Context, token string) (*UserType, error) {
 		if !ok {
 			return &UserType{}, errors.New("failed to extract id from claims")
 		}
-		ty, ok := claims["user_type"].(string)
+		typ, ok := claims["user_type"].(string)
 		if !ok {
-			return &UserType{}, errors.New("failed to extract id from claims")
+			return &UserType{}, errors.New("failed to extract user_type from claims")
 		}
-		return &UserType{UserID: id, Type: ty}, nil
+		return &UserType{UserID: id, Type: typ}, nil
 	}
 	return &UserType{}, errors.New("invalid token")
 }
@@ -120,7 +114,9 @@ func ValidateUUID(input string) bool {
 }
 
 func ValidateEmail(email string) bool {
-	// Define a regular expression for validating an email
-	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	return emailRegex.MatchString(email)
+	return regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`).MatchString(email)
+}
+
+func ValidateNIN(nin string) bool {
+	return regexp.MustCompile(`^\d{11}$`).MatchString(nin)
 }

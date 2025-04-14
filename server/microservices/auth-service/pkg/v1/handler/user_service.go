@@ -33,8 +33,9 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 		if err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
+		return &userProtoc.SuccessResponse{Data: Organization_Registered_Successfully}, nil
 	}
-	return &userProtoc.SuccessResponse{Data: Registered_Successfully}, nil
+	return &userProtoc.SuccessResponse{Data: User_Registered_Successfully}, nil
 }
 
 func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUserRequest) (*userProtoc.GetUserResponse, error) {
@@ -59,7 +60,7 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 	}
 	token, err := srv.transformToken(dto.CurrentUser{
 		ID:       user.ID,
-		UserType: db.NullUserEnum{UserEnum: user.UserType},
+		UserType: string(user.UserType),
 	})
 	return &userProtoc.SignInResponse{Token: token}, nil
 }
