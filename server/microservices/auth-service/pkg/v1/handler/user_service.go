@@ -5,6 +5,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
 	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -66,7 +67,7 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 }
 
 func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.UpdateNinRequest) (*userProtoc.UpdateNinResponse, error) {
-	UserID, ok := ctx.Value("UserID").(string)
+	user, ok := ctx.Value("user").(*middleware.UserType)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
@@ -74,7 +75,7 @@ func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.Upd
 		Nin: pgtype.Text{
 			String: req.GetNin(), Valid: true,
 		},
-		ID: UserID})
+		ID: user.UserID})
 	if err != nil {
 		return nil, status.Error(codes.Unimplemented, err.Error())
 	}

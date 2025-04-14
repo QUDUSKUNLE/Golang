@@ -17,22 +17,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return func(
-		ctx context.Context,
-		req interface{},
-		info *grpc.UnaryServerInfo,
-		handler grpc.UnaryHandler,
-	) (interface{}, error) {
-		switch info.FullMethod {
-		case UpdateNin:
-			return urinaryHelper(ctx, req, handler)
-		default:
-			return handler(ctx, req)
-		}
-	}
-}
-
 func ValidationInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
@@ -59,10 +43,15 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		}
 		if r, ok := req.(*user.UpdateNinRequest); ok {
 			if !ValidateNIN(r.Nin) {
-				return nil, status.Errorf(codes.InvalidArgument, "Nin cannot be empty")
+				return nil, status.Errorf(codes.InvalidArgument, "Invalid NIN")
 			}
 		}
-		return handler(ctx, req)
+		switch info.FullMethod {
+		case UpdateNin:
+			return urinaryHelper(ctx, req, handler)
+		default:
+			return handler(ctx, req)
+		}
 	}
 }
 
@@ -76,11 +65,11 @@ func urinaryHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandl
 	if len(token) == 0 {
 		return nil, status.Error(codes.Unauthenticated, "Authorization token is not provided")
 	}
-	user, err := validateToken(ctx, strings.Split(token[0], " ")[1])
+	user_type, err := validateToken(ctx, strings.Split(token[0], " ")[1])
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
-	ctx = context.WithValue(ctx, "user", user)
+	ctx = context.WithValue(ctx, "user", user_type)
 	return handler(ctx, req)
 }
 

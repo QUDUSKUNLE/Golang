@@ -31,7 +31,7 @@ func main() {
 	userUseCase := usecase.InitUserServer(db)
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-			middleware.UnaryServerInterceptor(),
+			// middleware.UnaryServerInterceptor(),
 			middleware.ValidationInterceptor(),
 		))
 	handler.NewServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
