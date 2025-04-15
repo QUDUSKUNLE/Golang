@@ -95,6 +95,38 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 	return &i, err
 }
 
+const getUsers = `-- name: GetUsers :many
+SELECT id, email, nin, password, user_type, created_at, updated_at FROM users LIMIT 100
+`
+
+func (q *Queries) GetUsers(ctx context.Context) ([]*User, error) {
+	rows, err := q.db.Query(ctx, getUsers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Email,
+			&i.Nin,
+			&i.Password,
+			&i.UserType,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateNin = `-- name: UpdateNin :one
 UPDATE users
 SET

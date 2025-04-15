@@ -14,6 +14,11 @@ type UseCase struct {
 	repo interfaces.RepositoryInterface
 }
 
+// GetUsers implements v1.UseCaseInterface.
+func (u *UseCase) GetUsers(ctx context.Context) ([]*db.User, error) {
+	return u.repo.GetUsers(ctx)
+}
+
 // UpdateNin implements v1.UseCaseInterface.
 func (u *UseCase) UpdateNin(ctx context.Context, data db.UpdateNinParams) (*db.UpdateNinRow, error) {
 	return u.repo.UpdateNin(ctx, data)

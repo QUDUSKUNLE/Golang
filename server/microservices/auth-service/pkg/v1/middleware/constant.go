@@ -2,6 +2,7 @@ package middleware
 
 const (
 	UpdateNin = "/UserService/UpdateNin"
+	ReadUsers = "/UserService/ReadUsers"
 )
 
 type UserType struct {

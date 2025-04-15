@@ -33,7 +33,7 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		}
 		if r, ok := req.(*user.SingleUserRequest); ok {
 			if !ValidateUUID(r.Id) {
-				return nil, status.Errorf(codes.InvalidArgument, "Id cannot be empty")
+				return nil, status.Errorf(codes.InvalidArgument, "Invalid id.")
 			}
 		}
 		if r, ok := req.(*user.SignInRequest); ok {
@@ -47,7 +47,7 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 			}
 		}
 		switch info.FullMethod {
-		case UpdateNin:
+		case UpdateNin, ReadUsers:
 			return urinaryHelper(ctx, req, handler)
 		default:
 			return handler(ctx, req)

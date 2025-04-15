@@ -89,7 +89,7 @@ message SuccessResponse {
 }
 
 message GetUsersResponse {
-  repeated User data = 1;
+  repeated User data = 1 [json_name = "data"];
 }
 
 message GetUserResponse {

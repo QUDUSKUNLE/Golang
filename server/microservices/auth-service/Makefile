@@ -12,13 +12,13 @@ setup:
 	GOBIN=$(GOBIN) go install -tags "postgres" github.com/golang-migrate/migrate/v4/cmd/migrate@$(MIGRATE_VERSION)
 
 generate:
-	$(GOBIN)/sqlc generate -f internal/db/sqlc.json
+	$(GOBIN)/sqlc generate -f adapters/db/sqlc.json
 
 migrate-up:
-	$(GOBIN)/migrate -path="internal/db/migrations" -database "postgres://abumuhsinah:abumuhsinah@localhost:5432/golang?sslmode=disable" up
+	$(GOBIN)/migrate -path="adapters/db/migrations" -database "postgres://abumuhsinah:abumuhsinah@localhost:5432/golang?sslmode=disable" up
 
 migrate-down:
-	$(GOBIN)/migrate -path="internal/db/migrations" -database "postgres://abumuhsinah:abumuhsinah@localhost:5432/golang?sslmode=disable" down
+	$(GOBIN)/migrate -path="adapters/db/migrations" -database "postgres://abumuhsinah:abumuhsinah@localhost:5432/golang?sslmode=disable" down
 
 protoc:
 	cd proto && protoc --go_opt=paths=source_relative \

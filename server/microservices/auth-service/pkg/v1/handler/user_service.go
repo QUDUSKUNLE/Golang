@@ -49,6 +49,27 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 		Data: data}, nil
 }
 
+func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.GetUsersRequest) (*userProtoc.GetUsersResponse, error) {
+	admin, ok := ctx.Value("user").(*middleware.UserType)
+	if !ok || admin.Type != string(db.UserEnumADMIN) {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+	users, err := srv.userService.GetUsers(ctx)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, Not_Found)
+	}
+	usersResponse := &userProtoc.GetUsersResponse{Data: []*userProtoc.User{}}
+	for _, user := range users {
+		usersResponse.Data = append(usersResponse.Data, &userProtoc.User{
+			Id: user.ID,
+			Email: user.Email.String,
+			CreatedAt: user.CreatedAt.Time.String(),
+			UpdatedAt: user.UpdatedAt.Time.String(),
+		})
+	}
+	return usersResponse, nil
+}
+
 func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignInRequest) (*userProtoc.SignInResponse, error) {
 	email, password := req.GetEmail(), req.GetPassword()
 	user, err := srv.userService.Login(ctx, dto.LogInDto{Email: email, Password: password})

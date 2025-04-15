@@ -12,6 +12,11 @@ type Repository struct {
 	database *db.Queries
 }
 
+// GetUsers implements v1.RepositoryInterface.
+func (u *Repository) GetUsers(ctx context.Context) ([]*db.User, error) {
+	return u.database.GetUsers(ctx)
+}
+
 // CreateUser implements v1.UseCaseInterface.
 func (u *Repository) CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error) {
 	return u.database.CreateUser(ctx, user)
