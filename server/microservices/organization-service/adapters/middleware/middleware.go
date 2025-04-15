@@ -9,6 +9,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -17,16 +18,19 @@ import (
 
 func ValidationInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	if r, ok := req.(*organization.CreateOrganizationRequest); ok {
-		if r.UserId == "" {
-			return nil, status.Errorf(codes.InvalidArgument, "User ID cannot be empty")
+		if !ValidateUUID(r.UserId) {
+			return nil, status.Errorf(codes.InvalidArgument, "Invalid User ID")
 		}
 	}
 	if r, ok := req.(*organization.GetOrganizationRequest); ok {
-		if r.Id == "" {
+		if !ValidateUUID(r.Id) {
 			return nil, status.Errorf(codes.InvalidArgument, "id is required")
 		}
 	}
-	return handler(ctx, req)
+	switch info.FullMethod {
+	default:
+		return urinaryHelper(ctx, req, handler)
+	}
 }
 
 func urinaryHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandler) (any, error) {
@@ -69,4 +73,9 @@ func validateToken(_ context.Context, token string) (*UserType, error) {
 		return &UserType{UserID: id, Type: ty}, nil
 	}
 	return &UserType{}, errors.New("failed to extract invalid token")
+}
+
+func ValidateUUID(input string) bool {
+	_, err := uuid.Parse(input)
+	return err == nil
 }

@@ -1,8 +1,10 @@
 package clients
 
 import (
+	"context"
 	"time"
 
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
@@ -19,6 +21,11 @@ type organizationService struct {
 
 type userService struct {
 	userGrpcClient user.UserServiceClient
+}
+
+// GetUsers implements v1.UseCaseInterface.
+func (u *userService) GetUsers(ctx context.Context) ([]*db.User, error) {
+	panic("unimplemented")
 }
 
 func NewGRPClientOrganizationService(organization_conn string) ports.UseCasePorts {

@@ -31,9 +31,7 @@ func main() {
 	defer listen.Close()
 
 	grpcServer := grpc.NewServer(
-		grpc.StreamInterceptor(middleware.StreamInterceptor()),
 		grpc.ChainUnaryInterceptor(
-			middleware.UnaryServerInterceptor(),
 			middleware.ValidateUnaryInterceptor(),
 		),
 	)

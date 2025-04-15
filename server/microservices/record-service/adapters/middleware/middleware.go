@@ -9,71 +9,12 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/record-service/protogen/golang/record"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
-
-func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return func(
-		ctx context.Context,
-		req interface{},
-		info *grpc.UnaryServerInfo,
-		handler grpc.UnaryHandler,
-	) (interface{}, error) {
-		switch info.FullMethod {
-		case CreateRecord, GetRecords, GetRecord:
-			return urinaryHelper(ctx, req, handler)
-		default:
-			return handler(ctx, req)
-		}
-	}
-}
-
-type wrappedServerStream struct {
-	grpc.ServerStream
-	newCtx context.Context
-}
-
-// Context returns the new context
-func (w *wrappedServerStream) Context() context.Context {
-	return w.newCtx
-}
-
-func StreamInterceptor() grpc.StreamServerInterceptor {
-	return func(
-		srv interface{},
-		ss grpc.ServerStream,
-		info *grpc.StreamServerInfo,
-		handler grpc.StreamHandler,
-	) error {
-		ctx := ss.Context()
-		md, ok := metadata.FromIncomingContext(ctx)
-		if !ok {
-			return status.Error(codes.Unauthenticated, "Metatdata is not provided")
-		}
-
-		// extract token from the authorization header
-		token := md["authorization"]
-		if len(token) == 0 {
-			return status.Error(codes.Unauthenticated, "Authorization token is not provided")
-		}
-		user, err := validateToken(ctx, strings.Split(token[0], " ")[1])
-		if err != nil {
-			return status.Error(codes.Unauthenticated, err.Error())
-		}
-
-		ctx = context.WithValue(ctx, "user", user)
-		// Calls the handler
-		wrappedStream := &wrappedServerStream{
-			ServerStream: ss,
-			newCtx:       ctx,
-		}
-		err = handler(srv, wrappedStream)
-		return err
-	}
-}
 
 func ValidateUnaryInterceptor() grpc.UnaryServerInterceptor {
 	return func(
@@ -83,20 +24,21 @@ func ValidateUnaryInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 		if r, ok := req.(*record.CreateRecordRequest); ok {
-			if r.Record == "" || r.UserId == "" {
+			if r.Record == "" || !ValidateUUID(r.UserId) {
 				return nil, status.Errorf(codes.InvalidArgument, "Record or UserID cannot be empty")
 			}
 		}
 		if r, ok := req.(*record.ScanUploadRequest); ok {
-			if r.ScanTitle == "" || r.FileName == "" || r.UserId == "" {
+			if r.ScanTitle == "" || r.FileName == "" || !ValidateUUID(r.UserId) {
 				return nil, status.Errorf(codes.InvalidArgument, "ScanTitle or FileName or UserID cannot be empty")
 			}
 		}
-		organization_user := ctx.Value("user").(*UserType)
-		if organization_user.Type != "ORGANIZATION" {
-			return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform this operation.")
+		switch info.FullMethod {
+		case CreateRecord, GetRecords, GetRecord, ScanUpload:
+			return urinaryHelper(ctx, req, handler)
+		default:
+			return handler(ctx, req)
 		}
-		return handler(ctx, req)
 	}
 }
 
@@ -137,11 +79,16 @@ func validateToken(_ context.Context, token string) (*UserType, error) {
 		if !ok {
 			return &UserType{}, errors.New("failed to extract id from claims")
 		}
-		typ, ok := claims["user_type"].(map[string]interface{})
+		typ, ok := claims["user_type"].(string)
 		if !ok {
-			return &UserType{}, errors.New("failed to extract ty from claims")
+			return &UserType{}, errors.New("failed to extract type from claims")
 		}
-		return &UserType{UserID: id, Type: typ["user_enum"].(string)}, nil
+		return &UserType{UserID: id, Type: typ}, nil
 	}
 	return &UserType{}, errors.New("failed to extract invalid token")
+}
+
+func ValidateUUID(input string) bool {
+	_, err := uuid.Parse(input)
+	return err == nil
 }

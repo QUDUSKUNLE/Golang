@@ -2,7 +2,7 @@ package handler
 
 import (
 	"context"
-	"io"
+	"fmt"
 	"os"
 
 	// "github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
@@ -82,46 +82,18 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 	return recordsResponse, nil
 }
 
-func (this *RecordServiceStruct) ScanUpload(stream record.RecordService_ScanUploadServer) error {
-	var fileName string
-	var userID string
-	var scanTitle string
-	var file *os.File
-	var fileData []byte
-
-	// Obtain context
-	ctx := stream.Context()
-	organization_user, ok := ctx.Value("user").(*middleware.UserType)
-	if !ok {
-		return status.Error(codes.PermissionDenied, "Unauthorized to perform operation")
+func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.ScanUploadRequest) (*record.ScanUploadResponse, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Error gettting current directory %v", err)
 	}
-
-	for {
-		chunk, err := stream.Recv()
-		fileName = chunk.GetFileName()
-		userID = chunk.GetUserId()
-		scanTitle = chunk.GetScanTitle()
-
-		if err == io.EOF {
-			return stream.SendAndClose(&record.ScanUploadResponse{
-				FileName:       chunk.GetFileName(),
-				UserId:         chunk.GetUserId(),
-				ScanTitle:      chunk.GetScanTitle(),
-				OrganizationId: organization_user.UserID,
-			})
-		}
-		if err != nil {
-			return status.Error(codes.Internal, err.Error())
-		}
-		fileData = append(fileData, chunk.GetContent()...)
-		_, err = file.Write(fileData)
-		if err != nil {
-			return stream.SendAndClose(&record.ScanUploadResponse{
-				FileName:       fileName,
-				UserId:         userID,
-				ScanTitle:      scanTitle,
-				OrganizationId: organization_user.UserID,
-			})
-		}
+	filePath := fmt.Sprintf("%s/uploads/%s", dir, req.GetFileName())
+	if err := os.WriteFile(filePath, req.GetContent(), 0644); err != nil {
+		return nil, fmt.Errorf("failed to save file: %v", err)
 	}
+	_ = os.Remove(filePath)
+	return &record.ScanUploadResponse{
+		Id:             "1",
+		OrganizationId: "ok",
+	}, nil
 }

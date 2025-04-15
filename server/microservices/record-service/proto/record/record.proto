@@ -20,7 +20,7 @@ service RecordService {
       get: "/v1/records/organizations",
     };
   }
-  rpc ScanUpload(stream ScanUploadRequest) returns (ScanUploadResponse) {
+  rpc ScanUpload(ScanUploadRequest) returns (ScanUploadResponse) {
     option (google.api.http) = {
       post: "/v1/records/scans",
       body: "*"
@@ -35,7 +35,6 @@ message ScanUploadRequest {
   string scan_title = 2 [json_name = "scan_title"];
   string file_name = 3 [json_name = "file_name"];
   string organization_id = 4 [json_name = "organization_id"];
-  // int32 chunk_number = 4 [json_name = "chunk_number"];
   bytes content = 5 [json_name = "content"];
 }
 
