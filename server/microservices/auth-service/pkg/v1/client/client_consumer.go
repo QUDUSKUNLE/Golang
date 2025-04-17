@@ -8,11 +8,16 @@ import (
 	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 )
 
+// AuthInterceptor is a struct to hold the token for authorization
+type AuthInterceptor struct {
+	authToken string
+}
+
 func (o *organizationService) CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error) {
 	req := &organization.CreateOrganizationRequest{UserId: user.UserID}
 	resp, err := o.grpcClient.CreateOrganization(ctx, req)
 	if err != nil {
-		return &db.Organization{}, nil
+		return &db.Organization{}, err
 	}
 	return &db.Organization{ID: resp.Id}, nil
 }

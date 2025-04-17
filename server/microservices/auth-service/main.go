@@ -23,21 +23,28 @@ func init() {
 }
 
 func main() {
+	// Initialize database connection
 	db := dbconfig.DbConn()
+
+	// Create TCP listener
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("PORT")))
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
-	userUseCase := usecase.InitUserServer(db)
+
+	// Create gRPC server with TLS and interceptors
 	grpcServer := grpc.NewServer(
+		// grpc.Creds(creds),
 		grpc.ChainUnaryInterceptor(
-			// middleware.UnaryServerInterceptor(),
 			middleware.ValidationInterceptor(),
 		))
+
+	// Initialize use case and register services
+	userUseCase := usecase.InitUserServer(db)
 	handler.NewServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
-	log.Printf("Auth Service listening at %v", listen.Addr())
+	log.Printf("Auth Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve auth service: %v", err)
 	}

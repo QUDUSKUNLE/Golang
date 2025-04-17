@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	// "fmt"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
@@ -61,8 +62,8 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 	usersResponse := &userProtoc.GetUsersResponse{Data: []*userProtoc.User{}}
 	for _, user := range users {
 		usersResponse.Data = append(usersResponse.Data, &userProtoc.User{
-			Id: user.ID,
-			Email: user.Email.String,
+			Id:        user.ID,
+			Email:     user.Email.String,
 			CreatedAt: user.CreatedAt.Time.String(),
 			UpdatedAt: user.UpdatedAt.Time.String(),
 		})

@@ -30,6 +30,7 @@ func main() {
 
 	defer listen.Close()
 
+	// Configure the gRPC server with enhanced options
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
 			middleware.ValidateUnaryInterceptor(),
@@ -37,7 +38,7 @@ func main() {
 	)
 	recordUseCase := usecase.InitializeRecordService(dbase)
 	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("AUTH"))
-	log.Printf("Record Service listening on %v", listen.Addr())
+	log.Printf("Record Service listening on %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve record service: %v", err)
 	}

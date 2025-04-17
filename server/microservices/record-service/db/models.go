@@ -13,6 +13,7 @@ type Record struct {
 	OrganizationID string             `db:"organization_id" json:"organization_id"`
 	UserID         string             `db:"user_id" json:"user_id"`
 	Record         string             `db:"record" json:"record"`
+	ScanTitle      string             `db:"scan_title" json:"scan_title"`
 	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }

@@ -17,10 +17,13 @@ type RecordServiceStruct struct {
 }
 
 func NewRecordServer(grpcServer *grpc.Server, useCase ports.UseCasePorts, organi_conn, auth_conn string) {
+	// Use default client options (insecure) for internal service communication
+	clientOptions := clients.DefaultClientOptions()
+	
 	recordGrpc := &RecordServiceStruct{
 		recordService:       useCase,
-		organizationService: clients.NewGRPClientOrganizationService(organi_conn),
-		authService:         clients.NewGRPClientAuthService(auth_conn),
+		organizationService: clients.NewGRPClientOrganizationService(organi_conn, clientOptions),
+		authService:         clients.NewGRPClientAuthService(auth_conn, clientOptions),
 	}
 	record.RegisterRecordServiceServer(grpcServer, recordGrpc)
 }

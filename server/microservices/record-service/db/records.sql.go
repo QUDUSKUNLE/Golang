@@ -13,26 +13,34 @@ const createRecord = `-- name: CreateRecord :one
 INSERT INTO records (
   organization_id,
   user_id,
-  record
+  record,
+  scan_title
 ) VALUES  (
-  $1, $2, $3
-) RETURNING id, organization_id, user_id, record, created_at, updated_at
+  $1, $2, $3, $4
+) RETURNING id, organization_id, user_id, record, scan_title, created_at, updated_at
 `
 
 type CreateRecordParams struct {
 	OrganizationID string `db:"organization_id" json:"organization_id"`
 	UserID         string `db:"user_id" json:"user_id"`
 	Record         string `db:"record" json:"record"`
+	ScanTitle      string `db:"scan_title" json:"scan_title"`
 }
 
 func (q *Queries) CreateRecord(ctx context.Context, arg CreateRecordParams) (*Record, error) {
-	row := q.db.QueryRow(ctx, createRecord, arg.OrganizationID, arg.UserID, arg.Record)
+	row := q.db.QueryRow(ctx, createRecord,
+		arg.OrganizationID,
+		arg.UserID,
+		arg.Record,
+		arg.ScanTitle,
+	)
 	var i Record
 	err := row.Scan(
 		&i.ID,
 		&i.OrganizationID,
 		&i.UserID,
 		&i.Record,
+		&i.ScanTitle,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -40,7 +48,7 @@ func (q *Queries) CreateRecord(ctx context.Context, arg CreateRecordParams) (*Re
 }
 
 const getRecord = `-- name: GetRecord :one
-SELECT id, organization_id, user_id, record, created_at, updated_at FROM records where id = $1
+SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where id = $1
 `
 
 func (q *Queries) GetRecord(ctx context.Context, id string) (*Record, error) {
@@ -51,6 +59,7 @@ func (q *Queries) GetRecord(ctx context.Context, id string) (*Record, error) {
 		&i.OrganizationID,
 		&i.UserID,
 		&i.Record,
+		&i.ScanTitle,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -58,7 +67,7 @@ func (q *Queries) GetRecord(ctx context.Context, id string) (*Record, error) {
 }
 
 const getRecords = `-- name: GetRecords :many
-SELECT id, organization_id, user_id, record, created_at, updated_at FROM records where organization_id = $1
+SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where organization_id = $1
 LIMIT 50
 `
 
@@ -76,6 +85,7 @@ func (q *Queries) GetRecords(ctx context.Context, organizationID string) ([]*Rec
 			&i.OrganizationID,
 			&i.UserID,
 			&i.Record,
+			&i.ScanTitle,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {

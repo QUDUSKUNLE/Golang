@@ -34,7 +34,6 @@ message ScanUploadRequest {
   string user_id = 1 [json_name = "user_id"];
   string scan_title = 2 [json_name = "scan_title"];
   string file_name = 3 [json_name = "file_name"];
-  string organization_id = 4 [json_name = "organization_id"];
   bytes content = 5 [json_name = "content"];
 }
 
@@ -43,13 +42,12 @@ message ScanUploadResponse {
   string organization_id = 2 [json_name = "organization_id"];
   string user_id = 3 [json_name = "user_id"];
   string scan_title = 4 [json_name = "scan_title"];
-  string file_name = 5 [json_name = "file_name"];
-  uint32 size = 6 [json_name = "size"];
+  string created_at = 5 [json_name = "created_at"];
+  string updated_at = 6 [json_name = "updated_at"];
 }
 
 message Record {
   string id = 1 [json_name = "id"];
-  string organization_id = 2 [json_name = "organization_id"];
   string user_id = 3 [json_name = "user_id"];
   string record = 4 [json_name = "record"];
   string created_at = 5 [json_name = "created_at"];

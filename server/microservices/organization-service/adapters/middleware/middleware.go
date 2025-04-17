@@ -29,11 +29,13 @@ func ValidationInterceptor(ctx context.Context, req interface{}, info *grpc.Unar
 	}
 	switch info.FullMethod {
 	default:
-		return urinaryHelper(ctx, req, handler)
+		return handler(ctx, req)
 	}
 }
 
 func urinaryHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandler) (any, error) {
+
+	// extract metadata from the context
 	meta, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "Metatdata is not provided")
@@ -43,11 +45,12 @@ func urinaryHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandl
 	if len(token) == 0 {
 		return nil, status.Error(codes.Unauthenticated, "Authorization token is not provided")
 	}
-	user, err := validateToken(ctx, strings.Split(token[0], " ")[1])
+	user, err := validateToken(ctx, strings.TrimPrefix(token[0], "Bearer "))
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
 	ctx = context.WithValue(ctx, "user", user)
+	ctx = context.WithValue(ctx, "token", token[0])
 	return handler(ctx, req)
 }
 

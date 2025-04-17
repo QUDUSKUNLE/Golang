@@ -2,9 +2,10 @@
 INSERT INTO records (
   organization_id,
   user_id,
-  record
+  record,
+  scan_title
 ) VALUES  (
-  $1, $2, $3
+  $1, $2, $3, $4
 ) RETURNING *;
 
 -- name: GetRecord :one

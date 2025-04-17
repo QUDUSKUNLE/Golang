@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	// "github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
+	"github.com/QUDUSKUNLE/microservices/record-service/adapters/thirdparty"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/protogen/golang/record"
 	"google.golang.org/grpc/codes"
@@ -72,7 +72,6 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 	for _, re := range records {
 		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
 			Id:             re.ID,
-			OrganizationId: re.OrganizationID,
 			UserId:         re.UserID,
 			Record:         re.Record,
 			CreatedAt:      re.CreatedAt.Time.String(),
@@ -83,17 +82,48 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 }
 
 func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.ScanUploadRequest) (*record.ScanUploadResponse, error) {
-	dir, err := os.Getwd()
+	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	// Check authorization right
+	if !ok || organization_user.Type != "ORGANIZATION" {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+	// Get organization details
+	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, organization_user.UserID)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "Organization not found")
+	}
+	// Get present directory
+	directory, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("Error gettting current directory %v", err)
 	}
-	filePath := fmt.Sprintf("%s/uploads/%s", dir, req.GetFileName())
+	// Write file to upload path
+	filePath := fmt.Sprintf("%s/uploads/%s", directory, req.GetFileName())
 	if err := os.WriteFile(filePath, req.GetContent(), 0644); err != nil {
 		return nil, fmt.Errorf("failed to save file: %v", err)
 	}
+	// Upload to Cloudinary
+	uploadedFile, err := thirdparty.CloudinaryUploader(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to upload file: %v", err)
+	}
+	// Remove uploaded file to free memory
 	_ = os.Remove(filePath)
+	scanRecord, err := this.recordService.CreateRecord(ctx, domain.RecordDto{
+		UserID:         req.GetUserId(),
+		OrganizationID: organizationDetails.ID,
+		Record:         uploadedFile,
+		ScanTitle:      req.GetScanTitle(),
+	})
+	if err != nil {
+		return nil, status.Error(codes.Unimplemented, err.Error())
+	}
 	return &record.ScanUploadResponse{
-		Id:             "1",
-		OrganizationId: "ok",
+		Id:        scanRecord.ID,
+		UserId:    req.GetUserId(),
+		ScanTitle: req.GetScanTitle(),
+		OrganizationId: scanRecord.OrganizationID,
+		CreatedAt: scanRecord.CreatedAt.Time.String(),
+		UpdatedAt: scanRecord.UpdatedAt.Time.String(),
 	}, nil
 }

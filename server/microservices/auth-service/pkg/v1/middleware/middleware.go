@@ -70,6 +70,7 @@ func urinaryHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandl
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
 	ctx = context.WithValue(ctx, "user", user_type)
+	ctx = context.WithValue(ctx, "token", token[0])
 	return handler(ctx, req)
 }
 
