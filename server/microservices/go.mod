@@ -3,7 +3,6 @@ module github.com/QUDUSKUNLE/microservices
 go 1.23.2
 
 require (
-	github.com/cloudinary/cloudinary-go/v2 v2.9.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
 	github.com/jackc/pgx/v5 v5.5.5
 	golang.org/x/crypto v0.28.0

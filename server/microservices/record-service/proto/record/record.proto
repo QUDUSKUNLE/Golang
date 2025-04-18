@@ -4,37 +4,44 @@ option go_package = "github.com/QUDUSKUNLE/microservices/services/record-service
 import "google/api/annotations.proto";
 
 service RecordService {
-  rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse) {
-    option (google.api.http) = {
-      post: "/v1/records",
-      body: "*"
-    };
-  }
   rpc GetRecord(GetRecordRequest) returns (GetRecordResponse) {
     option (google.api.http) = {
       get: "/v1/records/{id}",
     };
   }
+  rpc SearchRecord(SearchRecordRequest) returns (SearchRecordResponse) {
+    option (google.api.http) = {
+      get: "/v1/records/search",
+    };
+  }
   rpc GetRecords(GetRecordsRequest) returns (GetRecordsResponse) {
     option (google.api.http) = {
-      get: "/v1/records/organizations",
+      get: "/v1/records",
     };
   }
   rpc ScanUpload(ScanUploadRequest) returns (ScanUploadResponse) {
     option (google.api.http) = {
-      post: "/v1/records/scans",
+      post: "/v1/records",
       body: "*"
     };
   }
 }
 
-message GetRecordsRequest {}
+message GetRecordsRequest {
+  string scan_title = 1 [json_name = "scan_title"];
+  string latest = 2 [json_name = "latest"];
+}
 
 message ScanUploadRequest {
   string user_id = 1 [json_name = "user_id"];
   string scan_title = 2 [json_name = "scan_title"];
   string file_name = 3 [json_name = "file_name"];
   bytes content = 5 [json_name = "content"];
+}
+
+message SearchRecordRequest {
+  string user_id = 1 [json_name = "user_id"];
+  string scan_title = 2 [json_name = "scan_title"];
 }
 
 message ScanUploadResponse {
@@ -61,23 +68,10 @@ message GetRecordsResponse {
   repeated Record records = 1 [json_name = "records"];
 }
 
-message CreateRecordRequest {
-  string user_id = 1 [json_name = "user_id"];
-  string record = 2 [json_name = "record"];
-}
-
-message CreateRecordResponse {
-  string id = 1 [json_name = "id"];
-  string organization_id = 2 [json_name = "organization_id"];
-  string user_id = 3 [json_name = "user_id"];
-  string record = 4 [json_name = "record"];
-  string scan_title = 5 [json_name = "scan_title"];
-  string created_at = 6 [json_name = "created_at"];
-  string updated_at = 7 [json_name = "updated_at"];
-}
-
 message GetRecordRequest {
   string id = 1 [json_name = "id"];
+  string scan_title = 2 [json_name = "scan_title"];
+  string user_id = 3 [json_name = "user_id"];
 }
 
 message GetRecordResponse {
@@ -88,4 +82,8 @@ message GetRecordResponse {
   string scan_title = 5 [json_name = "scan_title"];
   string created_at = 6 [json_name = "created_at"];
   string updated_at = 7 [json_name = "updated_at"];
+}
+
+message SearchRecordResponse {
+  repeated Record records = 1 [json_name = "records"];
 }

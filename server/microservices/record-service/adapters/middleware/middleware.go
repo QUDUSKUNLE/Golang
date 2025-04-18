@@ -23,18 +23,13 @@ func ValidateUnaryInterceptor() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
-		if r, ok := req.(*record.CreateRecordRequest); ok {
-			if r.Record == "" || !ValidateUUID(r.UserId) {
-				return nil, status.Errorf(codes.InvalidArgument, "Record or UserID cannot be empty")
-			}
-		}
 		if r, ok := req.(*record.ScanUploadRequest); ok {
 			if r.ScanTitle == "" || r.FileName == "" || !ValidateUUID(r.UserId) {
 				return nil, status.Errorf(codes.InvalidArgument, "ScanTitle or FileName or UserID cannot be empty")
 			}
 		}
 		switch info.FullMethod {
-		case CreateRecord, GetRecords, GetRecord, ScanUpload:
+		case GetRecords, GetRecord, ScanUpload:
 			return urinaryHelper(ctx, req, handler)
 		default:
 			return handler(ctx, req)

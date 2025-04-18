@@ -12,9 +12,14 @@ type Repository struct {
 	database *db.Queries
 }
 
+// SearchRecord implements ports.RepositoryPorts.
+func (r *Repository) SearchRecord(ctx context.Context, searchRecord domain.GetRecordDto) ([]*db.Record, error) {
+	return r.database.GetRecordsByUserAndScanTitle(ctx, db.GetRecordsByUserAndScanTitleParams{UserID: *searchRecord.UserID, ScanTitle: *searchRecord.ScanTitle})
+}
+
 // UploadRecord implements ports.RepositoryPorts.
 func (r *Repository) UploadRecord(ctx context.Context, record domain.UploadDto) (*db.Upload, error) {
-	return r.database.UploadRecord(ctx, db.UploadRecordParams{UserID: record.UserID, OrganizationID: record.OrganizationID, FileName: record.FileName, ScanTitle: record.ScanTitle})
+	return r.database.UploadRecord(ctx, db.UploadRecordParams{UserID: record.UserID, OrganizationID: record.OrganizationID, ScanTitle: record.ScanTitle})
 }
 
 // GetRecords implements ports.RepositoryPorts.
@@ -23,8 +28,8 @@ func (r *Repository) GetRecords(ctx context.Context, organizationID string) ([]*
 }
 
 // GetRecord implements ports.RepositoryPorts.
-func (r *Repository) GetRecord(ctx context.Context, id string) (*db.Record, error) {
-	return r.database.GetRecord(ctx, id)
+func (r *Repository) GetRecord(ctx context.Context, record string) (*db.Record, error) {
+	return r.database.GetRecord(ctx, record)
 }
 
 // CreateRecord implements ports.RepositoryPorts.

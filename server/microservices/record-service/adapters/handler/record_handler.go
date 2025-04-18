@@ -18,6 +18,7 @@ func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetR
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
+
 	rec, err := this.recordService.GetRecord(ctx, req.GetId())
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "Record not found")
@@ -25,9 +26,9 @@ func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetR
 	return &record.GetRecordResponse{
 		Id:             rec.ID,
 		UserId:         rec.UserID,
-		OrganizationId: rec.OrganizationID,
 		Record:         rec.Record,
 		ScanTitle:      rec.ScanTitle,
+		OrganizationId: rec.OrganizationID,
 		CreatedAt:      rec.CreatedAt.Time.String(),
 		UpdatedAt:      rec.UpdatedAt.Time.String(),
 	}, nil
