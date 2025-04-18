@@ -29,7 +29,7 @@ func (r *Repository) GetRecord(ctx context.Context, id string) (*db.Record, erro
 
 // CreateRecord implements ports.RepositoryPorts.
 func (r *Repository) CreateRecord(ctx context.Context, record domain.RecordDto) (*db.Record, error) {
-	return r.database.CreateRecord(ctx, db.CreateRecordParams{OrganizationID: record.OrganizationID, UserID: record.UserID, Record: record.Record})
+	return r.database.CreateRecord(ctx, db.CreateRecordParams{OrganizationID: record.OrganizationID, UserID: record.UserID, Record: record.Record, ScanTitle: record.ScanTitle})
 }
 
 func NewRepository(database *db.Queries) ports.RepositoryPorts {

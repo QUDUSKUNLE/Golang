@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	// "fmt"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
@@ -14,12 +13,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// Create a record
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
+	// Transform request data
 	data := srv.transformUserRPC(req)
 	built_user, err := dto.BuildNewUser(data)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
+	// Create user in the database
 	user, err := srv.userService.CreateUser(
 		ctx, db.CreateUserParams{
 			Email:    built_user.Email,
@@ -28,8 +30,9 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 			UserType: built_user.UserType,
 		})
 	if err != nil {
-		return nil, status.Error(codes.AlreadyExists, err.Error())
+		return nil, status.Errorf(codes.AlreadyExists, err.Error())
 	}
+	// Check if user is an organization
 	if data.UserType == db.UserEnumORGANIZATION {
 		_, err := srv.organizationService.CreateOrganization(ctx, domain.OrganizationDto{UserID: user.ID})
 		if err != nil {
@@ -41,9 +44,10 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 }
 
 func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUserRequest) (*userProtoc.GetUserResponse, error) {
+	// Get a user with the ID
 	user, err := srv.userService.GetUser(ctx, req.GetId())
 	if err != nil {
-		return nil, status.Error(codes.NotFound, Not_Found)
+		return nil, status.Errorf(codes.NotFound, Not_Found)
 	}
 	data := &userProtoc.User{Id: user.ID, Email: user.Email.String, CreatedAt: user.CreatedAt.Time.String(), UpdatedAt: user.UpdatedAt.Time.String()}
 	return &userProtoc.GetUserResponse{
@@ -51,9 +55,10 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 }
 
 func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.GetUsersRequest) (*userProtoc.GetUsersResponse, error) {
+	// Check if user has admin right
 	admin, ok := ctx.Value("user").(*middleware.UserType)
 	if !ok || admin.Type != string(db.UserEnumADMIN) {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+		return nil, status.Errorf(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	users, err := srv.userService.GetUsers(ctx)
 	if err != nil {
@@ -75,7 +80,7 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 	email, password := req.GetEmail(), req.GetPassword()
 	user, err := srv.userService.Login(ctx, dto.LogInDto{Email: email, Password: password})
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "incorrect log in credentials")
+		return nil, status.Errorf(codes.NotFound, "Incorrect log in credentials")
 	}
 
 	if err = dto.ComparePassword(*user, password); err != nil {
@@ -99,7 +104,7 @@ func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.Upd
 		},
 		ID: user.UserID})
 	if err != nil {
-		return nil, status.Error(codes.Unimplemented, err.Error())
+		return nil, status.Errorf(codes.Unimplemented, err.Error())
 	}
 	return &userProtoc.UpdateNinResponse{Data: "Nin updated successfully"}, nil
 }

@@ -13,27 +13,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (this *RecordServiceStruct) CreateRecord(ctx context.Context, req *record.CreateRecordRequest) (*record.CreateRecordResponse, error) {
-	data := this.transformRecordRPC(req)
-	organization_user := ctx.Value("user").(*middleware.UserType)
-	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, organization_user.UserID)
-	if err != nil {
-		return nil, status.Error(codes.NotFound, "Organization not found")
-	}
-	re, err := this.recordService.CreateRecord(ctx, domain.RecordDto{UserID: data.UserID, OrganizationID: organizationDetails.ID, Record: data.Record})
-	if err != nil {
-		return nil, status.Error(codes.Unimplemented, "Unimplemented record")
-	}
-	return &record.CreateRecordResponse{
-		Id:             re.ID,
-		OrganizationId: re.OrganizationID,
-		UserId:         re.UserID,
-		Record:         re.Record,
-		CreatedAt:      re.CreatedAt.Time.String(),
-		UpdatedAt:      re.UpdatedAt.Time.String(),
-	}, nil
-}
-
 func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetRecordRequest) (*record.GetRecordResponse, error) {
 	_, ok := ctx.Value("user").(*middleware.UserType)
 	if !ok {
@@ -48,6 +27,7 @@ func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetR
 		UserId:         rec.UserID,
 		OrganizationId: rec.OrganizationID,
 		Record:         rec.Record,
+		ScanTitle:      rec.ScanTitle,
 		CreatedAt:      rec.CreatedAt.Time.String(),
 		UpdatedAt:      rec.UpdatedAt.Time.String(),
 	}, nil
@@ -74,6 +54,8 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 			Id:             re.ID,
 			UserId:         re.UserID,
 			Record:         re.Record,
+			ScanTitle:      re.ScanTitle,
+			OrganizationId: re.OrganizationID,
 			CreatedAt:      re.CreatedAt.Time.String(),
 			UpdatedAt:      re.UpdatedAt.Time.String(),
 		})
@@ -119,11 +101,11 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 		return nil, status.Error(codes.Unimplemented, err.Error())
 	}
 	return &record.ScanUploadResponse{
-		Id:        scanRecord.ID,
-		UserId:    req.GetUserId(),
-		ScanTitle: req.GetScanTitle(),
+		Id:             scanRecord.ID,
+		UserId:         req.GetUserId(),
+		ScanTitle:      req.GetScanTitle(),
 		OrganizationId: scanRecord.OrganizationID,
-		CreatedAt: scanRecord.CreatedAt.Time.String(),
-		UpdatedAt: scanRecord.UpdatedAt.Time.String(),
+		CreatedAt:      scanRecord.CreatedAt.Time.String(),
+		UpdatedAt:      scanRecord.UpdatedAt.Time.String(),
 	}, nil
 }

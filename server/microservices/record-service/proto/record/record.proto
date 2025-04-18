@@ -41,17 +41,20 @@ message ScanUploadResponse {
   string id = 1 [json_name = "id"];
   string organization_id = 2 [json_name = "organization_id"];
   string user_id = 3 [json_name = "user_id"];
-  string scan_title = 4 [json_name = "scan_title"];
-  string created_at = 5 [json_name = "created_at"];
-  string updated_at = 6 [json_name = "updated_at"];
+  string record = 4 [json_name = "record"];
+  string scan_title = 5 [json_name = "scan_title"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
 }
 
 message Record {
   string id = 1 [json_name = "id"];
+  string organization_id = 2 [json_name = "organization_id"];
   string user_id = 3 [json_name = "user_id"];
   string record = 4 [json_name = "record"];
-  string created_at = 5 [json_name = "created_at"];
-  string updated_at = 6 [json_name = "updated_at"];
+  string scan_title = 5 [json_name = "scan_title"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
 }
 
 message GetRecordsResponse {
@@ -68,8 +71,9 @@ message CreateRecordResponse {
   string organization_id = 2 [json_name = "organization_id"];
   string user_id = 3 [json_name = "user_id"];
   string record = 4 [json_name = "record"];
-  string created_at = 5 [json_name = "created_at"];
-  string updated_at = 6 [json_name = "updated_at"];
+  string scan_title = 5 [json_name = "scan_title"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
 }
 
 message GetRecordRequest {
@@ -78,9 +82,10 @@ message GetRecordRequest {
 
 message GetRecordResponse {
   string id = 1 [json_name = "id"];
-  string organization_id = 2 [json_name = "organization_id"];
-  string user_id = 3 [json_name = "user_id"];
+  string user_id = 2 [json_name = "user_id"];
+  string organization_id = 3 [json_name = "organization_id"];
   string record = 4 [json_name = "record"];
-  string created_at = 5 [json_name = "created_at"];
-  string updated_at = 6 [json_name = "updated_at"];
+  string scan_title = 5 [json_name = "scan_title"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
 }
