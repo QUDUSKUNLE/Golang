@@ -33,7 +33,7 @@ func main() {
 	))
 	organizationUseCase := usecase.InitOrganizationServer(dbase)
 	handler.NewOrganizationServer(grpcServer, organizationUseCase)
-	log.Printf("Organization Service listening at %v", listen.Addr())
+	log.Printf("Organization Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve organization service: %v", err)
 	}

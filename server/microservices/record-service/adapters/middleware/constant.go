@@ -5,6 +5,7 @@ const (
 	GetRecords   = "/RecordService/GetRecords"
 	GetRecord    = "/RecordService/GetRecord"
 	ScanUpload   = "/RecordService/ScanUpload"
+	SearchRecord = "/RecordService/SearchRecord"
 )
 
 type UserType struct {

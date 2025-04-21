@@ -29,7 +29,7 @@ func ValidateUnaryInterceptor() grpc.UnaryServerInterceptor {
 			}
 		}
 		switch info.FullMethod {
-		case GetRecords, GetRecord, ScanUpload:
+		case GetRecords, GetRecord, ScanUpload, SearchRecord:
 			return urinaryHelper(ctx, req, handler)
 		default:
 			return handler(ctx, req)

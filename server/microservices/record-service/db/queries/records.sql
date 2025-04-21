@@ -18,10 +18,10 @@ LIMIT 50;
 -- name: GetRecordsByUser :many
 SELECT * FROM records where user_id = $1
 ORDER BY created_at DESC
-LIMIT 1;
+LIMIT 10;
 
 -- name: GetRecordsByUserAndScanTitle :many
-SELECT * FROM records where user_id = $1 and scan_title = $2
+SELECT * FROM records where user_id = $1 and scan_title ILIKE $2
 ORDER BY created_at DESC
 LIMIT 10;
 

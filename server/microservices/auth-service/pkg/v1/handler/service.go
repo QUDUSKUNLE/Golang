@@ -14,7 +14,7 @@ type UserServiceStruct struct {
 	user.UnimplementedUserServiceServer
 }
 
-func NewServer(server *grpc.Server, usecase interfaces.UseCaseInterface, conn string) {
+func NewAuthServer(server *grpc.Server, usecase interfaces.UseCaseInterface, conn string) {
 	userServiceController := &UserServiceStruct{
 		userService:         usecase,
 		organizationService: client.NewGRPCOrganizationService(conn),

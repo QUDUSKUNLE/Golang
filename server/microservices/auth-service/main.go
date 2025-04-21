@@ -41,7 +41,7 @@ func main() {
 
 	// Initialize use case and register services
 	userUseCase := usecase.InitUserServer(db)
-	handler.NewServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
+	handler.NewAuthServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
 	log.Printf("Auth Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())

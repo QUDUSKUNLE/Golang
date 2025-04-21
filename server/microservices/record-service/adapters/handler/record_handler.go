@@ -110,3 +110,29 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 		UpdatedAt:      scanRecord.UpdatedAt.Time.String(),
 	}, nil
 }
+
+func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.SearchRecordRequest) (*record.SearchRecordResponse, error) {
+	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	if !ok || organization_user.Type != "ORGANIZATION" {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+	records, err := this.recordService.SearchRecord(ctx, domain.GetRecordDto{UserID: req.GetUserId(), ScanTitle: req.GetScanTitle()})
+	recordsResponse := &record.SearchRecordResponse{
+		Records: []*record.Record{},
+	}
+	if err != nil {
+		return nil, status.Error(codes.Unimplemented, err.Error())
+	}
+	for _, re := range records {
+		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
+			Id:             re.ID,
+			UserId:         re.UserID,
+			Record:         re.Record,
+			ScanTitle:      re.ScanTitle,
+			OrganizationId: re.OrganizationID,
+			CreatedAt:      re.CreatedAt.Time.String(),
+			UpdatedAt:      re.UpdatedAt.Time.String(),
+		})
+	}
+	return recordsResponse, nil
+}

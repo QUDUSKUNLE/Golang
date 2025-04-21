@@ -11,12 +11,10 @@ type (
 		UserID    string `json:"user_id"`
 		ScanTitle string `json:"scan_title"`
 		FileName  string `json:"file_name"`
-		// FileData       []byte `json:"file_data"`
 		OrganizationID string `json:"organization_id"`
 	}
 	GetRecordDto struct {
-		ID        string  `json:"id"`
-		UserID    *string `json:"user_id"`
-		ScanTitle *string `json:"scan_title"`
+		UserID    string `json:"user_id"`
+		ScanTitle string `json:"scan_title"`
 	}
 )

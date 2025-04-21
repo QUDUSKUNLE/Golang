@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"strings"
 
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
@@ -14,7 +15,10 @@ type Repository struct {
 
 // SearchRecord implements ports.RepositoryPorts.
 func (r *Repository) SearchRecord(ctx context.Context, searchRecord domain.GetRecordDto) ([]*db.Record, error) {
-	return r.database.GetRecordsByUserAndScanTitle(ctx, db.GetRecordsByUserAndScanTitleParams{UserID: *searchRecord.UserID, ScanTitle: *searchRecord.ScanTitle})
+	if strings.TrimSpace(searchRecord.ScanTitle) != "" {
+		return r.database.GetRecordsByUserAndScanTitle(ctx, db.GetRecordsByUserAndScanTitleParams{UserID: searchRecord.UserID, ScanTitle: "%" + strings.TrimSpace(searchRecord.ScanTitle) + "%"})
+	}
+	return r.database.GetRecordsByUser(ctx, searchRecord.UserID)
 }
 
 // UploadRecord implements ports.RepositoryPorts.

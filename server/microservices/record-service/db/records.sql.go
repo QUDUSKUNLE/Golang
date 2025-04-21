@@ -102,7 +102,7 @@ func (q *Queries) GetRecords(ctx context.Context, organizationID string) ([]*Rec
 const getRecordsByUser = `-- name: GetRecordsByUser :many
 SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1
 ORDER BY created_at DESC
-LIMIT 1
+LIMIT 10
 `
 
 func (q *Queries) GetRecordsByUser(ctx context.Context, userID string) ([]*Record, error) {
@@ -134,7 +134,7 @@ func (q *Queries) GetRecordsByUser(ctx context.Context, userID string) ([]*Recor
 }
 
 const getRecordsByUserAndScanTitle = `-- name: GetRecordsByUserAndScanTitle :many
-SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1 and scan_title = $2
+SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1 and scan_title ILIKE $2
 ORDER BY created_at DESC
 LIMIT 10
 `

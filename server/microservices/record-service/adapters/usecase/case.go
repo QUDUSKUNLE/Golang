@@ -15,7 +15,7 @@ type UseCase struct {
 
 // SearchRecord implements ports.UseCasePorts.
 func (u *UseCase) SearchRecord(ctx context.Context, searchRecord domain.GetRecordDto) ([]*db.Record, error) {
-	panic("unimplemented")
+	return u.usecase.SearchRecord(ctx, searchRecord)
 }
 
 // UploadRecord implements ports.UseCasePorts.
