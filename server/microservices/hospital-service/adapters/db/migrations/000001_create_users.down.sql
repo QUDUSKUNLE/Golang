@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS users CASCADE;
+
+DROP TYPE user_enum;
