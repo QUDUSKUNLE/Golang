@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/thirdparty"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
-	"github.com/QUDUSKUNLE/microservices/record-service/protogen/golang/record"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createRecord = `-- name: CreateRecord :one
@@ -161,6 +163,133 @@ func (q *Queries) GetRecordsByUserAndScanTitle(ctx context.Context, arg GetRecor
 			&i.ScanTitle,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const searchRecordByNin = `-- name: SearchRecordByNin :many
+SELECT records.id, organization_id, user_id, record, scan_title, records.created_at, records.updated_at, users.id, email, nin, password, user_type, address, contact, users.created_at, users.updated_at FROM public.records JOIN public.users ON users.nin = $1
+`
+
+type SearchRecordByNinRow struct {
+	ID             string             `db:"id" json:"id"`
+	OrganizationID string             `db:"organization_id" json:"organization_id"`
+	UserID         string             `db:"user_id" json:"user_id"`
+	Record         string             `db:"record" json:"record"`
+	ScanTitle      string             `db:"scan_title" json:"scan_title"`
+	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID_2           string             `db:"id_2" json:"id_2"`
+	Email          pgtype.Text        `db:"email" json:"email"`
+	Nin            pgtype.Text        `db:"nin" json:"nin"`
+	Password       string             `db:"password" json:"password"`
+	UserType       UserEnum           `db:"user_type" json:"user_type"`
+	Address        []byte             `db:"address" json:"address"`
+	Contact        []byte             `db:"contact" json:"contact"`
+	CreatedAt_2    pgtype.Timestamptz `db:"created_at_2" json:"created_at_2"`
+	UpdatedAt_2    pgtype.Timestamptz `db:"updated_at_2" json:"updated_at_2"`
+}
+
+func (q *Queries) SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*SearchRecordByNinRow, error) {
+	rows, err := q.db.Query(ctx, searchRecordByNin, nin)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*SearchRecordByNinRow
+	for rows.Next() {
+		var i SearchRecordByNinRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.OrganizationID,
+			&i.UserID,
+			&i.Record,
+			&i.ScanTitle,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.ID_2,
+			&i.Email,
+			&i.Nin,
+			&i.Password,
+			&i.UserType,
+			&i.Address,
+			&i.Contact,
+			&i.CreatedAt_2,
+			&i.UpdatedAt_2,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const searchRecordByNinAndScanTitle = `-- name: SearchRecordByNinAndScanTitle :many
+SELECT records.id, organization_id, user_id, record, scan_title, records.created_at, records.updated_at, users.id, email, nin, password, user_type, address, contact, users.created_at, users.updated_at FROM records JOIN public.users ON
+users.nin = $1 WHERE scan_title ILIKE $2
+LIMIT 10
+`
+
+type SearchRecordByNinAndScanTitleParams struct {
+	Nin       pgtype.Text `db:"nin" json:"nin"`
+	ScanTitle string      `db:"scan_title" json:"scan_title"`
+}
+
+type SearchRecordByNinAndScanTitleRow struct {
+	ID             string             `db:"id" json:"id"`
+	OrganizationID string             `db:"organization_id" json:"organization_id"`
+	UserID         string             `db:"user_id" json:"user_id"`
+	Record         string             `db:"record" json:"record"`
+	ScanTitle      string             `db:"scan_title" json:"scan_title"`
+	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID_2           string             `db:"id_2" json:"id_2"`
+	Email          pgtype.Text        `db:"email" json:"email"`
+	Nin            pgtype.Text        `db:"nin" json:"nin"`
+	Password       string             `db:"password" json:"password"`
+	UserType       UserEnum           `db:"user_type" json:"user_type"`
+	Address        []byte             `db:"address" json:"address"`
+	Contact        []byte             `db:"contact" json:"contact"`
+	CreatedAt_2    pgtype.Timestamptz `db:"created_at_2" json:"created_at_2"`
+	UpdatedAt_2    pgtype.Timestamptz `db:"updated_at_2" json:"updated_at_2"`
+}
+
+func (q *Queries) SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchRecordByNinAndScanTitleParams) ([]*SearchRecordByNinAndScanTitleRow, error) {
+	rows, err := q.db.Query(ctx, searchRecordByNinAndScanTitle, arg.Nin, arg.ScanTitle)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*SearchRecordByNinAndScanTitleRow
+	for rows.Next() {
+		var i SearchRecordByNinAndScanTitleRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.OrganizationID,
+			&i.UserID,
+			&i.Record,
+			&i.ScanTitle,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.ID_2,
+			&i.Email,
+			&i.Nin,
+			&i.Password,
+			&i.UserType,
+			&i.Address,
+			&i.Contact,
+			&i.CreatedAt_2,
+			&i.UpdatedAt_2,
 		); err != nil {
 			return nil, err
 		}

@@ -3,10 +3,10 @@ package usecase
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	repo "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/repository"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

@@ -5,7 +5,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
-	"github.com/QUDUSKUNLE/microservices/organization-service/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 )
 
 type Repository struct {

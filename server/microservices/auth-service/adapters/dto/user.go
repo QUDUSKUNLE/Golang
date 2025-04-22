@@ -3,7 +3,7 @@ package dto
 import (
 	"errors"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/jackc/pgx/v5/pgtype"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -27,8 +27,8 @@ type (
 		Email string `json:"email" validate:"email,required"`
 	}
 	CurrentUser struct {
-		ID       string          `json:"id"`
-		UserType string 					`json:"user_type"`
+		ID       string `json:"id"`
+		UserType string `json:"user_type"`
 	}
 	Response struct {
 		Data    interface{} `json:"data"`

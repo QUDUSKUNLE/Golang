@@ -33,3 +33,11 @@ INSERT INTO uploads (
 ) VALUES  (
   $1, $2, $3
 ) RETURNING *; 
+
+-- name: SearchRecordByNin :many
+SELECT * FROM public.records JOIN public.users ON users.nin = $1;
+
+-- name: SearchRecordByNinAndScanTitle :many
+SELECT * FROM records JOIN public.users ON
+users.nin = $1 WHERE scan_title ILIKE $2
+LIMIT 10;

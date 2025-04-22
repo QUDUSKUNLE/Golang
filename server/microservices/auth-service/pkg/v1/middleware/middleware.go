@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"

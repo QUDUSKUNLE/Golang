@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
 	"github.com/QUDUSKUNLE/microservices/gateway/config"
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 	"github.com/QUDUSKUNLE/microservices/record-service/protogen/golang/record"
 )

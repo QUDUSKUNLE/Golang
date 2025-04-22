@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
-	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
 	"google.golang.org/grpc"
 )
 

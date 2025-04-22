@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/config"
-	dbconfig "github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
 	middleware "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"
@@ -24,7 +24,7 @@ func init() {
 
 func main() {
 	// Initialize database connection
-	db := dbconfig.DbConn()
+	db := db.DatabaseConnection()
 
 	// Create TCP listener
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("PORT")))

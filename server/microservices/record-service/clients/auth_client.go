@@ -3,9 +3,9 @@ package clients
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
-		"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 )
 
 // CreateUser implements v1.UseCaseInterface.

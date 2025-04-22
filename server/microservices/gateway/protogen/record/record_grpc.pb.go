@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	RecordService_GetRecord_FullMethodName    = "/RecordService/GetRecord"
 	RecordService_SearchRecord_FullMethodName = "/RecordService/SearchRecord"
+	RecordService_SearchByNin_FullMethodName  = "/RecordService/SearchByNin"
 	RecordService_GetRecords_FullMethodName   = "/RecordService/GetRecords"
 	RecordService_ScanUpload_FullMethodName   = "/RecordService/ScanUpload"
 )
@@ -31,6 +32,7 @@ const (
 type RecordServiceClient interface {
 	GetRecord(ctx context.Context, in *GetRecordRequest, opts ...grpc.CallOption) (*GetRecordResponse, error)
 	SearchRecord(ctx context.Context, in *SearchRecordRequest, opts ...grpc.CallOption) (*SearchRecordResponse, error)
+	SearchByNin(ctx context.Context, in *SearchByNinRequest, opts ...grpc.CallOption) (*SearchRecordResponse, error)
 	GetRecords(ctx context.Context, in *GetRecordsRequest, opts ...grpc.CallOption) (*GetRecordsResponse, error)
 	ScanUpload(ctx context.Context, in *ScanUploadRequest, opts ...grpc.CallOption) (*ScanUploadResponse, error)
 }
@@ -61,6 +63,15 @@ func (c *recordServiceClient) SearchRecord(ctx context.Context, in *SearchRecord
 	return out, nil
 }
 
+func (c *recordServiceClient) SearchByNin(ctx context.Context, in *SearchByNinRequest, opts ...grpc.CallOption) (*SearchRecordResponse, error) {
+	out := new(SearchRecordResponse)
+	err := c.cc.Invoke(ctx, RecordService_SearchByNin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *recordServiceClient) GetRecords(ctx context.Context, in *GetRecordsRequest, opts ...grpc.CallOption) (*GetRecordsResponse, error) {
 	out := new(GetRecordsResponse)
 	err := c.cc.Invoke(ctx, RecordService_GetRecords_FullMethodName, in, out, opts...)
@@ -85,6 +96,7 @@ func (c *recordServiceClient) ScanUpload(ctx context.Context, in *ScanUploadRequ
 type RecordServiceServer interface {
 	GetRecord(context.Context, *GetRecordRequest) (*GetRecordResponse, error)
 	SearchRecord(context.Context, *SearchRecordRequest) (*SearchRecordResponse, error)
+	SearchByNin(context.Context, *SearchByNinRequest) (*SearchRecordResponse, error)
 	GetRecords(context.Context, *GetRecordsRequest) (*GetRecordsResponse, error)
 	ScanUpload(context.Context, *ScanUploadRequest) (*ScanUploadResponse, error)
 	mustEmbedUnimplementedRecordServiceServer()
@@ -99,6 +111,9 @@ func (UnimplementedRecordServiceServer) GetRecord(context.Context, *GetRecordReq
 }
 func (UnimplementedRecordServiceServer) SearchRecord(context.Context, *SearchRecordRequest) (*SearchRecordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchRecord not implemented")
+}
+func (UnimplementedRecordServiceServer) SearchByNin(context.Context, *SearchByNinRequest) (*SearchRecordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchByNin not implemented")
 }
 func (UnimplementedRecordServiceServer) GetRecords(context.Context, *GetRecordsRequest) (*GetRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRecords not implemented")
@@ -155,6 +170,24 @@ func _RecordService_SearchRecord_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecordService_SearchByNin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchByNinRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).SearchByNin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_SearchByNin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).SearchByNin(ctx, req.(*SearchByNinRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RecordService_GetRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRecordsRequest)
 	if err := dec(in); err != nil {
@@ -205,6 +238,10 @@ var RecordService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchRecord",
 			Handler:    _RecordService_SearchRecord_Handler,
+		},
+		{
+			MethodName: "SearchByNin",
+			Handler:    _RecordService_SearchByNin_Handler,
 		},
 		{
 			MethodName: "GetRecords",

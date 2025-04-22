@@ -16,6 +16,8 @@ type UserEnum string
 const (
 	UserEnumUSER         UserEnum = "USER"
 	UserEnumORGANIZATION UserEnum = "ORGANIZATION"
+	UserEnumDIAGNOSTIC   UserEnum = "DIAGNOSTIC"
+	UserEnumHOSPITAL     UserEnum = "HOSPITAL"
 	UserEnumADMIN        UserEnum = "ADMIN"
 )
 
@@ -58,6 +60,8 @@ func (e UserEnum) Valid() bool {
 	switch e {
 	case UserEnumUSER,
 		UserEnumORGANIZATION,
+		UserEnumDIAGNOSTIC,
+		UserEnumHOSPITAL,
 		UserEnumADMIN:
 		return true
 	}
@@ -68,8 +72,36 @@ func AllUserEnumValues() []UserEnum {
 	return []UserEnum{
 		UserEnumUSER,
 		UserEnumORGANIZATION,
+		UserEnumDIAGNOSTIC,
+		UserEnumHOSPITAL,
 		UserEnumADMIN,
 	}
+}
+
+type Organization struct {
+	ID        string             `db:"id" json:"id"`
+	UserID    string             `db:"user_id" json:"user_id"`
+	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}
+
+type Record struct {
+	ID             string             `db:"id" json:"id"`
+	OrganizationID string             `db:"organization_id" json:"organization_id"`
+	UserID         string             `db:"user_id" json:"user_id"`
+	Record         string             `db:"record" json:"record"`
+	ScanTitle      string             `db:"scan_title" json:"scan_title"`
+	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}
+
+type Upload struct {
+	ID             string             `db:"id" json:"id"`
+	OrganizationID string             `db:"organization_id" json:"organization_id"`
+	UserID         string             `db:"user_id" json:"user_id"`
+	ScanTitle      string             `db:"scan_title" json:"scan_title"`
+	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
 type User struct {
@@ -78,6 +110,8 @@ type User struct {
 	Nin       pgtype.Text        `db:"nin" json:"nin"`
 	Password  string             `db:"password" json:"password"`
 	UserType  UserEnum           `db:"user_type" json:"user_type"`
+	Address   []byte             `db:"address" json:"address"`
+	Contact   []byte             `db:"contact" json:"contact"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }

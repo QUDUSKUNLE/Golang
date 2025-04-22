@@ -3,8 +3,8 @@ package repo
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

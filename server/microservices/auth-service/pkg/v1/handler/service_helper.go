@@ -4,21 +4,21 @@ import (
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
-	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
+	userProtoc "github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 const (
-	All_Fields              = "Please provide all fields"
-	Incorrect_Password      = "Incorrect passwords"
-	Provide_ID              = "Id is required"
-	Not_Found               = "User`s not found"
-	Nin_Required            = "Nin is required"
-	User_Registered_Successfully = "User registered successfully."
+	All_Fields                           = "Please provide all fields"
+	Incorrect_Password                   = "Incorrect passwords"
+	Provide_ID                           = "Id is required"
+	Not_Found                            = "User`s not found"
+	Nin_Required                         = "Nin is required"
+	User_Registered_Successfully         = "User registered successfully."
 	Organization_Registered_Successfully = "Organization registered successfully."
-	Welcome_Home            = "Welcome to Scan Records scanrecords.com."
+	Welcome_Home                         = "Welcome to Scan Records scanrecords.com."
 )
 
 type CustomContext struct {
@@ -27,7 +27,7 @@ type CustomContext struct {
 
 type JwtCustomClaims struct {
 	// Authorized bool       `json:"authorized"`
-	ID       string          `json:"id"`
+	ID       string `json:"id"`
 	UserType string `json:"user_type"`
 	jwt.RegisteredClaims
 }

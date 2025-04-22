@@ -58,7 +58,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*Create
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, email, nin, password, user_type, created_at, updated_at FROM users where id = $1
+SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users where id = $1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
@@ -70,6 +70,8 @@ func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
 		&i.Nin,
 		&i.Password,
 		&i.UserType,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -77,7 +79,7 @@ func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, nin, password, user_type, created_at, updated_at FROM users WHERE email = $1
+SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users WHERE email = $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User, error) {
@@ -89,6 +91,8 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 		&i.Nin,
 		&i.Password,
 		&i.UserType,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -96,7 +100,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, email, nin, password, user_type, created_at, updated_at FROM users LIMIT 100
+SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users LIMIT 100
 `
 
 func (q *Queries) GetUsers(ctx context.Context) ([]*User, error) {
@@ -114,6 +118,8 @@ func (q *Queries) GetUsers(ctx context.Context) ([]*User, error) {
 			&i.Nin,
 			&i.Password,
 			&i.UserType,
+			&i.Address,
+			&i.Contact,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {

@@ -3,7 +3,7 @@ package handler
 import (
 	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/client"
-	"github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"google.golang.org/grpc"
 )

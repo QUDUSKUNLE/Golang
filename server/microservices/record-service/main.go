@@ -10,7 +10,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/usecase"
-	"github.com/QUDUSKUNLE/microservices/record-service/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"google.golang.org/grpc"
 )
 

@@ -4,13 +4,18 @@ import (
 	"context"
 	"strings"
 
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
-	"github.com/QUDUSKUNLE/microservices/record-service/db"
 )
 
 type Repository struct {
 	database *db.Queries
+}
+
+// SearchRecordByNin implements ports.RepositoryPorts.
+func (r *Repository) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.Record, error) {
+	panic("unimplemented")
 }
 
 // SearchRecord implements ports.RepositoryPorts.

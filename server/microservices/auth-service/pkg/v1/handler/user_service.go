@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
-	userProtoc "github.com/QUDUSKUNLE/microservices/auth-service/protogen/golang/user"
+	userProtoc "github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/grpc/codes"

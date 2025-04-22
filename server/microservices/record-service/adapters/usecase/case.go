@@ -6,11 +6,16 @@ import (
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/services"
-	"github.com/QUDUSKUNLE/microservices/record-service/db"
+	"github.com/QUDUSKUNLE/microservices/gateway/db"
 )
 
 type UseCase struct {
 	usecase ports.RepositoryPorts
+}
+
+// SearchRecordByNin implements ports.UseCasePorts.
+func (u *UseCase) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.Record, error) {
+	return u.usecase.SearchRecordByNin(ctx, searchRecord)
 }
 
 // SearchRecord implements ports.UseCasePorts.
