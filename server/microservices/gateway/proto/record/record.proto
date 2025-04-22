@@ -41,7 +41,7 @@ message ScanUploadRequest {
   string user_id = 1 [json_name = "user_id"];
   string scan_title = 2 [json_name = "scan_title"];
   string file_name = 3 [json_name = "file_name"];
-  bytes content = 5 [json_name = "content"];
+  bytes content = 4 [json_name = "content"];
 }
 
 message SearchRecordRequest {

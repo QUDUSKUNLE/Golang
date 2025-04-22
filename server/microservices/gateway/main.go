@@ -14,8 +14,8 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/gateway/config"
 	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
-	"github.com/QUDUSKUNLE/microservices/organization-service/protogen/golang/organization"
-	"github.com/QUDUSKUNLE/microservices/record-service/protogen/golang/record"
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
+	"github.com/QUDUSKUNLE/microservices/gateway/protogen/record"
 )
 
 func main() {

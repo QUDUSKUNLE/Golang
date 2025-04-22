@@ -7,6 +7,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Repository struct {
@@ -14,8 +15,28 @@ type Repository struct {
 }
 
 // SearchRecordByNin implements ports.RepositoryPorts.
-func (r *Repository) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.Record, error) {
-	panic("unimplemented")
+func (r *Repository) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.SearchRecordByNinRow, error) {
+	nin := pgtype.Text{String: searchRecord.Nin, Valid: true}
+	if strings.TrimSpace(searchRecord.ScanTitle) != "" {
+		return r.database.SearchRecordByNin(ctx, nin)
+	}
+	result, err := r.database.SearchRecordByNinAndScanTitle(ctx, db.SearchRecordByNinAndScanTitleParams{Nin: nin, ScanTitle: "%" + strings.TrimSpace(searchRecord.ScanTitle) + "%"})
+	if err != nil {
+		return nil, err
+	}
+	actualResult := make([]*db.SearchRecordByNinRow, 0)
+	for _, r := range result {
+		actualResult = append(actualResult, &db.SearchRecordByNinRow{
+			ID:             r.ID,
+			OrganizationID: r.OrganizationID,
+			UserID:         r.UserID,
+			Record:         r.Record,
+			ScanTitle:      r.ScanTitle,
+			CreatedAt:      r.CreatedAt,
+			UpdatedAt:      r.UpdatedAt,
+		})
+	}
+	return actualResult, nil
 }
 
 // SearchRecord implements ports.RepositoryPorts.

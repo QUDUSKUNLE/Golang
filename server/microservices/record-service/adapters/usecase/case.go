@@ -14,7 +14,7 @@ type UseCase struct {
 }
 
 // SearchRecordByNin implements ports.UseCasePorts.
-func (u *UseCase) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.Record, error) {
+func (u *UseCase) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.SearchRecordByNinRow, error) {
 	return u.usecase.SearchRecordByNin(ctx, searchRecord)
 }
 
