@@ -3,8 +3,8 @@ package v1
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

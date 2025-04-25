@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 )
@@ -13,7 +13,7 @@ type AuthInterceptor struct {
 	authToken string
 }
 
-func (o *organizationService) CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error) {
+func (o *organizationService) CreateOrganization(ctx context.Context, user dto.OrganizationDto) (*db.Organization, error) {
 	req := &organization.CreateOrganizationRequest{UserId: user.UserID}
 	resp, err := o.grpcClient.CreateOrganization(ctx, req)
 	if err != nil {

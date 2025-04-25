@@ -4,16 +4,16 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
 	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 )
 
 func TestUserServiceStruct_transformUserRPC(t *testing.T) {
 	type fields struct {
-		userService                    v1.UseCaseInterface
-		organizationService            ports.UseCasePorts
+		userService                    v1.UserPorts
+		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
 	type args struct {

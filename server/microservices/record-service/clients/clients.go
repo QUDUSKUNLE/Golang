@@ -49,7 +49,7 @@ func (u *userService) GetUsers(ctx context.Context) ([]*db.User, error) {
 	panic("unimplemented")
 }
 
-func NewGRPClientOrganizationService(organization_conn string, opts *ClientOptions) ports.UseCasePorts {
+func NewGRPClientOrganizationService(organization_conn string, opts *ClientOptions) ports.OrganizationPorts {
 	if opts == nil {
 		opts = DefaultClientOptions()
 	}
@@ -76,7 +76,7 @@ func NewGRPClientOrganizationService(organization_conn string, opts *ClientOptio
 	return &organizationService{organizationGrpcClient: organization.NewOrganizationServiceClient(organi_conn)}
 }
 
-func NewGRPClientAuthService(auth_conn string, opts *ClientOptions) v1.UseCaseInterface {
+func NewGRPClientAuthService(auth_conn string, opts *ClientOptions) v1.UserPorts {
 	if opts == nil {
 		opts = DefaultClientOptions()
 	}

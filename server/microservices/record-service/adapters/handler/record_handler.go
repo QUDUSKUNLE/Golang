@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/thirdparty"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
+	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetRecordRequest) (*record.GetRecordResponse, error) {
-	_, ok := ctx.Value("user").(*middleware.UserType)
+	_, ok := ctx.Value("user").(*constants.UserType)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
@@ -35,7 +35,7 @@ func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetR
 }
 
 func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.GetRecordsRequest) (*record.GetRecordsResponse, error) {
-	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	organization_user, ok := ctx.Value("user").(*constants.UserType)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
@@ -65,7 +65,7 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 }
 
 func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.ScanUploadRequest) (*record.ScanUploadResponse, error) {
-	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	organization_user, ok := ctx.Value("user").(*constants.UserType)
 	// Check authorization right
 	if !ok || organization_user.Type != "ORGANIZATION" {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
@@ -112,7 +112,7 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 }
 
 func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.SearchRecordRequest) (*record.SearchRecordResponse, error) {
-	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	organization_user, ok := ctx.Value("user").(*constants.UserType)
 	if !ok || organization_user.Type != "ORGANIZATION" {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
@@ -138,7 +138,7 @@ func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.S
 }
 
 func (this *RecordServiceStruct) SearchByNin(ctx context.Context, req *record.SearchByNinRequest) (*record.SearchRecordResponse, error) {
-	organization_user, ok := ctx.Value("user").(*middleware.UserType)
+	organization_user, ok := ctx.Value("user").(*constants.UserType)
 	if !ok || organization_user.Type != "ORGANIZATION" {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}

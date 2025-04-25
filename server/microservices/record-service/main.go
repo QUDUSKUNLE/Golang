@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/handler"
-	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
-	"github.com/QUDUSKUNLE/microservices/record-service/adapters/usecase"
+	"github.com/QUDUSKUNLE/microservices/record-service/adapters/recordcase"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"google.golang.org/grpc"
 )
@@ -33,10 +33,10 @@ func main() {
 	// Configure the gRPC server with enhanced options
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-			middleware.ValidateUnaryInterceptor(),
+			middleware.ValidationInterceptor(),
 		),
 	)
-	recordUseCase := usecase.InitializeRecordService(dbase)
+	recordUseCase := recordcase.InitializeRecordService(dbase)
 	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("AUTH"))
 	log.Printf("Record Service listening on %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {

@@ -10,7 +10,7 @@ import (
 
 type UserServiceStruct struct {
 	userService         v1.UseCaseInterface
-	organizationService ports.UseCasePorts
+	organizationService ports.OrganizationPorts
 	// user.UnimplementedUserServiceServer
 }
 

@@ -16,7 +16,7 @@ type RepositoryPorts interface {
 	UploadRecord(ctx context.Context, record domain.UploadDto) (*db.Upload, error)
 }
 
-type UseCasePorts interface {
+type RecordPorts interface {
 	CreateRecord(ctx context.Context, record domain.RecordDto) (*db.Record, error)
 	GetRecord(ctx context.Context, id string) (*db.Record, error)
 	SearchRecord(ctx context.Context, searchRecord domain.GetRecordDto) ([]*db.Record, error)

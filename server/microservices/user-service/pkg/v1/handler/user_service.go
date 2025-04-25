@@ -3,9 +3,8 @@ package handler
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/grpc/codes"
@@ -33,7 +32,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	}
 	// Check if user is an organization
 	if data.UserType != db.UserEnumUSER {
-		_, err := srv.organizationService.CreateOrganization(ctx, domain.OrganizationDto{UserID: user.ID})
+		_, err := srv.organizationService.CreateOrganization(ctx, dto.OrganizationDto{UserID: user.ID})
 		if err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
@@ -46,7 +45,7 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 	// Get a user with the ID
 	user, err := srv.userService.GetUser(ctx, req.GetId())
 	if err != nil {
-		return nil, status.Errorf(codes.NotFound, Not_Found)
+		return nil, status.Errorf(codes.NotFound, NotFound)
 	}
 	data := transformUserToProto(*user)
 	return &userProtoc.GetUserResponse{
@@ -64,7 +63,7 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 	}
 	users, err := srv.userService.GetUsers(ctx)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, Not_Found)
+		return nil, status.Error(codes.NotFound, NotFound)
 	}
 	usersResponse := &userProtoc.GetUsersResponse{Data: []*userProtoc.User{}}
 	for _, user := range users {

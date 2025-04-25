@@ -3,9 +3,8 @@ package handler
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/grpc/codes"
@@ -33,7 +32,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	}
 	// Check if user is an organization
 	if data.UserType != db.UserEnumUSER {
-		_, err := srv.organizationService.CreateOrganization(ctx, domain.OrganizationDto{UserID: user.ID})
+		_, err := srv.organizationService.CreateOrganization(ctx, dto.OrganizationDto{UserID: user.ID})
 		if err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}

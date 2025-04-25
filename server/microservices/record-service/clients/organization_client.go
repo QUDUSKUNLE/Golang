@@ -3,13 +3,13 @@ package clients
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 )
 
 // CreateOrganization implements ports.UseCasePorts.
-func (this *organizationService) CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error) {
+func (this *organizationService) CreateOrganization(ctx context.Context, user dto.OrganizationDto) (*db.Organization, error) {
 	req := &organization.CreateOrganizationRequest{UserId: user.UserID}
 	resp, err := this.organizationGrpcClient.CreateOrganization(ctx, req)
 	if err != nil {

@@ -3,7 +3,7 @@ package clients
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 )

@@ -1,11 +1,11 @@
 package handler
 
 import (
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 )
 
-func (handler *OrganizationServiceStruct) transformOrganizationRPC(req *organization.CreateOrganizationRequest) domain.OrganizationDto {
+func (handler *OrganizationServiceStruct) transformOrganizationRPC(req *organization.CreateOrganizationRequest) dto.OrganizationDto {
 	userID := req.GetUserId()
-	return domain.OrganizationDto{UserID: userID}
+	return dto.OrganizationDto{UserID: userID}
 }

@@ -15,7 +15,7 @@ type organizationService struct {
 	grpcClient organization.OrganizationServiceClient
 }
 
-func NewGRPCOrganizationService(connString string) ports.UseCasePorts {
+func NewGRPCOrganizationService(connString string) ports.OrganizationPorts {
 	conn, err := grpc.NewClient(connString, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil

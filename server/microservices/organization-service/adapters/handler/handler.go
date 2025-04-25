@@ -7,11 +7,11 @@ import (
 )
 
 type OrganizationServiceStruct struct {
-	organizationService ports.UseCasePorts
+	organizationService ports.OrganizationPorts
 	organization.UnimplementedOrganizationServiceServer
 }
 
-func NewOrganizationServer(grpcServer *grpc.Server, useCase ports.UseCasePorts) {
+func NewOrganizationServer(grpcServer *grpc.Server, useCase ports.OrganizationPorts) {
 	organizationGrpc := &OrganizationServiceStruct{organizationService: useCase}
 	organization.RegisterOrganizationServiceServer(grpcServer, organizationGrpc)
 }

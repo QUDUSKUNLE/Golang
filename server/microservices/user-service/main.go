@@ -7,9 +7,9 @@ import (
 	"os"
 
 	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
-	middleware "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
-	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usecase"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usercase"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -40,7 +40,7 @@ func main() {
 		))
 
 	// Initialize use case and register services
-	userUseCase := usecase.InitUserServer(db)
+	userUseCase := usercase.InitUserServer(db)
 	handler.NewAuthServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 

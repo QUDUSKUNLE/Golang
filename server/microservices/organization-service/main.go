@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
-	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/middleware"
-	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/usecase"
+	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/organizationcase"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"google.golang.org/grpc"
 )
@@ -29,9 +29,9 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
-		middleware.ValidationInterceptor,
+		middleware.ValidationInterceptor(),
 	))
-	organizationUseCase := usecase.InitOrganizationServer(dbase)
+	organizationUseCase := organizationcase.InitOrganizationServer(dbase)
 	handler.NewOrganizationServer(grpcServer, organizationUseCase)
 	log.Printf("Organization Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {

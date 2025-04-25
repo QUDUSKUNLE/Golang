@@ -11,8 +11,8 @@ import (
 )
 
 type fields struct {
-	userService                    v1.UseCaseInterface
-	organizationService            ports.UseCasePorts
+	userService                    v1.UserPorts
+	organizationService            ports.OrganizationPorts
 	UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 }
 
@@ -84,8 +84,8 @@ func TestUserServiceStruct_Create(t *testing.T) {
 
 func TestUserServiceStruct_Read(t *testing.T) {
 	type fields struct {
-		userService                    v1.UseCaseInterface
-		organizationService            ports.UseCasePorts
+		userService                    v1.UserPorts
+		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
 	type args struct {
@@ -122,8 +122,8 @@ func TestUserServiceStruct_Read(t *testing.T) {
 
 func TestUserServiceStruct_ReadUsers(t *testing.T) {
 	type fields struct {
-		userService                    v1.UseCaseInterface
-		organizationService            ports.UseCasePorts
+		userService                    v1.UserPorts
+		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
 	type args struct {
@@ -160,8 +160,8 @@ func TestUserServiceStruct_ReadUsers(t *testing.T) {
 
 func TestUserServiceStruct_UpdateNin(t *testing.T) {
 	type fields struct {
-		userService                    v1.UseCaseInterface
-		organizationService            ports.UseCasePorts
+		userService                    v1.UserPorts
+		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
 	type args struct {
@@ -198,8 +198,8 @@ func TestUserServiceStruct_UpdateNin(t *testing.T) {
 
 func TestUserServiceStruct_Home(t *testing.T) {
 	type fields struct {
-		userService                    v1.UseCaseInterface
-		organizationService            ports.UseCasePorts
+		userService                    v1.UserPorts
+		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
 	type args struct {

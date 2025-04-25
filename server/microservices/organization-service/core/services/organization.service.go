@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
@@ -18,7 +18,7 @@ func (r *Repository) GetOrganizationByUserID(ctx context.Context, user_id string
 }
 
 // CreateOrganization implements ports.RepositoryPorts.
-func (r *Repository) CreateOrganization(ctx context.Context, user domain.OrganizationDto) (*db.Organization, error) {
+func (r *Repository) CreateOrganization(ctx context.Context, user dto.OrganizationDto) (*db.Organization, error) {
 	return r.database.CreateOrganization(ctx, user.UserID)
 }
 

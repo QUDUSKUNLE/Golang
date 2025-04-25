@@ -9,12 +9,12 @@ import (
 )
 
 type UserServiceStruct struct {
-	userService         v1.UseCaseInterface
-	organizationService ports.UseCasePorts
+	userService         v1.UserPorts
+	organizationService ports.OrganizationPorts
 	user.UnimplementedUserServiceServer
 }
 
-func NewAuthServer(server *grpc.Server, usecase v1.UseCaseInterface, conn string) {
+func NewAuthServer(server *grpc.Server, usecase v1.UserPorts, conn string) {
 	userServiceController := &UserServiceStruct{
 		userService:         usecase,
 		organizationService: client.NewGRPCOrganizationService(conn),

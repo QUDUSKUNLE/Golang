@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
-	"github.com/QUDUSKUNLE/microservices/shared/db"
-	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
+	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

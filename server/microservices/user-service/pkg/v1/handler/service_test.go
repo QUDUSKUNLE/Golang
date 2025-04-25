@@ -10,7 +10,7 @@ import (
 func TestNewAuthServer(t *testing.T) {
 	type args struct {
 		server  *grpc.Server
-		usecase v1.UseCaseInterface
+		usecase v1.UserPorts
 		conn    string
 	}
 	tests := []struct {
