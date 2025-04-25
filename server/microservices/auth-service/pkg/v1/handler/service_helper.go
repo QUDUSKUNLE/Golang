@@ -1,72 +1,96 @@
 package handler
 
 import (
+	"context"
+	"errors"
 	"os"
 	"time"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
 	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	userProtoc "github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
+// Constants for messages
 const (
-	All_Fields                           = "Please provide all fields"
-	Incorrect_Password                   = "Incorrect passwords"
-	Provide_ID                           = "Id is required"
-	Not_Found                            = "User`s not found"
-	Nin_Required                         = "Nin is required"
-	User_Registered_Successfully         = "User registered successfully."
-	Organization_Registered_Successfully = "Organization registered successfully."
-	Welcome_Home                         = "Welcome to Scan Records scanrecords.com."
+	AllFields                          = "Please provide all fields"
+	Not_Found                          = "User not found"
+	IncorrectPassword                  = "Incorrect passwords"
+	ProvideID                          = "Id is required"
+	NotFound                           = "User not found"
+	NinRequired                        = "Nin is required"
+	UserRegisteredSuccessfully         = "User registered successfully."
+	OrganizationRegisteredSuccessfully = "Organization registered successfully."
+	NinUpdatedSuccessfully             = "Nin updated successfully."
+	WelcomeHome                        = "Welcome to Scan Records scanrecords.com."
+	ErrUnauthorized                    = "Unauthorized to perform operation."
+	ErrInvalidCredentials              = "Incorrect login credentials."
+	ErrNinUpdated                      = "Nin updated successfully."
 )
 
+// CustomContext holds the current user information
 type CustomContext struct {
 	User dto.CurrentUser `json:"user"`
 }
 
+// JwtCustomClaims defines the structure for JWT claims
 type JwtCustomClaims struct {
-	// Authorized bool       `json:"authorized"`
 	ID       string `json:"id"`
 	UserType string `json:"user_type"`
 	jwt.RegisteredClaims
 }
 
+// transformUserRPC converts a CreateUserRequest to a UserDto
 func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
-	return dto.UserDto{Password: req.GetPassword(), Email: req.GetEmail(), ConfirmPassword: req.GetConfirmPassword(), UserType: db.UserEnum(req.GetUserType().Enum().String())}
-}
-
-func (srv *UserServiceStruct) transformUsers(us []*db.User) *userProtoc.GetUsersResponse {
-	users := make([]*userProtoc.User, 0)
-	for _, user := range us {
-		users = append(users, &userProtoc.User{
-			Email:     user.Email.String,
-			CreatedAt: user.CreatedAt.Time.String(),
-			UpdatedAt: user.UpdatedAt.Time.String(),
-		})
+	return dto.UserDto{
+		Password:        req.GetPassword(),
+		Email:           req.GetEmail(),
+		ConfirmPassword: req.GetConfirmPassword(),
+		UserType:        db.UserEnum(req.GetUserType().Enum().String()),
 	}
-	return &userProtoc.GetUsersResponse{Data: users}
 }
 
+// transformToken generates a JWT token for the given user
 func (srv *UserServiceStruct) transformToken(user dto.CurrentUser) (string, error) {
-	// Get JWT_SECRET_KEY
 	secret := os.Getenv("JWT_SECRET_KEY")
-	// Create a new claims
+	if secret == "" {
+		ErrMissingSecretKey := errors.New("missing JWT secret key")
+		return "", ErrMissingSecretKey
+	}
+
 	claims := &JwtCustomClaims{
-		// Authorized: true,
-		user.ID,
-		user.UserType,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+		ID:       user.ID,
+		UserType: user.UserType,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(72 * time.Hour)),
 		},
 	}
-	// Create a new JWT access token with claims
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// Generate token
-	token, err := jwtToken.SignedString([]byte(secret))
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}
+
 	return token, nil
+}
+
+func transformUserToProto(user db.User) *userProtoc.User {
+	return &userProtoc.User{
+		Id:        user.ID,
+		Email:     user.Email.String,
+		CreatedAt: user.CreatedAt.Time.String(),
+		UpdatedAt: user.UpdatedAt.Time.String(),
+	}
+}
+
+func getUserFromContext(ctx context.Context) (*middleware.UserType, error) {
+	user, ok := ctx.Value("user").(*middleware.UserType)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, ErrUnauthorized)
+	}
+	return user, nil
 }

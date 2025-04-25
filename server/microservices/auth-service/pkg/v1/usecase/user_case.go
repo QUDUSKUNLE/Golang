@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
-	interfaces "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	repo "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/repository"
 	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type UseCase struct {
-	repo interfaces.RepositoryInterface
+	repo v1.RepositoryInterface
 }
 
 // GetUsers implements v1.UseCaseInterface.
@@ -44,11 +44,11 @@ func (u *UseCase) GetUser(ctx context.Context, id string) (*db.User, error) {
 	return u.repo.GetUser(ctx, id)
 }
 
-func New(repo interfaces.RepositoryInterface) interfaces.RepositoryInterface {
+func New(repo v1.RepositoryInterface) v1.RepositoryInterface {
 	return &UseCase{repo: repo}
 }
 
-func InitUserServer(db *db.Queries) interfaces.UseCaseInterface {
+func InitUserServer(db *db.Queries) v1.UseCaseInterface {
 	userRepo := repo.NewRepository(db)
 	return &UseCase{repo: userRepo}
 }
