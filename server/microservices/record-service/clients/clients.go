@@ -7,10 +7,10 @@ import (
 	"time"
 
 	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"

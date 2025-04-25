@@ -6,7 +6,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/services"
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
 
 type UseCase struct {

@@ -3,7 +3,7 @@ package ports
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 )
 

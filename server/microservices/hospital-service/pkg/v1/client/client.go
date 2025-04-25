@@ -3,8 +3,8 @@ package client
 import (
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

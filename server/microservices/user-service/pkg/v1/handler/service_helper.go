@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/dto"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
-	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/golang-jwt/jwt/v5"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,6 +18,7 @@ import (
 // Constants for messages
 const (
 	AllFields                          = "Please provide all fields"
+	Not_Found                          = "User not found"
 	IncorrectPassword                  = "Incorrect passwords"
 	ProvideID                          = "Id is required"
 	NotFound                           = "User not found"
@@ -86,8 +87,8 @@ func transformUserToProto(user db.User) *userProtoc.User {
 	}
 }
 
-func getUserFromContext(ctx context.Context) (*constants.UserType, error) {
-	user, ok := ctx.Value("user").(*constants.UserType)
+func getUserFromContext(ctx context.Context) (*middleware.UserType, error) {
+	user, ok := ctx.Value("user").(*middleware.UserType)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, ErrUnauthorized)
 	}

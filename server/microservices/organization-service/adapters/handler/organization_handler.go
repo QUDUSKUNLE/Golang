@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

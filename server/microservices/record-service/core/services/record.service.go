@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

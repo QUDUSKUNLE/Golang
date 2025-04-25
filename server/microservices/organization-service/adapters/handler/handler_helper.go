@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
 )
 

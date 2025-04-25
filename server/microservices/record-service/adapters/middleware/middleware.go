@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/record"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"

@@ -3,8 +3,8 @@ package ports
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
 
 type RepositoryPorts interface {

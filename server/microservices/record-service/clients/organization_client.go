@@ -3,9 +3,9 @@ package clients
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/domain"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 )
 
 // CreateOrganization implements ports.UseCasePorts.

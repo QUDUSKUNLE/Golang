@@ -46,7 +46,7 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 	// Get a user with the ID
 	user, err := srv.userService.GetUser(ctx, req.GetId())
 	if err != nil {
-		return nil, status.Errorf(codes.NotFound, NotFound)
+		return nil, status.Errorf(codes.NotFound, Not_Found)
 	}
 	data := transformUserToProto(*user)
 	return &userProtoc.GetUserResponse{
@@ -64,7 +64,7 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 	}
 	users, err := srv.userService.GetUsers(ctx)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, NotFound)
+		return nil, status.Error(codes.NotFound, Not_Found)
 	}
 	usersResponse := &userProtoc.GetUsersResponse{Data: []*userProtoc.User{}}
 	for _, user := range users {

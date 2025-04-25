@@ -3,8 +3,8 @@ package handler
 import (
 	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/client"
-	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"google.golang.org/grpc"
 )
 

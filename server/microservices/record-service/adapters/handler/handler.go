@@ -2,10 +2,10 @@ package handler
 
 import (
 	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/record"
 	organizationPorts "github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/record-service/clients"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"google.golang.org/grpc"
 )
 

@@ -12,14 +12,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/QUDUSKUNLE/microservices/gateway/config"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/user"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/organization"
-	"github.com/QUDUSKUNLE/microservices/gateway/protogen/record"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
+	"github.com/QUDUSKUNLE/microservices/shared/utils"
 )
 
 func main() {
-	if err := config.LoadEnvironmentVariable(); err != nil {
+	if err := utils.LoadEnvironmentVariable(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 

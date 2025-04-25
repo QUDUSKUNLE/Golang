@@ -6,17 +6,17 @@ import (
 	"net"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/record-service/adapters/config"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/middleware"
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/usecase"
-	"github.com/QUDUSKUNLE/microservices/gateway/db"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"google.golang.org/grpc"
 )
 
 func init() {
 	// Load environment variable
-	if err := config.LoadEnvironmentVariable(); err != nil {
+	if err := utils.LoadEnvironmentVariable(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 }
