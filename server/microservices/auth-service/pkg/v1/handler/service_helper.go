@@ -1,18 +1,14 @@
 package handler
 
 import (
-	"context"
 	"errors"
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // Constants for messages
@@ -20,15 +16,11 @@ const (
 	AllFields                          = "Please provide all fields"
 	IncorrectPassword                  = "Incorrect passwords"
 	ProvideID                          = "Id is required"
-	NotFound                           = "User not found"
 	NinRequired                        = "Nin is required"
 	UserRegisteredSuccessfully         = "User registered successfully."
 	OrganizationRegisteredSuccessfully = "Organization registered successfully."
 	NinUpdatedSuccessfully             = "Nin updated successfully."
 	WelcomeHome                        = "Welcome to Scan Records scanrecords.com."
-	ErrUnauthorized                    = "Unauthorized to perform operation."
-	ErrInvalidCredentials              = "Incorrect login credentials."
-	ErrNinUpdated                      = "Nin updated successfully."
 )
 
 // CustomContext holds the current user information
@@ -84,12 +76,4 @@ func transformUserToProto(user db.User) *userProtoc.User {
 		CreatedAt: user.CreatedAt.Time.String(),
 		UpdatedAt: user.UpdatedAt.Time.String(),
 	}
-}
-
-func getUserFromContext(ctx context.Context) (*constants.UserType, error) {
-	user, ok := ctx.Value("user").(*constants.UserType)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, ErrUnauthorized)
-	}
-	return user, nil
 }

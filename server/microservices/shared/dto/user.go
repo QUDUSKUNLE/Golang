@@ -38,8 +38,9 @@ type (
 		Error   interface{} `json:"error"`
 		Success bool        `json:"success"`
 	}
-	Local struct {
-		*db.User
+	UserCreatedEvent struct {
+		UserID string `json:"userId"`
+		Email  string `json:"email"`
 	}
 )
 

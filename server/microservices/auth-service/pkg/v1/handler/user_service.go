@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 
+	"github.com/QUDUSKUNLE/microservices/shared/constants"
+	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
@@ -32,8 +34,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	}
 	// Check if user is an organization
 	if data.UserType != db.UserEnumUSER {
-		_, err := srv.organizationService.CreateOrganization(ctx, dto.OrganizationDto{UserID: user.ID})
-		if err != nil {
+		if err := srv.eventBroker.Publish("CreatedUser", &dto.UserCreatedEvent{UserID: user.ID, Email: built_user.Email.String}); err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
@@ -45,7 +46,7 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 	// Get a user with the ID
 	user, err := srv.userService.GetUser(ctx, req.GetId())
 	if err != nil {
-		return nil, status.Errorf(codes.NotFound, NotFound)
+		return nil, status.Errorf(codes.NotFound, constants.ErrUserNotFound)
 	}
 	data := transformUserToProto(*user)
 	return &userProtoc.GetUserResponse{
@@ -54,16 +55,16 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 
 func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.GetUsersRequest) (*userProtoc.GetUsersResponse, error) {
 	// Check if user has admin right
-	admin, err := getUserFromContext(ctx)
+	admin, err := middleware.GetUserFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if admin.Type != string(db.UserEnumADMIN) {
-		return nil, status.Errorf(codes.Unauthenticated, ErrUnauthorized)
+		return nil, status.Errorf(codes.Unauthenticated, constants.ErrUnauthorized)
 	}
 	users, err := srv.userService.GetUsers(ctx)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, NotFound)
+		return nil, status.Error(codes.NotFound, constants.ErrUserNotFound)
 	}
 	usersResponse := &userProtoc.GetUsersResponse{Data: []*userProtoc.User{}}
 	for _, user := range users {
@@ -75,7 +76,7 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignInRequest) (*userProtoc.SignInResponse, error) {
 	user, err := srv.userService.Login(ctx, dto.LogInDto{Email: req.GetEmail(), Password: req.GetPassword()})
 	if err != nil {
-		return nil, status.Errorf(codes.NotFound, ErrInvalidCredentials)
+		return nil, status.Errorf(codes.NotFound, constants.ErrInvalidCredentials)
 	}
 
 	if err = dto.ComparePassword(*user, req.GetPassword()); err != nil {
@@ -92,7 +93,7 @@ func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignIn
 }
 
 func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.UpdateNinRequest) (*userProtoc.UpdateNinResponse, error) {
-	user, err := getUserFromContext(ctx)
+	user, err := middleware.GetUserFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 type UseCase struct {
-	repo v1.RepositoryInterface
+	repo v1.UserRepository
 }
 
 // GetUsers implements v1.UserPorts.
@@ -44,7 +44,7 @@ func (u *UseCase) GetUser(ctx context.Context, id string) (*db.User, error) {
 	return u.repo.GetUser(ctx, id)
 }
 
-func New(repo v1.RepositoryInterface) v1.RepositoryInterface {
+func New(repo v1.UserRepository) v1.UserRepository {
 	return &UseCase{repo: repo}
 }
 

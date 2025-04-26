@@ -117,3 +117,11 @@ func ValidateEmail(email string) bool {
 func ValidateNIN(nin string) bool {
 	return regexp.MustCompile(`^\d{11}$`).MatchString(nin)
 }
+
+func GetUserFromContext(ctx context.Context) (*constants.UserType, error) {
+	user, ok := ctx.Value("user").(*constants.UserType)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, constants.ErrUnauthorized)
+	}
+	return user, nil
+}

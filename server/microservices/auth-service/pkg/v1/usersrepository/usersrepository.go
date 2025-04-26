@@ -35,6 +35,6 @@ func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*d
 	return u.database.UpdateNin(ctx, user)
 }
 
-func NewRepository(dbase *db.Queries) v1.RepositoryInterface {
+func NewRepository(dbase *db.Queries) v1.UserRepository {
 	return &Repository{database: dbase}
 }
