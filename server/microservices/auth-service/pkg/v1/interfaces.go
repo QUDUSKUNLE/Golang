@@ -8,16 +8,14 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type UserRepository interface {
-	CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error)
+type AuthRepository interface {
 	GetUser(ctx context.Context, id string) (*db.User, error)
 	GetUsers(ctx context.Context) ([]*db.User, error)
 	GetUserByEmail(ctx context.Context, email pgtype.Text) (*db.User, error)
 	UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error)
 }
 
-type UserPorts interface {
-	CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error)
+type AuthPorts interface {
 	GetUser(ctx context.Context, id string) (*db.User, error)
 	GetUsers(ctx context.Context) ([]*db.User, error)
 	Login(ctx context.Context, user dto.LogInDto) (*db.User, error)

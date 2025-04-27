@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 )
@@ -14,39 +14,6 @@ type fields struct {
 	userService                    v1.UserPorts
 	organizationService            ports.OrganizationPorts
 	UnimplementedUserServiceServer user.UnimplementedUserServiceServer
-}
-
-func TestUserServiceStruct_Signin(t *testing.T) {
-	type args struct {
-		ctx context.Context
-		req *user.SignInRequest
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *user.SignInResponse
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			srv := &UserServiceStruct{
-				userService:                    tt.fields.userService,
-				organizationService:            tt.fields.organizationService,
-				UnimplementedUserServiceServer: tt.fields.UnimplementedUserServiceServer,
-			}
-			got, err := srv.Signin(tt.args.ctx, tt.args.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("UserServiceStruct.Signin() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("UserServiceStruct.Signin() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
 
 func TestUserServiceStruct_Create(t *testing.T) {

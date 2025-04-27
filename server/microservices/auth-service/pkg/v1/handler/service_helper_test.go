@@ -12,7 +12,7 @@ import (
 
 func TestUserServiceStruct_transformUserRPC(t *testing.T) {
 	type fields struct {
-		userService                    v1.UserPorts
+		authService                    v1.AuthPorts
 		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
@@ -29,13 +29,13 @@ func TestUserServiceStruct_transformUserRPC(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := &UserServiceStruct{
-				userService:                    tt.fields.userService,
+			srv := &AuthServiceStruct{
+				authService:                    tt.fields.authService,
 				organizationService:            tt.fields.organizationService,
 				UnimplementedUserServiceServer: tt.fields.UnimplementedUserServiceServer,
 			}
 			if got := srv.transformUserRPC(tt.args.req); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("UserServiceStruct.transformUserRPC() = %v, want %v", got, tt.want)
+				t.Errorf("AuthServiceStruct.transformUserRPC() = %v, want %v", got, tt.want)
 			}
 		})
 	}

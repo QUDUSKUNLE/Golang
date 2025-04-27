@@ -20,7 +20,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 	// Create user in the database
-	user, err := srv.userService.CreateUser(
+	_, err = srv.userService.CreateUser(
 		ctx, db.CreateUserParams{
 			Email:    built_user.Email,
 			Nin:      pgtype.Text{String: "", Valid: true},
@@ -32,10 +32,9 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	}
 	// Check if user is an organization
 	if data.UserType != db.UserEnumUSER {
-		_, err := srv.organizationService.CreateOrganization(ctx, dto.OrganizationDto{UserID: user.ID})
-		if err != nil {
-			return nil, status.Error(codes.Aborted, err.Error())
-		}
+		// if err := srv.eventBroker.Publish("CreatedUser", &dto.UserCreatedEvent{UserID: user.ID, Email: built_user.Email.String}); err != nil {
+		// 	return nil, status.Error(codes.Aborted, err.Error())
+		// }
 		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
 	}
 	return &userProtoc.SuccessResponse{Data: UserRegisteredSuccessfully}, nil
@@ -70,25 +69,6 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 		usersResponse.Data = append(usersResponse.Data, transformUserToProto(*user))
 	}
 	return usersResponse, nil
-}
-
-func (srv *UserServiceStruct) Signin(ctx context.Context, req *userProtoc.SignInRequest) (*userProtoc.SignInResponse, error) {
-	user, err := srv.userService.Login(ctx, dto.LogInDto{Email: req.GetEmail(), Password: req.GetPassword()})
-	if err != nil {
-		return nil, status.Errorf(codes.NotFound, ErrInvalidCredentials)
-	}
-
-	if err = dto.ComparePassword(*user, req.GetPassword()); err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-	token, err := srv.transformToken(dto.CurrentUser{
-		ID:       user.ID,
-		UserType: string(user.UserType),
-	})
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Failed to generate token: %v", err)
-	}
-	return &userProtoc.SignInResponse{Token: token}, nil
 }
 
 func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.UpdateNinRequest) (*userProtoc.UpdateNinResponse, error) {

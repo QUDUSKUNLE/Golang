@@ -4,16 +4,14 @@ import (
 	"testing"
 
 	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
-	"github.com/QUDUSKUNLE/microservices/events-service/domain"
 	"google.golang.org/grpc"
 )
 
 func TestNewAuthServer(t *testing.T) {
 	type args struct {
-		server  *grpc.Server
-		usecase v1.UserPorts
-		event   domain.EventPorts
-		conn    string
+		server   *grpc.Server
+		authcase v1.AuthPorts
+		conn     string
 	}
 	tests := []struct {
 		name string
@@ -22,6 +20,6 @@ func TestNewAuthServer(t *testing.T) {
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
-		NewAuthServer(tt.args.server, tt.args.usecase, tt.args.event, tt.args.conn)
+		NewAuthServer(tt.args.server, tt.args.authcase, tt.args.conn)
 	}
 }

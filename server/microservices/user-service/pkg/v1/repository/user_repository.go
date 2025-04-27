@@ -3,7 +3,7 @@ package repo
 import (
 	"context"
 
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -35,6 +35,6 @@ func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*d
 	return u.database.UpdateNin(ctx, user)
 }
 
-func NewRepository(dbase *db.Queries) v1.RepositoryInterface {
+func NewRepository(dbase *db.Queries) v1.UserRepository {
 	return &Repository{database: dbase}
 }

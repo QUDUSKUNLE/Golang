@@ -1,0 +1,24 @@
+syntax = "proto3";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/auth-service/protogen/golang/auth";
+
+import "google/api/annotations.proto";
+
+service AuthService {
+  rpc Signin(SignInRequest) returns (SignInResponse) {
+    option (google.api.http) = {
+      post: "/v1/login",
+      body: "*"
+    };
+  }
+}
+
+
+message SignInRequest {
+  string email = 1 [json_name = "email"];
+  string password = 2 [json_name = "password"];
+}
+
+message SignInResponse {
+  string token = 1;
+}
+

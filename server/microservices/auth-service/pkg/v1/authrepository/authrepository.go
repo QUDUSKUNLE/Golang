@@ -1,4 +1,4 @@
-package repo
+package authrepository
 
 import (
 	"context"
@@ -35,6 +35,6 @@ func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*d
 	return u.database.UpdateNin(ctx, user)
 }
 
-func NewRepository(dbase *db.Queries) v1.UserRepository {
+func NewRepository(dbase *db.Queries) v1.AuthRepository {
 	return &Repository{database: dbase}
 }

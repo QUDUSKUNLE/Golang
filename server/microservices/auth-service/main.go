@@ -1,18 +1,27 @@
 package main
 
+// Package main is the entry point for the auth-service microservice.
+// It initializes and starts the gRPC server for handling authentication-related requests.
+//
+// - External dependencies:
+//   - github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/authcase: Contains the use case logic for authentication.
+//   - github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler: Provides gRPC handlers for authentication services.
+//   - github.com/QUDUSKUNLE/microservices/shared/db: Provides shared database utilities.
+//   - github.com/QUDUSKUNLE/microservices/shared/middleware: Provides shared middleware utilities.
+//   - github.com/QUDUSKUNLE/microservices/shared/utils: Provides shared utility functions.
+//   - google.golang.org/grpc: Provides gRPC server and client functionality.
+//   - google.golang.org/grpc/reflection: Provides server reflection for gRPC debugging and tooling.
 import (
 	"fmt"
 	"log"
 	"net"
 	"os"
 
-	handler "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
-	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/usercase"
-	"github.com/QUDUSKUNLE/microservices/events-service/publish"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/authcase"
+	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
-	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -36,19 +45,14 @@ func main() {
 
 	// Create gRPC server with TLS and interceptors
 	grpcServer := grpc.NewServer(
-		// grpc.Creds(creds),
 		grpc.ChainUnaryInterceptor(
 			middleware.ValidationInterceptor(),
 		))
 
 	// Initialize use case and register services
-	userUseCase := usercase.InitUserServer(db)
-	// Initilaize new broker
-	broker := publish.NewBroker(kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{os.Getenv("KAFKA_BROKER")},
-		// Topic:   os.Getenv("KAFKA_TOPIC"),
-	}))
-	handler.NewAuthServer(grpcServer, userUseCase, broker, os.Getenv("ORGANIZATION"))
+	userUseCase := authcase.InitAuthServer(db)
+
+	handler.NewAuthServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
 	log.Printf("Auth Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())

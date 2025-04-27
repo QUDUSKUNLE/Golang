@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
@@ -36,7 +37,7 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 				return nil, status.Errorf(codes.InvalidArgument, "Invalid id.")
 			}
 		}
-		if r, ok := req.(*user.SignInRequest); ok {
+		if r, ok := req.(*auth.SignInRequest); ok {
 			if !ValidateEmail(r.Email) || r.Password == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Email and Password cannot be empty")
 			}

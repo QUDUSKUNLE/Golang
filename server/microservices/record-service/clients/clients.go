@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"

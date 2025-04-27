@@ -1,5 +1,17 @@
 package main
 
+// Package main serves as the entry point for the gRPC Gateway server.
+// It sets up HTTP handlers to proxy requests to gRPC services and provides
+// RESTful endpoints for the microservices in the application.
+//
+// This file imports the necessary packages for setting up the gRPC Gateway,
+// including the gRPC runtime, credentials, and metadata handling. It also
+// imports the generated protocol buffer code for the various microservices
+// (organization, record, user, and auth) and utility functions.
+//
+// The gRPC Gateway enables seamless communication between RESTful clients
+// and gRPC services by translating HTTP/JSON requests into gRPC requests
+// and vice versa.
 import (
 	"context"
 	"fmt"
@@ -15,6 +27,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 )
 
@@ -36,10 +49,18 @@ func main() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	// Register AuthServiceHandler
-	if err := user.RegisterUserServiceHandlerFromEndpoint(
+	if err := auth.RegisterAuthServiceHandlerFromEndpoint(
 		ctx,
 		mux,
 		os.Getenv("AUTH"), opts); err != nil {
+		log.Fatalf("Failed to register the auth service handler: %v", err)
+	}
+
+	// Register UserServiceHandler
+	if err := user.RegisterUserServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		os.Getenv("USER"), opts); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
 

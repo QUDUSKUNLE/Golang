@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "github.com/QUDUSKUNLE/microservices/services/auth-service/protogen/golang/user";
+option go_package = "github.com/QUDUSKUNLE/microservices/services/user-service/protogen/golang/user";
 
 import "google/api/annotations.proto";
 
@@ -27,12 +27,6 @@ service UserService {
   rpc Read(SingleUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {
       get: "/v1/users/{id}",
-    };
-  }
-  rpc Signin(SignInRequest) returns (SignInResponse) {
-    option (google.api.http) = {
-      post: "/v1/login",
-      body: "*"
     };
   }
   rpc Home(HomeRequest) returns (GetHomeResponse) {
@@ -65,11 +59,6 @@ message User {
   string updated_at = 5 [json_name = "updated_at"];
 }
 
-message SignInRequest {
-  string email = 1 [json_name = "email"];
-  string password = 2 [json_name = "password"];
-}
-
 message SingleUserRequest {
   string id = 1 [json_name = "id"];
 }
@@ -100,10 +89,6 @@ message GetUserResponse {
 
 message GetHomeResponse {
   string message = 1;
-}
-
-message SignInResponse {
-  string token = 1;
 }
 
 message UpdateNinResponse {

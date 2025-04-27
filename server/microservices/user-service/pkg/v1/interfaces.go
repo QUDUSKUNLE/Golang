@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type RepositoryInterface interface {
+type UserRepository interface {
 	CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error)
 	GetUser(ctx context.Context, id string) (*db.User, error)
 	GetUsers(ctx context.Context) ([]*db.User, error)
@@ -16,7 +16,7 @@ type RepositoryInterface interface {
 	UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error)
 }
 
-type UseCaseInterface interface {
+type UserPorts interface {
 	CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error)
 	GetUser(ctx context.Context, id string) (*db.User, error)
 	GetUsers(ctx context.Context) ([]*db.User, error)

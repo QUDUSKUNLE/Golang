@@ -36,7 +36,7 @@ type JwtCustomClaims struct {
 }
 
 // transformUserRPC converts a CreateUserRequest to a UserDto
-func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
+func (srv *AuthServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
 	return dto.UserDto{
 		Password:        req.GetPassword(),
 		Email:           req.GetEmail(),
@@ -46,7 +46,7 @@ func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest
 }
 
 // transformToken generates a JWT token for the given user
-func (srv *UserServiceStruct) transformToken(user dto.CurrentUser) (string, error) {
+func (srv *AuthServiceStruct) transformToken(user dto.CurrentUser) (string, error) {
 	secret := os.Getenv("JWT_SECRET_KEY")
 	if secret == "" {
 		ErrMissingSecretKey := errors.New("missing JWT secret key")
@@ -67,13 +67,4 @@ func (srv *UserServiceStruct) transformToken(user dto.CurrentUser) (string, erro
 	}
 
 	return token, nil
-}
-
-func transformUserToProto(user db.User) *userProtoc.User {
-	return &userProtoc.User{
-		Id:        user.ID,
-		Email:     user.Email.String,
-		CreatedAt: user.CreatedAt.Time.String(),
-		UpdatedAt: user.UpdatedAt.Time.String(),
-	}
 }

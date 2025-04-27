@@ -22,7 +22,6 @@ const (
 	UserService_Create_FullMethodName    = "/UserService/Create"
 	UserService_ReadUsers_FullMethodName = "/UserService/ReadUsers"
 	UserService_Read_FullMethodName      = "/UserService/Read"
-	UserService_Signin_FullMethodName    = "/UserService/Signin"
 	UserService_Home_FullMethodName      = "/UserService/Home"
 	UserService_UpdateNin_FullMethodName = "/UserService/UpdateNin"
 )
@@ -34,7 +33,6 @@ type UserServiceClient interface {
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	ReadUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 	Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	Signin(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	Home(ctx context.Context, in *HomeRequest, opts ...grpc.CallOption) (*GetHomeResponse, error)
 	UpdateNin(ctx context.Context, in *UpdateNinRequest, opts ...grpc.CallOption) (*UpdateNinResponse, error)
 }
@@ -74,15 +72,6 @@ func (c *userServiceClient) Read(ctx context.Context, in *SingleUserRequest, opt
 	return out, nil
 }
 
-func (c *userServiceClient) Signin(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error) {
-	out := new(SignInResponse)
-	err := c.cc.Invoke(ctx, UserService_Signin_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) Home(ctx context.Context, in *HomeRequest, opts ...grpc.CallOption) (*GetHomeResponse, error) {
 	out := new(GetHomeResponse)
 	err := c.cc.Invoke(ctx, UserService_Home_FullMethodName, in, out, opts...)
@@ -108,7 +97,6 @@ type UserServiceServer interface {
 	Create(context.Context, *CreateUserRequest) (*SuccessResponse, error)
 	ReadUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 	Read(context.Context, *SingleUserRequest) (*GetUserResponse, error)
-	Signin(context.Context, *SignInRequest) (*SignInResponse, error)
 	Home(context.Context, *HomeRequest) (*GetHomeResponse, error)
 	UpdateNin(context.Context, *UpdateNinRequest) (*UpdateNinResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -126,9 +114,6 @@ func (UnimplementedUserServiceServer) ReadUsers(context.Context, *GetUsersReques
 }
 func (UnimplementedUserServiceServer) Read(context.Context, *SingleUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
-}
-func (UnimplementedUserServiceServer) Signin(context.Context, *SignInRequest) (*SignInResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
 }
 func (UnimplementedUserServiceServer) Home(context.Context, *HomeRequest) (*GetHomeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Home not implemented")
@@ -203,24 +188,6 @@ func _UserService_Read_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_Signin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SignInRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).Signin(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_Signin_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Signin(ctx, req.(*SignInRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_Home_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(HomeRequest)
 	if err := dec(in); err != nil {
@@ -275,10 +242,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Read",
 			Handler:    _UserService_Read_Handler,
-		},
-		{
-			MethodName: "Signin",
-			Handler:    _UserService_Signin_Handler,
 		},
 		{
 			MethodName: "Home",
