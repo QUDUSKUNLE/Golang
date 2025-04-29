@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
@@ -13,6 +14,8 @@ import (
 
 // Create a record
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
+
+	fmt.Println("Hereeeee")
 	// Transform request data
 	data := srv.transformUserRPC(req)
 	built_user, err := dto.BuildNewUser(data)

@@ -19,13 +19,11 @@ import (
 	"net"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/user-service/pkg/v1/handler"
-	"github.com/QUDUSKUNLE/microservices/user-service/pkg/v1/usercase"
-	"github.com/QUDUSKUNLE/microservices/events-service/publish"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
-	"github.com/segmentio/kafka-go"
+	"github.com/QUDUSKUNLE/microservices/user-service/pkg/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/user-service/pkg/v1/usercase"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -49,19 +47,15 @@ func main() {
 
 	// Create gRPC server with TLS and interceptors
 	grpcServer := grpc.NewServer(
-		// grpc.Creds(creds),
 		grpc.ChainUnaryInterceptor(
 			middleware.ValidationInterceptor(),
-		))
+		),
+	)
 
 	// Initialize use case and register services
 	userUseCase := usercase.InitUserServer(db)
 
-	// Initilaize new broker
-	broker := publish.NewBroker(kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{os.Getenv("KAFKA_BROKER")},
-	}))
-	handler.NewAuthServer(grpcServer, userUseCase, broker, os.Getenv("ORGANIZATION"))
+	handler.NewAuthServer(grpcServer, userUseCase, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
 	log.Printf("User Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())

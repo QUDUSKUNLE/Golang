@@ -4,7 +4,7 @@ func Add(x, y int) int {
 	return x + y
 }
 
-// Sum calculates the total of a list of integers
+// Sum takes a slice of integers and returns their total
 func Sum(numbers []int) int {
 	sum := 0
 	for _, number := range numbers {

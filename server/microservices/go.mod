@@ -5,6 +5,7 @@ go 1.23.2
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
 	github.com/jackc/pgx/v5 v5.5.5
+	github.com/segmentio/kafka-go v0.4.47
 	golang.org/x/crypto v0.28.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20241021214115-324edc3d5d38
 	google.golang.org/protobuf v1.35.1
@@ -18,7 +19,6 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/pierrec/lz4/v4 v4.1.15 // indirect
-	github.com/segmentio/kafka-go v0.4.47 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect

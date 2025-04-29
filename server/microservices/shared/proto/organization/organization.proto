@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "github.com/QUDUSKUNLE/microservices/services/organization-service/protogen/golang/organization";
+option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/organization";
 
 import "google/api/annotations.proto";
 
