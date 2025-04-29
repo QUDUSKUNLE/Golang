@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
@@ -14,8 +13,6 @@ import (
 
 // Create a record
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
-
-	fmt.Println("Hereeeee")
 	// Transform request data
 	data := srv.transformUserRPC(req)
 	built_user, err := dto.BuildNewUser(data)
@@ -23,7 +20,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 	// Create user in the database
-	_, err = srv.userService.CreateUser(
+	created_user, err := srv.userService.CreateUser(
 		ctx, db.CreateUserParams{
 			Email:    built_user.Email,
 			Nin:      pgtype.Text{String: "", Valid: true},
@@ -35,9 +32,9 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	}
 	// Check if user is an organization
 	if data.UserType != db.UserEnumUSER {
-		// if err := srv.eventBroker.Publish("CreatedUser", &dto.UserCreatedEvent{UserID: user.ID, Email: built_user.Email.String}); err != nil {
-		// 	return nil, status.Error(codes.Aborted, err.Error())
-		// }
+		if err := srv.eventBroker.Publish(ctx, "user-events", &dto.UserCreatedEvent{UserID: created_user.ID, Email: built_user.Email.String}); err != nil {
+			return nil, status.Error(codes.Aborted, err.Error())
+		}
 		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
 	}
 	return &userProtoc.SuccessResponse{Data: UserRegisteredSuccessfully}, nil

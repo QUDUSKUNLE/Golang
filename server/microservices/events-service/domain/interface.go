@@ -9,7 +9,9 @@
 // topic. The handler function receives the event data as a byte slice.
 package domain
 
+import "context"
+
 type EventPorts interface {
-	Publish(topic string, event interface{}) error
-	Subscribe(topic string, handler func(event []byte))
+	Publish(context context.Context, topic string, event interface{}) error
+	// Subscribe(topic string, handler func(event []byte))
 }

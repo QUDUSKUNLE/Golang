@@ -4,15 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/segmentio/kafka-go"
 )
 
-
 func ConsumeCreatedUserEvent(brokerAddress, topic string) {
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{brokerAddress},
-		Topic: topic,
+		Topic:   topic,
 	})
 
 	defer reader.Close()
@@ -26,11 +26,16 @@ func ConsumeCreatedUserEvent(brokerAddress, topic string) {
 		}
 
 		// Process the event
-		var event dto.UserCreatedEvent
-		if err = json.Unmarshal(msg.Value, &event); err != nil {
-			log.Printf("Error unmarshaling event: %v", err)
-			continue
+		switch topic {
+		case "user-events":
+			var event dto.UserCreatedEvent
+			if err = json.Unmarshal(msg.Value, &event); err != nil {
+				log.Printf("Error unmarshaling event: %v", err)
+				continue
+			}
+			log.Printf("Processing UserCreatedEvent: UserID=%s, Email=%s", event.UserID, event.Email)
+		default:
+			log.Default()
 		}
-		log.Printf("Processing UserCreatedEvent: UserID=%s, Email=%s",event.UserID, event.Email)
 	}
 }

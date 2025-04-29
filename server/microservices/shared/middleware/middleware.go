@@ -28,7 +28,6 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 		if r, ok := req.(*user.CreateUserRequest); ok {
-			fmt.Println("CreateUserRequest")
 			if !ValidateEmail(r.Email) || r.Password == "" || string(r.UserType) == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Email, Password and UserType cannot be empty")
 			} else if r.Password != r.ConfirmPassword {

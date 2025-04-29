@@ -24,10 +24,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
-	// "github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
-	// "github.com/QUDUSKUNLE/microservices/shared/protogen/record"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
-	// "github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 )
 
@@ -49,36 +49,36 @@ func main() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	// Register AuthServiceHandler
-	// if err := auth.RegisterAuthServiceHandlerFromEndpoint(
-	// 	ctx,
-	// 	mux,
-	// 	os.Getenv("AUTH"), opts); err != nil {
-	// 	log.Fatalf("Failed to register the auth service handler: %v", err)
-	// }
+	if err := auth.RegisterAuthServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		os.Getenv("AUTH"), opts); err != nil {
+		log.Fatalf("Failed to register the auth service handler: %v", err)
+	}
 
 	// Register UserServiceHandler
 	if err := user.RegisterUserServiceHandlerFromEndpoint(
 		ctx,
 		mux,
-		os.Getenv("USER"), opts); err != nil {
+		os.Getenv("USER_SERVICE"), opts); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
 	}
 
 	// Register OrganizationServiceHandler
-	// if err := organization.RegisterOrganizationServiceHandlerFromEndpoint(
-	// 	ctx,
-	// 	mux,
-	// 	os.Getenv("ORGANIZATION"), opts); err != nil {
-	// 	log.Fatalf("Failed to register the organization service handler: %v", err)
-	// }
+	if err := organization.RegisterOrganizationServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		os.Getenv("ORGANIZATION"), opts); err != nil {
+		log.Fatalf("Failed to register the organization service handler: %v", err)
+	}
 
-	// // Register RecordServiceHandler
-	// if err := record.RegisterRecordServiceHandlerFromEndpoint(
-	// 	ctx,
-	// 	mux,
-	// 	os.Getenv("RECORD"), opts); err != nil {
-	// 	log.Fatalf("Failed to register the record service handler: %v", err)
-	// }
+	// Register RecordServiceHandler
+	if err := record.RegisterRecordServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		os.Getenv("RECORD"), opts); err != nil {
+		log.Fatalf("Failed to register the record service handler: %v", err)
+	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
 	log.Printf("Gateway server listening on port :%v", os.Getenv("GATEWAY_PORT"))
