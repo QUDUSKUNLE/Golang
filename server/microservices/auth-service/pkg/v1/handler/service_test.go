@@ -11,7 +11,6 @@ func TestNewAuthServer(t *testing.T) {
 	type args struct {
 		server   *grpc.Server
 		authcase v1.AuthPorts
-		conn     string
 	}
 	tests := []struct {
 		name string
@@ -20,6 +19,6 @@ func TestNewAuthServer(t *testing.T) {
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
-		NewAuthServer(tt.args.server, tt.args.authcase, tt.args.conn)
+		NewAuthServer(tt.args.server, tt.args.authcase)
 	}
 }

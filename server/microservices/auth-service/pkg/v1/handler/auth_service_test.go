@@ -36,7 +36,7 @@ func TestUserServiceStruct_Signin(t *testing.T) {
 			srv := &AuthServiceStruct{
 				authService:                    tt.fields.authService,
 				organizationService:            tt.fields.organizationService,
-				UnimplementedUserServiceServer: tt.fields.UnimplementedUserServiceServer,
+				// Removed as AuthServiceStruct does not have this field
 			}
 			got, err := srv.Signin(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
