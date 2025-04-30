@@ -100,11 +100,18 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users LIMIT 100
+SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users
+ORDER BY id
+LIMIT $1 OFFSET $2
 `
 
-func (q *Queries) GetUsers(ctx context.Context) ([]*User, error) {
-	rows, err := q.db.Query(ctx, getUsers)
+type GetUsersParams struct {
+	Limit  int32 `db:"limit" json:"limit"`
+	Offset int32 `db:"offset" json:"offset"`
+}
+
+func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, error) {
+	rows, err := q.db.Query(ctx, getUsers, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

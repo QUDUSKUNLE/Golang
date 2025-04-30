@@ -22,7 +22,7 @@ type Querier interface {
 	GetRecordsByUserAndScanTitle(ctx context.Context, arg GetRecordsByUserAndScanTitleParams) ([]*Record, error)
 	GetUser(ctx context.Context, id string) (*User, error)
 	GetUserByEmail(ctx context.Context, email pgtype.Text) (*User, error)
-	GetUsers(ctx context.Context) ([]*User, error)
+	GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, error)
 	SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*SearchRecordByNinRow, error)
 	SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchRecordByNinAndScanTitleParams) ([]*SearchRecordByNinAndScanTitleRow, error)
 	UpdateNin(ctx context.Context, arg UpdateNinParams) (*UpdateNinRow, error)

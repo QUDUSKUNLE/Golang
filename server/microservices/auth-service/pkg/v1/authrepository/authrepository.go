@@ -12,11 +12,6 @@ type Repository struct {
 	database *db.Queries
 }
 
-// GetUsers implements v1.RepositoryInterface.
-func (u *Repository) GetUsers(ctx context.Context) ([]*db.User, error) {
-	return u.database.GetUsers(ctx)
-}
-
 // CreateUser implements v1.UseCaseInterface.
 func (u *Repository) CreateUser(ctx context.Context, user db.CreateUserParams) (*db.CreateUserRow, error) {
 	return u.database.CreateUser(ctx, user)
@@ -31,9 +26,6 @@ func (u *Repository) GetUserByEmail(ctx context.Context, email pgtype.Text) (*db
 	return u.database.GetUserByEmail(ctx, email)
 }
 
-func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error) {
-	return u.database.UpdateNin(ctx, user)
-}
 
 func NewRepository(dbase *db.Queries) v1.AuthRepository {
 	return &Repository{database: dbase}

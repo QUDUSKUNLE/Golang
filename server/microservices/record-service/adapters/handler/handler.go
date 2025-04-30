@@ -1,7 +1,7 @@
 package handler
 
 import (
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
+	// v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
 	organizationPorts "github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/record-service/clients"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
@@ -12,7 +12,7 @@ import (
 type RecordServiceStruct struct {
 	recordService       ports.RecordPorts
 	organizationService organizationPorts.OrganizationPorts
-	authService         v1.UserPorts
+	// authService         v1.UserPorts
 	record.UnimplementedRecordServiceServer
 }
 
@@ -23,7 +23,7 @@ func NewRecordServer(grpcServer *grpc.Server, useCase ports.RecordPorts, organi_
 	recordGrpc := &RecordServiceStruct{
 		recordService:       useCase,
 		organizationService: clients.NewGRPClientOrganizationService(organi_conn, clientOptions),
-		authService:         clients.NewGRPClientAuthService(auth_conn, clientOptions),
+		// authService:         clients.NewGRPClientAuthService(auth_conn, clientOptions),
 	}
 	record.RegisterRecordServiceServer(grpcServer, recordGrpc)
 }

@@ -14,15 +14,6 @@ type AuthCase struct {
 	repo v1.AuthRepository
 }
 
-// GetUsers implements v1.UserPorts.
-func (u *AuthCase) GetUsers(ctx context.Context) ([]*db.User, error) {
-	return u.repo.GetUsers(ctx)
-}
-
-// UpdateNin implements v1.UserPorts.
-func (u *AuthCase) UpdateNin(ctx context.Context, data db.UpdateNinParams) (*db.UpdateNinRow, error) {
-	return u.repo.UpdateNin(ctx, data)
-}
 
 // GetUserByEmail implements v1.RepositoryInterface.
 func (u *AuthCase) GetUserByEmail(ctx context.Context, email pgtype.Text) (*db.User, error) {

@@ -23,8 +23,8 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/events-service/publish"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
-	"github.com/QUDUSKUNLE/microservices/user-service/pkg/v1/handler"
-	"github.com/QUDUSKUNLE/microservices/user-service/pkg/v1/usercase"
+	"github.com/QUDUSKUNLE/microservices/user-service/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/user-service/services"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -52,11 +52,10 @@ func main() {
 			middleware.ValidationInterceptor(),
 		),
 	)
-
 	// Initialize use case and register services
-	userUseCase := usercase.InitUserServer(db)
+	userUseCase := services.InitUserServer(db)
   eventBroker := publish.NewBroker(os.Getenv("KAFKA_BROKER"), os.Getenv("KAFKA_TOPIC"))
-	handler.NewAuthServer(grpcServer, userUseCase, eventBroker, os.Getenv("ORGANIZATION"))
+	handler.NewUserService(grpcServer, userUseCase, eventBroker, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
 	log.Printf("User Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())

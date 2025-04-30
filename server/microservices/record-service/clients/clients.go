@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
+	// v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
@@ -76,29 +76,29 @@ func NewGRPClientOrganizationService(organization_conn string, opts *ClientOptio
 	return &organizationService{organizationGrpcClient: organization.NewOrganizationServiceClient(organi_conn)}
 }
 
-func NewGRPClientAuthService(auth_conn string, opts *ClientOptions) v1.UserPorts {
-	if opts == nil {
-		opts = DefaultClientOptions()
-	}
+// func NewGRPClientAuthService(auth_conn string, opts *ClientOptions) v1.UserPorts {
+// 	if opts == nil {
+// 		opts = DefaultClientOptions()
+// 	}
 
-	var dialOpts []grpc.DialOption
+// 	var dialOpts []grpc.DialOption
 
-	if opts.UseTLS {
-		config := &tls.Config{
-			ServerName:         "localhost",
-			InsecureSkipVerify: true, // For development only
-			MinVersion:         tls.VersionTLS12,
-		}
-		creds := credentials.NewTLS(config)
-		dialOpts = append(dialOpts, grpc.WithTransportCredentials(creds))
-	} else {
-		dialOpts = append(dialOpts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	}
+// 	if opts.UseTLS {
+// 		config := &tls.Config{
+// 			ServerName:         "localhost",
+// 			InsecureSkipVerify: true, // For development only
+// 			MinVersion:         tls.VersionTLS12,
+// 		}
+// 		creds := credentials.NewTLS(config)
+// 		dialOpts = append(dialOpts, grpc.WithTransportCredentials(creds))
+// 	} else {
+// 		dialOpts = append(dialOpts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	}
 
-	auth, err := grpc.Dial(auth_conn, dialOpts...)
-	if err != nil {
-		log.Printf("Failed to connect to auth service: %v", err)
-		return nil
-	}
-	return &userService{userGrpcClient: user.NewUserServiceClient(auth)}
-}
+// 	auth, err := grpc.Dial(auth_conn, dialOpts...)
+// 	if err != nil {
+// 		log.Printf("Failed to connect to auth service: %v", err)
+// 		return nil
+// 	}
+// 	return &userService{userGrpcClient: user.NewUserServiceClient(auth)}
+// }

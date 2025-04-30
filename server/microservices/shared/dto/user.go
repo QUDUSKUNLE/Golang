@@ -15,6 +15,10 @@ type (
 		ConfirmPassword string      `json:"confirm_password" validate:"eqfield=Password"`
 		UserType        db.UserEnum `json:"user_type"`
 	}
+	GetUsersParams struct {
+		Limit  int `json:"limit" validate:"min=1"`
+		Offset int `json:"offset" validate:"min=0"`
+	}
 	LogInDto struct {
 		Email    string `json:"email" validate:"email,required"`
 		Password string `json:"password" validate:"min=8,required"`

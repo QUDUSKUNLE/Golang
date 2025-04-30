@@ -15,24 +15,24 @@ import (
 func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.CreateUserRequest) (*userProtoc.SuccessResponse, error) {
 	// Transform request data
 	data := srv.transformUserRPC(req)
-	built_user, err := dto.BuildNewUser(data)
+	newUser, err := dto.BuildNewUser(data)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 	// Create user in the database
-	created_user, err := srv.userService.CreateUser(
+	user, err := srv.userService.CreateUser(
 		ctx, db.CreateUserParams{
-			Email:    built_user.Email,
+			Email:    newUser.Email,
 			Nin:      pgtype.Text{String: "", Valid: true},
-			Password: built_user.Password,
-			UserType: built_user.UserType,
+			Password: newUser.Password,
+			UserType: newUser.UserType,
 		})
 	if err != nil {
 		return nil, status.Errorf(codes.AlreadyExists, err.Error())
 	}
 	// Check if user is an organization
 	if data.UserType != db.UserEnumUSER {
-		if err := srv.eventBroker.Publish(ctx, "user-events", &dto.UserCreatedEvent{UserID: created_user.ID, Email: built_user.Email.String}); err != nil {
+		if err := srv.eventBroker.Publish(ctx, "user-events", &dto.UserCreatedEvent{UserID: user.ID, Email: newUser.Email.String}); err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
@@ -60,7 +60,16 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 	if admin.Type != string(db.UserEnumADMIN) {
 		return nil, status.Errorf(codes.Unauthenticated, ErrUnauthorized)
 	}
-	users, err := srv.userService.GetUsers(ctx)
+	limit := int(req.GetLimit())
+	offset := int(req.GetOffset())
+	if limit <= 0 {
+		limit = 50
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	users, err := srv.userService.GetUsers(ctx, db.GetUsersParams{
+		Limit: int32(limit), Offset: int32(offset)})
 	if err != nil {
 		return nil, status.Error(codes.NotFound, NotFound)
 	}

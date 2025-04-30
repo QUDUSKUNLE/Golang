@@ -49,7 +49,11 @@ message CreateUserRequest {
   UserType user_type = 4 [json_name = "user_type"];
 }
 
-message GetUsersRequest {}
+message GetUsersRequest {
+  int32 limit = 1 [json_name = "limit"];
+  int32 offset = 2 [json_name = "offset"];
+}
+
 message HomeRequest {}
 
 message User {

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/client"
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
 
 	"github.com/QUDUSKUNLE/microservices/events-service/domain"
 	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
@@ -17,7 +17,7 @@ type UserServiceStruct struct {
 	user.UnimplementedUserServiceServer
 }
 
-func NewAuthServer(server *grpc.Server, usecase v1.UserPorts, brok domain.EventPorts, conn string) {
+func NewUserService(server *grpc.Server, usecase v1.UserPorts, brok domain.EventPorts, conn string) {
 	userServiceController := &UserServiceStruct{
 		userService:         usecase,
 		organizationService: client.NewGRPCOrganizationService(conn),

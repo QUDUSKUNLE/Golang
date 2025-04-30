@@ -15,7 +15,9 @@ INSERT INTO users (
 SELECT * FROM users WHERE email = $1;
 
 -- name: GetUsers :many
-SELECT * FROM users LIMIT 100;
+SELECT * FROM users
+ORDER BY id
+LIMIT $1 OFFSET $2;
 
 -- name: UpdateNin :one
 UPDATE users
