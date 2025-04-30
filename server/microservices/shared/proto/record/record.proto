@@ -35,6 +35,8 @@ service RecordService {
 message GetRecordsRequest {
   string scan_title = 1 [json_name = "scan_title"];
   string latest = 2 [json_name = "latest"];
+  int32 limit = 3 [json_name = "limit"];
+  int32 offset = 4 [json_name = "offset"];
 }
 
 message ScanUploadRequest {
@@ -47,11 +49,15 @@ message ScanUploadRequest {
 message SearchRecordRequest {
   string user_id = 1 [json_name = "user_id"];
   string scan_title = 2 [json_name = "scan_title"];
+  int32 limit = 3 [json_name = "limit"];
+  int32 offset = 4 [json_name = "offset"];
 }
 
 message SearchByNinRequest {
   string nin = 1 [json_name = "nin"];
   string scan_title = 2 [json_name = "scan_title"];
+  int32 limit = 3 [json_name = "limit"];
+  int32 offset = 4 [json_name = "offset"];
 }
 
 message ScanUploadResponse {
@@ -82,6 +88,8 @@ message GetRecordRequest {
   string id = 1 [json_name = "id"];
   string scan_title = 2 [json_name = "scan_title"];
   string user_id = 3 [json_name = "user_id"];
+  int32 limit = 3 [json_name = "limit"];
+  int32 offset = 4 [json_name = "offset"];
 }
 
 message GetRecordResponse {

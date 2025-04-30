@@ -7,15 +7,19 @@ import (
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.ScanUploadRequest) (*record.ScanUploadResponse, error) {
+	log := logger.GetLogger()
 	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
 	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
+		log.Warn("Unauthorized access to perform operation.", zap.String("userType", diagnostic_centre.Type))
 		return nil, status.Error(codes.Unauthenticated, constants.ErrUnauthorized)
 	}
 	// Check if user is registered
@@ -51,6 +55,7 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 	if err != nil {
 		return nil, status.Error(codes.Unimplemented, err.Error())
 	}
+	log.Info("Record created successfully", zap.String("recordId", scanRecord.ID))
 	return &record.ScanUploadResponse{
 		Id:             scanRecord.ID,
 		UserId:         req.GetUserId(),
