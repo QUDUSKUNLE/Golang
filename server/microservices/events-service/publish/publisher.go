@@ -30,5 +30,6 @@ func (broker *KafkaPublisher) Publish(ctx context.Context, topic string, event i
 func NewBroker(brokerAddress, topic string) domain.EventPorts {
 	return &KafkaPublisher{writer: &kafka.Writer{
 		Addr:     kafka.TCP(brokerAddress),
+		Balancer: &kafka.LeastBytes{},
 	}}
 }

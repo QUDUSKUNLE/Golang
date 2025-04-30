@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
-	"github.com/QUDUSKUNLE/microservices/organization-service/consumers"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/organizationcase"
+	"github.com/QUDUSKUNLE/microservices/organization-service/consumers"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
@@ -32,7 +32,7 @@ func main() {
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		middleware.ValidationInterceptor(),
 	))
-	go consumers.ConsumeCreatedUserEvent(os.Getenv("KAFKA_BROKER"), "user-events")
+	go consumers.ConsumeCreatedUserEvent(dbase, os.Getenv("KAFKA_BROKER"), os.Getenv("KAFKA_TOPIC"), os.Getenv("KAFKA_GROUP_ID"))
 	organizationUseCase := organizationcase.InitOrganizationServer(dbase)
 	handler.NewOrganizationServer(grpcServer, organizationUseCase)
 	log.Printf("Organization Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
