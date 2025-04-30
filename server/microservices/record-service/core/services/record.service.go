@@ -2,73 +2,48 @@ package services
 
 import (
 	"context"
-	"strings"
 
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
+	"github.com/QUDUSKUNLE/microservices/record-service/core/repository"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type Repository struct {
-	database *db.Queries
+type RecordCase struct {
+	usecase ports.RepositoryPorts
 }
 
-// SearchRecordByNin implements ports.RepositoryPorts.
-func (r *Repository) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.SearchRecordByNinRow, error) {
-	nin := pgtype.Text{String: searchRecord.Nin, Valid: true}
-	if strings.TrimSpace(searchRecord.ScanTitle) != "" {
-		return r.database.SearchRecordByNin(ctx, nin)
-	}
-	result, err := r.database.SearchRecordByNinAndScanTitle(ctx, db.SearchRecordByNinAndScanTitleParams{Nin: nin, ScanTitle: "%" + strings.TrimSpace(searchRecord.ScanTitle) + "%"})
-	if err != nil {
-		return nil, err
-	}
-	actualResult := make([]*db.SearchRecordByNinRow, 0)
-	for _, r := range result {
-		actualResult = append(actualResult, &db.SearchRecordByNinRow{
-			ID:             r.ID,
-			OrganizationID: r.OrganizationID,
-			UserID:         r.UserID,
-			Record:         r.Record,
-			ScanTitle:      r.ScanTitle,
-			CreatedAt:      r.CreatedAt,
-			UpdatedAt:      r.UpdatedAt,
-		})
-	}
-	return actualResult, nil
+// SearchRecordByNin implements ports.UseCasePorts.
+func (u *RecordCase) SearchRecordByNin(ctx context.Context, searchRecord domain.GetRecordByNinDto) ([]*db.SearchRecordByNinRow, error) {
+	return u.usecase.SearchRecordByNin(ctx, searchRecord)
 }
 
-// SearchRecord implements ports.RepositoryPorts.
-func (r *Repository) SearchRecord(ctx context.Context, searchRecord domain.GetRecordDto) ([]*db.Record, error) {
-	if strings.TrimSpace(searchRecord.ScanTitle) != "" {
-		return r.database.GetRecordsByUserAndScanTitle(ctx, db.GetRecordsByUserAndScanTitleParams{UserID: searchRecord.UserID, ScanTitle: "%" + strings.TrimSpace(searchRecord.ScanTitle) + "%"})
-	}
-	return r.database.GetRecordsByUser(ctx, searchRecord.UserID)
+// SearchRecord implements ports.UseCasePorts.
+func (u *RecordCase) SearchRecord(ctx context.Context, searchRecord domain.GetRecordDto) ([]*db.Record, error) {
+	return u.usecase.SearchRecord(ctx, searchRecord)
 }
 
-// UploadRecord implements ports.RepositoryPorts.
-func (r *Repository) UploadRecord(ctx context.Context, record domain.UploadDto) (*db.Upload, error) {
-	return r.database.UploadRecord(ctx, db.UploadRecordParams{UserID: record.UserID, OrganizationID: record.OrganizationID, ScanTitle: record.ScanTitle})
+// UploadRecord implements ports.UseCasePorts.
+func (u *RecordCase) UploadRecord(ctx context.Context, record domain.UploadDto) (*db.Upload, error) {
+	return u.usecase.UploadRecord(ctx, record)
 }
 
-// GetRecords implements ports.RepositoryPorts.
-func (r *Repository) GetRecords(ctx context.Context, organizationID string) ([]*db.Record, error) {
-	return r.database.GetRecords(ctx, organizationID)
+// GetRecords implements ports.UseCasePorts.
+func (u *RecordCase) GetRecords(ctx context.Context, organizationID string) ([]*db.Record, error) {
+	return u.usecase.GetRecords(ctx, organizationID)
 }
 
-// GetRecord implements ports.RepositoryPorts.
-func (r *Repository) GetRecord(ctx context.Context, record string) (*db.Record, error) {
-	return r.database.GetRecord(ctx, record)
+// GetRecord implements ports.UseCasePorts.
+func (u *RecordCase) GetRecord(ctx context.Context, id string) (*db.Record, error) {
+	return u.usecase.GetRecord(ctx, id)
 }
 
-// CreateRecord implements ports.RepositoryPorts.
-func (r *Repository) CreateRecord(ctx context.Context, record domain.RecordDto) (*db.Record, error) {
-	return r.database.CreateRecord(ctx, db.CreateRecordParams{OrganizationID: record.OrganizationID, UserID: record.UserID, Record: record.Record, ScanTitle: record.ScanTitle})
+// CreateRecord implements ports.UseCasePorts.
+func (u *RecordCase) CreateRecord(ctx context.Context, record domain.RecordDto) (*db.Record, error) {
+	return u.usecase.CreateRecord(ctx, record)
 }
 
-func NewRepository(database *db.Queries) ports.RepositoryPorts {
-	return &Repository{
-		database: database,
-	}
+func InitializeRecordService(db *db.Queries) ports.RecordPorts {
+	records := repository.NewRepository(db)
+	return &RecordCase{usecase: records}
 }

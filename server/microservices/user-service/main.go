@@ -24,7 +24,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/events-service/publish"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"github.com/QUDUSKUNLE/microservices/user-service/v1/handler"
-	"github.com/QUDUSKUNLE/microservices/user-service/services"
+	"github.com/QUDUSKUNLE/microservices/user-service/core/services"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

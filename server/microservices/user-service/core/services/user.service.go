@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
-	repo "github.com/QUDUSKUNLE/microservices/user-service/repository"
+	repo "github.com/QUDUSKUNLE/microservices/user-service/core/repository"
 	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
 )
 

@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/handler"
-	"github.com/QUDUSKUNLE/microservices/record-service/adapters/recordcase"
+	"github.com/QUDUSKUNLE/microservices/record-service/core/services"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
@@ -36,8 +36,8 @@ func main() {
 			middleware.ValidationInterceptor(),
 		),
 	)
-	recordUseCase := recordcase.InitializeRecordService(dbase)
-	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("AUTH"))
+	recordUseCase := services.InitializeRecordService(dbase)
+	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("USER_SERVICE"))
 	log.Printf("Record Service listening on %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve record service: %v", err)

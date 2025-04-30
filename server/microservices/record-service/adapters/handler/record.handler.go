@@ -8,72 +8,27 @@ import (
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/thirdparty"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetRecordRequest) (*record.GetRecordResponse, error) {
-	_, ok := ctx.Value("user").(*constants.UserType)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
-	}
-
-	rec, err := this.recordService.GetRecord(ctx, req.GetId())
-	if err != nil {
-		return nil, status.Error(codes.NotFound, "Record not found")
-	}
-	return &record.GetRecordResponse{
-		Id:             rec.ID,
-		UserId:         rec.UserID,
-		Record:         rec.Record,
-		ScanTitle:      rec.ScanTitle,
-		OrganizationId: rec.OrganizationID,
-		CreatedAt:      rec.CreatedAt.Time.String(),
-		UpdatedAt:      rec.UpdatedAt.Time.String(),
-	}, nil
-}
-
-func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.GetRecordsRequest) (*record.GetRecordsResponse, error) {
-	organization_user, ok := ctx.Value("user").(*constants.UserType)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
-	}
-	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, organization_user.UserID)
-	if err != nil {
-		return nil, status.Error(codes.NotFound, "Organization not found")
-	}
-	records, err := this.recordService.GetRecords(ctx, organizationDetails.ID)
-	if err != nil {
-		return nil, status.Error(codes.Unimplemented, "Unimplemented record")
-	}
-	recordsResponse := &record.GetRecordsResponse{
-		Records: []*record.Record{},
-	}
-	for _, re := range records {
-		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
-			Id:             re.ID,
-			UserId:         re.UserID,
-			Record:         re.Record,
-			ScanTitle:      re.ScanTitle,
-			OrganizationId: re.OrganizationID,
-			CreatedAt:      re.CreatedAt.Time.String(),
-			UpdatedAt:      re.UpdatedAt.Time.String(),
-		})
-	}
-	return recordsResponse, nil
-}
-
 func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.ScanUploadRequest) (*record.ScanUploadResponse, error) {
-	organization_user, ok := ctx.Value("user").(*constants.UserType)
+	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
 	// Check authorization right
-	if !ok || organization_user.Type != "ORGANIZATION" {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+	// Check if user is registered
+	_, err := this.userService.GetUser(ctx, req.GetUserId())
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "User not found")
 	}
 	// Get organization details
-	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, organization_user.UserID)
+	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, diagnostic_centre.UserID)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "Organization not found")
+		return nil, status.Error(codes.NotFound, "Diagnostic centre not found")
 	}
 	// Get present directory
 	directory, err := os.Getwd()
@@ -111,9 +66,60 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 	}, nil
 }
 
+func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetRecordRequest) (*record.GetRecordResponse, error) {
+	_, ok := ctx.Value("user").(*constants.UserType)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+
+	rec, err := this.recordService.GetRecord(ctx, req.GetId())
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "Record not found")
+	}
+	return &record.GetRecordResponse{
+		Id:             rec.ID,
+		UserId:         rec.UserID,
+		Record:         rec.Record,
+		ScanTitle:      rec.ScanTitle,
+		OrganizationId: rec.OrganizationID,
+		CreatedAt:      rec.CreatedAt.Time.String(),
+		UpdatedAt:      rec.UpdatedAt.Time.String(),
+	}, nil
+}
+
+func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.GetRecordsRequest) (*record.GetRecordsResponse, error) {
+	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+	}
+	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, diagnostic_centre.UserID)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "Organization not found")
+	}
+	records, err := this.recordService.GetRecords(ctx, organizationDetails.ID)
+	if err != nil {
+		return nil, status.Error(codes.Unimplemented, "Unimplemented record")
+	}
+	recordsResponse := &record.GetRecordsResponse{
+		Records: []*record.Record{},
+	}
+	for _, re := range records {
+		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
+			Id:             re.ID,
+			UserId:         re.UserID,
+			Record:         re.Record,
+			ScanTitle:      re.ScanTitle,
+			OrganizationId: re.OrganizationID,
+			CreatedAt:      re.CreatedAt.Time.String(),
+			UpdatedAt:      re.UpdatedAt.Time.String(),
+		})
+	}
+	return recordsResponse, nil
+}
+
 func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.SearchRecordRequest) (*record.SearchRecordResponse, error) {
-	organization_user, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || organization_user.Type != "ORGANIZATION" {
+	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
+	if !ok || diagnostic_centre.Type != "ORGANIZATION" {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	records, err := this.recordService.SearchRecord(ctx, domain.GetRecordDto{UserID: req.GetUserId(), ScanTitle: req.GetScanTitle()})
@@ -138,8 +144,8 @@ func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.S
 }
 
 func (this *RecordServiceStruct) SearchByNin(ctx context.Context, req *record.SearchByNinRequest) (*record.SearchRecordResponse, error) {
-	organization_user, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || organization_user.Type != "ORGANIZATION" {
+	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
+	if !ok || diagnostic_centre.Type != "ORGANIZATION" {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	records, err := this.recordService.SearchRecordByNin(ctx, domain.GetRecordByNinDto{Nin: req.GetNin(), ScanTitle: req.GetScanTitle()})
