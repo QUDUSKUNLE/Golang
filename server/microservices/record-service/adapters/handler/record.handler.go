@@ -3,9 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
-	"os"
 
-	"github.com/QUDUSKUNLE/microservices/record-service/adapters/thirdparty"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
@@ -15,38 +13,35 @@ import (
 )
 
 func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.ScanUploadRequest) (*record.ScanUploadResponse, error) {
+	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	// Check authorization right
 	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
+		return nil, status.Error(codes.Unauthenticated, constants.ErrUnauthorized)
 	}
 	// Check if user is registered
 	_, err := this.userService.GetUser(ctx, req.GetUserId())
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "User not found")
+		return nil, status.Error(codes.NotFound, constants.ErrUserNotFound)
 	}
 	// Get organization details
 	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, diagnostic_centre.UserID)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, "Diagnostic centre not found")
-	}
-	// Get present directory
-	directory, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("Error gettting current directory %v", err)
+		return nil, status.Error(codes.NotFound, constants.ErrDiagnosticCentreNotFound)
 	}
 	// Write file to upload path
-	filePath := fmt.Sprintf("%s/uploads/%s", directory, req.GetFileName())
-	if err := os.WriteFile(filePath, req.GetContent(), 0644); err != nil {
+	filePath := fmt.Sprintf("uploads/%s", req.GetFileName())
+	if err := this.fileService.SaveFile(filePath, req.GetContent()); err != nil {
 		return nil, fmt.Errorf("failed to save file: %v", err)
 	}
 	// Upload to Cloudinary
-	uploadedFile, err := thirdparty.CloudinaryUploader(filePath)
+	uploadedFile, err := this.fileService.UploadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to upload file: %v", err)
 	}
 	// Remove uploaded file to free memory
-	_ = os.Remove(filePath)
+	_ = this.fileService.DeleteFile(filePath)
+
+	// Create record
 	scanRecord, err := this.recordService.CreateRecord(ctx, domain.RecordDto{
 		UserID:         req.GetUserId(),
 		OrganizationID: organizationDetails.ID,
@@ -67,8 +62,9 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 }
 
 func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetRecordRequest) (*record.GetRecordResponse, error) {
-	_, ok := ctx.Value("user").(*constants.UserType)
-	if !ok {
+	// Retrieve the user from the context
+	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 
@@ -88,8 +84,9 @@ func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetR
 }
 
 func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.GetRecordsRequest) (*record.GetRecordsResponse, error) {
+	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, diagnostic_centre.UserID)
@@ -118,8 +115,9 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 }
 
 func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.SearchRecordRequest) (*record.SearchRecordResponse, error) {
+	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != "ORGANIZATION" {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	records, err := this.recordService.SearchRecord(ctx, domain.GetRecordDto{UserID: req.GetUserId(), ScanTitle: req.GetScanTitle()})
@@ -127,7 +125,7 @@ func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.S
 		Records: []*record.Record{},
 	}
 	if err != nil {
-		return nil, status.Error(codes.Unimplemented, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	for _, re := range records {
 		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
@@ -144,8 +142,9 @@ func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.S
 }
 
 func (this *RecordServiceStruct) SearchByNin(ctx context.Context, req *record.SearchByNinRequest) (*record.SearchRecordResponse, error) {
+	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != "ORGANIZATION" {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	records, err := this.recordService.SearchRecordByNin(ctx, domain.GetRecordByNinDto{Nin: req.GetNin(), ScanTitle: req.GetScanTitle()})

@@ -14,6 +14,7 @@ type RecordServiceStruct struct {
 	recordService       ports.RecordPorts
 	organizationService organizationPorts.OrganizationPorts
 	userService         v1.UserPorts
+	fileService         LocalFileService
 	record.UnimplementedRecordServiceServer
 }
 
