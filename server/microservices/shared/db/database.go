@@ -3,13 +3,12 @@ package db
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func DatabaseConnection() *Queries {
-	database, err := pgxpool.New(context.Background(), os.Getenv("DB_URL"))
+func DatabaseConnection(DB_URL string) *Queries {
+	database, err := pgxpool.New(context.Background(), DB_URL)
 	if err != nil {
 		log.Fatalf("There was error connecting to the database: %v", err)
 	}

@@ -39,12 +39,17 @@ func init() {
 }
 
 func main() {
+	// Load configuration
+	// Load environment variable
+	cfg, err := utils.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
 	// Initialize database connection
-	db := db.DatabaseConnection()
+	db := db.DatabaseConnection(cfg.DB_URL)
 
-	port := os.Getenv("PORT")
 	// Create TCP listener
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatalf("Error starting user service: %v", err)
 	}
@@ -61,11 +66,11 @@ func main() {
 	)
 	// Initialize use case and register services
 	userUseCase := services.InitUserServer(db)
-	eventBroker := publish.NewBroker(os.Getenv("KAFKA_BROKER"), os.Getenv("KAFKA_TOPIC"))
+	eventBroker := publish.NewBroker(cfg.KafkaBroker, cfg.KafkaTopic)
 	handler.NewUserService(grpcServer, userUseCase, eventBroker, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
-	logger.GetLogger().Info("User Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", port))
+	logger.GetLogger().Info("User Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
 	if err := grpcServer.Serve(listen); err != nil {
 		logger.GetLogger().Fatal("failed to serve user service", zap.Error(err))
 	}

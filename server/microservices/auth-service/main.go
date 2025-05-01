@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/authcase"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
@@ -36,12 +35,17 @@ func init() {
 }
 
 func main() {
+	// Load configuration
+	// Load environment variable
+	cfg, err := utils.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
 	// Initialize database connection
-	db := db.DatabaseConnection()
+	db := db.DatabaseConnection(cfg.DB_URL)
 
 	// Create TCP listener
-	port := os.Getenv("PORT")
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
@@ -62,7 +66,7 @@ func main() {
 	handler.NewAuthServer(grpcServer, authUseCase)
 	reflection.Register(grpcServer)
 
-	logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", port))
+	logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
 	if err := grpcServer.Serve(listen); err != nil {
 		logger.GetLogger().Fatal("failed to serve auth service", zap.Error(err))
 	}

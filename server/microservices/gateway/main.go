@@ -24,13 +24,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/diagnostic"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/schedule"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
-		"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"go.uber.org/zap"
 )
 
@@ -93,6 +94,14 @@ func main() {
 		mux,
 		os.Getenv("DIAGNOSTIC"), opts); err != nil {
 		logger.GetLogger().Fatal("Failed to register the diagnostic service handler", zap.Error(err))
+	}
+
+	// Register ScheduleServiceHandler
+	if err := schedule.RegisterScheduleServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		os.Getenv("SCHEDULE_SERVICE"), opts); err != nil {
+		logger.GetLogger().Fatal("Failed to register the schedule service handler", zap.Error(err))
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))

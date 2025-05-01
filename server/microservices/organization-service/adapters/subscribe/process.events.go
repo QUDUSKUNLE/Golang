@@ -10,9 +10,16 @@ import (
 	organizationService "github.com/QUDUSKUNLE/microservices/organization-service/adapters/organizationcase"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
+	"github.com/QUDUSKUNLE/microservices/shared/utils"
 )
 
 func ProcessEvent(ctx context.Context, event []byte) error {
+	// Load configuration
+	// Load environment variable
+	cfg, err := utils.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
 	// Process the event
 	// For example, you can unmarshal the event and perform some action based on its content
 	var user dto.UserCreatedEvent
@@ -23,7 +30,7 @@ func ProcessEvent(ctx context.Context, event []byte) error {
 	log.Printf("Processing OrganizationCreatedEvent: UserID=%s", user.UserID)
 
     // Initialize the organization service
-    organizationService := organizationService.InitOrganizationServer(db.DatabaseConnection())
+    organizationService := organizationService.InitOrganizationServer(db.DatabaseConnection(cfg.DB_URL))
     organization, err := organizationService.CreateOrganization(ctx, dto.OrganizationDto{UserID: user.UserID})
     if err != nil {
         return fmt.Errorf("error creating organization: %w", err)

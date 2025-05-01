@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/organizationcase"
@@ -26,9 +25,15 @@ func init() {
 }
 
 func main() {
-	dbase := db.DatabaseConnection()
-	port := os.Getenv("PORT")
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	// Load configuration
+	// Load environment variable
+	cfg, err := utils.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
+	
+	dbase := db.DatabaseConnection(cfg.DB_URL)
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatalf("Error starting organization service: %v", err)
 	}
@@ -40,10 +45,10 @@ func main() {
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		middleware.ValidationInterceptor(),
 	))
-	go events.EventsSubscriber(os.Getenv("KAFKA_BROKER"), os.Getenv("KAFKA_TOPIC"), os.Getenv("KAFKA_GROUP_ID"), subscribe.ProcessEvent)
+	go events.EventsSubscriber(cfg.KafkaBroker, cfg.KafkaTopic, cfg.KafkaGroup, subscribe.ProcessEvent)
 	organizationUseCase := organizationcase.InitOrganizationServer(dbase)
 	handler.NewOrganizationServer(grpcServer, organizationUseCase)
-	logger.GetLogger().Info("Organization Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", port))
+	logger.GetLogger().Info("Organization Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
 
 	if err := grpcServer.Serve(listen); err != nil {
 		logger.GetLogger().Fatal("failed to serve organization service", zap.Error(err))

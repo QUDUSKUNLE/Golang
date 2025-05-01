@@ -1,0 +1,163 @@
+syntax = "proto3";
+option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/schedule";
+
+import "google/api/annotations.proto";
+
+enum SessionStatus {
+  SESSION_STATUS_UNSPECIFIED = 0; // For SessionStatus
+  SCHEDULED = 1; // Session is scheduled
+  COMPLETED = 2; // Session is completed
+  CANCELED = 3;  // Session is canceled
+}
+
+enum SessionType {
+  SESSION_TYPE_UNSPECIFIED = 0;
+  BLOOD_TEST = 1; // Blood test
+  URINE_TEST = 2; // Urine test
+  X_RAY = 3;     // X-ray
+  MRI = 4;       // MRI
+  CT_SCAN = 5;   // CT scan
+  ULTRASOUND = 6; // Ultrasound
+  ECG = 7;       // Electrocardiogram
+  COVID_TEST = 8; // COVID-19 test
+  DNA_TEST = 9;   // DNA test
+  ALLERGY_TEST = 10; // Allergy test
+  GENETIC_TEST = 11; // Genetic test
+  OTHER = 12;   // Other types of tests
+}
+enum SessionMode {
+  SESSION_MODE_UNSPECIFIED = 0;
+  IN_PERSON = 1; // In-person session
+  VIRTUAL = 2;   // Virtual session
+  HOME_VISIT = 3; // Home visit session
+}
+
+enum SessionPriority {
+  SESSION_PRIORITY_UNSPECIFIED = 0;
+  HIGH = 1;   // High priority
+  MEDIUM = 2; // Medium priority
+  LOW = 3;    // Low priority
+}
+
+enum SessionResult {
+  SESSION_RESULT_UNSPECIFIED = 0;
+  POSITIVE = 1; // Positive result
+  NEGATIVE = 2; // Negative result
+  INCONCLUSIVE = 3; // Inconclusive result
+
+}
+
+enum SessionPaymentStatus {
+  SESSION_PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAID = 1;   // Payment completed
+  UNPAID = 2; // Payment pending
+}
+
+service ScheduleService {
+  rpc CreateScheduleSession(ScheduleRequest) returns (ScheduleResponse) {
+    option (google.api.http) = {
+      post: "/v1/schedules",
+      body: "*"
+    };
+  }
+  rpc GetScheduleSession(GetScheduledSessionRequest) returns (GetScheduledSessionResponse) {
+    option (google.api.http) = {
+      get: "/v1/schedules/{schedule_id}"
+    };
+  }
+  rpc UpdateScheduleSession(UpdateScheduledSessionRequest) returns (UpdateScheduledSessionResponse) {
+    option (google.api.http) = {
+      put: "/v1/schedules/{schedule_id}",
+      body: "*"
+    };
+  }
+  rpc CancelScheduleSession(CancelScheduledSessionRequest) returns (CancelScheduledSessionResponse) {
+    option (google.api.http) = {
+      delete: "/v1/schedules/{schedule_id}"
+    };
+  }
+  rpc ListScheduleSessions(ListScheduledSessionsRequest) returns (ListScheduledSessionsResponse) {
+    option (google.api.http) = {
+      get: "/v1/schedules"
+    };
+  }
+}
+
+message ScheduleRequest {              // ID of the user scheduling the session
+  string diagnostic_centre_id = 1; // ID of the diagnostic center
+  string date = 2;                 // Date of the session (e.g., "2025-05-01")
+  string time = 3;                 // Time of the session (e.g., "10:00 AM")
+  SessionType test_type = 4;            // Type of diagnostic test
+  SessionStatus status = 5;
+  string notes = 6;            // Status of the session              // Additional notes (optional)
+}
+
+message GetScheduledSessionRequest {
+  string schedule_id = 1;           // ID of the scheduled session
+}
+
+message UpdateScheduledSessionRequest {
+  string schedule_id = 1;           // ID of the scheduled session             // ID of the user scheduling the session
+  string diagnostic_centre_id = 2; // ID of the diagnostic center
+  string date = 3;                 // Date of the session (e.g., "2025-05-01")
+  string time = 4;                 // Time of the session (e.g., "10:00 AM")
+  SessionType test_type = 5;            // Type of diagnostic test
+  SessionStatus status = 6;
+  string notes = 7;                // Status of the session              // Additional notes (optional)
+}
+
+message CancelScheduledSessionRequest {
+  string schedule_id = 1;           // ID of the scheduled session// ID of the user canceling the session
+  SessionStatus status = 2;        // Status of the session
+}
+
+message ListScheduledSessionsRequest {}
+
+message GetScheduledSessionResponse {
+  string schedule_id = 1 [json_name = "schedule_id"]; 
+  string user_id = 2;          // ID of the scheduled session// ID of the user who scheduled the session
+  string diagnostic_centre_id = 3; // ID of the diagnostic center
+  string date = 4;                 // Date of the session (e.g., "2025-05-01")
+  string time = 5;                 // Time of the session (e.g., "10:00 AM")
+  string test_type = 6;
+  string status = 7;
+  string notes = 8;         // Status of the session             // Additional notes (optional)
+  string created_at = 9;          // Creation timestamp
+  string updated_at = 10;          // Last update timestamp
+}
+
+message ScheduledSession {
+  string schedule_id = 1;           // ID of the scheduled session
+  string user_id = 2;              // ID of the user who scheduled the session
+  string diagnostic_centre_id = 3; // ID of the diagnostic center
+  string date = 4;                 // Date of the session (e.g., "2025-05-01")
+  string time = 5;                 // Time of the session (e.g., "10:00 AM")
+  string test_type = 6;
+  string status = 7;          // Type of diagnostic test
+  string notes = 8;
+  string created_at = 9;          // Creation timestamp
+  string updated_at = 10;                        // Additional notes (optional)
+}
+
+message ListScheduledSessionsResponse {
+  repeated ScheduledSession sessions = 1; // List of scheduled sessions
+}
+
+message UpdateScheduledSessionResponse {
+  string schedule_id = 1;
+  string user_id = 2;          // ID of the updated session
+  string message = 3;              // Confirmation message
+  string created_at = 4;          // Creation timestamp
+  string updated_at = 5;         // Status of the session     // Amount paid for the session
+}
+
+message CancelScheduledSessionResponse {
+  string schedule_id = 1;
+  string user_id = 2;             // ID of the canceled session
+  string message = 3;              // Confirmation message
+}
+message ScheduleResponse {
+  string schedule_id = 1;
+  string user_id = 2;             // ID of the scheduled session
+  string message = 3;              // Confirmation message
+}

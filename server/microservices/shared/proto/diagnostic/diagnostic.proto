@@ -10,10 +10,81 @@ service DiagnosticService {
       body: "*"
     };
   }
+  rpc GetDiagnostic(GetDiagnosticRequest) returns (GetDiagnosticResponse) {
+    option (google.api.http) = {
+      get: "/v1/diagnostics/{id}"
+    };
+  }
+  rpc UpdateDiagnostic(UpdateDiagnosticRequest) returns (UpdateDiagnosticResponse) {
+    option (google.api.http) = {
+      put: "/v1/diagnostics/{id}"
+      body: "*"
+    };
+  }
+  rpc DeleteDiagnostic(DeleteDiagnosticRequest) returns (DeleteDiagnosticResponse) {
+    option (google.api.http) = {
+      delete: "/v1/diagnostics/{id}"
+    };
+  }
+  rpc ListDiagnostics(ListDiagnosticsRequest) returns (ListDiagnosticsResponse) {
+    option (google.api.http) = {
+      get: "/v1/diagnostics"
+    };
+  }
+
 }
 
 message CreateDiagnosticRequest {
   string user_id = 1 [json_name = "user_id"];
+}
+
+message GetDiagnosticRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message UpdateDiagnosticRequest {
+  string id = 1 [json_name = "id"];
+  string user_id = 2 [json_name = "user_id"];
+}
+
+message DeleteDiagnosticRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message GetDiagnosticResponse {
+  string id = 1 [json_name = "id"];
+  string user_id = 2 [json_name = "user_id"];
+  string created_at = 3 [json_name = "created_at"];
+  string updated_at = 4 [json_name = "updated_at"];
+}
+
+message ListDiagnosticsRequest {
+  string user_id = 1 [json_name = "user_id"];
+}
+
+message Diagnostic {
+  string id = 1 [json_name = "id"];
+  string user_id = 2 [json_name = "user_id"];
+  string created_at = 3 [json_name = "created_at"];
+  string updated_at = 4 [json_name = "updated_at"];
+}
+
+message ListDiagnosticsResponse {
+  repeated Diagnostic diagnostics = 1 [json_name = "diagnostics"];
+}
+
+message DeleteDiagnosticResponse {
+  string id = 1 [json_name = "id"];
+  string user_id = 2 [json_name = "user_id"];
+  string created_at = 3 [json_name = "created_at"];
+  string updated_at = 4 [json_name = "updated_at"];
+}
+
+message UpdateDiagnosticResponse {
+  string id = 1 [json_name = "id"];
+  string user_id = 2 [json_name = "user_id"];
+  string created_at = 3 [json_name = "created_at"];
+  string updated_at = 4 [json_name = "updated_at"];
 }
 
 message CreateDiagnosticResponse {

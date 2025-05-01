@@ -24,9 +24,16 @@ func init() {
 }
 
 func main() {
-	dbase := db.DatabaseConnection()
-	port := os.Getenv("PORT")
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	// Load configuration
+	// Load environment variable
+	cfg, err := utils.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
+	dbase := db.DatabaseConnection(cfg.DB_URL)
+
+	// Start gRPC server
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatalf("Error starting record service: %v", err)
 	}
@@ -45,7 +52,7 @@ func main() {
 	)
 	recordUseCase := services.InitializeRecordService(dbase)
 	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("USER_SERVICE"))
-	logger.GetLogger().Info("Record Service listening on with TLS enabled (Min version: TLS 1.2)", zap.String("address", port))
+	logger.GetLogger().Info("Record Service listening on with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
 	if err := grpcServer.Serve(listen); err != nil {
 		logger.GetLogger().Fatal("failed to serve record service", zap.Error(err))
 	}

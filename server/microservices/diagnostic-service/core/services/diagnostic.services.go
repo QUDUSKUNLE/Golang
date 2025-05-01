@@ -1,7 +1,7 @@
 package services
 
 import (
-		"github.com/QUDUSKUNLE/microservices/diagnostic-service/adapters/repository"
+	"github.com/QUDUSKUNLE/microservices/diagnostic-service/adapters/repository"
 )
 
 type DiagnosticService struct {

@@ -20,6 +20,10 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	DiagnosticService_CreateDiagnostic_FullMethodName = "/DiagnosticService/CreateDiagnostic"
+	DiagnosticService_GetDiagnostic_FullMethodName    = "/DiagnosticService/GetDiagnostic"
+	DiagnosticService_UpdateDiagnostic_FullMethodName = "/DiagnosticService/UpdateDiagnostic"
+	DiagnosticService_DeleteDiagnostic_FullMethodName = "/DiagnosticService/DeleteDiagnostic"
+	DiagnosticService_ListDiagnostics_FullMethodName  = "/DiagnosticService/ListDiagnostics"
 )
 
 // DiagnosticServiceClient is the client API for DiagnosticService service.
@@ -27,6 +31,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DiagnosticServiceClient interface {
 	CreateDiagnostic(ctx context.Context, in *CreateDiagnosticRequest, opts ...grpc.CallOption) (*CreateDiagnosticResponse, error)
+	GetDiagnostic(ctx context.Context, in *GetDiagnosticRequest, opts ...grpc.CallOption) (*GetDiagnosticResponse, error)
+	UpdateDiagnostic(ctx context.Context, in *UpdateDiagnosticRequest, opts ...grpc.CallOption) (*UpdateDiagnosticResponse, error)
+	DeleteDiagnostic(ctx context.Context, in *DeleteDiagnosticRequest, opts ...grpc.CallOption) (*DeleteDiagnosticResponse, error)
+	ListDiagnostics(ctx context.Context, in *ListDiagnosticsRequest, opts ...grpc.CallOption) (*ListDiagnosticsResponse, error)
 }
 
 type diagnosticServiceClient struct {
@@ -46,11 +54,51 @@ func (c *diagnosticServiceClient) CreateDiagnostic(ctx context.Context, in *Crea
 	return out, nil
 }
 
+func (c *diagnosticServiceClient) GetDiagnostic(ctx context.Context, in *GetDiagnosticRequest, opts ...grpc.CallOption) (*GetDiagnosticResponse, error) {
+	out := new(GetDiagnosticResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_GetDiagnostic_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *diagnosticServiceClient) UpdateDiagnostic(ctx context.Context, in *UpdateDiagnosticRequest, opts ...grpc.CallOption) (*UpdateDiagnosticResponse, error) {
+	out := new(UpdateDiagnosticResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_UpdateDiagnostic_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *diagnosticServiceClient) DeleteDiagnostic(ctx context.Context, in *DeleteDiagnosticRequest, opts ...grpc.CallOption) (*DeleteDiagnosticResponse, error) {
+	out := new(DeleteDiagnosticResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_DeleteDiagnostic_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *diagnosticServiceClient) ListDiagnostics(ctx context.Context, in *ListDiagnosticsRequest, opts ...grpc.CallOption) (*ListDiagnosticsResponse, error) {
+	out := new(ListDiagnosticsResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_ListDiagnostics_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DiagnosticServiceServer is the server API for DiagnosticService service.
 // All implementations must embed UnimplementedDiagnosticServiceServer
 // for forward compatibility
 type DiagnosticServiceServer interface {
 	CreateDiagnostic(context.Context, *CreateDiagnosticRequest) (*CreateDiagnosticResponse, error)
+	GetDiagnostic(context.Context, *GetDiagnosticRequest) (*GetDiagnosticResponse, error)
+	UpdateDiagnostic(context.Context, *UpdateDiagnosticRequest) (*UpdateDiagnosticResponse, error)
+	DeleteDiagnostic(context.Context, *DeleteDiagnosticRequest) (*DeleteDiagnosticResponse, error)
+	ListDiagnostics(context.Context, *ListDiagnosticsRequest) (*ListDiagnosticsResponse, error)
 	mustEmbedUnimplementedDiagnosticServiceServer()
 }
 
@@ -60,6 +108,18 @@ type UnimplementedDiagnosticServiceServer struct {
 
 func (UnimplementedDiagnosticServiceServer) CreateDiagnostic(context.Context, *CreateDiagnosticRequest) (*CreateDiagnosticResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDiagnostic not implemented")
+}
+func (UnimplementedDiagnosticServiceServer) GetDiagnostic(context.Context, *GetDiagnosticRequest) (*GetDiagnosticResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDiagnostic not implemented")
+}
+func (UnimplementedDiagnosticServiceServer) UpdateDiagnostic(context.Context, *UpdateDiagnosticRequest) (*UpdateDiagnosticResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDiagnostic not implemented")
+}
+func (UnimplementedDiagnosticServiceServer) DeleteDiagnostic(context.Context, *DeleteDiagnosticRequest) (*DeleteDiagnosticResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDiagnostic not implemented")
+}
+func (UnimplementedDiagnosticServiceServer) ListDiagnostics(context.Context, *ListDiagnosticsRequest) (*ListDiagnosticsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDiagnostics not implemented")
 }
 func (UnimplementedDiagnosticServiceServer) mustEmbedUnimplementedDiagnosticServiceServer() {}
 
@@ -92,6 +152,78 @@ func _DiagnosticService_CreateDiagnostic_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DiagnosticService_GetDiagnostic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDiagnosticRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DiagnosticServiceServer).GetDiagnostic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DiagnosticService_GetDiagnostic_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DiagnosticServiceServer).GetDiagnostic(ctx, req.(*GetDiagnosticRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DiagnosticService_UpdateDiagnostic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDiagnosticRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DiagnosticServiceServer).UpdateDiagnostic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DiagnosticService_UpdateDiagnostic_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DiagnosticServiceServer).UpdateDiagnostic(ctx, req.(*UpdateDiagnosticRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DiagnosticService_DeleteDiagnostic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDiagnosticRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DiagnosticServiceServer).DeleteDiagnostic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DiagnosticService_DeleteDiagnostic_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DiagnosticServiceServer).DeleteDiagnostic(ctx, req.(*DeleteDiagnosticRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DiagnosticService_ListDiagnostics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDiagnosticsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DiagnosticServiceServer).ListDiagnostics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DiagnosticService_ListDiagnostics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DiagnosticServiceServer).ListDiagnostics(ctx, req.(*ListDiagnosticsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DiagnosticService_ServiceDesc is the grpc.ServiceDesc for DiagnosticService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +234,22 @@ var DiagnosticService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateDiagnostic",
 			Handler:    _DiagnosticService_CreateDiagnostic_Handler,
+		},
+		{
+			MethodName: "GetDiagnostic",
+			Handler:    _DiagnosticService_GetDiagnostic_Handler,
+		},
+		{
+			MethodName: "UpdateDiagnostic",
+			Handler:    _DiagnosticService_UpdateDiagnostic_Handler,
+		},
+		{
+			MethodName: "DeleteDiagnostic",
+			Handler:    _DiagnosticService_DeleteDiagnostic_Handler,
+		},
+		{
+			MethodName: "ListDiagnostics",
+			Handler:    _DiagnosticService_ListDiagnostics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

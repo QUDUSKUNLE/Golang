@@ -20,4 +20,18 @@ const (
 	// Organization case
 	CreateOrganization = "/OrganizationService/CreateOrganization"
 	GetOrganization    = "/OrganizationService/GetOrganization"
+
+	// Diagnostic case
+	CreateDiagnostic = "/DiagnosticService/CreateDiagnostic"
+	GetDiagnostic    = "/DiagnosticService/GetDiagnostic"
+	ListDiagnostics  = "/DiagnosticService/ListDiagnostics"
+	DeleteDiagnostic = "/DiagnosticService/DeleteDiagnostic"
+	UpdateDiagnostic = "/DiagnosticService/UpdateDiagnostic"
+
+	// Schedule case
+	CreateSchedule        = "/ScheduleService/CreateScheduleSession"
+	GetScheduleSession    = "/ScheduleService/GetScheduleSession"
+	ListScheduleSessions  = "/ScheduleService/ListScheduleSessions"
+	DeleteScheduleSession = "/ScheduleService/DeleteScheduleSession"
+	UpdateScheduleSession = "/ScheduleService/UpdateScheduleSession"
 )

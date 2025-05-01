@@ -11,6 +11,155 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type ScheduleStatus string
+
+const (
+	ScheduleStatusSCHEDULED ScheduleStatus = "SCHEDULED"
+	ScheduleStatusCOMPLETED ScheduleStatus = "COMPLETED"
+	ScheduleStatusCANCELED  ScheduleStatus = "CANCELED"
+)
+
+func (e *ScheduleStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ScheduleStatus(s)
+	case string:
+		*e = ScheduleStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ScheduleStatus: %T", src)
+	}
+	return nil
+}
+
+type NullScheduleStatus struct {
+	ScheduleStatus ScheduleStatus `json:"schedule_status"`
+	Valid          bool           `json:"valid"` // Valid is true if ScheduleStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullScheduleStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.ScheduleStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.ScheduleStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullScheduleStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.ScheduleStatus), nil
+}
+
+func (e ScheduleStatus) Valid() bool {
+	switch e {
+	case ScheduleStatusSCHEDULED,
+		ScheduleStatusCOMPLETED,
+		ScheduleStatusCANCELED:
+		return true
+	}
+	return false
+}
+
+func AllScheduleStatusValues() []ScheduleStatus {
+	return []ScheduleStatus{
+		ScheduleStatusSCHEDULED,
+		ScheduleStatusCOMPLETED,
+		ScheduleStatusCANCELED,
+	}
+}
+
+type ScheduleType string
+
+const (
+	ScheduleTypeBLOODTEST   ScheduleType = "BLOOD_TEST"
+	ScheduleTypeURINETEST   ScheduleType = "URINE_TEST"
+	ScheduleTypeXRAY        ScheduleType = "X_RAY"
+	ScheduleTypeMRI         ScheduleType = "MRI"
+	ScheduleTypeCTSCAN      ScheduleType = "CT_SCAN"
+	ScheduleTypeULTRASOUND  ScheduleType = "ULTRASOUND"
+	ScheduleTypeECG         ScheduleType = "ECG"
+	ScheduleTypeCOVIDTEST   ScheduleType = "COVID_TEST"
+	ScheduleTypeDNATEST     ScheduleType = "DNA_TEST"
+	ScheduleTypeALLERGYTEST ScheduleType = "ALLERGY_TEST"
+	ScheduleTypeGENETICTEST ScheduleType = "GENETIC_TEST"
+	ScheduleTypeOTHER       ScheduleType = "OTHER"
+)
+
+func (e *ScheduleType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ScheduleType(s)
+	case string:
+		*e = ScheduleType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ScheduleType: %T", src)
+	}
+	return nil
+}
+
+type NullScheduleType struct {
+	ScheduleType ScheduleType `json:"schedule_type"`
+	Valid        bool         `json:"valid"` // Valid is true if ScheduleType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullScheduleType) Scan(value interface{}) error {
+	if value == nil {
+		ns.ScheduleType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.ScheduleType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullScheduleType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.ScheduleType), nil
+}
+
+func (e ScheduleType) Valid() bool {
+	switch e {
+	case ScheduleTypeBLOODTEST,
+		ScheduleTypeURINETEST,
+		ScheduleTypeXRAY,
+		ScheduleTypeMRI,
+		ScheduleTypeCTSCAN,
+		ScheduleTypeULTRASOUND,
+		ScheduleTypeECG,
+		ScheduleTypeCOVIDTEST,
+		ScheduleTypeDNATEST,
+		ScheduleTypeALLERGYTEST,
+		ScheduleTypeGENETICTEST,
+		ScheduleTypeOTHER:
+		return true
+	}
+	return false
+}
+
+func AllScheduleTypeValues() []ScheduleType {
+	return []ScheduleType{
+		ScheduleTypeBLOODTEST,
+		ScheduleTypeURINETEST,
+		ScheduleTypeXRAY,
+		ScheduleTypeMRI,
+		ScheduleTypeCTSCAN,
+		ScheduleTypeULTRASOUND,
+		ScheduleTypeECG,
+		ScheduleTypeCOVIDTEST,
+		ScheduleTypeDNATEST,
+		ScheduleTypeALLERGYTEST,
+		ScheduleTypeGENETICTEST,
+		ScheduleTypeOTHER,
+	}
+}
+
 type UserEnum string
 
 const (
@@ -83,6 +232,19 @@ type Diagnostic struct {
 	UserID    string             `db:"user_id" json:"user_id"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}
+
+type DiagnosticSchedule struct {
+	ID                 string             `db:"id" json:"id"`
+	UserID             string             `db:"user_id" json:"user_id"`
+	DiagnosticCentreID string             `db:"diagnostic_centre_id" json:"diagnostic_centre_id"`
+	Date               pgtype.Timestamptz `db:"date" json:"date"`
+	Time               pgtype.Timestamptz `db:"time" json:"time"`
+	TestType           ScheduleType       `db:"test_type" json:"test_type"`
+	Status             ScheduleStatus     `db:"status" json:"status"`
+	Notes              pgtype.Text        `db:"notes" json:"notes"`
+	CreatedAt          pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt          pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
 type Organization struct {

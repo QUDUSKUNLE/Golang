@@ -11,6 +11,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/schedule"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -27,6 +28,7 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
+		// User validations
 		if r, ok := req.(*user.CreateUserRequest); ok {
 			if !ValidateEmail(r.Email) || r.Password == "" || string(r.UserType) == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "Email, Password and UserType cannot be empty")
@@ -39,23 +41,44 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 				return nil, status.Errorf(codes.InvalidArgument, "Invalid id.")
 			}
 		}
-		if r, ok := req.(*auth.SignInRequest); ok {
-			if !ValidateEmail(r.Email) || r.Password == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "Email and Password cannot be empty")
-			}
-		}
 		if r, ok := req.(*user.UpdateNinRequest); ok {
 			if !ValidateNIN(r.Nin) {
 				return nil, status.Errorf(codes.InvalidArgument, "Invalid NIN")
 			}
 		}
+		// Auth validations
+		if r, ok := req.(*auth.SignInRequest); ok {
+			if !ValidateEmail(r.Email) || r.Password == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "Email and Password are required")
+			}
+		}
+		// Record validations
 		if r, ok := req.(*record.ScanUploadRequest); ok {
-			if r.ScanTitle == "" || r.FileName == "" || !ValidateUUID(r.UserId) {
-				return nil, status.Errorf(codes.InvalidArgument, "ScanTitle or FileName or UserID cannot be empty")
+			if r.ScanTitle == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "ScanTitle is required")
+			}
+			if r.FileName == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "FileName is required")
+			}
+			if !ValidateUUID(r.UserId) {
+				return nil, status.Errorf(codes.InvalidArgument, "Invalid UserId")
+			}
+		}
+		// schedule validations
+		if r, ok := req.(*schedule.ScheduleRequest); ok {
+			if r.DiagnosticCentreId == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "DiagnosticCentreId is required")
+			}
+			if r.Date == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "Date is required")
+			}
+			if r.Time == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "Time is required")
 			}
 		}
 		switch info.FullMethod {
-		case constants.UpdateNin, constants.ReadUsers, constants.GetRecords, constants.GetRecord, constants.ScanUpload, constants.SearchRecord, constants.SearchByNin:
+		case constants.UpdateNin,
+			constants.ReadUsers, constants.GetRecords, constants.GetRecord, constants.ScanUpload, constants.SearchRecord, constants.SearchByNin, constants.GetDiagnostic, constants.UpdateDiagnostic, constants.DeleteDiagnostic, constants.CreateSchedule, constants.GetScheduleSession, constants.ListScheduleSessions, constants.DeleteScheduleSession, constants.UpdateScheduleSession:
 			return urinaryHelper(ctx, req, handler)
 		default:
 			return handler(ctx, req)
