@@ -24,6 +24,7 @@ const (
 	NinRequired                        = "Nin is required"
 	UserRegisteredSuccessfully         = "User registered successfully."
 	OrganizationRegisteredSuccessfully = "Organization registered successfully."
+	DiagnosticRegisteredSuccessfully   = "Diagnostic registered successfully."
 	NinUpdatedSuccessfully             = "Nin updated successfully."
 	WelcomeHome                        = "Welcome to Scan Records scanrecords.com."
 	ErrUnauthorized                    = "Unauthorized to perform operation."

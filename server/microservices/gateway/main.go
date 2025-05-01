@@ -25,6 +25,7 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/diagnostic"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
@@ -84,6 +85,14 @@ func main() {
 		mux,
 		os.Getenv("RECORD"), opts); err != nil {
 		logger.GetLogger().Fatal("Failed to register the record service handler", zap.Error(err))
+	}
+
+	// Register DiagnosticServiceHandler
+	if err := diagnostic.RegisterDiagnosticServiceHandlerFromEndpoint(
+		ctx,
+		mux,
+		os.Getenv("DIAGNOSTIC"), opts); err != nil {
+		logger.GetLogger().Fatal("Failed to register the diagnostic service handler", zap.Error(err))
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))

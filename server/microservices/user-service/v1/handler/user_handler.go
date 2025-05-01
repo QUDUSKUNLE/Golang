@@ -34,15 +34,15 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	// Check if user is an organization
 	switch data.UserType {
 	case db.UserEnumORGANIZATION:
-		if err := srv.eventBroker.Publish(ctx, events.USER_EVENTS, &dto.UserCreatedEvent{UserID: user.ID, Email: newUser.Email.String}); err != nil {
+		if err := srv.eventBroker.Publish(ctx, events.USER_EVENTS, &dto.UserCreatedEvent{UserID: user.ID}); err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
 	case db.UserEnumDIAGNOSTIC:
-		if err := srv.eventBroker.Publish(ctx, events.DIAGNOSTIC_EVENTS, &dto.UserCreatedEvent{UserID: user.ID, Email: newUser.Email.String}); err != nil {
+		if err := srv.eventBroker.Publish(ctx, events.DIAGNOSTIC_EVENTS, &dto.UserCreatedEvent{UserID: user.ID}); err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
-		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
+		return &userProtoc.SuccessResponse{Data: DiagnosticRegisteredSuccessfully}, nil
 	default:
 		return &userProtoc.SuccessResponse{Data: UserRegisteredSuccessfully}, nil
 	}

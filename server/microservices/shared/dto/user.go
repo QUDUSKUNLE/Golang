@@ -44,7 +44,6 @@ type (
 	}
 	UserCreatedEvent struct {
 		UserID string `json:"userId"`
-		Email  string `json:"email"`
 	}
 )
 

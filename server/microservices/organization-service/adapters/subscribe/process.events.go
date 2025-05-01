@@ -20,7 +20,7 @@ func ProcessEvent(ctx context.Context, event []byte) error {
 		return fmt.Errorf("failed to unmarshal event: %w", err)
 	}
 
-	log.Printf("Processing UserCreatedEvent: UserID=%s, Email=%s", user.UserID, user.Email)
+	log.Printf("Processing OrganizationCreatedEvent: UserID=%s", user.UserID)
 
     // Initialize the organization service
     organizationService := organizationService.InitOrganizationServer(db.DatabaseConnection())
