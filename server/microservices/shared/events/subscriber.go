@@ -20,21 +20,17 @@
 //   - The function runs indefinitely and should be executed in a separate goroutine or managed appropriately.
 //
 // Example Usage:
-//   go consumers.ConsumeCreatedUserEvent(dbQueries, "localhost:9092", "user-events", "group-id")
-package consumers
+//
+//	go consumers.ConsumeCreatedUserEvent(dbQueries, "localhost:9092", "user-events", "group-id")
+package events
 
 import (
 	"context"
-	"encoding/json"
 	"log"
-
-	organizationService "github.com/QUDUSKUNLE/microservices/organization-service/adapters/organizationcase"
-	"github.com/QUDUSKUNLE/microservices/shared/db"
-	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/segmentio/kafka-go"
 )
 
-func ConsumeCreatedUserEvent(d *db.Queries, brokerAddress, topic, groupID string) {
+func EventsSubscriber(brokerAddress, topic, groupID string, processEvent func(context.Context, []byte) error) {
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:        []string{brokerAddress},
 		Topic:          topic,
@@ -52,24 +48,9 @@ func ConsumeCreatedUserEvent(d *db.Queries, brokerAddress, topic, groupID string
 		}
 
 		// Process the event
-		switch topic {
-		case USER_EVENTS:
-			var user dto.UserCreatedEvent
-			if err = json.Unmarshal(msg.Value, &user); err != nil {
-				log.Printf("Error unmarshaling event: %v", err)
-				continue
-			}
-			log.Printf("Processing OrganizationCreatedEvent: UserID=%s, Email=%s", user.UserID, user.Email)
-			organizationService := organizationService.InitOrganizationServer(d)
-			// Ensure this is initialized with a concrete implementation
-			organization, err := organizationService.CreateOrganization(context.Background(), dto.OrganizationDto{UserID: user.UserID})
-			if err != nil {
-				log.Printf("Error creating organization: %v", err)
-				continue
-			}
-			log.Printf("Organization created successfully: %v", organization.ID)
-		default:
-			log.Printf("Unknown topic: %s", topic)
+		if err := processEvent(context.Background(), msg.Value); err != nil {
+			log.Printf("Error processing event: %v", err)
+			continue
 		}
 	}
 }

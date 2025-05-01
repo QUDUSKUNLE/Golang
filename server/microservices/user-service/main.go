@@ -19,14 +19,14 @@ import (
 	"net"
 	"os"
 
-	"github.com/QUDUSKUNLE/microservices/shared/db"
-	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/events-service/publish"
-	"github.com/QUDUSKUNLE/microservices/shared/utils"
+	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/logger"
-	"github.com/QUDUSKUNLE/microservices/user-service/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/shared/middleware"
+	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"github.com/QUDUSKUNLE/microservices/user-service/core/services"
-		"go.uber.org/zap"
+	"github.com/QUDUSKUNLE/microservices/user-service/v1/handler"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -42,8 +42,9 @@ func main() {
 	// Initialize database connection
 	db := db.DatabaseConnection()
 
+	port := os.Getenv("PORT")
 	// Create TCP listener
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("PORT")))
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("Error starting user service: %v", err)
 	}
@@ -60,11 +61,11 @@ func main() {
 	)
 	// Initialize use case and register services
 	userUseCase := services.InitUserServer(db)
-  eventBroker := publish.NewBroker(os.Getenv("KAFKA_BROKER"), os.Getenv("KAFKA_TOPIC"))
+	eventBroker := publish.NewBroker(os.Getenv("KAFKA_BROKER"), os.Getenv("KAFKA_TOPIC"))
 	handler.NewUserService(grpcServer, userUseCase, eventBroker, os.Getenv("ORGANIZATION"))
 	reflection.Register(grpcServer)
 
-	logger.GetLogger().Info("User Service listening at with TLS enabled (Min version: TLS 1.2)", zap.Error(err))
+	logger.GetLogger().Info("User Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", port))
 	if err := grpcServer.Serve(listen); err != nil {
 		logger.GetLogger().Fatal("failed to serve user service", zap.Error(err))
 	}

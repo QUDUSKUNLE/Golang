@@ -11,9 +11,11 @@ import (
 )
 
 type Querier interface {
+	CreateDiagnostic(ctx context.Context, userID string) (*Diagnostic, error)
 	CreateOrganization(ctx context.Context, userID string) (*Organization, error)
 	CreateRecord(ctx context.Context, arg CreateRecordParams) (*Record, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (*CreateUserRow, error)
+	GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error)
 	GetOrganization(ctx context.Context, id string) (*Organization, error)
 	GetOrganizationByUserID(ctx context.Context, userID string) (*Organization, error)
 	GetRecord(ctx context.Context, id string) (*Record, error)

@@ -78,6 +78,13 @@ func AllUserEnumValues() []UserEnum {
 	}
 }
 
+type Diagnostic struct {
+	ID        string             `db:"id" json:"id"`
+	UserID    string             `db:"user_id" json:"user_id"`
+	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+}
+
 type Organization struct {
 	ID        string             `db:"id" json:"id"`
 	UserID    string             `db:"user_id" json:"user_id"`

@@ -40,7 +40,8 @@ func main() {
 	db := db.DatabaseConnection()
 
 	// Create TCP listener
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("PORT")))
+	port := os.Getenv("PORT")
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
@@ -61,7 +62,7 @@ func main() {
 	handler.NewAuthServer(grpcServer, authUseCase)
 	reflection.Register(grpcServer)
 
-	logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.Error(err))
+	logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", port))
 	if err := grpcServer.Serve(listen); err != nil {
 		logger.GetLogger().Fatal("failed to serve auth service", zap.Error(err))
 	}

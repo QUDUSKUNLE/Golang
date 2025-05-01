@@ -1,0 +1,24 @@
+syntax = "proto3";
+option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/diagnostic";
+
+import "google/api/annotations.proto";
+
+service DiagnosticService {
+  rpc CreateDiagnostic(CreateDiagnosticRequest) returns (CreateDiagnosticResponse) {
+    option (google.api.http) = {
+      post: "/v1/diagnostics",
+      body: "*"
+    };
+  }
+}
+
+message CreateDiagnosticRequest {
+  string user_id = 1 [json_name = "user_id"];
+}
+
+message CreateDiagnosticResponse {
+  string id = 1 [json_name = "id"];
+  string user_id = 2 [json_name = "user_id"];
+  string created_at = 3 [json_name = "created_at"];
+  string updated_at = 4 [json_name = "updated_at"];
+}

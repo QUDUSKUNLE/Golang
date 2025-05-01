@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/events"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -31,13 +32,20 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 		return nil, status.Errorf(codes.AlreadyExists, err.Error())
 	}
 	// Check if user is an organization
-	if data.UserType != db.UserEnumUSER {
-		if err := srv.eventBroker.Publish(ctx, "user-events", &dto.UserCreatedEvent{UserID: user.ID, Email: newUser.Email.String}); err != nil {
+	switch data.UserType {
+	case db.UserEnumORGANIZATION:
+		if err := srv.eventBroker.Publish(ctx, events.USER_EVENTS, &dto.UserCreatedEvent{UserID: user.ID, Email: newUser.Email.String}); err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
+	case db.UserEnumDIAGNOSTIC:
+		if err := srv.eventBroker.Publish(ctx, events.DIAGNOSTIC_EVENTS, &dto.UserCreatedEvent{UserID: user.ID, Email: newUser.Email.String}); err != nil {
+			return nil, status.Error(codes.Aborted, err.Error())
+		}
+		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
+	default:
+		return &userProtoc.SuccessResponse{Data: UserRegisteredSuccessfully}, nil
 	}
-	return &userProtoc.SuccessResponse{Data: UserRegisteredSuccessfully}, nil
 }
 
 func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUserRequest) (*userProtoc.GetUserResponse, error) {
