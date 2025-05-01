@@ -29,6 +29,8 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
+		"github.com/QUDUSKUNLE/microservices/shared/logger"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -39,6 +41,10 @@ func main() {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+
+	// Initialize the logger
+	logger.InitLogger()
+	defer logger.Sync()
 
 	// Initialize runtime server
 	mux := runtime.NewServeMux(
@@ -77,12 +83,12 @@ func main() {
 		ctx,
 		mux,
 		os.Getenv("RECORD"), opts); err != nil {
-		log.Fatalf("Failed to register the record service handler: %v", err)
+		logger.GetLogger().Fatal("Failed to register the record service handler", zap.Error(err))
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
-	log.Printf("Gateway server listening on port :%v", os.Getenv("GATEWAY_PORT"))
+	logger.GetLogger().Info("Gateway server listening on port", zap.String("address", addr))
 	if err := http.ListenAndServe(addr, mux); err != nil {
-		log.Fatalf("Gateway server closed abruptly: %v", err)
+		logger.GetLogger().Fatal("Gateway server closed abruptly", zap.Error(err))
 	}
 }

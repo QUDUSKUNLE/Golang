@@ -22,6 +22,8 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
+	"github.com/QUDUSKUNLE/microservices/shared/logger"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -43,6 +45,10 @@ func main() {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
 
+	// Initialize the logger
+	logger.InitLogger()
+	defer logger.Sync()
+
 	// Create gRPC server with TLS and interceptors
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
@@ -55,8 +61,8 @@ func main() {
 	handler.NewAuthServer(grpcServer, authUseCase)
 	reflection.Register(grpcServer)
 
-	log.Printf("Auth Service listening at %v with TLS enabled (Min version: TLS 1.2)", listen.Addr())
+	logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.Error(err))
 	if err := grpcServer.Serve(listen); err != nil {
-		log.Fatalf("failed to serve auth service: %v", err)
+		logger.GetLogger().Fatal("failed to serve auth service", zap.Error(err))
 	}
 }

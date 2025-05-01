@@ -88,8 +88,8 @@ message GetRecordRequest {
   string id = 1 [json_name = "id"];
   string scan_title = 2 [json_name = "scan_title"];
   string user_id = 3 [json_name = "user_id"];
-  int32 limit = 3 [json_name = "limit"];
-  int32 offset = 4 [json_name = "offset"];
+  int32 limit = 4 [json_name = "limit"];
+  int32 offset = 5 [json_name = "offset"];
 }
 
 message GetRecordResponse {
