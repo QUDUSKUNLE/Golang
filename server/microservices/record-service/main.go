@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/QUDUSKUNLE/microservices/record-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/services"
@@ -32,6 +35,9 @@ func main() {
 	}
 	dbase := db.DatabaseConnection(cfg.DB_URL)
 
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	// Start gRPC server
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
@@ -52,8 +58,14 @@ func main() {
 	)
 	recordUseCase := services.InitializeRecordService(dbase)
 	handler.NewRecordServer(grpcServer, recordUseCase, os.Getenv("ORGANIZATION"), os.Getenv("USER_SERVICE"))
-	logger.GetLogger().Info("Record Service listening on with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
-	if err := grpcServer.Serve(listen); err != nil {
-		logger.GetLogger().Fatal("failed to serve record service", zap.Error(err))
-	}
+	go func() {
+		logger.GetLogger().Info("Record Service listening on with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
+		if err := grpcServer.Serve(listen); err != nil {
+			logger.GetLogger().Fatal("failed to serve record service", zap.Error(err))
+		}
+	}()
+	<-ctx.Done()
+	logger.GetLogger().Info("Record Service shutting down")
+	grpcServer.GracefulStop()
+	logger.GetLogger().Info("Record Service stopped")
 }

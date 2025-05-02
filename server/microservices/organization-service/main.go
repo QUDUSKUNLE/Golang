@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/organization-service/adapters/organizationcase"
@@ -31,12 +35,19 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
-	
+
+	// Initialize database connection
 	dbase := db.DatabaseConnection(cfg.DB_URL)
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	// Start gRPC server
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatalf("Error starting organization service: %v", err)
 	}
+	defer listen.Close()
 
 	// Initialize the logger
 	logger.InitLogger()
@@ -48,9 +59,16 @@ func main() {
 	go events.EventsSubscriber(cfg.KafkaBroker, cfg.KafkaTopic, cfg.KafkaGroup, subscribe.ProcessEvent)
 	organizationUseCase := organizationcase.InitOrganizationServer(dbase)
 	handler.NewOrganizationServer(grpcServer, organizationUseCase)
-	logger.GetLogger().Info("Organization Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
+	go func() {
+		logger.GetLogger().Info("Organization Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
 
-	if err := grpcServer.Serve(listen); err != nil {
-		logger.GetLogger().Fatal("failed to serve organization service", zap.Error(err))
-	}
+		if err := grpcServer.Serve(listen); err != nil {
+			logger.GetLogger().Fatal("failed to serve organization service", zap.Error(err))
+		}
+	}()
+	<-ctx.Done()
+	logger.GetLogger().Info("Shutting down organization service")
+	grpcServer.GracefulStop()
+
+	logger.GetLogger().Info("Organization service stopped")
 }

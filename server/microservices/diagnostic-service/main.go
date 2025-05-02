@@ -78,5 +78,6 @@ func main() {
 <- ctx.Done()
 	logger.GetLogger().Info("Shutting down server gracefully...")
 	grpcServer.GracefulStop()
+
 	logger.GetLogger().Info("Diagnostic service stopped gracefully")
 }

@@ -19,6 +19,9 @@ import (
 	"net/http"
 	"os"
 
+	"os/signal"
+	"syscall"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -40,9 +43,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	// Initialize the logger
 	logger.InitLogger()
@@ -105,8 +107,14 @@ func main() {
 	}
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
-	logger.GetLogger().Info("Gateway server listening on port", zap.String("address", addr))
-	if err := http.ListenAndServe(addr, mux); err != nil {
-		logger.GetLogger().Fatal("Gateway server closed abruptly", zap.Error(err))
-	}
+	go func() {
+		logger.GetLogger().Info("Gateway server listening on port", zap.String("address", addr))
+		if err := http.ListenAndServe(addr, mux); err != nil {
+			logger.GetLogger().Fatal("Gateway server closed abruptly", zap.Error(err))
+		}
+	}()
+	<-ctx.Done()
+
+	logger.GetLogger().Info("Shutting down gateway server gracefully...")
+	logger.GetLogger().Info("Gateway server stopped gracefully")
 }
