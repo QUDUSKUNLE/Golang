@@ -15,6 +15,16 @@ type (
 		ConfirmPassword string      `json:"confirm_password" validate:"eqfield=Password"`
 		UserType        db.UserEnum `json:"user_type"`
 	}
+	Address struct {
+		Street  string `json:"street"`
+		City    string `json:"city"`
+		State   string `json:"state"`
+		Country string `json:"country"`
+	}
+	Contact struct {
+		Phone []string `json:"phone"`
+		Email string   `json:"email"`
+	}
 	GetUsersParams struct {
 		Limit  int `json:"limit" validate:"min=1"`
 		Offset int `json:"offset" validate:"min=0"`
@@ -23,9 +33,11 @@ type (
 		Email    string `json:"email" validate:"email,required"`
 		Password string `json:"password" validate:"min=8,required"`
 	}
-	UpdateNinDto struct {
-		Nin    string `json:"nin" validate:"required"`
-		UserID string `json:"user_id" validate:""`
+	UpdateUserDto struct {
+		Nin     string  `json:"nin" validate:"required"`
+		Address Address `json:"address"`
+		Contact Contact `json:"contact"`
+		UserID string `json:"user_id"`
 	}
 	ResetPasswordDto struct {
 		Email string `json:"email" validate:"email,required"`

@@ -67,16 +67,9 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 	if err != nil {
 		return nil, err
 	}
-	limit := int(req.GetLimit())
-	offset := int(req.GetOffset())
-	if limit <= 0 {
-		limit = 50
-	}
-	if offset < 0 {
-		offset = 0
-	}
+	limit, offset := utils.PaginationParams(req.GetLimit(), req.GetOffset())
 	users, err := srv.userService.GetUsers(ctx, db.GetUsersParams{
-		Limit: int32(limit), Offset: int32(offset)})
+		Limit: limit, Offset: offset})
 	if err != nil {
 		return nil, status.Error(codes.NotFound, NotFound)
 	}
@@ -92,17 +85,24 @@ func (srv *UserServiceStruct) UpdateUser(ctx context.Context, req *userProtoc.Up
 	if err != nil {
 		return nil, err
 	}
-	address, _ := utils.JsonMarshal(req.GetAddress())
-	contact, _ := utils.JsonMarshal(req.GetContact())
+	addressJSON, err := utils.MapToStruct(req.GetAddress().AsMap())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid address format: %v", err)
+	}
+	contactJSON, err := utils.MapToStruct(req.GetContact().AsMap())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid contact format: %v", err)
+	}
+	address, _ := utils.JsonMarshal(addressJSON)
+	contact, _ := utils.JsonMarshal(contactJSON)
 	_, err = srv.userService.UpdateUser(ctx, db.UpdateUserParams{
-		Nin: pgtype.Text{
-			String: req.GetNin(), Valid: true,
-		},
+		Nin:     pgtype.Text{String: req.GetNin(), Valid: true},
 		Address: address,
 		Contact: contact,
-		ID:      user.UserID})
+		ID:      user.UserID,
+	})
 	if err != nil {
-		return nil, status.Errorf(codes.Unimplemented, err.Error())
+		return nil, status.Errorf(codes.Internal, "Failed to update user: %v", err)
 	}
 	return &userProtoc.UpdateUserResponse{Data: UserUpdatedSuccessfully}, nil
 }

@@ -2,10 +2,13 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"os"
 
+	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/joho/godotenv"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type Config struct {
@@ -61,4 +64,22 @@ func JsonMarshal(data interface{}) ([]byte, error) {
 		return nil, err
 	}
 	return jsonData, nil
+}
+
+func MapToStruct(data map[string]interface{}) (*structpb.Struct, error) {
+	structData, err := structpb.NewStruct(data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert map to struct: %w", err)
+	}
+	return structData, nil
+}
+
+func PaginationParams(limit, offset int32) (int32, int32) {
+	if limit <= 0 {
+		limit = constants.DefaultLimit
+	}
+	if offset < 0 {
+		offset = constants.DefaultOffset
+	}
+	return int32(limit), int32(offset)
 }

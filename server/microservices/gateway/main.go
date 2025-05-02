@@ -30,7 +30,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/diagnostic"
-	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
+	// "github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/schedule"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
@@ -72,14 +72,6 @@ func main() {
 		mux,
 		os.Getenv("USER_SERVICE"), opts); err != nil {
 		log.Fatalf("Failed to register the user service handler: %v", err)
-	}
-
-	// Register OrganizationServiceHandler
-	if err := organization.RegisterOrganizationServiceHandlerFromEndpoint(
-		ctx,
-		mux,
-		os.Getenv("ORGANIZATION"), opts); err != nil {
-		log.Fatalf("Failed to register the organization service handler: %v", err)
 	}
 
 	// Register RecordServiceHandler

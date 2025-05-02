@@ -8,7 +8,7 @@ type UserType struct {
 const (
 	// Users constants
 	UpdateUser = "/UserService/UpdateUser"
-	ReadUsers = "/UserService/ReadUsers"
+	ReadUsers  = "/UserService/ReadUsers"
 
 	// Records constants
 	CreateRecord = "/RecordService/CreateRecord"
@@ -36,4 +36,7 @@ const (
 	ListScheduleSessions  = "/ScheduleService/ListScheduleSessions"
 	DeleteScheduleSession = "/ScheduleService/DeleteScheduleSession"
 	UpdateScheduleSession = "/ScheduleService/UpdateScheduleSession"
+
+	DefaultLimit  = 50
+	DefaultOffset = 0
 )

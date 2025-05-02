@@ -33,7 +33,11 @@ func (u *Repository) GetUserByEmail(ctx context.Context, email string) (*db.User
 }
 
 func (u *Repository) UpdateUser(ctx context.Context, user db.UpdateUserParams) (*db.UpdateUserRow, error) {
-	return u.database.UpdateUser(ctx, user)
+	updatedUser, err := u.database.UpdateUser(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	return updatedUser, nil
 }
 
 func NewRepository(dbase *db.Queries) v1.UserRepository {
