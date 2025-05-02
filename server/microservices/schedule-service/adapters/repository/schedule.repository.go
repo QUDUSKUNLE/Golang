@@ -19,9 +19,9 @@ func (s *ScheduleRepository) CreateSchedule(ctx context.Context, arg db.CreateSc
 	return schedule, nil
 }
 
-func (s *ScheduleRepository) GetScheduleByID(ctx context.Context, id string) (*db.DiagnosticSchedule, error) {
+func (s *ScheduleRepository) GetScheduleByID(ctx context.Context, arg db.GetScheduleParams) (*db.DiagnosticSchedule, error) {
 	// Implementation for getting a schedule by ID
-	schedule, err := s.database.GetSchedule(ctx, id)
+	schedule, err := s.database.GetSchedule(ctx, arg)
 	if err != nil {
 		return nil, err
 	}

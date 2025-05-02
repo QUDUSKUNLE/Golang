@@ -33,3 +33,5 @@ CREATE TABLE diagnostic_schedules (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (diagnostic_centre_id) REFERENCES diagnostics(id) ON DELETE CASCADE);
+
+CREATE INDEX idx_diagnostics_schedules_id_user_id ON diagnostic_schedules (id, user_id);

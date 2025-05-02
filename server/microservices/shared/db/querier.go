@@ -30,7 +30,7 @@ type Querier interface {
 	GetRecords(ctx context.Context, organizationID string) ([]*Record, error)
 	GetRecordsByUser(ctx context.Context, userID string) ([]*Record, error)
 	GetRecordsByUserAndScanTitle(ctx context.Context, arg GetRecordsByUserAndScanTitleParams) ([]*Record, error)
-	GetSchedule(ctx context.Context, id string) (*DiagnosticSchedule, error)
+	GetSchedule(ctx context.Context, arg GetScheduleParams) (*DiagnosticSchedule, error)
 	GetSchedules(ctx context.Context, arg GetSchedulesParams) ([]*DiagnosticSchedule, error)
 	GetSchedulesByCentre(ctx context.Context, arg GetSchedulesByCentreParams) ([]*DiagnosticSchedule, error)
 	GetSchedulesByStatus(ctx context.Context, arg GetSchedulesByStatusParams) ([]*DiagnosticSchedule, error)

@@ -91,11 +91,16 @@ func (q *Queries) CreateSchedule(ctx context.Context, arg CreateScheduleParams) 
 }
 
 const getSchedule = `-- name: GetSchedule :one
-SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at FROM diagnostic_schedules WHERE id = $1
+SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at FROM diagnostic_schedules WHERE id = $1 AND user_id=$2
 `
 
-func (q *Queries) GetSchedule(ctx context.Context, id string) (*DiagnosticSchedule, error) {
-	row := q.db.QueryRow(ctx, getSchedule, id)
+type GetScheduleParams struct {
+	ID     string `db:"id" json:"id"`
+	UserID string `db:"user_id" json:"user_id"`
+}
+
+func (q *Queries) GetSchedule(ctx context.Context, arg GetScheduleParams) (*DiagnosticSchedule, error) {
+	row := q.db.QueryRow(ctx, getSchedule, arg.ID, arg.UserID)
 	var i DiagnosticSchedule
 	err := row.Scan(
 		&i.ID,

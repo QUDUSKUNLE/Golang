@@ -12,7 +12,7 @@ INSERT INTO diagnostic_schedules (
 ) RETURNING *;
 
 -- name: GetSchedule :one
-SELECT * FROM diagnostic_schedules WHERE id = $1;
+SELECT * FROM diagnostic_schedules WHERE id = $1 AND user_id=$2;
 
 -- name: GetSchedules :many
 SELECT * FROM diagnostic_schedules

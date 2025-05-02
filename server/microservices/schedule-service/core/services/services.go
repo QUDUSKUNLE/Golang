@@ -56,12 +56,12 @@ func (s *ScheduleService) CreateSchedule(ctx context.Context, req *schedule.Sche
 
 func (s *ScheduleService) GetScheduleSession(ctx context.Context, arg *schedule.GetScheduledSessionRequest) (*schedule.GetScheduledSessionResponse, error) {
 	// Validate the request
-	_, err := middleware.ValidateUser(ctx, string(db.UserEnumUSER))
+	user, err := middleware.ValidateUser(ctx, string(db.UserEnumUSER))
 	if err != nil {
 		return nil, err
 	}
 	// Get the schedule by ID from the database
-	response, err := s.Repo.GetScheduleByID(ctx, arg.GetScheduleId())
+	response, err := s.Repo.GetScheduleByID(ctx, db.GetScheduleParams{ID: arg.GetScheduleId(), UserID: user.UserID})
 	if err != nil {
 		return nil, err
 	}
