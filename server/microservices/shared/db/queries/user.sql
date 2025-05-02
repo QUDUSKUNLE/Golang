@@ -19,10 +19,12 @@ SELECT * FROM users
 ORDER BY id
 LIMIT $1 OFFSET $2;
 
--- name: UpdateNin :one
+-- name: UpdateUser :one
 UPDATE users
 SET
   nin = COALESCE($1, nin),
+  address = COALESCE($2, address),
+  contact = COALESCE($3, contact),
   updated_at = NOW()
-WHERE id = $2
-RETURNING id, email, user_type, created_at, updated_at;
+WHERE id = $4
+RETURNING id, email, nin, user_type, address, contact, created_at, updated_at;

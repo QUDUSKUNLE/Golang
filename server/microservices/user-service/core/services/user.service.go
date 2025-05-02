@@ -18,8 +18,8 @@ func (u *UserCase) GetUsers(ctx context.Context, params db.GetUsersParams) ([]*d
 }
 
 // UpdateNin implements v1.UseCaseInterface.
-func (u *UserCase) UpdateNin(ctx context.Context, data db.UpdateNinParams) (*db.UpdateNinRow, error) {
-	return u.database.UpdateNin(ctx, data)
+func (u *UserCase) UpdateUser(ctx context.Context, data db.UpdateUserParams) (*db.UpdateUserRow, error) {
+	return u.database.UpdateUser(ctx, data)
 }
 
 // GetUserByEmail implements v1.RepositoryInterface.

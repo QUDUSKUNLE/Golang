@@ -41,7 +41,7 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 				return nil, status.Errorf(codes.InvalidArgument, "Invalid id.")
 			}
 		}
-		if r, ok := req.(*user.UpdateNinRequest); ok {
+		if r, ok := req.(*user.UpdateUserRequest); ok {
 			if !ValidateNIN(r.Nin) {
 				return nil, status.Errorf(codes.InvalidArgument, "Invalid NIN")
 			}
@@ -77,7 +77,7 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 			}
 		}
 		switch info.FullMethod {
-		case constants.UpdateNin,
+		case constants.UpdateUser,
 			constants.ReadUsers, constants.GetRecords, constants.GetRecord, constants.ScanUpload, constants.SearchRecord, constants.SearchByNin, constants.GetDiagnostic, constants.UpdateDiagnostic, constants.DeleteDiagnostic, constants.CreateSchedule, constants.GetScheduleSession, constants.ListScheduleSessions, constants.DeleteScheduleSession, constants.UpdateScheduleSession:
 			return urinaryHelper(ctx, req, handler)
 		default:

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"math"
 	"os"
 
@@ -51,4 +52,13 @@ func Haversine(lat1, lon1, lat2, lon2 float64) float64 {
 	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
 
 	return earthRadius * c
+}
+
+func JsonMarshal(data interface{}) ([]byte, error) {
+	// Marshal the data to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+	return jsonData, nil
 }

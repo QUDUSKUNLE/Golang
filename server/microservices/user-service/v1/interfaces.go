@@ -11,7 +11,7 @@ type UserRepository interface {
 	GetUser(ctx context.Context, id string) (*db.User, error)
 	GetUsers(ctx context.Context, params db.GetUsersParams) ([]*db.User, error)
 	GetUserByEmail(ctx context.Context, email string) (*db.User, error)
-	UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error)
+	UpdateUser(ctx context.Context, user db.UpdateUserParams) (*db.UpdateUserRow, error)
 }
 
 type UserPorts interface {
@@ -19,5 +19,5 @@ type UserPorts interface {
 	GetUser(ctx context.Context, id string) (*db.User, error)
 	GetUsers(ctx context.Context, params db.GetUsersParams) ([]*db.User, error)
 	GetUserByEmail(ctx context.Context, email string) (*db.User, error)
-	UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error)
+	UpdateUser(ctx context.Context, user db.UpdateUserParams) (*db.UpdateUserRow, error)
 }

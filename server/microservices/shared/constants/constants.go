@@ -7,7 +7,7 @@ type UserType struct {
 
 const (
 	// Users constants
-	UpdateNin = "/UserService/UpdateNin"
+	UpdateUser = "/UserService/UpdateUser"
 	ReadUsers = "/UserService/ReadUsers"
 
 	// Records constants

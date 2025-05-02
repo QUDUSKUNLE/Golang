@@ -34,8 +34,8 @@ type Querier interface {
 	GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, error)
 	SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*SearchRecordByNinRow, error)
 	SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchRecordByNinAndScanTitleParams) ([]*SearchRecordByNinAndScanTitleRow, error)
-	UpdateNin(ctx context.Context, arg UpdateNinParams) (*UpdateNinRow, error)
 	UpdateSchedule(ctx context.Context, arg UpdateScheduleParams) (*DiagnosticSchedule, error)
+	UpdateUser(ctx context.Context, arg UpdateUserParams) (*UpdateUserRow, error)
 	UploadRecord(ctx context.Context, arg UploadRecordParams) (*Upload, error)
 }
 

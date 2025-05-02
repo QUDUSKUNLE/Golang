@@ -140,35 +140,50 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, er
 	return items, nil
 }
 
-const updateNin = `-- name: UpdateNin :one
+const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET
   nin = COALESCE($1, nin),
+  address = COALESCE($2, address),
+  contact = COALESCE($3, contact),
   updated_at = NOW()
-WHERE id = $2
-RETURNING id, email, user_type, created_at, updated_at
+WHERE id = $4
+RETURNING id, email, nin, user_type, address, contact, created_at, updated_at
 `
 
-type UpdateNinParams struct {
-	Nin pgtype.Text `db:"nin" json:"nin"`
-	ID  string      `db:"id" json:"id"`
+type UpdateUserParams struct {
+	Nin     pgtype.Text `db:"nin" json:"nin"`
+	Address []byte      `db:"address" json:"address"`
+	Contact []byte      `db:"contact" json:"contact"`
+	ID      string      `db:"id" json:"id"`
 }
 
-type UpdateNinRow struct {
+type UpdateUserRow struct {
 	ID        string             `db:"id" json:"id"`
 	Email     pgtype.Text        `db:"email" json:"email"`
+	Nin       pgtype.Text        `db:"nin" json:"nin"`
 	UserType  UserEnum           `db:"user_type" json:"user_type"`
+	Address   []byte             `db:"address" json:"address"`
+	Contact   []byte             `db:"contact" json:"contact"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
-func (q *Queries) UpdateNin(ctx context.Context, arg UpdateNinParams) (*UpdateNinRow, error) {
-	row := q.db.QueryRow(ctx, updateNin, arg.Nin, arg.ID)
-	var i UpdateNinRow
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (*UpdateUserRow, error) {
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.Nin,
+		arg.Address,
+		arg.Contact,
+		arg.ID,
+	)
+	var i UpdateUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.Nin,
 		&i.UserType,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_Create_FullMethodName    = "/UserService/Create"
-	UserService_ReadUsers_FullMethodName = "/UserService/ReadUsers"
-	UserService_Read_FullMethodName      = "/UserService/Read"
-	UserService_Home_FullMethodName      = "/UserService/Home"
-	UserService_UpdateNin_FullMethodName = "/UserService/UpdateNin"
+	UserService_Create_FullMethodName     = "/UserService/Create"
+	UserService_ReadUsers_FullMethodName  = "/UserService/ReadUsers"
+	UserService_Read_FullMethodName       = "/UserService/Read"
+	UserService_Home_FullMethodName       = "/UserService/Home"
+	UserService_UpdateUser_FullMethodName = "/UserService/UpdateUser"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -34,7 +34,7 @@ type UserServiceClient interface {
 	ReadUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 	Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	Home(ctx context.Context, in *HomeRequest, opts ...grpc.CallOption) (*GetHomeResponse, error)
-	UpdateNin(ctx context.Context, in *UpdateNinRequest, opts ...grpc.CallOption) (*UpdateNinResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 }
 
 type userServiceClient struct {
@@ -81,9 +81,9 @@ func (c *userServiceClient) Home(ctx context.Context, in *HomeRequest, opts ...g
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateNin(ctx context.Context, in *UpdateNinRequest, opts ...grpc.CallOption) (*UpdateNinResponse, error) {
-	out := new(UpdateNinResponse)
-	err := c.cc.Invoke(ctx, UserService_UpdateNin_FullMethodName, in, out, opts...)
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
+	err := c.cc.Invoke(ctx, UserService_UpdateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ type UserServiceServer interface {
 	ReadUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 	Read(context.Context, *SingleUserRequest) (*GetUserResponse, error)
 	Home(context.Context, *HomeRequest) (*GetHomeResponse, error)
-	UpdateNin(context.Context, *UpdateNinRequest) (*UpdateNinResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -118,8 +118,8 @@ func (UnimplementedUserServiceServer) Read(context.Context, *SingleUserRequest) 
 func (UnimplementedUserServiceServer) Home(context.Context, *HomeRequest) (*GetHomeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Home not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateNin(context.Context, *UpdateNinRequest) (*UpdateNinResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateNin not implemented")
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -206,20 +206,20 @@ func _UserService_Home_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_UpdateNin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateNinRequest)
+func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).UpdateNin(ctx, in)
+		return srv.(UserServiceServer).UpdateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_UpdateNin_FullMethodName,
+		FullMethod: UserService_UpdateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateNin(ctx, req.(*UpdateNinRequest))
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -248,8 +248,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_Home_Handler,
 		},
 		{
-			MethodName: "UpdateNin",
-			Handler:    _UserService_UpdateNin_Handler,
+			MethodName: "UpdateUser",
+			Handler:    _UserService_UpdateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

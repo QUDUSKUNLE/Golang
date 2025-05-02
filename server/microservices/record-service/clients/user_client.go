@@ -3,8 +3,8 @@ package clients
 import (
 	"context"
 
-	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 )
 
@@ -28,6 +28,6 @@ func (u *userService) Login(ctx context.Context, user dto.LogInDto) (*db.User, e
 }
 
 // UpdateNin implements v1.UseCaseInterface.
-func (u *userService) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error) {
+func (u *userService) UpdateNin(ctx context.Context, user db.UpdateUserParams) (*db.UpdateUserRow, error) {
 	panic("unimplemented")
 }

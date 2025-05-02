@@ -45,6 +45,12 @@ type userService struct {
 	userGrpcClient user.UserServiceClient
 }
 
+// UpdateUser updates a user's information.
+func (u *userService) UpdateUser(ctx context.Context, user db.UpdateUserParams) (*db.UpdateUserRow, error) {
+	// Implement the logic to update a user using u.userGrpcClient
+	panic("unimplemented")
+}
+
 func (u *userService) GetUsers(ctx context.Context, params db.GetUsersParams) ([]*db.User, error) {
 	// Implement the logic to fetch users using u.userGrpcClient and params
 	panic("unimplemented")

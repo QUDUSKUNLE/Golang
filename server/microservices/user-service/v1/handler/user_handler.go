@@ -4,9 +4,11 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
-	"github.com/QUDUSKUNLE/microservices/shared/events"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
+	"github.com/QUDUSKUNLE/microservices/shared/events"
+	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
+	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -61,12 +63,9 @@ func (srv *UserServiceStruct) Read(ctx context.Context, req *userProtoc.SingleUs
 
 func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.GetUsersRequest) (*userProtoc.GetUsersResponse, error) {
 	// Check if user has admin right
-	admin, err := getUserFromContext(ctx)
+	_, err := middleware.ValidateUser(ctx, string(db.UserEnumADMIN))
 	if err != nil {
 		return nil, err
-	}
-	if admin.Type != string(db.UserEnumADMIN) {
-		return nil, status.Errorf(codes.Unauthenticated, ErrUnauthorized)
 	}
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
@@ -88,20 +87,24 @@ func (srv *UserServiceStruct) ReadUsers(ctx context.Context, req *userProtoc.Get
 	return usersResponse, nil
 }
 
-func (srv *UserServiceStruct) UpdateNin(ctx context.Context, req *userProtoc.UpdateNinRequest) (*userProtoc.UpdateNinResponse, error) {
-	user, err := getUserFromContext(ctx)
+func (srv *UserServiceStruct) UpdateUser(ctx context.Context, req *userProtoc.UpdateUserRequest) (*userProtoc.UpdateUserResponse, error) {
+	user, err := middleware.ValidateUser(ctx, string(db.UserEnumUSER))
 	if err != nil {
 		return nil, err
 	}
-	_, err = srv.userService.UpdateNin(ctx, db.UpdateNinParams{
+	address, _ := utils.JsonMarshal(req.GetAddress())
+	contact, _ := utils.JsonMarshal(req.GetContact())
+	_, err = srv.userService.UpdateUser(ctx, db.UpdateUserParams{
 		Nin: pgtype.Text{
 			String: req.GetNin(), Valid: true,
 		},
-		ID: user.UserID})
+		Address: address,
+		Contact: contact,
+		ID:      user.UserID})
 	if err != nil {
 		return nil, status.Errorf(codes.Unimplemented, err.Error())
 	}
-	return &userProtoc.UpdateNinResponse{Data: NinUpdatedSuccessfully}, nil
+	return &userProtoc.UpdateUserResponse{Data: UserUpdatedSuccessfully}, nil
 }
 
 func (srv *UserServiceStruct) Home(ctx context.Context, req *userProtoc.HomeRequest) (*userProtoc.GetHomeResponse, error) {

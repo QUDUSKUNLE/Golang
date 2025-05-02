@@ -133,13 +133,13 @@ func TestUserServiceStruct_UpdateNin(t *testing.T) {
 	}
 	type args struct {
 		ctx context.Context
-		req *user.UpdateNinRequest
+		req *user.UpdateUserRequest
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    *user.UpdateNinResponse
+		want    *user.UpdateUserResponse
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -151,7 +151,7 @@ func TestUserServiceStruct_UpdateNin(t *testing.T) {
 				organizationService:            tt.fields.organizationService,
 				UnimplementedUserServiceServer: tt.fields.UnimplementedUserServiceServer,
 			}
-			got, err := srv.UpdateNin(tt.args.ctx, tt.args.req)
+			got, err := srv.UpdateUser(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UserServiceStruct.UpdateNin() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -1,18 +1,10 @@
 package handler
 
 import (
-	"context"
-	"errors"
-	"os"
-	"time"
-
-	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // Constants for messages
@@ -25,8 +17,8 @@ const (
 	UserRegisteredSuccessfully         = "User registered successfully."
 	OrganizationRegisteredSuccessfully = "Organization registered successfully."
 	DiagnosticRegisteredSuccessfully   = "Diagnostic registered successfully."
-	NinUpdatedSuccessfully             = "Nin updated successfully."
-	WelcomeHome                        = "Welcome to Scan Records scanrecords.com."
+	UserUpdatedSuccessfully            = "User record updated successfully."
+	WelcomeHome                        = "Welcome to S3records."
 	ErrUnauthorized                    = "Unauthorized to perform operation."
 	ErrInvalidCredentials              = "Incorrect login credentials."
 	ErrNinUpdated                      = "Nin updated successfully."
@@ -54,30 +46,6 @@ func (srv *UserServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest
 	}
 }
 
-// transformToken generates a JWT token for the given user
-func (srv *UserServiceStruct) transformToken(user dto.CurrentUser) (string, error) {
-	secret := os.Getenv("JWT_SECRET_KEY")
-	if secret == "" {
-		ErrMissingSecretKey := errors.New("missing JWT secret key")
-		return "", ErrMissingSecretKey
-	}
-
-	claims := &JwtCustomClaims{
-		ID:       user.ID,
-		UserType: user.UserType,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(72 * time.Hour)),
-		},
-	}
-
-	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(secret))
-	if err != nil {
-		return "", err
-	}
-
-	return token, nil
-}
-
 func transformUserToProto(user db.User) *userProtoc.User {
 	return &userProtoc.User{
 		Id:        user.ID,
@@ -85,12 +53,4 @@ func transformUserToProto(user db.User) *userProtoc.User {
 		CreatedAt: user.CreatedAt.Time.String(),
 		UpdatedAt: user.UpdatedAt.Time.String(),
 	}
-}
-
-func getUserFromContext(ctx context.Context) (*constants.UserType, error) {
-	user, ok := ctx.Value("user").(*constants.UserType)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, ErrUnauthorized)
-	}
-	return user, nil
 }

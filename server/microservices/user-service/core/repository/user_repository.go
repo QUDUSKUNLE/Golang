@@ -32,8 +32,8 @@ func (u *Repository) GetUserByEmail(ctx context.Context, email string) (*db.User
 	return u.database.GetUserByEmail(ctx, emailText)
 }
 
-func (u *Repository) UpdateNin(ctx context.Context, user db.UpdateNinParams) (*db.UpdateNinRow, error) {
-	return u.database.UpdateNin(ctx, user)
+func (u *Repository) UpdateUser(ctx context.Context, user db.UpdateUserParams) (*db.UpdateUserRow, error) {
+	return u.database.UpdateUser(ctx, user)
 }
 
 func NewRepository(dbase *db.Queries) v1.UserRepository {

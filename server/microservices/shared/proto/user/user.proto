@@ -34,7 +34,7 @@ service UserService {
       get: "/v1/home",
     };
   }
-  rpc UpdateNin(UpdateNinRequest) returns (UpdateNinResponse) {
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       put: "/v1/users",
       body: "*"
@@ -75,8 +75,10 @@ message CreateUserResponse {
   string updated_at = 5 [json_name = "updated_at"];
 }
 
-message UpdateNinRequest {
-  string nin = 2 [json_name = "nin"];
+message UpdateUserRequest {
+  string nin = 1 [json_name = "nin"];
+  string address = 2 [json_name = "address"];
+  string contact = 3 [json_name = "contact"];
 }
 
 message SuccessResponse {
@@ -95,6 +97,6 @@ message GetHomeResponse {
   string message = 1;
 }
 
-message UpdateNinResponse {
+message UpdateUserResponse {
   string data = 1 [json_name = "response"];
 }
