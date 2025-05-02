@@ -231,7 +231,6 @@ type Diagnostic struct {
 	ID        string             `db:"id" json:"id"`
 	UserID    string             `db:"user_id" json:"user_id"`
 	Name      pgtype.Text        `db:"name" json:"name"`
-	Address   pgtype.Text        `db:"address" json:"address"`
 	Latitude  pgtype.Float8      `db:"latitude" json:"latitude"`
 	Longitude pgtype.Float8      `db:"longitude" json:"longitude"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`

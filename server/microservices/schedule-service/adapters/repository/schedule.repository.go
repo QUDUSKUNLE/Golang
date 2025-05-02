@@ -28,9 +28,9 @@ func (s *ScheduleRepository) GetScheduleByID(ctx context.Context, id string) (*d
 	return schedule, nil
 }
 
-func (s *ScheduleRepository) DeleteSchedule(ctx context.Context, id string) (*db.DiagnosticSchedule, error) {
+func (s *ScheduleRepository) DeleteSchedule(ctx context.Context, arg db.CancelScheduleParams) (*db.DiagnosticSchedule, error) {
 	// Implementation for deleting a schedule
-	schedule, err := s.database.DeleteSchedule(ctx, id)
+	schedule, err := s.database.CancelSchedule(ctx, arg)
 	if err != nil {
 		return nil, err
 	}
@@ -58,6 +58,15 @@ func (s *ScheduleRepository) GetSchedulesByCentre(ctx context.Context, arg db.Ge
 func (s *ScheduleRepository) GetSchedulesByStatus(ctx context.Context, arg db.GetSchedulesByStatusParams) ([]*db.DiagnosticSchedule, error) {
 	// Implementation for getting schedules by status
 	schedules, err := s.database.GetSchedulesByStatus(ctx, arg)
+	if err != nil {
+		return nil, err
+	}
+	return schedules, nil
+}
+
+func (s *ScheduleRepository) GetUserSchedules(ctx context.Context, arg db.GetSchedulesParams) ([]*db.DiagnosticSchedule, error) {
+	// Implementation for getting all schedules
+	schedules, err := s.database.GetSchedules(ctx, arg)
 	if err != nil {
 		return nil, err
 	}

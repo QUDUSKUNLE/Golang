@@ -11,6 +11,35 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const cancelSchedule = `-- name: CancelSchedule :one
+DELETE FROM diagnostic_schedules
+WHERE id = $1 AND user_id = $2
+RETURNING id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
+`
+
+type CancelScheduleParams struct {
+	ID     string `db:"id" json:"id"`
+	UserID string `db:"user_id" json:"user_id"`
+}
+
+func (q *Queries) CancelSchedule(ctx context.Context, arg CancelScheduleParams) (*DiagnosticSchedule, error) {
+	row := q.db.QueryRow(ctx, cancelSchedule, arg.ID, arg.UserID)
+	var i DiagnosticSchedule
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.DiagnosticCentreID,
+		&i.Date,
+		&i.Time,
+		&i.TestType,
+		&i.Status,
+		&i.Notes,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}
+
 const createSchedule = `-- name: CreateSchedule :one
 INSERT INTO diagnostic_schedules (
   user_id,
@@ -45,30 +74,6 @@ func (q *Queries) CreateSchedule(ctx context.Context, arg CreateScheduleParams) 
 		arg.Status,
 		arg.Notes,
 	)
-	var i DiagnosticSchedule
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.DiagnosticCentreID,
-		&i.Date,
-		&i.Time,
-		&i.TestType,
-		&i.Status,
-		&i.Notes,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return &i, err
-}
-
-const deleteSchedule = `-- name: DeleteSchedule :one
-DELETE FROM diagnostic_schedules
-WHERE id = $1
-RETURNING id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
-`
-
-func (q *Queries) DeleteSchedule(ctx context.Context, id string) (*DiagnosticSchedule, error) {
-	row := q.db.QueryRow(ctx, deleteSchedule, id)
 	var i DiagnosticSchedule
 	err := row.Scan(
 		&i.ID,
@@ -242,33 +247,27 @@ func (q *Queries) GetSchedulesByStatus(ctx context.Context, arg GetSchedulesBySt
 const updateSchedule = `-- name: UpdateSchedule :one
 UPDATE diagnostic_schedules
 SET
-  user_id = COALESCE($1, user_id),
-  diagnostic_centre_id = COALESCE($2, diagnostic_centre_id),
-  date = COALESCE($3, date),
-  time = COALESCE($4, time),
-  test_type = COALESCE($5, test_type),
-  status = COALESCE($6, status),
-  notes = COALESCE($7, notes),
+  date = COALESCE($1, date),
+  time = COALESCE($2, time),
+  test_type = COALESCE($3, test_type),
+  status = COALESCE($4, status),
+  notes = COALESCE($5, notes),
   updated_at = NOW()
-WHERE id = $8
+WHERE id = $6
 RETURNING id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
 `
 
 type UpdateScheduleParams struct {
-	UserID             string             `db:"user_id" json:"user_id"`
-	DiagnosticCentreID string             `db:"diagnostic_centre_id" json:"diagnostic_centre_id"`
-	Date               pgtype.Timestamptz `db:"date" json:"date"`
-	Time               pgtype.Timestamptz `db:"time" json:"time"`
-	TestType           ScheduleType       `db:"test_type" json:"test_type"`
-	Status             ScheduleStatus     `db:"status" json:"status"`
-	Notes              pgtype.Text        `db:"notes" json:"notes"`
-	ID                 string             `db:"id" json:"id"`
+	Date     pgtype.Timestamptz `db:"date" json:"date"`
+	Time     pgtype.Timestamptz `db:"time" json:"time"`
+	TestType ScheduleType       `db:"test_type" json:"test_type"`
+	Status   ScheduleStatus     `db:"status" json:"status"`
+	Notes    pgtype.Text        `db:"notes" json:"notes"`
+	ID       string             `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateSchedule(ctx context.Context, arg UpdateScheduleParams) (*DiagnosticSchedule, error) {
 	row := q.db.QueryRow(ctx, updateSchedule,
-		arg.UserID,
-		arg.DiagnosticCentreID,
 		arg.Date,
 		arg.Time,
 		arg.TestType,

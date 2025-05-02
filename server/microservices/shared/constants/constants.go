@@ -5,38 +5,49 @@ type UserType struct {
 	Type   string
 }
 
+// Default values
 const (
-	// Users constants
+	DefaultLimit  = 50
+	DefaultOffset = 0
+)
+
+// UserService constants
+const (
 	UpdateUser = "/UserService/UpdateUser"
 	ReadUsers  = "/UserService/ReadUsers"
+)
 
-	// Records constants
+// RecordService constants
+const (
 	CreateRecord = "/RecordService/CreateRecord"
 	GetRecords   = "/RecordService/GetRecords"
 	GetRecord    = "/RecordService/GetRecord"
 	ScanUpload   = "/RecordService/ScanUpload"
 	SearchRecord = "/RecordService/SearchRecord"
 	SearchByNin  = "/RecordService/SearchByNin"
+)
 
-	// Organization case
+// OrganizationService constants
+const (
 	CreateOrganization = "/OrganizationService/CreateOrganization"
 	GetOrganization    = "/OrganizationService/GetOrganization"
+)
 
-	// Diagnostic case
+// DiagnosticService constants
+const (
 	CreateDiagnostic         = "/DiagnosticService/CreateDiagnostic"
 	GetDiagnostic            = "/DiagnosticService/GetDiagnostic"
 	ListDiagnostics          = "/DiagnosticService/ListDiagnostics"
 	DeleteDiagnostic         = "/DiagnosticService/DeleteDiagnostic"
 	UpdateDiagnostic         = "/DiagnosticService/UpdateDiagnostic"
 	SearchNearestDiagnostics = "/DiagnosticService/SearchNearestDiagnostics"
+)
 
-	// Schedule case
+// ScheduleService constants
+const (
 	CreateSchedule        = "/ScheduleService/CreateScheduleSession"
 	GetScheduleSession    = "/ScheduleService/GetScheduleSession"
 	ListScheduleSessions  = "/ScheduleService/ListScheduleSessions"
 	DeleteScheduleSession = "/ScheduleService/DeleteScheduleSession"
 	UpdateScheduleSession = "/ScheduleService/UpdateScheduleSession"
-
-	DefaultLimit  = 50
-	DefaultOffset = 0
 )

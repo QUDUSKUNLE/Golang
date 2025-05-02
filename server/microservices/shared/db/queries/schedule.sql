@@ -35,19 +35,16 @@ LIMIT $2 OFFSET $3;
 -- name: UpdateSchedule :one
 UPDATE diagnostic_schedules
 SET
-  user_id = COALESCE($1, user_id),
-  diagnostic_centre_id = COALESCE($2, diagnostic_centre_id),
-  date = COALESCE($3, date),
-  time = COALESCE($4, time),
-  test_type = COALESCE($5, test_type),
-  status = COALESCE($6, status),
-  notes = COALESCE($7, notes),
+  date = COALESCE($1, date),
+  time = COALESCE($2, time),
+  test_type = COALESCE($3, test_type),
+  status = COALESCE($4, status),
+  notes = COALESCE($5, notes),
   updated_at = NOW()
-WHERE id = $8
+WHERE id = $6
 RETURNING *;
 
--- name: DeleteSchedule :one
+-- name: CancelSchedule :one
 DELETE FROM diagnostic_schedules
-WHERE id = $1
+WHERE id = $1 AND user_id = $2
 RETURNING *;
-

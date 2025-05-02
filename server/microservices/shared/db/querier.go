@@ -11,13 +11,18 @@ import (
 )
 
 type Querier interface {
+	CancelSchedule(ctx context.Context, arg CancelScheduleParams) (*DiagnosticSchedule, error)
+	// Inserts a new diagnostic record into the diagnostics table.
 	CreateDiagnostic(ctx context.Context, userID string) (*Diagnostic, error)
 	CreateOrganization(ctx context.Context, userID string) (*Organization, error)
 	CreateRecord(ctx context.Context, arg CreateRecordParams) (*Record, error)
 	CreateSchedule(ctx context.Context, arg CreateScheduleParams) (*DiagnosticSchedule, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (*CreateUserRow, error)
-	DeleteSchedule(ctx context.Context, id string) (*DiagnosticSchedule, error)
-	GetAllDiagnostics(ctx context.Context) ([]*Diagnostic, error)
+	// Deletes a diagnostic record by its ID.
+	DeleteDiagnostic(ctx context.Context, id string) (*Diagnostic, error)
+	// Retrieves all diagnostic records with pagination.
+	GetAllDiagnostics(ctx context.Context, arg GetAllDiagnosticsParams) ([]*Diagnostic, error)
+	// Retrieves a single diagnostic record by its ID.
 	GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error)
 	GetOrganization(ctx context.Context, id string) (*Organization, error)
 	GetOrganizationByUserID(ctx context.Context, userID string) (*Organization, error)
@@ -32,8 +37,14 @@ type Querier interface {
 	GetUser(ctx context.Context, id string) (*User, error)
 	GetUserByEmail(ctx context.Context, email pgtype.Text) (*User, error)
 	GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, error)
+	// Retrieves all diagnostic records for a specific user.
+	ListDiagnostics(ctx context.Context, arg ListDiagnosticsParams) ([]*Diagnostic, error)
+	// Searches diagnostics by name with pagination.
+	SearchDiagnostics(ctx context.Context, arg SearchDiagnosticsParams) ([]*Diagnostic, error)
 	SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*SearchRecordByNinRow, error)
 	SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchRecordByNinAndScanTitleParams) ([]*SearchRecordByNinAndScanTitleRow, error)
+	// Updates a diagnostic record by its ID.
+	UpdateDiagnostic(ctx context.Context, arg UpdateDiagnosticParams) (*Diagnostic, error)
 	UpdateSchedule(ctx context.Context, arg UpdateScheduleParams) (*DiagnosticSchedule, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (*UpdateUserRow, error)
 	UploadRecord(ctx context.Context, arg UploadRecordParams) (*Upload, error)

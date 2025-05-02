@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createDiagnostic = `-- name: CreateDiagnostic :one
@@ -14,9 +16,10 @@ INSERT INTO diagnostics (
   user_id
 ) VALUES  (
   $1
-) RETURNING id, user_id, name, address, latitude, longitude, created_at, updated_at
+) RETURNING id, user_id, name, latitude, longitude, created_at, updated_at
 `
 
+// Inserts a new diagnostic record into the diagnostics table.
 func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnostic, error) {
 	row := q.db.QueryRow(ctx, createDiagnostic, userID)
 	var i Diagnostic
@@ -24,7 +27,26 @@ func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnos
 		&i.ID,
 		&i.UserID,
 		&i.Name,
-		&i.Address,
+		&i.Latitude,
+		&i.Longitude,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}
+
+const deleteDiagnostic = `-- name: DeleteDiagnostic :one
+DELETE FROM diagnostics WHERE id = $1 RETURNING id, user_id, name, latitude, longitude, created_at, updated_at
+`
+
+// Deletes a diagnostic record by its ID.
+func (q *Queries) DeleteDiagnostic(ctx context.Context, id string) (*Diagnostic, error) {
+	row := q.db.QueryRow(ctx, deleteDiagnostic, id)
+	var i Diagnostic
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
 		&i.Latitude,
 		&i.Longitude,
 		&i.CreatedAt,
@@ -34,11 +56,19 @@ func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnos
 }
 
 const getAllDiagnostics = `-- name: GetAllDiagnostics :many
-SELECT id, user_id, name, address, latitude, longitude, created_at, updated_at FROM diagnostics
+SELECT id, user_id, name, latitude, longitude, created_at, updated_at FROM diagnostics
+ORDER BY created_at DESC
+LIMIT $1 OFFSET $2
 `
 
-func (q *Queries) GetAllDiagnostics(ctx context.Context) ([]*Diagnostic, error) {
-	rows, err := q.db.Query(ctx, getAllDiagnostics)
+type GetAllDiagnosticsParams struct {
+	Limit  int32 `db:"limit" json:"limit"`
+	Offset int32 `db:"offset" json:"offset"`
+}
+
+// Retrieves all diagnostic records with pagination.
+func (q *Queries) GetAllDiagnostics(ctx context.Context, arg GetAllDiagnosticsParams) ([]*Diagnostic, error) {
+	rows, err := q.db.Query(ctx, getAllDiagnostics, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +80,6 @@ func (q *Queries) GetAllDiagnostics(ctx context.Context) ([]*Diagnostic, error) 
 			&i.ID,
 			&i.UserID,
 			&i.Name,
-			&i.Address,
 			&i.Latitude,
 			&i.Longitude,
 			&i.CreatedAt,
@@ -67,9 +96,10 @@ func (q *Queries) GetAllDiagnostics(ctx context.Context) ([]*Diagnostic, error) 
 }
 
 const getDiagnostic = `-- name: GetDiagnostic :one
-SELECT id, user_id, name, address, latitude, longitude, created_at, updated_at FROM diagnostics WHERE id = $1
+SELECT id, user_id, name, latitude, longitude, created_at, updated_at FROM diagnostics WHERE id = $1
 `
 
+// Retrieves a single diagnostic record by its ID.
 func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error) {
 	row := q.db.QueryRow(ctx, getDiagnostic, id)
 	var i Diagnostic
@@ -77,7 +107,129 @@ func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, er
 		&i.ID,
 		&i.UserID,
 		&i.Name,
-		&i.Address,
+		&i.Latitude,
+		&i.Longitude,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}
+
+const listDiagnostics = `-- name: ListDiagnostics :many
+SELECT id, user_id, name, latitude, longitude, created_at, updated_at FROM diagnostics WHERE user_id = $1
+ORDER BY created_at DESC
+LIMIT $2 OFFSET $3
+`
+
+type ListDiagnosticsParams struct {
+	UserID string `db:"user_id" json:"user_id"`
+	Limit  int32  `db:"limit" json:"limit"`
+	Offset int32  `db:"offset" json:"offset"`
+}
+
+// Retrieves all diagnostic records for a specific user.
+func (q *Queries) ListDiagnostics(ctx context.Context, arg ListDiagnosticsParams) ([]*Diagnostic, error) {
+	rows, err := q.db.Query(ctx, listDiagnostics, arg.UserID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*Diagnostic
+	for rows.Next() {
+		var i Diagnostic
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Latitude,
+			&i.Longitude,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const searchDiagnostics = `-- name: SearchDiagnostics :many
+SELECT id, user_id, name, latitude, longitude, created_at, updated_at
+FROM diagnostics
+WHERE name ILIKE '%' || $1 || '%'
+ORDER BY created_at DESC
+LIMIT $2 OFFSET $3
+`
+
+type SearchDiagnosticsParams struct {
+	Column1 pgtype.Text `db:"column_1" json:"column_1"`
+	Limit   int32       `db:"limit" json:"limit"`
+	Offset  int32       `db:"offset" json:"offset"`
+}
+
+// Searches diagnostics by name with pagination.
+func (q *Queries) SearchDiagnostics(ctx context.Context, arg SearchDiagnosticsParams) ([]*Diagnostic, error) {
+	rows, err := q.db.Query(ctx, searchDiagnostics, arg.Column1, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*Diagnostic
+	for rows.Next() {
+		var i Diagnostic
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Latitude,
+			&i.Longitude,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateDiagnostic = `-- name: UpdateDiagnostic :one
+UPDATE diagnostics
+SET
+  name = COALESCE($2, name),
+  latitude = COALESCE($3, latitude),
+  longitude = COALESCE($4, longitude),
+  updated_at = NOW()
+WHERE id = $1
+RETURNING id, user_id, name, latitude, longitude, created_at, updated_at
+`
+
+type UpdateDiagnosticParams struct {
+	ID        string        `db:"id" json:"id"`
+	Name      pgtype.Text   `db:"name" json:"name"`
+	Latitude  pgtype.Float8 `db:"latitude" json:"latitude"`
+	Longitude pgtype.Float8 `db:"longitude" json:"longitude"`
+}
+
+// Updates a diagnostic record by its ID.
+func (q *Queries) UpdateDiagnostic(ctx context.Context, arg UpdateDiagnosticParams) (*Diagnostic, error) {
+	row := q.db.QueryRow(ctx, updateDiagnostic,
+		arg.ID,
+		arg.Name,
+		arg.Latitude,
+		arg.Longitude,
+	)
+	var i Diagnostic
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
 		&i.Latitude,
 		&i.Longitude,
 		&i.CreatedAt,

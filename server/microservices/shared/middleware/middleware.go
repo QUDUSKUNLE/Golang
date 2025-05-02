@@ -28,105 +28,168 @@ func ValidationInterceptor() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
-		// User validations
-		if r, ok := req.(*user.CreateUserRequest); ok {
-			if !ValidateEmail(r.Email) || r.Password == "" || string(r.UserType) == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "Email, Password and UserType cannot be empty")
-			} else if r.Password != r.ConfirmPassword {
-				return nil, status.Errorf(codes.InvalidArgument, "Password and ConfirmPassword must match")
-			}
+		// Delegate validation to specific functions
+		if err := validateRequest(req); err != nil {
+			return nil, err
 		}
-		if r, ok := req.(*user.SingleUserRequest); ok {
-			if !ValidateUUID(r.Id) {
-				return nil, status.Errorf(codes.InvalidArgument, "Invalid id.")
-			}
+		// Handle authorization for specific methods
+		if requiresAuthorization(info.FullMethod) {
+			return authorizationHelper(ctx, req, handler)
 		}
-		if r, ok := req.(*user.UpdateUserRequest); ok {
-			if !ValidateNIN(r.Nin) {
-				return nil, status.Errorf(codes.InvalidArgument, "Invalid NIN")
-			}
-		}
-		// Auth validations
-		if r, ok := req.(*auth.SignInRequest); ok {
-			if !ValidateEmail(r.Email) || r.Password == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "Email and Password are required")
-			}
-		}
-		// Record validations
-		if r, ok := req.(*record.ScanUploadRequest); ok {
-			if r.ScanTitle == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "ScanTitle is required")
-			}
-			if r.FileName == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "FileName is required")
-			}
-			if !ValidateUUID(r.UserId) {
-				return nil, status.Errorf(codes.InvalidArgument, "Invalid UserId")
-			}
-		}
-		// schedule validations
-		if r, ok := req.(*schedule.ScheduleRequest); ok {
-			if r.DiagnosticCentreId == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "DiagnosticCentreId is required")
-			}
-			if r.Date == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "Date is required")
-			}
-			if r.Time == "" {
-				return nil, status.Errorf(codes.InvalidArgument, "Time is required")
-			}
-		}
-		switch info.FullMethod {
-		case constants.UpdateUser,
-			constants.ReadUsers, constants.GetRecords, constants.GetRecord, constants.ScanUpload, constants.SearchRecord, constants.SearchByNin, constants.GetDiagnostic, constants.UpdateDiagnostic, constants.DeleteDiagnostic, constants.CreateSchedule, constants.GetScheduleSession, constants.ListScheduleSessions, constants.DeleteScheduleSession, constants.UpdateScheduleSession:
-			return urinaryHelper(ctx, req, handler)
-		default:
-			return handler(ctx, req)
-		}
+		return handler(ctx, req)
 	}
 }
 
-func urinaryHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandler) (interface{}, error) {
+func validateRequest(req interface{}) error {
+	switch r := req.(type) {
+	case *user.CreateUserRequest:
+		return validateCreateUserRequest(r)
+	case *user.SingleUserRequest:
+		return validateSingleUserRequest(r)
+	case *user.UpdateUserRequest:
+		return validateUpdateUserRequest(r)
+	case *auth.SignInRequest:
+		return validateSignInRequest(r)
+	case *record.ScanUploadRequest:
+		return validateScanUploadRequest(r)
+	case *schedule.ScheduleRequest:
+		return validateScheduleRequest(r)
+	default:
+		return nil
+	}
+}
+
+func validateCreateUserRequest(r *user.CreateUserRequest) error {
+	if !ValidateEmail(r.Email) || r.Password == "" || string(r.UserType) == "" {
+		return status.Errorf(codes.InvalidArgument, "Email, Password, and UserType cannot be empty")
+	}
+	if r.Password != r.ConfirmPassword {
+		return status.Errorf(codes.InvalidArgument, "Password and ConfirmPassword must match")
+	}
+	return nil
+}
+
+func validateSingleUserRequest(r *user.SingleUserRequest) error {
+	if !ValidateUUID(r.Id) {
+		return status.Errorf(codes.InvalidArgument, "Invalid ID")
+	}
+	return nil
+}
+
+func validateUpdateUserRequest(r *user.UpdateUserRequest) error {
+	if !ValidateNIN(r.Nin) {
+		return status.Errorf(codes.InvalidArgument, "Invalid NIN")
+	}
+	return nil
+}
+
+func validateSignInRequest(r *auth.SignInRequest) error {
+	if !ValidateEmail(r.Email) || r.Password == "" {
+		return status.Errorf(codes.InvalidArgument, "Email and Password are required")
+	}
+	return nil
+}
+
+func validateScanUploadRequest(r *record.ScanUploadRequest) error {
+	if r.ScanTitle == "" {
+		return status.Errorf(codes.InvalidArgument, "ScanTitle is required")
+	}
+	if r.FileName == "" {
+		return status.Errorf(codes.InvalidArgument, "FileName is required")
+	}
+	if !ValidateUUID(r.UserId) {
+		return status.Errorf(codes.InvalidArgument, "Invalid UserId")
+	}
+	return nil
+}
+
+func validateScheduleRequest(r *schedule.ScheduleRequest) error {
+	if r.DiagnosticCentreId == "" {
+		return status.Errorf(codes.InvalidArgument, "DiagnosticCentreId is required")
+	}
+	if r.Date == "" {
+		return status.Errorf(codes.InvalidArgument, "Date is required")
+	}
+	if r.Time == "" {
+		return status.Errorf(codes.InvalidArgument, "Time is required")
+	}
+	return nil
+}
+
+func requiresAuthorization(method string) bool {
+	authorizedMethods := map[string]bool{
+		constants.UpdateUser:            true,
+		constants.ReadUsers:             true,
+		constants.GetRecords:            true,
+		constants.GetRecord:             true,
+		constants.ScanUpload:            true,
+		constants.SearchRecord:          true,
+		constants.SearchByNin:           true,
+		constants.GetDiagnostic:         true,
+		constants.UpdateDiagnostic:      true,
+		constants.DeleteDiagnostic:      true,
+		constants.CreateSchedule:        true,
+		constants.GetScheduleSession:    true,
+		constants.ListScheduleSessions:  true,
+		constants.DeleteScheduleSession: true,
+		constants.UpdateScheduleSession: true,
+	}
+	return authorizedMethods[method]
+}
+
+func authorizationHelper(ctx context.Context, req interface{}, handler grpc.UnaryHandler) (interface{}, error) {
 	meta, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Metatdata is not provided")
+		return nil, status.Error(codes.Unauthenticated, "Metadata is not provided")
 	}
-	// extract token from the authorization header
+
+	// Extract token from the authorization header
 	token := meta["authorization"]
 	if len(token) == 0 {
 		return nil, status.Error(codes.Unauthenticated, "Authorization token is not provided")
 	}
-	user_type, err := validateToken(ctx, strings.Split(token[0], " ")[1])
+
+	// Validate the token
+	userType, err := validateToken(strings.Split(token[0], " ")[1])
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
-	ctx = context.WithValue(ctx, "user", user_type)
+
+	// Add user and token to the context
+	ctx = context.WithValue(ctx, "user", userType)
 	ctx = context.WithValue(ctx, "token", token[0])
+
+	// Proceed to the next handler
 	return handler(ctx, req)
 }
 
-func validateToken(_ context.Context, token string) (*constants.UserType, error) {
+func validateToken(token string) (*constants.UserType, error) {
 	t, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method %v", t.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
 	if err != nil {
-		return &constants.UserType{}, err
+		return nil, fmt.Errorf("invalid token: %w", err)
 	}
-	if claims, ok := t.Claims.(jwt.MapClaims); ok && t.Valid {
-		id, ok := claims["id"].(string)
-		if !ok {
-			return &constants.UserType{}, errors.New("failed to extract id from claims")
-		}
-		typ, ok := claims["user_type"].(string)
-		if !ok {
-			return &constants.UserType{}, errors.New("failed to extract user_type from claims")
-		}
-		return &constants.UserType{UserID: id, Type: typ}, nil
+
+	claims, ok := t.Claims.(jwt.MapClaims)
+	if !ok || !t.Valid {
+		return nil, errors.New("invalid token claims")
 	}
-	return &constants.UserType{}, errors.New("invalid token")
+
+	id, ok := claims["id"].(string)
+	if !ok {
+		return nil, errors.New("failed to extract id from claims")
+	}
+
+	userType, ok := claims["user_type"].(string)
+	if !ok {
+		return nil, errors.New("failed to extract user_type from claims")
+	}
+
+	return &constants.UserType{UserID: id, Type: userType}, nil
 }
 
 func ValidateUUID(input string) bool {
