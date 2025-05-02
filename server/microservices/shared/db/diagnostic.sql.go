@@ -14,7 +14,7 @@ INSERT INTO diagnostics (
   user_id
 ) VALUES  (
   $1
-) RETURNING id, user_id, created_at, updated_at
+) RETURNING id, user_id, name, address, latitude, longitude, created_at, updated_at
 `
 
 func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnostic, error) {
@@ -23,14 +23,51 @@ func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnos
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
+		&i.Name,
+		&i.Address,
+		&i.Latitude,
+		&i.Longitude,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
 	return &i, err
 }
 
+const getAllDiagnostics = `-- name: GetAllDiagnostics :many
+SELECT id, user_id, name, address, latitude, longitude, created_at, updated_at FROM diagnostics
+`
+
+func (q *Queries) GetAllDiagnostics(ctx context.Context) ([]*Diagnostic, error) {
+	rows, err := q.db.Query(ctx, getAllDiagnostics)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*Diagnostic
+	for rows.Next() {
+		var i Diagnostic
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Address,
+			&i.Latitude,
+			&i.Longitude,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getDiagnostic = `-- name: GetDiagnostic :one
-SELECT id, user_id, created_at, updated_at FROM diagnostics WHERE id = $1
+SELECT id, user_id, name, address, latitude, longitude, created_at, updated_at FROM diagnostics WHERE id = $1
 `
 
 func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error) {
@@ -39,6 +76,10 @@ func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, er
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
+		&i.Name,
+		&i.Address,
+		&i.Latitude,
+		&i.Longitude,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

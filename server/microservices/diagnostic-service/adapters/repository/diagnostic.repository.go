@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
 
@@ -16,6 +17,14 @@ func (d *DiagnosticRepository) CreateDiagnostic(ctx context.Context, userID stri
 		return nil, err
 	}
 	return diagnostic, nil
+}
+func (d *DiagnosticRepository) GetAllDiagnostics(ctx context.Context) ([]*db.Diagnostic, error) {
+	// Implementation for getting all diagnostics
+	diagnostics, err := d.database.GetAllDiagnostics(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return diagnostics, nil
 }
 
 func NewDiagnosticRepository(database *db.Queries) *DiagnosticRepository {

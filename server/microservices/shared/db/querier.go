@@ -17,6 +17,7 @@ type Querier interface {
 	CreateSchedule(ctx context.Context, arg CreateScheduleParams) (*DiagnosticSchedule, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (*CreateUserRow, error)
 	DeleteSchedule(ctx context.Context, id string) (*DiagnosticSchedule, error)
+	GetAllDiagnostics(ctx context.Context) ([]*Diagnostic, error)
 	GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error)
 	GetOrganization(ctx context.Context, id string) (*Organization, error)
 	GetOrganizationByUserID(ctx context.Context, userID string) (*Organization, error)

@@ -31,7 +31,18 @@ service DiagnosticService {
       get: "/v1/diagnostics"
     };
   }
+  rpc SearchNearestDiagnostics(SearchNearestDiagnosticsRequest) returns (SearchNearestDiagnosticsResponse) {
+    option (google.api.http) = {
+      get: "/v1/diagnostics/search"
+    };
+  }
 
+}
+
+message SearchNearestDiagnosticsRequest {
+  double latitude = 1 [json_name = "latitude"];
+  double longitude = 2 [json_name = "longitude"];
+  int32 limit = 3 [json_name = "limit"];
 }
 
 message CreateDiagnosticRequest {
@@ -65,8 +76,11 @@ message ListDiagnosticsRequest {
 message Diagnostic {
   string id = 1 [json_name = "id"];
   string user_id = 2 [json_name = "user_id"];
-  string created_at = 3 [json_name = "created_at"];
-  string updated_at = 4 [json_name = "updated_at"];
+  string name = 3 [json_name = "name"];
+  string latitude = 4 [json_name = "latitude"];
+  string longitude = 5 [json_name = "longitude"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
 }
 
 message ListDiagnosticsResponse {
@@ -92,4 +106,8 @@ message CreateDiagnosticResponse {
   string user_id = 2 [json_name = "user_id"];
   string created_at = 3 [json_name = "created_at"];
   string updated_at = 4 [json_name = "updated_at"];
+}
+
+message SearchNearestDiagnosticsResponse {
+  repeated Diagnostic diagnostics = 1 [json_name = "diagnostics"];
 }

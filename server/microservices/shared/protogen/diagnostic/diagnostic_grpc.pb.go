@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	DiagnosticService_CreateDiagnostic_FullMethodName = "/DiagnosticService/CreateDiagnostic"
-	DiagnosticService_GetDiagnostic_FullMethodName    = "/DiagnosticService/GetDiagnostic"
-	DiagnosticService_UpdateDiagnostic_FullMethodName = "/DiagnosticService/UpdateDiagnostic"
-	DiagnosticService_DeleteDiagnostic_FullMethodName = "/DiagnosticService/DeleteDiagnostic"
-	DiagnosticService_ListDiagnostics_FullMethodName  = "/DiagnosticService/ListDiagnostics"
+	DiagnosticService_CreateDiagnostic_FullMethodName         = "/DiagnosticService/CreateDiagnostic"
+	DiagnosticService_GetDiagnostic_FullMethodName            = "/DiagnosticService/GetDiagnostic"
+	DiagnosticService_UpdateDiagnostic_FullMethodName         = "/DiagnosticService/UpdateDiagnostic"
+	DiagnosticService_DeleteDiagnostic_FullMethodName         = "/DiagnosticService/DeleteDiagnostic"
+	DiagnosticService_ListDiagnostics_FullMethodName          = "/DiagnosticService/ListDiagnostics"
+	DiagnosticService_SearchNearestDiagnostics_FullMethodName = "/DiagnosticService/SearchNearestDiagnostics"
 )
 
 // DiagnosticServiceClient is the client API for DiagnosticService service.
@@ -35,6 +36,7 @@ type DiagnosticServiceClient interface {
 	UpdateDiagnostic(ctx context.Context, in *UpdateDiagnosticRequest, opts ...grpc.CallOption) (*UpdateDiagnosticResponse, error)
 	DeleteDiagnostic(ctx context.Context, in *DeleteDiagnosticRequest, opts ...grpc.CallOption) (*DeleteDiagnosticResponse, error)
 	ListDiagnostics(ctx context.Context, in *ListDiagnosticsRequest, opts ...grpc.CallOption) (*ListDiagnosticsResponse, error)
+	SearchNearestDiagnostics(ctx context.Context, in *SearchNearestDiagnosticsRequest, opts ...grpc.CallOption) (*SearchNearestDiagnosticsResponse, error)
 }
 
 type diagnosticServiceClient struct {
@@ -90,6 +92,15 @@ func (c *diagnosticServiceClient) ListDiagnostics(ctx context.Context, in *ListD
 	return out, nil
 }
 
+func (c *diagnosticServiceClient) SearchNearestDiagnostics(ctx context.Context, in *SearchNearestDiagnosticsRequest, opts ...grpc.CallOption) (*SearchNearestDiagnosticsResponse, error) {
+	out := new(SearchNearestDiagnosticsResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_SearchNearestDiagnostics_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DiagnosticServiceServer is the server API for DiagnosticService service.
 // All implementations must embed UnimplementedDiagnosticServiceServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type DiagnosticServiceServer interface {
 	UpdateDiagnostic(context.Context, *UpdateDiagnosticRequest) (*UpdateDiagnosticResponse, error)
 	DeleteDiagnostic(context.Context, *DeleteDiagnosticRequest) (*DeleteDiagnosticResponse, error)
 	ListDiagnostics(context.Context, *ListDiagnosticsRequest) (*ListDiagnosticsResponse, error)
+	SearchNearestDiagnostics(context.Context, *SearchNearestDiagnosticsRequest) (*SearchNearestDiagnosticsResponse, error)
 	mustEmbedUnimplementedDiagnosticServiceServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedDiagnosticServiceServer) DeleteDiagnostic(context.Context, *D
 }
 func (UnimplementedDiagnosticServiceServer) ListDiagnostics(context.Context, *ListDiagnosticsRequest) (*ListDiagnosticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDiagnostics not implemented")
+}
+func (UnimplementedDiagnosticServiceServer) SearchNearestDiagnostics(context.Context, *SearchNearestDiagnosticsRequest) (*SearchNearestDiagnosticsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchNearestDiagnostics not implemented")
 }
 func (UnimplementedDiagnosticServiceServer) mustEmbedUnimplementedDiagnosticServiceServer() {}
 
@@ -224,6 +239,24 @@ func _DiagnosticService_ListDiagnostics_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DiagnosticService_SearchNearestDiagnostics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchNearestDiagnosticsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DiagnosticServiceServer).SearchNearestDiagnostics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DiagnosticService_SearchNearestDiagnostics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DiagnosticServiceServer).SearchNearestDiagnostics(ctx, req.(*SearchNearestDiagnosticsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DiagnosticService_ServiceDesc is the grpc.ServiceDesc for DiagnosticService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var DiagnosticService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDiagnostics",
 			Handler:    _DiagnosticService_ListDiagnostics_Handler,
+		},
+		{
+			MethodName: "SearchNearestDiagnostics",
+			Handler:    _DiagnosticService_SearchNearestDiagnostics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

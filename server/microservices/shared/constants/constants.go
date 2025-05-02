@@ -9,6 +9,7 @@ const (
 	// Users constants
 	UpdateNin = "/UserService/UpdateNin"
 	ReadUsers = "/UserService/ReadUsers"
+
 	// Records constants
 	CreateRecord = "/RecordService/CreateRecord"
 	GetRecords   = "/RecordService/GetRecords"
@@ -22,11 +23,12 @@ const (
 	GetOrganization    = "/OrganizationService/GetOrganization"
 
 	// Diagnostic case
-	CreateDiagnostic = "/DiagnosticService/CreateDiagnostic"
-	GetDiagnostic    = "/DiagnosticService/GetDiagnostic"
-	ListDiagnostics  = "/DiagnosticService/ListDiagnostics"
-	DeleteDiagnostic = "/DiagnosticService/DeleteDiagnostic"
-	UpdateDiagnostic = "/DiagnosticService/UpdateDiagnostic"
+	CreateDiagnostic         = "/DiagnosticService/CreateDiagnostic"
+	GetDiagnostic            = "/DiagnosticService/GetDiagnostic"
+	ListDiagnostics          = "/DiagnosticService/ListDiagnostics"
+	DeleteDiagnostic         = "/DiagnosticService/DeleteDiagnostic"
+	UpdateDiagnostic         = "/DiagnosticService/UpdateDiagnostic"
+	SearchNearestDiagnostics = "/DiagnosticService/SearchNearestDiagnostics"
 
 	// Schedule case
 	CreateSchedule        = "/ScheduleService/CreateScheduleSession"

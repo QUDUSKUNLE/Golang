@@ -12,16 +12,21 @@ package main
 //   - google.golang.org/grpc: Provides gRPC server and client functionality.
 //   - google.golang.org/grpc/reflection: Provides server reflection for gRPC debugging and tooling.
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
+	"os"
+
+	"os/signal"
+	"syscall"
 
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/authcase"
 	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
+	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
-	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -44,11 +49,16 @@ func main() {
 	// Initialize database connection
 	db := db.DatabaseConnection(cfg.DB_URL)
 
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	// Create TCP listener
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatalf("Error starting auth service: %v", err)
 	}
+
+	defer listen.Close()
 
 	// Initialize the logger
 	logger.InitLogger()
@@ -66,8 +76,15 @@ func main() {
 	handler.NewAuthServer(grpcServer, authUseCase)
 	reflection.Register(grpcServer)
 
-	logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
-	if err := grpcServer.Serve(listen); err != nil {
-		logger.GetLogger().Fatal("failed to serve auth service", zap.Error(err))
-	}
+	go func() {
+		logger.GetLogger().Info("Auth Service listening at with TLS enabled (Min version: TLS 1.2)", zap.String("address", cfg.Port))
+		if err := grpcServer.Serve(listen); err != nil {
+			logger.GetLogger().Fatal("failed to serve auth service", zap.Error(err))
+		}
+	}()
+	<-ctx.Done()
+	logger.GetLogger().Info("Shutting down auth service...")
+	grpcServer.GracefulStop()
+
+	logger.GetLogger().Info("Auth service stopped gracefully")
 }

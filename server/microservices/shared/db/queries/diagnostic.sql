@@ -7,3 +7,6 @@ INSERT INTO diagnostics (
 
 -- name: GetDiagnostic :one
 SELECT * FROM diagnostics WHERE id = $1;
+
+-- name: GetAllDiagnostics :many
+SELECT * FROM diagnostics; 
