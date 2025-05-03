@@ -19,11 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ScheduleService_CreateScheduleSession_FullMethodName = "/ScheduleService/CreateScheduleSession"
-	ScheduleService_GetScheduleSession_FullMethodName    = "/ScheduleService/GetScheduleSession"
-	ScheduleService_UpdateScheduleSession_FullMethodName = "/ScheduleService/UpdateScheduleSession"
-	ScheduleService_CancelScheduleSession_FullMethodName = "/ScheduleService/CancelScheduleSession"
-	ScheduleService_ListScheduleSessions_FullMethodName  = "/ScheduleService/ListScheduleSessions"
+	ScheduleService_CreateScheduleSession_FullMethodName         = "/ScheduleService/CreateScheduleSession"
+	ScheduleService_GetScheduleSession_FullMethodName            = "/ScheduleService/GetScheduleSession"
+	ScheduleService_UpdateScheduleSession_FullMethodName         = "/ScheduleService/UpdateScheduleSession"
+	ScheduleService_CancelScheduleSession_FullMethodName         = "/ScheduleService/CancelScheduleSession"
+	ScheduleService_ListScheduleSessions_FullMethodName          = "/ScheduleService/ListScheduleSessions"
+	ScheduleService_ListDiagnosticCentreSchedules_FullMethodName = "/ScheduleService/ListDiagnosticCentreSchedules"
+	ScheduleService_GetDiagnosticCentreSchedule_FullMethodName   = "/ScheduleService/GetDiagnosticCentreSchedule"
 )
 
 // ScheduleServiceClient is the client API for ScheduleService service.
@@ -35,6 +37,8 @@ type ScheduleServiceClient interface {
 	UpdateScheduleSession(ctx context.Context, in *UpdateScheduledSessionRequest, opts ...grpc.CallOption) (*UpdateScheduledSessionResponse, error)
 	CancelScheduleSession(ctx context.Context, in *CancelScheduledSessionRequest, opts ...grpc.CallOption) (*CancelScheduledSessionResponse, error)
 	ListScheduleSessions(ctx context.Context, in *ListScheduledSessionsRequest, opts ...grpc.CallOption) (*ListScheduledSessionsResponse, error)
+	ListDiagnosticCentreSchedules(ctx context.Context, in *ListDiagnosticCentreSchedulesRequest, opts ...grpc.CallOption) (*ListDiagnosticCentreSchedulesResponse, error)
+	GetDiagnosticCentreSchedule(ctx context.Context, in *GetDiagnosticCentreScheduleRequest, opts ...grpc.CallOption) (*GetDiagnosticCentreScheduleResponse, error)
 }
 
 type scheduleServiceClient struct {
@@ -90,6 +94,24 @@ func (c *scheduleServiceClient) ListScheduleSessions(ctx context.Context, in *Li
 	return out, nil
 }
 
+func (c *scheduleServiceClient) ListDiagnosticCentreSchedules(ctx context.Context, in *ListDiagnosticCentreSchedulesRequest, opts ...grpc.CallOption) (*ListDiagnosticCentreSchedulesResponse, error) {
+	out := new(ListDiagnosticCentreSchedulesResponse)
+	err := c.cc.Invoke(ctx, ScheduleService_ListDiagnosticCentreSchedules_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scheduleServiceClient) GetDiagnosticCentreSchedule(ctx context.Context, in *GetDiagnosticCentreScheduleRequest, opts ...grpc.CallOption) (*GetDiagnosticCentreScheduleResponse, error) {
+	out := new(GetDiagnosticCentreScheduleResponse)
+	err := c.cc.Invoke(ctx, ScheduleService_GetDiagnosticCentreSchedule_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScheduleServiceServer is the server API for ScheduleService service.
 // All implementations must embed UnimplementedScheduleServiceServer
 // for forward compatibility
@@ -99,6 +121,8 @@ type ScheduleServiceServer interface {
 	UpdateScheduleSession(context.Context, *UpdateScheduledSessionRequest) (*UpdateScheduledSessionResponse, error)
 	CancelScheduleSession(context.Context, *CancelScheduledSessionRequest) (*CancelScheduledSessionResponse, error)
 	ListScheduleSessions(context.Context, *ListScheduledSessionsRequest) (*ListScheduledSessionsResponse, error)
+	ListDiagnosticCentreSchedules(context.Context, *ListDiagnosticCentreSchedulesRequest) (*ListDiagnosticCentreSchedulesResponse, error)
+	GetDiagnosticCentreSchedule(context.Context, *GetDiagnosticCentreScheduleRequest) (*GetDiagnosticCentreScheduleResponse, error)
 	mustEmbedUnimplementedScheduleServiceServer()
 }
 
@@ -120,6 +144,12 @@ func (UnimplementedScheduleServiceServer) CancelScheduleSession(context.Context,
 }
 func (UnimplementedScheduleServiceServer) ListScheduleSessions(context.Context, *ListScheduledSessionsRequest) (*ListScheduledSessionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListScheduleSessions not implemented")
+}
+func (UnimplementedScheduleServiceServer) ListDiagnosticCentreSchedules(context.Context, *ListDiagnosticCentreSchedulesRequest) (*ListDiagnosticCentreSchedulesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDiagnosticCentreSchedules not implemented")
+}
+func (UnimplementedScheduleServiceServer) GetDiagnosticCentreSchedule(context.Context, *GetDiagnosticCentreScheduleRequest) (*GetDiagnosticCentreScheduleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDiagnosticCentreSchedule not implemented")
 }
 func (UnimplementedScheduleServiceServer) mustEmbedUnimplementedScheduleServiceServer() {}
 
@@ -224,6 +254,42 @@ func _ScheduleService_ListScheduleSessions_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScheduleService_ListDiagnosticCentreSchedules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDiagnosticCentreSchedulesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServiceServer).ListDiagnosticCentreSchedules(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScheduleService_ListDiagnosticCentreSchedules_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServiceServer).ListDiagnosticCentreSchedules(ctx, req.(*ListDiagnosticCentreSchedulesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScheduleService_GetDiagnosticCentreSchedule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDiagnosticCentreScheduleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServiceServer).GetDiagnosticCentreSchedule(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScheduleService_GetDiagnosticCentreSchedule_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServiceServer).GetDiagnosticCentreSchedule(ctx, req.(*GetDiagnosticCentreScheduleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ScheduleService_ServiceDesc is the grpc.ServiceDesc for ScheduleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +316,14 @@ var ScheduleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListScheduleSessions",
 			Handler:    _ScheduleService_ListScheduleSessions_Handler,
+		},
+		{
+			MethodName: "ListDiagnosticCentreSchedules",
+			Handler:    _ScheduleService_ListDiagnosticCentreSchedules_Handler,
+		},
+		{
+			MethodName: "GetDiagnosticCentreSchedule",
+			Handler:    _ScheduleService_GetDiagnosticCentreSchedule_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

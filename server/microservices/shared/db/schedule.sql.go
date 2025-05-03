@@ -117,6 +117,34 @@ func (q *Queries) GetSchedule(ctx context.Context, arg GetScheduleParams) (*Diag
 	return &i, err
 }
 
+const getScheduleByDiagnosticCentre = `-- name: GetScheduleByDiagnosticCentre :one
+SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at FROM diagnostic_schedules
+WHERE id = $1 AND diagnostic_centre_id = $2
+`
+
+type GetScheduleByDiagnosticCentreParams struct {
+	ID                 string `db:"id" json:"id"`
+	DiagnosticCentreID string `db:"diagnostic_centre_id" json:"diagnostic_centre_id"`
+}
+
+func (q *Queries) GetScheduleByDiagnosticCentre(ctx context.Context, arg GetScheduleByDiagnosticCentreParams) (*DiagnosticSchedule, error) {
+	row := q.db.QueryRow(ctx, getScheduleByDiagnosticCentre, arg.ID, arg.DiagnosticCentreID)
+	var i DiagnosticSchedule
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.DiagnosticCentreID,
+		&i.Date,
+		&i.Time,
+		&i.TestType,
+		&i.Status,
+		&i.Notes,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
+}
+
 const getSchedules = `-- name: GetSchedules :many
 SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at FROM diagnostic_schedules
 WHERE user_id = $1
@@ -205,21 +233,87 @@ func (q *Queries) GetSchedulesByCentre(ctx context.Context, arg GetSchedulesByCe
 	return items, nil
 }
 
-const getSchedulesByStatus = `-- name: GetSchedulesByStatus :many
-SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at FROM diagnostic_schedules
-WHERE status = $1
+const getSchedulesByDiagnosticCentre = `-- name: GetSchedulesByDiagnosticCentre :many
+SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
+FROM diagnostic_schedules
+WHERE diagnostic_centre_id = $1
+  AND ($2::schedule_status IS NULL OR status = $2)
+  AND ($3::timestamp IS NULL OR date >= $3)
 ORDER BY date DESC, time DESC
-LIMIT $2 OFFSET $3
+LIMIT $4 OFFSET $5
 `
 
-type GetSchedulesByStatusParams struct {
-	Status ScheduleStatus `db:"status" json:"status"`
-	Limit  int32          `db:"limit" json:"limit"`
-	Offset int32          `db:"offset" json:"offset"`
+type GetSchedulesByDiagnosticCentreParams struct {
+	DiagnosticCentreID string           `db:"diagnostic_centre_id" json:"diagnostic_centre_id"`
+	Column2            ScheduleStatus   `db:"column_2" json:"column_2"`
+	Column3            pgtype.Timestamp `db:"column_3" json:"column_3"`
+	Limit              int32            `db:"limit" json:"limit"`
+	Offset             int32            `db:"offset" json:"offset"`
 }
 
-func (q *Queries) GetSchedulesByStatus(ctx context.Context, arg GetSchedulesByStatusParams) ([]*DiagnosticSchedule, error) {
-	rows, err := q.db.Query(ctx, getSchedulesByStatus, arg.Status, arg.Limit, arg.Offset)
+func (q *Queries) GetSchedulesByDiagnosticCentre(ctx context.Context, arg GetSchedulesByDiagnosticCentreParams) ([]*DiagnosticSchedule, error) {
+	rows, err := q.db.Query(ctx, getSchedulesByDiagnosticCentre,
+		arg.DiagnosticCentreID,
+		arg.Column2,
+		arg.Column3,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*DiagnosticSchedule
+	for rows.Next() {
+		var i DiagnosticSchedule
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.DiagnosticCentreID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getSchedulesDiagnosticCentreByStatusAndDate = `-- name: GetSchedulesDiagnosticCentreByStatusAndDate :many
+SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
+FROM diagnostic_schedules
+WHERE diagnostic_centre_id = $1
+  AND status = $2
+  AND date >= $3 -- Filter schedules starting from a specific date
+ORDER BY date DESC, time DESC
+LIMIT $4 OFFSET $5
+`
+
+type GetSchedulesDiagnosticCentreByStatusAndDateParams struct {
+	DiagnosticCentreID string             `db:"diagnostic_centre_id" json:"diagnostic_centre_id"`
+	Status             ScheduleStatus     `db:"status" json:"status"`
+	Date               pgtype.Timestamptz `db:"date" json:"date"`
+	Limit              int32              `db:"limit" json:"limit"`
+	Offset             int32              `db:"offset" json:"offset"`
+}
+
+func (q *Queries) GetSchedulesDiagnosticCentreByStatusAndDate(ctx context.Context, arg GetSchedulesDiagnosticCentreByStatusAndDateParams) ([]*DiagnosticSchedule, error) {
+	rows, err := q.db.Query(ctx, getSchedulesDiagnosticCentreByStatusAndDate,
+		arg.DiagnosticCentreID,
+		arg.Status,
+		arg.Date,
+		arg.Limit,
+		arg.Offset,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +352,7 @@ SET
   status = COALESCE($4, status),
   notes = COALESCE($5, notes),
   updated_at = NOW()
-WHERE id = $6
+WHERE id = $6 AND user_id = $7
 RETURNING id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
 `
 
@@ -269,6 +363,7 @@ type UpdateScheduleParams struct {
 	Status   ScheduleStatus     `db:"status" json:"status"`
 	Notes    pgtype.Text        `db:"notes" json:"notes"`
 	ID       string             `db:"id" json:"id"`
+	UserID   string             `db:"user_id" json:"user_id"`
 }
 
 func (q *Queries) UpdateSchedule(ctx context.Context, arg UpdateScheduleParams) (*DiagnosticSchedule, error) {
@@ -279,6 +374,7 @@ func (q *Queries) UpdateSchedule(ctx context.Context, arg UpdateScheduleParams) 
 		arg.Status,
 		arg.Notes,
 		arg.ID,
+		arg.UserID,
 	)
 	var i DiagnosticSchedule
 	err := row.Scan(

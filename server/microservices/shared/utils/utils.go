@@ -6,8 +6,12 @@ import (
 	"math"
 	"os"
 
+	"time"
+
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -100,4 +104,17 @@ func PaginationParams(limit, offset int32) (int32, int32) {
 		offset = constants.DefaultOffset
 	}
 	return limit, offset
+}
+
+func LogError(message string, err error) {
+	logger := zap.L()
+	logger.Error(message, zap.Error(err))
+}
+
+func ParseTimestamp(input string) (pgtype.Timestamptz, error) {
+	parsedTime, err := time.Parse(time.RFC3339, input)
+	if err != nil {
+		return pgtype.Timestamptz{Valid: false}, fmt.Errorf("invalid timestamp format: %v", err)
+	}
+	return pgtype.Timestamptz{Time: parsedTime, Valid: true}, nil
 }
