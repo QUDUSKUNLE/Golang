@@ -1,7 +1,6 @@
 package handler
 
 import (
-	organizationPorts "github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/record-service/clients"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
 	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
@@ -12,7 +11,6 @@ import (
 
 type RecordServiceStruct struct {
 	recordService       ports.RecordPorts
-	organizationService organizationPorts.OrganizationPorts
 	userService         v1.UserPorts
 	fileService         LocalFileService
 	record.UnimplementedRecordServiceServer
@@ -24,7 +22,6 @@ func NewRecordServer(grpcServer *grpc.Server, useCase ports.RecordPorts, organi_
 
 	recordGrpc := &RecordServiceStruct{
 		recordService:       useCase,
-		organizationService: clients.NewGRPClientOrganizationService(organi_conn, clientOptions),
 		userService:         clients.NewGRPClientUserService(user_conn, clientOptions),
 	}
 	record.RegisterRecordServiceServer(grpcServer, recordGrpc)

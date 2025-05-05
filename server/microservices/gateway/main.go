@@ -27,10 +27,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/QUDUSKUNLE/microservices/gateway/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/diagnostic"
-	// "github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/schedule"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
@@ -38,17 +38,23 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	rateLimitRequestsPerSecond = 10
+	rateLimitBurst             = 5
+	maxRequestBodySize         = 10 * 1024 * 1024 // 10 MB
+)
+
 func main() {
 	if err := utils.LoadEnvironmentVariable(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
-
 	// Initialize the logger
 	logger.InitLogger()
 	defer logger.Sync()
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	// Initialize runtime server
 	mux := runtime.NewServeMux(
@@ -58,55 +64,40 @@ func main() {
 	)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	// Register AuthServiceHandler
-	if err := auth.RegisterAuthServiceHandlerFromEndpoint(
-		ctx,
-		mux,
-		os.Getenv("AUTH"), opts); err != nil {
-		log.Fatalf("Failed to register the auth service handler: %v", err)
-	}
+	registerServices(ctx, mux, opts)
 
-	// Register UserServiceHandler
-	if err := user.RegisterUserServiceHandlerFromEndpoint(
-		ctx,
-		mux,
-		os.Getenv("USER_SERVICE"), opts); err != nil {
-		log.Fatalf("Failed to register the user service handler: %v", err)
-	}
-
-	// Register RecordServiceHandler
-	if err := record.RegisterRecordServiceHandlerFromEndpoint(
-		ctx,
-		mux,
-		os.Getenv("RECORD"), opts); err != nil {
-		logger.GetLogger().Fatal("Failed to register the record service handler", zap.Error(err))
-	}
-
-	// Register DiagnosticServiceHandler
-	if err := diagnostic.RegisterDiagnosticServiceHandlerFromEndpoint(
-		ctx,
-		mux,
-		os.Getenv("DIAGNOSTIC"), opts); err != nil {
-		logger.GetLogger().Fatal("Failed to register the diagnostic service handler", zap.Error(err))
-	}
-
-	// Register ScheduleServiceHandler
-	if err := schedule.RegisterScheduleServiceHandlerFromEndpoint(
-		ctx,
-		mux,
-		os.Getenv("SCHEDULE_SERVICE"), opts); err != nil {
-		logger.GetLogger().Fatal("Failed to register the schedule service handler", zap.Error(err))
-	}
+	// Create a  rate limiter middleware
+	rateLimiter := middleware.NewRateLimiter(rateLimitRequestsPerSecond, rateLimitBurst)
+	rateLimitedMux := middleware.RateLimitMiddleware(rateLimiter, mux)
+	corsMux := middleware.CORSMiddleware(rateLimitedMux)
+	limitRequestBodyMux := middleware.LimitRequestBodyMiddleware(maxRequestBodySize, corsMux)
 
 	addr := fmt.Sprintf("%v:%v", os.Getenv("GATEWAY"), os.Getenv("GATEWAY_PORT"))
-	go func() {
-		logger.GetLogger().Info("Gateway server listening on port", zap.String("address", addr))
-		if err := http.ListenAndServe(addr, mux); err != nil {
-			logger.GetLogger().Fatal("Gateway server closed abruptly", zap.Error(err))
-		}
-	}()
+	go startHTTPServer(addr, limitRequestBodyMux)
 	<-ctx.Done()
-
 	logger.GetLogger().Info("Shutting down gateway server gracefully...")
-	logger.GetLogger().Info("Gateway server stopped gracefully")
+}
+
+func registerServices(ctx context.Context, mux *runtime.ServeMux, opts []grpc.DialOption) {
+	services := map[string]func(context.Context, *runtime.ServeMux, string, []grpc.DialOption) error{
+		"AuthService":       auth.RegisterAuthServiceHandlerFromEndpoint,
+		"UserService":       user.RegisterUserServiceHandlerFromEndpoint,
+		"RecordService":     record.RegisterRecordServiceHandlerFromEndpoint,
+		"DiagnosticService": diagnostic.RegisterDiagnosticServiceHandlerFromEndpoint,
+		"ScheduleService":   schedule.RegisterScheduleServiceHandlerFromEndpoint,
+	}
+	for serviceName, registerFunc := range services {
+		endpoint := os.Getenv(serviceName)
+		if err := registerFunc(ctx, mux, endpoint, opts); err != nil {
+			logger.GetLogger().Fatal(fmt.Sprintf("Failed to register %s handler", serviceName), zap.Error(err))
+		}
+		logger.GetLogger().Info(fmt.Sprintf("%s registered successfully", serviceName))
+	}
+}
+
+func startHTTPServer(addr string, handler http.Handler) {
+	logger.GetLogger().Info("Gateway server listening", zap.String("address", addr))
+	if err := http.ListenAndServe(addr, handler); err != nil {
+		logger.GetLogger().Fatal("Gateway server closed abruptly", zap.Error(err))
+	}
 }

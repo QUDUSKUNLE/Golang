@@ -5,9 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
-	userProtoc "github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -33,16 +31,6 @@ type JwtCustomClaims struct {
 	ID       string `json:"id"`
 	UserType string `json:"user_type"`
 	jwt.RegisteredClaims
-}
-
-// transformUserRPC converts a CreateUserRequest to a UserDto
-func (srv *AuthServiceStruct) transformUserRPC(req *userProtoc.CreateUserRequest) dto.UserDto {
-	return dto.UserDto{
-		Password:        req.GetPassword(),
-		Email:           req.GetEmail(),
-		ConfirmPassword: req.GetConfirmPassword(),
-		UserType:        db.UserEnum(req.GetUserType().Enum().String()),
-	}
 }
 
 // transformToken generates a JWT token for the given user

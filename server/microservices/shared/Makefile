@@ -1,7 +1,7 @@
 GOBASE=$(shell pwd)
 GOBIN=$(GOBASE)/bin
 
-.PHONY: setup generate migrate-up migrate-down protoc run_local_server generate-tls-cert run-tls-server test-tls build-gateway run-gateway test-full-stack
+.PHONY: setup generate migrate-up migrate-down protoc run_local_server generate-tls-cert run-tls-server test-tls build-gateway run-gateway test-full-stack generate-openapi
 
 SQLC_VERSION=v1.27.0
 MIGRATE_VERSION=v4.17.0
@@ -29,6 +29,15 @@ protoc:
 	--grpc-gateway_out=../protogen \
 	--grpc-gateway_opt generate_unbound_methods=true \
 	./**/*.proto
+
+generate-openapi:
+	cd proto && protoc -I . \
+  --openapiv2_out . \
+  --openapiv2_opt logtostderr=true \
+  --openapiv2_opt json_names_for_fields=true \
+  --openapiv2_opt allow_merge=true \
+  --openapiv2_opt generate_unbound_methods=true \
+  ./**/*.proto
 
 run_local_server:
 	air

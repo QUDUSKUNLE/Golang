@@ -1,3 +1,6 @@
 .env
 bin
 tmp
+2.txt
+docs.txt
+swagger

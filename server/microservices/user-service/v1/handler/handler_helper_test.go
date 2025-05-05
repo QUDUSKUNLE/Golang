@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 )
@@ -13,7 +12,6 @@ import (
 func TestUserServiceStruct_transformUserRPC(t *testing.T) {
 	type fields struct {
 		userService                    v1.UserPorts
-		organizationService            ports.OrganizationPorts
 		UnimplementedUserServiceServer user.UnimplementedUserServiceServer
 	}
 	type args struct {
@@ -31,7 +29,6 @@ func TestUserServiceStruct_transformUserRPC(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			srv := &UserServiceStruct{
 				userService:                    tt.fields.userService,
-				organizationService:            tt.fields.organizationService,
 				UnimplementedUserServiceServer: tt.fields.UnimplementedUserServiceServer,
 			}
 			if got := srv.transformUserRPC(tt.args.req); !reflect.DeepEqual(got, tt.want) {

@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/QUDUSKUNLE/microservices/organization-service/core/ports"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/organization"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
@@ -61,32 +60,32 @@ func (u *userService) GetUserByEmail(ctx context.Context, email string) (*db.Use
 	panic("unimplemented")
 }
 
-func NewGRPClientOrganizationService(organization_conn string, opts *ClientOptions) ports.OrganizationPorts {
-	if opts == nil {
-		opts = DefaultClientOptions()
-	}
+// func NewGRPClientOrganizationService(organization_conn string, opts *ClientOptions) ports.OrganizationPorts {
+// 	if opts == nil {
+// 		opts = DefaultClientOptions()
+// 	}
 
-	var dialOpts []grpc.DialOption
+// 	var dialOpts []grpc.DialOption
 
-	if opts.UseTLS {
-		config := &tls.Config{
-			ServerName:         "localhost",
-			InsecureSkipVerify: true, // For development only
-			MinVersion:         tls.VersionTLS12,
-		}
-		creds := credentials.NewTLS(config)
-		dialOpts = append(dialOpts, grpc.WithTransportCredentials(creds))
-	} else {
-		dialOpts = append(dialOpts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	}
+// 	if opts.UseTLS {
+// 		config := &tls.Config{
+// 			ServerName:         "localhost",
+// 			InsecureSkipVerify: true, // For development only
+// 			MinVersion:         tls.VersionTLS12,
+// 		}
+// 		creds := credentials.NewTLS(config)
+// 		dialOpts = append(dialOpts, grpc.WithTransportCredentials(creds))
+// 	} else {
+// 		dialOpts = append(dialOpts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	}
 
-	organi_conn, err := grpc.Dial(organization_conn, dialOpts...)
-	if err != nil {
-		log.Printf("Failed to connect to organization service: %v", err)
-		return nil
-	}
-	return &organizationService{organizationGrpcClient: organization.NewOrganizationServiceClient(organi_conn)}
-}
+// 	organi_conn, err := grpc.Dial(organization_conn, dialOpts...)
+// 	if err != nil {
+// 		log.Printf("Failed to connect to organization service: %v", err)
+// 		return nil
+// 	}
+// 	return &organizationService{organizationGrpcClient: organization.NewOrganizationServiceClient(organi_conn)}
+// }
 
 func NewGRPClientUserService(user_conn string, opts *ClientOptions) v1.UserPorts {
 	if opts == nil {

@@ -27,11 +27,6 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 	if err != nil {
 		return nil, status.Error(codes.NotFound, constants.ErrUserNotFound)
 	}
-	// Get organization details
-	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, diagnostic_centre.UserID)
-	if err != nil {
-		return nil, status.Error(codes.NotFound, constants.ErrDiagnosticCentreNotFound)
-	}
 	// Write file to upload path
 	filePath := fmt.Sprintf("uploads/%s", req.GetFileName())
 	if err := this.fileService.SaveFile(filePath, req.GetContent()); err != nil {
@@ -48,7 +43,7 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 	// Create record
 	scanRecord, err := this.recordService.CreateRecord(ctx, domain.RecordDto{
 		UserID:         req.GetUserId(),
-		OrganizationID: organizationDetails.ID,
+		// OrganizationID: organizationDetails.ID,
 		Record:         uploadedFile,
 		ScanTitle:      req.GetScanTitle(),
 	})
@@ -94,27 +89,9 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
-	organizationDetails, err := this.organizationService.GetOrganizationByUserID(ctx, diagnostic_centre.UserID)
-	if err != nil {
-		return nil, status.Error(codes.NotFound, "Organization not found")
-	}
-	records, err := this.recordService.GetRecords(ctx, organizationDetails.ID)
-	if err != nil {
-		return nil, status.Error(codes.Unimplemented, "Unimplemented record")
-	}
+	
 	recordsResponse := &record.GetRecordsResponse{
 		Records: []*record.Record{},
-	}
-	for _, re := range records {
-		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
-			Id:             re.ID,
-			UserId:         re.UserID,
-			Record:         re.Record,
-			ScanTitle:      re.ScanTitle,
-			OrganizationId: re.OrganizationID,
-			CreatedAt:      re.CreatedAt.Time.String(),
-			UpdatedAt:      re.UpdatedAt.Time.String(),
-		})
 	}
 	return recordsResponse, nil
 }
