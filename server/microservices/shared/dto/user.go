@@ -57,6 +57,12 @@ type (
 	UserCreatedEvent struct {
 		UserID string `json:"userId"`
 	}
+	NotificationEvent struct {
+		EventType string            `json:"event_type"`
+		UserID    string            `json:"user_id"`
+		Channel   string            `json:"channel"` // e.g., email, sms, push
+		Data      map[string]string `json:"data"`    // Dynamic data for the notification
+	}
 )
 
 func BuildNewUser(user UserDto) (*db.User, error) {

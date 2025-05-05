@@ -13,7 +13,6 @@ func TestNewAuthServer(t *testing.T) {
 		server  *grpc.Server
 		usecase v1.UserPorts
 		event   domain.EventPorts
-		conn    string
 	}
 	tests := []struct {
 		name string
@@ -22,6 +21,6 @@ func TestNewAuthServer(t *testing.T) {
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
-		NewUserService(tt.args.server, tt.args.usecase, tt.args.event, tt.args.conn)
+		NewUserService(tt.args.server, tt.args.usecase, tt.args.event)
 	}
 }

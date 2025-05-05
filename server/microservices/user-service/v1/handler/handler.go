@@ -14,7 +14,7 @@ type UserServiceStruct struct {
 	user.UnimplementedUserServiceServer
 }
 
-func NewUserService(server *grpc.Server, usecase v1.UserPorts, brok domain.EventPorts, conn string) {
+func NewUserService(server *grpc.Server, usecase v1.UserPorts, brok domain.EventPorts) {
 	userServiceController := &UserServiceStruct{
 		userService:         usecase,
 		eventBroker:         brok,

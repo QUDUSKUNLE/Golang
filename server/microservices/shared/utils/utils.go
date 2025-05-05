@@ -21,6 +21,16 @@ type Config struct {
 	KafkaTopic  string
 	KafkaGroup  string
 	DB_URL      string
+
+	// Add other configuration fields as needed
+	// For example:
+	// GATEWAY
+	Gateway string
+	AuthService string
+	UserService string
+	RecordService string
+	DiagnosticService string
+	ScheduleService string
 }
 
 func LoadEnvironmentVariable() error {
@@ -31,21 +41,35 @@ func LoadEnvironmentVariable() error {
 	return nil
 }
 
-func LoadConfig() (*Config, error) {
+func LoadConfig(serviceName string) (*Config, error) {
 	if err := LoadEnvironmentVariable(); err != nil {
 		return nil, err
 	}
 
 	config := &Config{
-		Port:        os.Getenv("PORT"),
-		KafkaBroker: os.Getenv("KAFKA_BROKER"),
-		KafkaTopic:  os.Getenv("KAFKA_TOPIC"),
-		KafkaGroup:  os.Getenv("KAFKA_GROUP_ID"),
-		DB_URL:      os.Getenv("DB_URL"),
+		Port:        os.Getenv(fmt.Sprintf("%s_PORT", serviceName)),
+		KafkaBroker: os.Getenv(fmt.Sprintf("%s_KAFKA_BROKER", serviceName)),
+		KafkaTopic:  os.Getenv(fmt.Sprintf("%s_KAFKA_TOPIC", serviceName)),
+		KafkaGroup:  os.Getenv(fmt.Sprintf("%s_KAFKA_GROUP_ID", serviceName)),
+		DB_URL:      os.Getenv(fmt.Sprintf("%s_DB_URL", serviceName)),
+	}
+
+	switch serviceName {
+	case "GATEWAY":
+		config.Port = os.Getenv("GATEWAY_PORT")
+		config.Gateway = os.Getenv("GATEWAY")
+		config.AuthService = os.Getenv("AuthService")
+		config.UserService = os.Getenv("UserService")
+		config.RecordService = os.Getenv("RecordService")
+		config.DiagnosticService = os.Getenv("DiagnosticService")
+		config.ScheduleService = os.Getenv("ScheduleService")
+		if config.Gateway == "" {
+			return nil, fmt.Errorf("missing required environment variables: GATEWAY or GATEWAY_PORT")
+		}
 	}
 	// Validate required fields
-	if config.Port == "" || config.KafkaBroker == "" || config.DB_URL == "" {
-		return nil, fmt.Errorf("missing required environment variables: PORT, KAFKA_BROKER, or DB_URL")
+	if config.Port == "" {
+		return nil, fmt.Errorf("missing required environment variables: PORT")
 	}
 	return config, nil
 }

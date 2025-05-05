@@ -17,7 +17,7 @@ import (
 func ProcessEvent(ctx context.Context, event []byte) error {
 	// Load configuration
 	// Load environment variable
-	cfg, err := utils.LoadConfig()
+	cfg, err := utils.LoadConfig("DIAGNOSTIC")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}

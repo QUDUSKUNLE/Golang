@@ -34,17 +34,14 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func init() {
-	// Load environment variable
-	if err := utils.LoadEnvironmentVariable(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
-
 func main() {
+	// Initialize the logger
+	logger.InitLogger()
+	defer logger.Sync()
+
 	// Load configuration
 	// Load environment variable
-	cfg, err := utils.LoadConfig()
+	cfg, err := utils.LoadConfig("USER")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
@@ -74,7 +71,7 @@ func main() {
 	// Initialize use case and register services
 	userUseCase := services.InitUserServer(db)
 	eventBroker := publish.NewBroker(cfg.KafkaBroker, cfg.KafkaTopic)
-	handler.NewUserService(grpcServer, userUseCase, eventBroker, os.Getenv("ORGANIZATION"))
+	handler.NewUserService(grpcServer, userUseCase, eventBroker)
 	reflection.Register(grpcServer)
 
 	go func() {

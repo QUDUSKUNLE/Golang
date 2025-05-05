@@ -32,17 +32,11 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func init() {
-	// Load environment variable
-	if err := utils.LoadEnvironmentVariable(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
 
 func main() {
 	// Load configuration
 	// Load environment variable
-	cfg, err := utils.LoadConfig()
+	cfg, err := utils.LoadConfig("AUTH")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
