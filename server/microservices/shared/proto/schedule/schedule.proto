@@ -207,5 +207,7 @@ message CancelScheduledSessionResponse {
 message ScheduleResponse {
   string schedule_id = 1;
   string user_id = 2;             // ID of the scheduled session
-  string message = 3;              // Confirmation message
+  string message = 3;
+  string created_at = 4;
+  string updated_at = 5;              // Confirmation message
 }

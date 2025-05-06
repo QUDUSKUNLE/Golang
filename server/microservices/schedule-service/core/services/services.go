@@ -21,10 +21,7 @@ func (s *ScheduleService) CreateScheduleSession(ctx context.Context, req *schedu
 		utils.LogError("Error validating user: ", err)
 		return nil, status.Errorf(codes.PermissionDenied, "Unauthorized: %v", err)
 	}
-	// Ensure the user is authorized to access the schedule
-	if req.GetUserId() != user.UserID {
-		return nil, status.Errorf(codes.PermissionDenied, "You are not authorized to access this schedule")
-	}
+	// N.B Work on validating the user as a registered user
 	// Parse timestamps
 	date, err := utils.ParseTimestamp(req.GetDate())
 	if err != nil {
@@ -58,6 +55,8 @@ func (s *ScheduleService) CreateScheduleSession(ctx context.Context, req *schedu
 		ScheduleId: response.ID,
 		UserId:     user.UserID,
 		Message:    "Schedule created successfully",
+		CreatedAt:  response.CreatedAt.Time.String(),
+		UpdatedAt:  response.UpdatedAt.Time.String(),
 	}, nil
 }
 
@@ -159,10 +158,7 @@ func (s *ScheduleService) ListScheduleSessions(ctx context.Context, req *schedul
 		utils.LogError("Error validating user: ", err)
 		return nil, err
 	}
-	// Ensure the user is authorized to access the schedule
-	if req.GetUserId() != user.UserID {
-		return nil, status.Errorf(codes.PermissionDenied, "You are not authorized to access this schedule")
-	}
+	// NB Get Schedules by user ID
 	// Get all schedules for the user from the database
 	response, err := s.Repo.GetUserSchedules(ctx, db.GetSchedulesParams{UserID: user.UserID, Limit: constants.DefaultLimit, Offset: constants.DefaultOffset})
 	if err != nil {
