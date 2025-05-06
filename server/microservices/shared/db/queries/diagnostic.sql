@@ -1,9 +1,10 @@
 -- name: CreateDiagnostic :one
 -- Inserts a new diagnostic record into the diagnostics table.
 INSERT INTO diagnostics (
-  user_id
+  user_id,
+  diagnostic_centre_name
 ) VALUES  (
-  $1
+  $1, $2
 ) RETURNING *;
 
 -- name: GetDiagnostic :one
@@ -20,9 +21,11 @@ LIMIT $1 OFFSET $2;
 -- Updates a diagnostic record by its ID.
 UPDATE diagnostics
 SET
-  name = COALESCE($2, name),
+  diagnostic_centre_name = COALESCE($2, diagnostic_centre_name),
   latitude = COALESCE($3, latitude),
   longitude = COALESCE($4, longitude),
+  address = COALESCE($5, address),
+  contact = COALESCE($6, contact),
   updated_at = NOW()
 WHERE id = $1
 RETURNING *;

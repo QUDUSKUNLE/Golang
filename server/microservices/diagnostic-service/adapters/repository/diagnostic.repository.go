@@ -10,9 +10,9 @@ type DiagnosticRepository struct {
 	database *db.Queries
 }
 
-func (d *DiagnosticRepository) CreateDiagnostic(ctx context.Context, userID string) (*db.Diagnostic, error) {
+func (d *DiagnosticRepository) CreateDiagnostic(ctx context.Context, arg db.CreateDiagnosticParams) (*db.Diagnostic, error) {
 	// Implementation for creating a diagnostic
-	diagnostic, err := d.database.CreateDiagnostic(ctx, userID)
+	diagnostic, err := d.database.CreateDiagnostic(ctx, arg)
 	if err != nil {
 		return nil, err
 	}

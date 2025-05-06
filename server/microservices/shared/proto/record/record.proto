@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 service RecordService {
   rpc GetRecord(GetRecordRequest) returns (GetRecordResponse) {
     option (google.api.http) = {
-      get: "/v1/records/{id}",
+      get: "/v1/records/{record_id}",
     };
   }
   rpc SearchRecord(SearchRecordRequest) returns (SearchRecordResponse) {
@@ -57,8 +57,8 @@ message SearchByNinRequest {
 }
 
 message ScanUploadResponse {
-  string id = 1 [json_name = "id"];
-  string organization_id = 2 [json_name = "organization_id"];
+  string record_id = 1 [json_name = "record_id"];
+  string diagnostic_id = 2 [json_name = "diagnostic_id"];
   string user_id = 3 [json_name = "user_id"];
   string record = 4 [json_name = "record"];
   string scan_title = 5 [json_name = "scan_title"];
@@ -67,8 +67,8 @@ message ScanUploadResponse {
 }
 
 message Record {
-  string id = 1 [json_name = "id"];
-  string organization_id = 2 [json_name = "organization_id"];
+  string record_id = 1 [json_name = "record_id"];
+  string diagnostic_id = 2 [json_name = "diagnostic_id"];
   string user_id = 3 [json_name = "user_id"];
   string record = 4 [json_name = "record"];
   string scan_title = 5 [json_name = "scan_title"];
@@ -81,15 +81,15 @@ message GetRecordsResponse {
 }
 
 message GetRecordRequest {
-  string id = 1 [json_name = "id"];
+  string record_id = 1 [json_name = "record_id"];
   string scan_title = 2 [json_name = "scan_title"];
   string user_id = 3 [json_name = "user_id"];
 }
 
 message GetRecordResponse {
-  string id = 1 [json_name = "id"];
+  string record_id = 1 [json_name = "record_id"];
   string user_id = 2 [json_name = "user_id"];
-  string organization_id = 3 [json_name = "organization_id"];
+  string diagnostic_id = 3 [json_name = "diagnostic_id"];
   string record = 4 [json_name = "record"];
   string scan_title = 5 [json_name = "scan_title"];
   string created_at = 6 [json_name = "created_at"];

@@ -18,7 +18,7 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 	log := logger.GetLogger()
 	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTICCENTRE) {
 		log.Warn("Unauthorized access to perform operation.", zap.String("userType", diagnostic_centre.Type))
 		return nil, status.Error(codes.Unauthenticated, constants.ErrUnauthorized)
 	}
@@ -42,54 +42,54 @@ func (this *RecordServiceStruct) ScanUpload(ctx context.Context, req *record.Sca
 
 	// Create record
 	scanRecord, err := this.recordService.CreateRecord(ctx, domain.RecordDto{
-		UserID:         req.GetUserId(),
+		UserID: req.GetUserId(),
 		// OrganizationID: organizationDetails.ID,
-		Record:         uploadedFile,
-		ScanTitle:      req.GetScanTitle(),
+		Record:    uploadedFile,
+		ScanTitle: req.GetScanTitle(),
 	})
 	if err != nil {
 		return nil, status.Error(codes.Unimplemented, err.Error())
 	}
 	log.Info("Record created successfully", zap.String("recordId", scanRecord.ID))
 	return &record.ScanUploadResponse{
-		Id:             scanRecord.ID,
-		UserId:         req.GetUserId(),
-		ScanTitle:      req.GetScanTitle(),
-		OrganizationId: scanRecord.OrganizationID,
-		CreatedAt:      scanRecord.CreatedAt.Time.String(),
-		UpdatedAt:      scanRecord.UpdatedAt.Time.String(),
+		RecordId:     scanRecord.ID,
+		UserId:       req.GetUserId(),
+		ScanTitle:    req.GetScanTitle(),
+		DiagnosticId: scanRecord.DiagnosticID,
+		CreatedAt:    scanRecord.CreatedAt.Time.String(),
+		UpdatedAt:    scanRecord.UpdatedAt.Time.String(),
 	}, nil
 }
 
 func (this *RecordServiceStruct) GetRecord(ctx context.Context, req *record.GetRecordRequest) (*record.GetRecordResponse, error) {
 	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTICCENTRE) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 
-	rec, err := this.recordService.GetRecord(ctx, req.GetId())
+	rec, err := this.recordService.GetRecord(ctx, req.GetRecordId())
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "Record not found")
 	}
 	return &record.GetRecordResponse{
-		Id:             rec.ID,
-		UserId:         rec.UserID,
-		Record:         rec.Record,
-		ScanTitle:      rec.ScanTitle,
-		OrganizationId: rec.OrganizationID,
-		CreatedAt:      rec.CreatedAt.Time.String(),
-		UpdatedAt:      rec.UpdatedAt.Time.String(),
+		RecordId:     rec.ID,
+		UserId:       rec.UserID,
+		Record:       rec.Record,
+		ScanTitle:    rec.ScanTitle,
+		DiagnosticId: rec.DiagnosticID,
+		CreatedAt:    rec.CreatedAt.Time.String(),
+		UpdatedAt:    rec.UpdatedAt.Time.String(),
 	}, nil
 }
 
 func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.GetRecordsRequest) (*record.GetRecordsResponse, error) {
 	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTICCENTRE) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
-	
+
 	recordsResponse := &record.GetRecordsResponse{
 		Records: []*record.Record{},
 	}
@@ -99,7 +99,7 @@ func (this *RecordServiceStruct) GetRecords(ctx context.Context, req *record.Get
 func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.SearchRecordRequest) (*record.SearchRecordResponse, error) {
 	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTICCENTRE) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	records, err := this.recordService.SearchRecord(ctx, domain.GetRecordDto{UserID: req.GetUserId(), ScanTitle: req.GetScanTitle()})
@@ -111,13 +111,13 @@ func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.S
 	}
 	for _, re := range records {
 		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
-			Id:             re.ID,
-			UserId:         re.UserID,
-			Record:         re.Record,
-			ScanTitle:      re.ScanTitle,
-			OrganizationId: re.OrganizationID,
-			CreatedAt:      re.CreatedAt.Time.String(),
-			UpdatedAt:      re.UpdatedAt.Time.String(),
+			RecordId:     re.ID,
+			UserId:       re.UserID,
+			Record:       re.Record,
+			ScanTitle:    re.ScanTitle,
+			DiagnosticId: re.DiagnosticID,
+			CreatedAt:    re.CreatedAt.Time.String(),
+			UpdatedAt:    re.UpdatedAt.Time.String(),
 		})
 	}
 	return recordsResponse, nil
@@ -126,7 +126,7 @@ func (this *RecordServiceStruct) SearchRecord(ctx context.Context, req *record.S
 func (this *RecordServiceStruct) SearchByNin(ctx context.Context, req *record.SearchByNinRequest) (*record.SearchRecordResponse, error) {
 	// Retrieve the user from the context
 	diagnostic_centre, ok := ctx.Value("user").(*constants.UserType)
-	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTIC) {
+	if !ok || diagnostic_centre.Type != string(db.UserEnumDIAGNOSTICCENTRE) {
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized to perform operation.")
 	}
 	records, err := this.recordService.SearchRecordByNin(ctx, domain.GetRecordByNinDto{Nin: req.GetNin(), ScanTitle: req.GetScanTitle()})
@@ -138,13 +138,13 @@ func (this *RecordServiceStruct) SearchByNin(ctx context.Context, req *record.Se
 	}
 	for _, re := range records {
 		recordsResponse.Records = append(recordsResponse.Records, &record.Record{
-			Id:             re.ID,
-			UserId:         re.UserID,
-			Record:         re.Record,
-			ScanTitle:      re.ScanTitle,
-			OrganizationId: re.OrganizationID,
-			CreatedAt:      re.CreatedAt.Time.String(),
-			UpdatedAt:      re.UpdatedAt.Time.String(),
+			RecordId:     re.ID,
+			UserId:       re.UserID,
+			Record:       re.Record,
+			ScanTitle:    re.ScanTitle,
+			DiagnosticId: re.DiagnosticID,
+			CreatedAt:    re.CreatedAt.Time.String(),
+			UpdatedAt:    re.UpdatedAt.Time.String(),
 		})
 	}
 	return recordsResponse, nil

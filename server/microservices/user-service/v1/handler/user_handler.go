@@ -25,6 +25,9 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
+	if newUser.UserType == db.UserEnumDIAGNOSTICCENTRE && data.DiagnosticCentre == "" {
+		return nil, status.Error(codes.InvalidArgument, "Diagnostic Centre Name is required")
+	}
 	// Create user in the database
 	user, err := srv.userService.CreateUser(
 		ctx, db.CreateUserParams{
@@ -38,13 +41,8 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 	}
 	// Check if user is an organization
 	switch data.UserType {
-	case db.UserEnumORGANIZATION:
-		if err := srv.publishUserCreatedEvent(ctx, events.USER_EVENTS, user.ID); err != nil {
-			return nil, status.Error(codes.Aborted, err.Error())
-		}
-		return &userProtoc.SuccessResponse{Data: OrganizationRegisteredSuccessfully}, nil
-	case db.UserEnumDIAGNOSTIC:
-		if err := srv.publishUserCreatedEvent(ctx, events.DIAGNOSTIC_EVENTS, user.ID); err != nil {
+	case db.UserEnumDIAGNOSTICCENTRE:
+		if err := srv.publishDiagnosticCreatedEvent(ctx, events.DIAGNOSTIC_EVENTS, &dto.DiagnosticCreatedEvent{UserID: user.ID, DiagnosticCentreName: data.DiagnosticCentre}); err != nil {
 			return nil, status.Error(codes.Aborted, err.Error())
 		}
 		if err := srv.publishNotificationEvent(ctx, user.ID, "Diagnostic SignUp", "Email", map[string]string{"email": user.Email.String}); err != nil {
@@ -96,21 +94,10 @@ func (srv *UserServiceStruct) UpdateUser(ctx context.Context, req *userProtoc.Up
 	if err != nil {
 		return nil, err
 	}
-	addressJSON, err := utils.MapToStruct(req.GetAddress().AsMap())
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Invalid address format: %v", err)
-	}
-	contactJSON, err := utils.MapToStruct(req.GetContact().AsMap())
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Invalid contact format: %v", err)
-	}
-	address, _ := utils.JsonMarshal(addressJSON)
-	contact, _ := utils.JsonMarshal(contactJSON)
+
 	_, err = srv.userService.UpdateUser(ctx, db.UpdateUserParams{
-		Nin:     pgtype.Text{String: req.GetNin(), Valid: true},
-		Address: address,
-		Contact: contact,
-		ID:      user.UserID,
+		Nin: pgtype.Text{String: req.GetNin(), Valid: true},
+		ID:  user.UserID,
 	})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to update user: %v", err)
@@ -123,12 +110,12 @@ func (srv *UserServiceStruct) Home(ctx context.Context, req *userProtoc.HomeRequ
 }
 
 // Helper method to publish user-created events
-func (srv *UserServiceStruct) publishUserCreatedEvent(ctx context.Context, topic string, userID string) error {
-	if err := srv.eventBroker.Publish(ctx, topic, &dto.UserCreatedEvent{UserID: userID}); err != nil {
-		logger.GetLogger().Error("Failed to publish user-created event", zap.String("topic", topic), zap.String("userID", userID), zap.Error(err))
+func (srv *UserServiceStruct) publishDiagnosticCreatedEvent(ctx context.Context, topic string, arg *dto.DiagnosticCreatedEvent) error {
+	if err := srv.eventBroker.Publish(ctx, topic, arg); err != nil {
+		logger.GetLogger().Error("Failed to publish user-created event", zap.String("topic", topic), zap.String("userID", arg.UserID), zap.Error(err))
 		return err
 	}
-	logger.GetLogger().Info("User-created event published successfully", zap.String("topic", topic), zap.String("userID", userID))
+	logger.GetLogger().Info("Diagnostic-created event published successfully", zap.String("topic", topic), zap.String("userID", arg.UserID))
 	return nil
 }
 

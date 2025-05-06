@@ -13,22 +13,30 @@ import (
 
 const createDiagnostic = `-- name: CreateDiagnostic :one
 INSERT INTO diagnostics (
-  user_id
+  user_id,
+  diagnostic_centre_name
 ) VALUES  (
-  $1
-) RETURNING id, user_id, name, latitude, longitude, created_at, updated_at
+  $1, $2
+) RETURNING id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at
 `
 
+type CreateDiagnosticParams struct {
+	UserID               string `db:"user_id" json:"user_id"`
+	DiagnosticCentreName string `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
 // Inserts a new diagnostic record into the diagnostics table.
-func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnostic, error) {
-	row := q.db.QueryRow(ctx, createDiagnostic, userID)
+func (q *Queries) CreateDiagnostic(ctx context.Context, arg CreateDiagnosticParams) (*Diagnostic, error) {
+	row := q.db.QueryRow(ctx, createDiagnostic, arg.UserID, arg.DiagnosticCentreName)
 	var i Diagnostic
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.Name,
+		&i.DiagnosticCentreName,
 		&i.Latitude,
 		&i.Longitude,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -36,7 +44,7 @@ func (q *Queries) CreateDiagnostic(ctx context.Context, userID string) (*Diagnos
 }
 
 const deleteDiagnostic = `-- name: DeleteDiagnostic :one
-DELETE FROM diagnostics WHERE id = $1 RETURNING id, user_id, name, latitude, longitude, created_at, updated_at
+DELETE FROM diagnostics WHERE id = $1 RETURNING id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at
 `
 
 // Deletes a diagnostic record by its ID.
@@ -46,9 +54,11 @@ func (q *Queries) DeleteDiagnostic(ctx context.Context, id string) (*Diagnostic,
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.Name,
+		&i.DiagnosticCentreName,
 		&i.Latitude,
 		&i.Longitude,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -56,7 +66,7 @@ func (q *Queries) DeleteDiagnostic(ctx context.Context, id string) (*Diagnostic,
 }
 
 const getAllDiagnostics = `-- name: GetAllDiagnostics :many
-SELECT id, user_id, name, latitude, longitude, created_at, updated_at FROM diagnostics
+SELECT id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at FROM diagnostics
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2
 `
@@ -79,9 +89,11 @@ func (q *Queries) GetAllDiagnostics(ctx context.Context, arg GetAllDiagnosticsPa
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.Name,
+			&i.DiagnosticCentreName,
 			&i.Latitude,
 			&i.Longitude,
+			&i.Address,
+			&i.Contact,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -96,7 +108,7 @@ func (q *Queries) GetAllDiagnostics(ctx context.Context, arg GetAllDiagnosticsPa
 }
 
 const getDiagnostic = `-- name: GetDiagnostic :one
-SELECT id, user_id, name, latitude, longitude, created_at, updated_at FROM diagnostics WHERE id = $1
+SELECT id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at FROM diagnostics WHERE id = $1
 `
 
 // Retrieves a single diagnostic record by its ID.
@@ -106,9 +118,11 @@ func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, er
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.Name,
+		&i.DiagnosticCentreName,
 		&i.Latitude,
 		&i.Longitude,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -116,7 +130,7 @@ func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, er
 }
 
 const listDiagnostics = `-- name: ListDiagnostics :many
-SELECT id, user_id, name, latitude, longitude, created_at, updated_at FROM diagnostics WHERE user_id = $1
+SELECT id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at FROM diagnostics WHERE user_id = $1
 ORDER BY created_at DESC
 LIMIT $2 OFFSET $3
 `
@@ -140,9 +154,11 @@ func (q *Queries) ListDiagnostics(ctx context.Context, arg ListDiagnosticsParams
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.Name,
+			&i.DiagnosticCentreName,
 			&i.Latitude,
 			&i.Longitude,
+			&i.Address,
+			&i.Contact,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -157,7 +173,7 @@ func (q *Queries) ListDiagnostics(ctx context.Context, arg ListDiagnosticsParams
 }
 
 const searchDiagnostics = `-- name: SearchDiagnostics :many
-SELECT id, user_id, name, latitude, longitude, created_at, updated_at
+SELECT id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at
 FROM diagnostics
 WHERE name ILIKE '%' || $1 || '%'
 ORDER BY created_at DESC
@@ -183,9 +199,11 @@ func (q *Queries) SearchDiagnostics(ctx context.Context, arg SearchDiagnosticsPa
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.Name,
+			&i.DiagnosticCentreName,
 			&i.Latitude,
 			&i.Longitude,
+			&i.Address,
+			&i.Contact,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -202,36 +220,44 @@ func (q *Queries) SearchDiagnostics(ctx context.Context, arg SearchDiagnosticsPa
 const updateDiagnostic = `-- name: UpdateDiagnostic :one
 UPDATE diagnostics
 SET
-  name = COALESCE($2, name),
+  diagnostic_centre_name = COALESCE($2, diagnostic_centre_name),
   latitude = COALESCE($3, latitude),
   longitude = COALESCE($4, longitude),
+  address = COALESCE($5, address),
+  contact = COALESCE($6, contact),
   updated_at = NOW()
 WHERE id = $1
-RETURNING id, user_id, name, latitude, longitude, created_at, updated_at
+RETURNING id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at
 `
 
 type UpdateDiagnosticParams struct {
-	ID        string        `db:"id" json:"id"`
-	Name      pgtype.Text   `db:"name" json:"name"`
-	Latitude  pgtype.Float8 `db:"latitude" json:"latitude"`
-	Longitude pgtype.Float8 `db:"longitude" json:"longitude"`
+	ID                   string        `db:"id" json:"id"`
+	DiagnosticCentreName string        `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+	Latitude             pgtype.Float8 `db:"latitude" json:"latitude"`
+	Longitude            pgtype.Float8 `db:"longitude" json:"longitude"`
+	Address              []byte        `db:"address" json:"address"`
+	Contact              []byte        `db:"contact" json:"contact"`
 }
 
 // Updates a diagnostic record by its ID.
 func (q *Queries) UpdateDiagnostic(ctx context.Context, arg UpdateDiagnosticParams) (*Diagnostic, error) {
 	row := q.db.QueryRow(ctx, updateDiagnostic,
 		arg.ID,
-		arg.Name,
+		arg.DiagnosticCentreName,
 		arg.Latitude,
 		arg.Longitude,
+		arg.Address,
+		arg.Contact,
 	)
 	var i Diagnostic
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.Name,
+		&i.DiagnosticCentreName,
 		&i.Latitude,
 		&i.Longitude,
+		&i.Address,
+		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

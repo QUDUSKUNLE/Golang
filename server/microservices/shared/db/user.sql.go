@@ -58,7 +58,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*Create
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users where id = $1
+SELECT id, email, nin, password, user_type, created_at, updated_at FROM users where id = $1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
@@ -70,8 +70,6 @@ func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
 		&i.Nin,
 		&i.Password,
 		&i.UserType,
-		&i.Address,
-		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -79,7 +77,7 @@ func (q *Queries) GetUser(ctx context.Context, id string) (*User, error) {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users WHERE email = $1
+SELECT id, email, nin, password, user_type, created_at, updated_at FROM users WHERE email = $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User, error) {
@@ -91,8 +89,6 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 		&i.Nin,
 		&i.Password,
 		&i.UserType,
-		&i.Address,
-		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -100,7 +96,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email pgtype.Text) (*User,
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, email, nin, password, user_type, address, contact, created_at, updated_at FROM users
+SELECT id, email, nin, password, user_type, created_at, updated_at FROM users
 ORDER BY id
 LIMIT $1 OFFSET $2
 `
@@ -125,8 +121,6 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, er
 			&i.Nin,
 			&i.Password,
 			&i.UserType,
-			&i.Address,
-			&i.Contact,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -143,19 +137,15 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, er
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET
-  nin = COALESCE($1, nin),
-  address = COALESCE($2, address),
-  contact = COALESCE($3, contact),
+  nin = COALESCE($2, nin),
   updated_at = NOW()
-WHERE id = $4
-RETURNING id, email, nin, user_type, address, contact, created_at, updated_at
+WHERE id = $1
+RETURNING id, email, nin, user_type, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	Nin     pgtype.Text `db:"nin" json:"nin"`
-	Address []byte      `db:"address" json:"address"`
-	Contact []byte      `db:"contact" json:"contact"`
-	ID      string      `db:"id" json:"id"`
+	ID  string      `db:"id" json:"id"`
+	Nin pgtype.Text `db:"nin" json:"nin"`
 }
 
 type UpdateUserRow struct {
@@ -163,27 +153,18 @@ type UpdateUserRow struct {
 	Email     pgtype.Text        `db:"email" json:"email"`
 	Nin       pgtype.Text        `db:"nin" json:"nin"`
 	UserType  UserEnum           `db:"user_type" json:"user_type"`
-	Address   []byte             `db:"address" json:"address"`
-	Contact   []byte             `db:"contact" json:"contact"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (*UpdateUserRow, error) {
-	row := q.db.QueryRow(ctx, updateUser,
-		arg.Nin,
-		arg.Address,
-		arg.Contact,
-		arg.ID,
-	)
+	row := q.db.QueryRow(ctx, updateUser, arg.ID, arg.Nin)
 	var i UpdateUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
 		&i.Nin,
 		&i.UserType,
-		&i.Address,
-		&i.Contact,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

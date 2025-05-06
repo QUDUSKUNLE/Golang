@@ -189,7 +189,7 @@ func (s *ScheduleService) ListScheduleSessions(ctx context.Context, req *schedul
 
 func (s *ScheduleService) ListDiagnosticCentreSchedules(ctx context.Context, req *schedule.ListDiagnosticCentreSchedulesRequest) (*schedule.ListDiagnosticCentreSchedulesResponse, error) {
 	// Validate the request
-	_, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTIC))
+	_, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTICCENTRE))
 	if err != nil {
 		utils.LogError("Error validating user: ", err)
 		return nil, err
@@ -236,7 +236,7 @@ func (s *ScheduleService) ListDiagnosticCentreSchedules(ctx context.Context, req
 
 func (s *ScheduleService) GetScheduleByDiagnosticCentre(ctx context.Context, req *schedule.GetDiagnosticCentreScheduleRequest) (*schedule.GetDiagnosticCentreScheduleResponse, error) {
 	// Validate the request
-	_, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTIC))
+	_, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTICCENTRE))
 	if err != nil {
 		utils.LogError("Error validating user: ", err)
 		return nil, err

@@ -10,10 +10,11 @@ import (
 
 type (
 	UserDto struct {
-		Email           string      `json:"email" validate:"email,required"`
-		Password        string      `json:"password" validate:"min=8,required"`
-		ConfirmPassword string      `json:"confirm_password" validate:"eqfield=Password"`
-		UserType        db.UserEnum `json:"user_type"`
+		Email            string      `json:"email" validate:"email,required"`
+		Password         string      `json:"password" validate:"min=8,required"`
+		ConfirmPassword  string      `json:"confirm_password" validate:"eqfield=Password"`
+		UserType         db.UserEnum `json:"user_type"`
+		DiagnosticCentre string      `json:"diagnostic_centre"`
 	}
 	Address struct {
 		Street  string `json:"street"`
@@ -37,7 +38,7 @@ type (
 		Nin     string  `json:"nin" validate:"required"`
 		Address Address `json:"address"`
 		Contact Contact `json:"contact"`
-		UserID string `json:"user_id"`
+		UserID  string  `json:"user_id"`
 	}
 	ResetPasswordDto struct {
 		Email string `json:"email" validate:"email,required"`
@@ -56,6 +57,10 @@ type (
 	}
 	UserCreatedEvent struct {
 		UserID string `json:"userId"`
+	}
+	DiagnosticCreatedEvent struct {
+		UserID               string `json:"userId"`
+		DiagnosticCentreName string `json:"diagnosticCentreName"`
 	}
 	NotificationEvent struct {
 		EventType string            `json:"event_type"`

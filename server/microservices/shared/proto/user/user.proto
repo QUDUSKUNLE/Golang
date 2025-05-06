@@ -2,15 +2,13 @@ syntax = "proto3";
 option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/user";
 
 import "google/api/annotations.proto";
-import "google/protobuf/struct.proto";
 
 enum UserType {
   UNSPECIFIED = 0;
   USER = 1;
-  ORGANIZATION = 2;
-  DIAGNOSTIC = 3;
-  HOSPITAL = 4;
-  ADMIN = 5;
+  DIAGNOSTIC_CENTRE = 2;
+  HOSPITAL = 3;
+  ADMIN = 4;
 }
 
 service UserService {
@@ -47,7 +45,8 @@ message CreateUserRequest {
   string email = 1 [json_name = "email"];
   string password = 2 [json_name = "password"];
   string confirm_password = 3 [json_name = "confirm_password"];
-  UserType user_type = 4 [json_name = "user_type"];
+  string diagnostic_centre = 4 [json_name = "diagnostic_centre"];
+  UserType user_type = 5 [json_name = "user_type"];
 }
 
 message GetUsersRequest {
@@ -60,8 +59,6 @@ message HomeRequest {}
 message User {
   string id = 1 [json_name = "id"];
   string email = 2 [json_name = "email"];
-  Address address = 3 [json_name = "address"];
-  Contact contact = 4 [json_name = "contact"];
   string nin = 5 [json_name = "nin"];
   string created_at = 6 [json_name = "created_at"];
   string updated_at = 7 [json_name = "updated_at"];
@@ -69,23 +66,6 @@ message User {
 
 message SingleUserRequest {
   string id = 1 [json_name = "id"];
-}
-
-message Address {
-  string street = 1 [json_name = "street"];
-  string city = 2 [json_name = "city"];
-  string state = 3 [json_name = "state"];
-  string country = 4 [json_name = "country"];
-}
-
-message Phone {
-  string phone = 1 [json_name = "phone"];
-}
-
-
-message Contact {
-  repeated Phone phone = 1 [json_name = "phone"];
-  string email = 2 [json_name = "email"];
 }
 
 message CreateUserResponse {
@@ -98,8 +78,6 @@ message CreateUserResponse {
 
 message UpdateUserRequest {
   string nin = 1 [json_name = "nin"];
-  google.protobuf.Struct address = 2 [json_name = "address"];
-  google.protobuf.Struct contact = 3 [json_name = "contact"];
 }
 
 message SuccessResponse {

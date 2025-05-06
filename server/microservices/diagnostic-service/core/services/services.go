@@ -12,15 +12,16 @@ import (
 
 func (s *DiagnosticService) CreateDiagnostic(ctx context.Context, req *diagnostic.CreateDiagnosticRequest) (*diagnostic.CreateDiagnosticResponse, error) {
 	// Save the diagnostic to the database
-	diag, err := s.Repo.CreateDiagnostic(ctx, req.GetUserId())
+	diag, err := s.Repo.CreateDiagnostic(ctx, db.CreateDiagnosticParams{
+		UserID: req.GetUserId(), DiagnosticCentreName: req.GetDiagnosticCentreName()})
 	if err != nil {
 		return nil, err
 	}
 	return &diagnostic.CreateDiagnosticResponse{
-		Id:        diag.ID,
-		UserId:    diag.UserID,
-		CreatedAt: diag.CreatedAt.Time.String(),
-		UpdatedAt: diag.UpdatedAt.Time.String(),
+		DiagnosticId: diag.ID,
+		UserId:       diag.UserID,
+		CreatedAt:    diag.CreatedAt.Time.String(),
+		UpdatedAt:    diag.UpdatedAt.Time.String(),
 	}, nil
 }
 
@@ -40,11 +41,11 @@ func (s *DiagnosticService) SearchNearestDiagnosticCenter(ctx context.Context, r
 			return nil, status.Errorf(codes.InvalidArgument, "Invalid latitude or longitude: %v", err)
 		}
 		responseDiagnostics = append(responseDiagnostics, &diagnostic.Diagnostic{
-			Id:        diag.ID,
-			UserId:    diag.UserID,
-			Name:      diag.Name.String,
-			CreatedAt: diag.CreatedAt.Time.String(),
-			UpdatedAt: diag.UpdatedAt.Time.String(),
+			DiagnosticId:         diag.ID,
+			UserId:               diag.UserID,
+			DiagnosticCentreName: diag.DiagnosticCentreName,
+			CreatedAt:            diag.CreatedAt.Time.String(),
+			UpdatedAt:            diag.UpdatedAt.Time.String(),
 		})
 	}
 	// Sort result by distance
@@ -55,29 +56,29 @@ func (s *DiagnosticService) SearchNearestDiagnosticCenter(ctx context.Context, r
 
 func (s *DiagnosticService) CancelDiagnostic(ctx context.Context, req *diagnostic.DeleteDiagnosticRequest) (*diagnostic.DeleteDiagnosticResponse, error) {
 	// Delete the diagnostic from the database
-	diag, err := s.Repo.CancelDiagnostic(ctx, req.GetId())
+	diag, err := s.Repo.CancelDiagnostic(ctx, req.GetDiagnosticId())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to delete diagnostic: %v", err)
 	}
 	return &diagnostic.DeleteDiagnosticResponse{
-		Id:        diag.ID,
-		UserId:    diag.UserID,
-		CreatedAt: diag.CreatedAt.Time.String(),
-		UpdatedAt: diag.UpdatedAt.Time.String(),
+		DiagnosticId: diag.ID,
+		UserId:       diag.UserID,
+		CreatedAt:    diag.CreatedAt.Time.String(),
+		UpdatedAt:    diag.UpdatedAt.Time.String(),
 	}, nil
 }
 
 func (s *DiagnosticService) GetDiagnostic(ctx context.Context, req *diagnostic.GetDiagnosticRequest) (*diagnostic.GetDiagnosticResponse, error) {
 	// Get the diagnostic from the database
-	diag, err := s.Repo.GetDiagnostic(ctx, req.GetId())
+	diag, err := s.Repo.GetDiagnostic(ctx, req.GetDiagnosticId())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to fetch diagnostic: %v", err)
 	}
 	return &diagnostic.GetDiagnosticResponse{
-		Id:        diag.ID,
-		UserId:    diag.UserID,
-		CreatedAt: diag.CreatedAt.Time.String(),
-		UpdatedAt: diag.UpdatedAt.Time.String(),
+		DiagnosticId: diag.ID,
+		UserId:       diag.UserID,
+		CreatedAt:    diag.CreatedAt.Time.String(),
+		UpdatedAt:    diag.UpdatedAt.Time.String(),
 	}, nil
 }
 
@@ -90,11 +91,11 @@ func (s *DiagnosticService) ListDiagnostics(ctx context.Context, req *diagnostic
 	var responseDiagnostics []*diagnostic.Diagnostic
 	for _, diag := range diagnostics {
 		responseDiagnostics = append(responseDiagnostics, &diagnostic.Diagnostic{
-			Id:        diag.ID,
-			UserId:    diag.UserID,
-			Name:      diag.Name.String,
-			CreatedAt: diag.CreatedAt.Time.String(),
-			UpdatedAt: diag.UpdatedAt.Time.String(),
+			DiagnosticId:         diag.ID,
+			UserId:               diag.UserID,
+			DiagnosticCentreName: diag.DiagnosticCentreName,
+			CreatedAt:            diag.CreatedAt.Time.String(),
+			UpdatedAt:            diag.UpdatedAt.Time.String(),
 		})
 	}
 	return &diagnostic.ListDiagnosticsResponse{

@@ -163,11 +163,10 @@ func AllScheduleTypeValues() []ScheduleType {
 type UserEnum string
 
 const (
-	UserEnumUSER         UserEnum = "USER"
-	UserEnumORGANIZATION UserEnum = "ORGANIZATION"
-	UserEnumDIAGNOSTIC   UserEnum = "DIAGNOSTIC"
-	UserEnumHOSPITAL     UserEnum = "HOSPITAL"
-	UserEnumADMIN        UserEnum = "ADMIN"
+	UserEnumUSER             UserEnum = "USER"
+	UserEnumDIAGNOSTICCENTRE UserEnum = "DIAGNOSTIC_CENTRE"
+	UserEnumHOSPITAL         UserEnum = "HOSPITAL"
+	UserEnumADMIN            UserEnum = "ADMIN"
 )
 
 func (e *UserEnum) Scan(src interface{}) error {
@@ -208,8 +207,7 @@ func (ns NullUserEnum) Value() (driver.Value, error) {
 func (e UserEnum) Valid() bool {
 	switch e {
 	case UserEnumUSER,
-		UserEnumORGANIZATION,
-		UserEnumDIAGNOSTIC,
+		UserEnumDIAGNOSTICCENTRE,
 		UserEnumHOSPITAL,
 		UserEnumADMIN:
 		return true
@@ -220,21 +218,22 @@ func (e UserEnum) Valid() bool {
 func AllUserEnumValues() []UserEnum {
 	return []UserEnum{
 		UserEnumUSER,
-		UserEnumORGANIZATION,
-		UserEnumDIAGNOSTIC,
+		UserEnumDIAGNOSTICCENTRE,
 		UserEnumHOSPITAL,
 		UserEnumADMIN,
 	}
 }
 
 type Diagnostic struct {
-	ID        string             `db:"id" json:"id"`
-	UserID    string             `db:"user_id" json:"user_id"`
-	Name      pgtype.Text        `db:"name" json:"name"`
-	Latitude  pgtype.Float8      `db:"latitude" json:"latitude"`
-	Longitude pgtype.Float8      `db:"longitude" json:"longitude"`
-	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID                   string             `db:"id" json:"id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+	Latitude             pgtype.Float8      `db:"latitude" json:"latitude"`
+	Longitude            pgtype.Float8      `db:"longitude" json:"longitude"`
+	Address              []byte             `db:"address" json:"address"`
+	Contact              []byte             `db:"contact" json:"contact"`
+	CreatedAt            pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt            pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
 type DiagnosticSchedule struct {
@@ -250,30 +249,23 @@ type DiagnosticSchedule struct {
 	UpdatedAt          pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
-type Organization struct {
-	ID        string             `db:"id" json:"id"`
-	UserID    string             `db:"user_id" json:"user_id"`
-	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
-}
-
 type Record struct {
-	ID             string             `db:"id" json:"id"`
-	OrganizationID string             `db:"organization_id" json:"organization_id"`
-	UserID         string             `db:"user_id" json:"user_id"`
-	Record         string             `db:"record" json:"record"`
-	ScanTitle      string             `db:"scan_title" json:"scan_title"`
-	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID           string             `db:"id" json:"id"`
+	DiagnosticID string             `db:"diagnostic_id" json:"diagnostic_id"`
+	UserID       string             `db:"user_id" json:"user_id"`
+	Record       string             `db:"record" json:"record"`
+	ScanTitle    string             `db:"scan_title" json:"scan_title"`
+	CreatedAt    pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
 type Upload struct {
-	ID             string             `db:"id" json:"id"`
-	OrganizationID string             `db:"organization_id" json:"organization_id"`
-	UserID         string             `db:"user_id" json:"user_id"`
-	ScanTitle      string             `db:"scan_title" json:"scan_title"`
-	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID           string             `db:"id" json:"id"`
+	DiagnosticID string             `db:"diagnostic_id" json:"diagnostic_id"`
+	UserID       string             `db:"user_id" json:"user_id"`
+	ScanTitle    string             `db:"scan_title" json:"scan_title"`
+	CreatedAt    pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
 
 type User struct {
@@ -282,8 +274,6 @@ type User struct {
 	Nin       pgtype.Text        `db:"nin" json:"nin"`
 	Password  string             `db:"password" json:"password"`
 	UserType  UserEnum           `db:"user_type" json:"user_type"`
-	Address   []byte             `db:"address" json:"address"`
-	Contact   []byte             `db:"contact" json:"contact"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }

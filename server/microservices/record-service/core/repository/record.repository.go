@@ -27,13 +27,13 @@ func (r *Repository) SearchRecordByNin(ctx context.Context, searchRecord domain.
 	actualResult := make([]*db.SearchRecordByNinRow, 0)
 	for _, r := range result {
 		actualResult = append(actualResult, &db.SearchRecordByNinRow{
-			ID:             r.ID,
-			OrganizationID: r.OrganizationID,
-			UserID:         r.UserID,
-			Record:         r.Record,
-			ScanTitle:      r.ScanTitle,
-			CreatedAt:      r.CreatedAt,
-			UpdatedAt:      r.UpdatedAt,
+			ID:           r.ID,
+			DiagnosticID: r.DiagnosticID,
+			UserID:       r.UserID,
+			Record:       r.Record,
+			ScanTitle:    r.ScanTitle,
+			CreatedAt:    r.CreatedAt,
+			UpdatedAt:    r.UpdatedAt,
 		})
 	}
 	return actualResult, nil
@@ -49,7 +49,7 @@ func (r *Repository) SearchRecord(ctx context.Context, searchRecord domain.GetRe
 
 // UploadRecord implements ports.RepositoryPorts.
 func (r *Repository) UploadRecord(ctx context.Context, record domain.UploadDto) (*db.Upload, error) {
-	return r.database.UploadRecord(ctx, db.UploadRecordParams{UserID: record.UserID, OrganizationID: record.OrganizationID, ScanTitle: record.ScanTitle})
+	return r.database.UploadRecord(ctx, db.UploadRecordParams{UserID: record.UserID, DiagnosticID: record.DiagnosticID, ScanTitle: record.ScanTitle})
 }
 
 // GetRecords implements ports.RepositoryPorts.
@@ -64,7 +64,7 @@ func (r *Repository) GetRecord(ctx context.Context, record string) (*db.Record, 
 
 // CreateRecord implements ports.RepositoryPorts.
 func (r *Repository) CreateRecord(ctx context.Context, record domain.RecordDto) (*db.Record, error) {
-	return r.database.CreateRecord(ctx, db.CreateRecordParams{OrganizationID: record.OrganizationID, UserID: record.UserID, Record: record.Record, ScanTitle: record.ScanTitle})
+	return r.database.CreateRecord(ctx, db.CreateRecordParams{DiagnosticID: record.DiagnosticID, UserID: record.UserID, Record: record.Record, ScanTitle: record.ScanTitle})
 }
 
 func NewRepository(database *db.Queries) ports.RepositoryPorts {

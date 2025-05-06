@@ -68,14 +68,14 @@ func request_DiagnosticService_GetDiagnostic_0(ctx context.Context, marshaler ru
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["diagnostic_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_id")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	protoReq.DiagnosticId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_id", err)
 	}
 
 	msg, err := client.GetDiagnostic(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -94,14 +94,14 @@ func local_request_DiagnosticService_GetDiagnostic_0(ctx context.Context, marsha
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["diagnostic_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_id")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	protoReq.DiagnosticId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_id", err)
 	}
 
 	msg, err := server.GetDiagnostic(ctx, &protoReq)
@@ -124,14 +124,14 @@ func request_DiagnosticService_UpdateDiagnostic_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["diagnostic_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_id")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	protoReq.DiagnosticId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_id", err)
 	}
 
 	msg, err := client.UpdateDiagnostic(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -154,14 +154,14 @@ func local_request_DiagnosticService_UpdateDiagnostic_0(ctx context.Context, mar
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["diagnostic_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_id")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	protoReq.DiagnosticId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_id", err)
 	}
 
 	msg, err := server.UpdateDiagnostic(ctx, &protoReq)
@@ -180,14 +180,14 @@ func request_DiagnosticService_DeleteDiagnostic_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["diagnostic_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_id")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	protoReq.DiagnosticId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_id", err)
 	}
 
 	msg, err := client.DeleteDiagnostic(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -206,14 +206,14 @@ func local_request_DiagnosticService_DeleteDiagnostic_0(ctx context.Context, mar
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["diagnostic_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_id")
 	}
 
-	protoReq.Id, err = runtime.String(val)
+	protoReq.DiagnosticId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_id", err)
 	}
 
 	msg, err := server.DeleteDiagnostic(ctx, &protoReq)
@@ -333,7 +333,7 @@ func RegisterDiagnosticServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/GetDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/GetDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -358,7 +358,7 @@ func RegisterDiagnosticServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/UpdateDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/UpdateDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -383,7 +383,7 @@ func RegisterDiagnosticServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/DeleteDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/DeleteDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -519,7 +519,7 @@ func RegisterDiagnosticServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/GetDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/GetDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -541,7 +541,7 @@ func RegisterDiagnosticServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/UpdateDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/UpdateDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -563,7 +563,7 @@ func RegisterDiagnosticServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/DeleteDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/DeleteDiagnostic", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -629,11 +629,11 @@ func RegisterDiagnosticServiceHandlerClient(ctx context.Context, mux *runtime.Se
 var (
 	pattern_DiagnosticService_CreateDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "diagnostics"}, ""))
 
-	pattern_DiagnosticService_GetDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "diagnostics", "id"}, ""))
+	pattern_DiagnosticService_GetDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "diagnostics", "diagnostic_id"}, ""))
 
-	pattern_DiagnosticService_UpdateDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "diagnostics", "id"}, ""))
+	pattern_DiagnosticService_UpdateDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "diagnostics", "diagnostic_id"}, ""))
 
-	pattern_DiagnosticService_DeleteDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "diagnostics", "id"}, ""))
+	pattern_DiagnosticService_DeleteDiagnostic_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "diagnostics", "diagnostic_id"}, ""))
 
 	pattern_DiagnosticService_ListDiagnostics_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "diagnostics"}, ""))
 

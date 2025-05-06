@@ -1,6 +1,6 @@
 -- name: CreateRecord :one
 INSERT INTO records (
-  organization_id,
+  diagnostic_id,
   user_id,
   record,
   scan_title
@@ -12,7 +12,7 @@ INSERT INTO records (
 SELECT * FROM records where id = $1;
 
 -- name: GetRecords :many
-SELECT * FROM records where organization_id = $1
+SELECT * FROM records where diagnostic_id = $1
 LIMIT 50;
 
 -- name: GetRecordsByUser :many
@@ -27,7 +27,7 @@ LIMIT 10;
 
 -- name: UploadRecord :one
 INSERT INTO uploads (
-  organization_id,
+  diagnostic_id,
   user_id,
   scan_title
 ) VALUES  (

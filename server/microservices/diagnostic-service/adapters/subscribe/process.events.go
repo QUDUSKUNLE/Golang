@@ -22,18 +22,20 @@ func ProcessEvent(ctx context.Context, event []byte) error {
 		log.Fatalf("Error loading config: %v", err)
 	}
 	// Process the event
-	var user dto.UserCreatedEvent
+	var user dto.DiagnosticCreatedEvent
 	if err := json.Unmarshal(event, &user); err != nil {
 		return fmt.Errorf("failed to unmarshal event: %w", err)
 	}
 
 	log.Printf("Processing DiagnosticCreatedEvent: UserID=%s", user.UserID)
 
-	// Initialize the diagnostic service
 	// repository.DiagnosticRepository
 	diagnosticRepo := repository.NewDiagnosticRepository(db.DatabaseConnection(cfg.DB_URL))
 	service := diagnosticService.NewDiagnosticService(*diagnosticRepo)
-	diag, err := service.Repo.CreateDiagnostic(ctx, user.UserID)
+	diag, err := service.Repo.CreateDiagnostic(ctx, db.CreateDiagnosticParams{
+		UserID:               user.UserID,
+		DiagnosticCentreName: user.DiagnosticCentreName,
+	})
 	if err != nil {
 		return fmt.Errorf("Error creating diagnostic centre: %w", err)
 	}

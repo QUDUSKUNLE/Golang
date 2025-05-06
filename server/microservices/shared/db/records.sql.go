@@ -13,25 +13,25 @@ import (
 
 const createRecord = `-- name: CreateRecord :one
 INSERT INTO records (
-  organization_id,
+  diagnostic_id,
   user_id,
   record,
   scan_title
 ) VALUES  (
   $1, $2, $3, $4
-) RETURNING id, organization_id, user_id, record, scan_title, created_at, updated_at
+) RETURNING id, diagnostic_id, user_id, record, scan_title, created_at, updated_at
 `
 
 type CreateRecordParams struct {
-	OrganizationID string `db:"organization_id" json:"organization_id"`
-	UserID         string `db:"user_id" json:"user_id"`
-	Record         string `db:"record" json:"record"`
-	ScanTitle      string `db:"scan_title" json:"scan_title"`
+	DiagnosticID string `db:"diagnostic_id" json:"diagnostic_id"`
+	UserID       string `db:"user_id" json:"user_id"`
+	Record       string `db:"record" json:"record"`
+	ScanTitle    string `db:"scan_title" json:"scan_title"`
 }
 
 func (q *Queries) CreateRecord(ctx context.Context, arg CreateRecordParams) (*Record, error) {
 	row := q.db.QueryRow(ctx, createRecord,
-		arg.OrganizationID,
+		arg.DiagnosticID,
 		arg.UserID,
 		arg.Record,
 		arg.ScanTitle,
@@ -39,7 +39,7 @@ func (q *Queries) CreateRecord(ctx context.Context, arg CreateRecordParams) (*Re
 	var i Record
 	err := row.Scan(
 		&i.ID,
-		&i.OrganizationID,
+		&i.DiagnosticID,
 		&i.UserID,
 		&i.Record,
 		&i.ScanTitle,
@@ -50,7 +50,7 @@ func (q *Queries) CreateRecord(ctx context.Context, arg CreateRecordParams) (*Re
 }
 
 const getRecord = `-- name: GetRecord :one
-SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where id = $1
+SELECT id, diagnostic_id, user_id, record, scan_title, created_at, updated_at FROM records where id = $1
 `
 
 func (q *Queries) GetRecord(ctx context.Context, id string) (*Record, error) {
@@ -58,7 +58,7 @@ func (q *Queries) GetRecord(ctx context.Context, id string) (*Record, error) {
 	var i Record
 	err := row.Scan(
 		&i.ID,
-		&i.OrganizationID,
+		&i.DiagnosticID,
 		&i.UserID,
 		&i.Record,
 		&i.ScanTitle,
@@ -69,12 +69,12 @@ func (q *Queries) GetRecord(ctx context.Context, id string) (*Record, error) {
 }
 
 const getRecords = `-- name: GetRecords :many
-SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where organization_id = $1
+SELECT id, diagnostic_id, user_id, record, scan_title, created_at, updated_at FROM records where diagnostic_id = $1
 LIMIT 50
 `
 
-func (q *Queries) GetRecords(ctx context.Context, organizationID string) ([]*Record, error) {
-	rows, err := q.db.Query(ctx, getRecords, organizationID)
+func (q *Queries) GetRecords(ctx context.Context, diagnosticID string) ([]*Record, error) {
+	rows, err := q.db.Query(ctx, getRecords, diagnosticID)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (q *Queries) GetRecords(ctx context.Context, organizationID string) ([]*Rec
 		var i Record
 		if err := rows.Scan(
 			&i.ID,
-			&i.OrganizationID,
+			&i.DiagnosticID,
 			&i.UserID,
 			&i.Record,
 			&i.ScanTitle,
@@ -102,7 +102,7 @@ func (q *Queries) GetRecords(ctx context.Context, organizationID string) ([]*Rec
 }
 
 const getRecordsByUser = `-- name: GetRecordsByUser :many
-SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1
+SELECT id, diagnostic_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1
 ORDER BY created_at DESC
 LIMIT 10
 `
@@ -118,7 +118,7 @@ func (q *Queries) GetRecordsByUser(ctx context.Context, userID string) ([]*Recor
 		var i Record
 		if err := rows.Scan(
 			&i.ID,
-			&i.OrganizationID,
+			&i.DiagnosticID,
 			&i.UserID,
 			&i.Record,
 			&i.ScanTitle,
@@ -136,7 +136,7 @@ func (q *Queries) GetRecordsByUser(ctx context.Context, userID string) ([]*Recor
 }
 
 const getRecordsByUserAndScanTitle = `-- name: GetRecordsByUserAndScanTitle :many
-SELECT id, organization_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1 and scan_title ILIKE $2
+SELECT id, diagnostic_id, user_id, record, scan_title, created_at, updated_at FROM records where user_id = $1 and scan_title ILIKE $2
 ORDER BY created_at DESC
 LIMIT 10
 `
@@ -157,7 +157,7 @@ func (q *Queries) GetRecordsByUserAndScanTitle(ctx context.Context, arg GetRecor
 		var i Record
 		if err := rows.Scan(
 			&i.ID,
-			&i.OrganizationID,
+			&i.DiagnosticID,
 			&i.UserID,
 			&i.Record,
 			&i.ScanTitle,
@@ -175,26 +175,24 @@ func (q *Queries) GetRecordsByUserAndScanTitle(ctx context.Context, arg GetRecor
 }
 
 const searchRecordByNin = `-- name: SearchRecordByNin :many
-SELECT records.id, organization_id, user_id, record, scan_title, records.created_at, records.updated_at, users.id, email, nin, password, user_type, address, contact, users.created_at, users.updated_at FROM public.records JOIN public.users ON users.nin = $1
+SELECT records.id, diagnostic_id, user_id, record, scan_title, records.created_at, records.updated_at, users.id, email, nin, password, user_type, users.created_at, users.updated_at FROM public.records JOIN public.users ON users.nin = $1
 `
 
 type SearchRecordByNinRow struct {
-	ID             string             `db:"id" json:"id"`
-	OrganizationID string             `db:"organization_id" json:"organization_id"`
-	UserID         string             `db:"user_id" json:"user_id"`
-	Record         string             `db:"record" json:"record"`
-	ScanTitle      string             `db:"scan_title" json:"scan_title"`
-	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
-	ID_2           string             `db:"id_2" json:"id_2"`
-	Email          pgtype.Text        `db:"email" json:"email"`
-	Nin            pgtype.Text        `db:"nin" json:"nin"`
-	Password       string             `db:"password" json:"password"`
-	UserType       UserEnum           `db:"user_type" json:"user_type"`
-	Address        []byte             `db:"address" json:"address"`
-	Contact        []byte             `db:"contact" json:"contact"`
-	CreatedAt_2    pgtype.Timestamptz `db:"created_at_2" json:"created_at_2"`
-	UpdatedAt_2    pgtype.Timestamptz `db:"updated_at_2" json:"updated_at_2"`
+	ID           string             `db:"id" json:"id"`
+	DiagnosticID string             `db:"diagnostic_id" json:"diagnostic_id"`
+	UserID       string             `db:"user_id" json:"user_id"`
+	Record       string             `db:"record" json:"record"`
+	ScanTitle    string             `db:"scan_title" json:"scan_title"`
+	CreatedAt    pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID_2         string             `db:"id_2" json:"id_2"`
+	Email        pgtype.Text        `db:"email" json:"email"`
+	Nin          pgtype.Text        `db:"nin" json:"nin"`
+	Password     string             `db:"password" json:"password"`
+	UserType     UserEnum           `db:"user_type" json:"user_type"`
+	CreatedAt_2  pgtype.Timestamptz `db:"created_at_2" json:"created_at_2"`
+	UpdatedAt_2  pgtype.Timestamptz `db:"updated_at_2" json:"updated_at_2"`
 }
 
 func (q *Queries) SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*SearchRecordByNinRow, error) {
@@ -208,7 +206,7 @@ func (q *Queries) SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*Se
 		var i SearchRecordByNinRow
 		if err := rows.Scan(
 			&i.ID,
-			&i.OrganizationID,
+			&i.DiagnosticID,
 			&i.UserID,
 			&i.Record,
 			&i.ScanTitle,
@@ -219,8 +217,6 @@ func (q *Queries) SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*Se
 			&i.Nin,
 			&i.Password,
 			&i.UserType,
-			&i.Address,
-			&i.Contact,
 			&i.CreatedAt_2,
 			&i.UpdatedAt_2,
 		); err != nil {
@@ -235,7 +231,7 @@ func (q *Queries) SearchRecordByNin(ctx context.Context, nin pgtype.Text) ([]*Se
 }
 
 const searchRecordByNinAndScanTitle = `-- name: SearchRecordByNinAndScanTitle :many
-SELECT records.id, organization_id, user_id, record, scan_title, records.created_at, records.updated_at, users.id, email, nin, password, user_type, address, contact, users.created_at, users.updated_at FROM records JOIN public.users ON
+SELECT records.id, diagnostic_id, user_id, record, scan_title, records.created_at, records.updated_at, users.id, email, nin, password, user_type, users.created_at, users.updated_at FROM records JOIN public.users ON
 users.nin = $1 WHERE scan_title ILIKE $2
 LIMIT 10
 `
@@ -246,22 +242,20 @@ type SearchRecordByNinAndScanTitleParams struct {
 }
 
 type SearchRecordByNinAndScanTitleRow struct {
-	ID             string             `db:"id" json:"id"`
-	OrganizationID string             `db:"organization_id" json:"organization_id"`
-	UserID         string             `db:"user_id" json:"user_id"`
-	Record         string             `db:"record" json:"record"`
-	ScanTitle      string             `db:"scan_title" json:"scan_title"`
-	CreatedAt      pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt      pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
-	ID_2           string             `db:"id_2" json:"id_2"`
-	Email          pgtype.Text        `db:"email" json:"email"`
-	Nin            pgtype.Text        `db:"nin" json:"nin"`
-	Password       string             `db:"password" json:"password"`
-	UserType       UserEnum           `db:"user_type" json:"user_type"`
-	Address        []byte             `db:"address" json:"address"`
-	Contact        []byte             `db:"contact" json:"contact"`
-	CreatedAt_2    pgtype.Timestamptz `db:"created_at_2" json:"created_at_2"`
-	UpdatedAt_2    pgtype.Timestamptz `db:"updated_at_2" json:"updated_at_2"`
+	ID           string             `db:"id" json:"id"`
+	DiagnosticID string             `db:"diagnostic_id" json:"diagnostic_id"`
+	UserID       string             `db:"user_id" json:"user_id"`
+	Record       string             `db:"record" json:"record"`
+	ScanTitle    string             `db:"scan_title" json:"scan_title"`
+	CreatedAt    pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID_2         string             `db:"id_2" json:"id_2"`
+	Email        pgtype.Text        `db:"email" json:"email"`
+	Nin          pgtype.Text        `db:"nin" json:"nin"`
+	Password     string             `db:"password" json:"password"`
+	UserType     UserEnum           `db:"user_type" json:"user_type"`
+	CreatedAt_2  pgtype.Timestamptz `db:"created_at_2" json:"created_at_2"`
+	UpdatedAt_2  pgtype.Timestamptz `db:"updated_at_2" json:"updated_at_2"`
 }
 
 func (q *Queries) SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchRecordByNinAndScanTitleParams) ([]*SearchRecordByNinAndScanTitleRow, error) {
@@ -275,7 +269,7 @@ func (q *Queries) SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchR
 		var i SearchRecordByNinAndScanTitleRow
 		if err := rows.Scan(
 			&i.ID,
-			&i.OrganizationID,
+			&i.DiagnosticID,
 			&i.UserID,
 			&i.Record,
 			&i.ScanTitle,
@@ -286,8 +280,6 @@ func (q *Queries) SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchR
 			&i.Nin,
 			&i.Password,
 			&i.UserType,
-			&i.Address,
-			&i.Contact,
 			&i.CreatedAt_2,
 			&i.UpdatedAt_2,
 		); err != nil {
@@ -303,26 +295,26 @@ func (q *Queries) SearchRecordByNinAndScanTitle(ctx context.Context, arg SearchR
 
 const uploadRecord = `-- name: UploadRecord :one
 INSERT INTO uploads (
-  organization_id,
+  diagnostic_id,
   user_id,
   scan_title
 ) VALUES  (
   $1, $2, $3
-) RETURNING id, organization_id, user_id, scan_title, created_at, updated_at
+) RETURNING id, diagnostic_id, user_id, scan_title, created_at, updated_at
 `
 
 type UploadRecordParams struct {
-	OrganizationID string `db:"organization_id" json:"organization_id"`
-	UserID         string `db:"user_id" json:"user_id"`
-	ScanTitle      string `db:"scan_title" json:"scan_title"`
+	DiagnosticID string `db:"diagnostic_id" json:"diagnostic_id"`
+	UserID       string `db:"user_id" json:"user_id"`
+	ScanTitle    string `db:"scan_title" json:"scan_title"`
 }
 
 func (q *Queries) UploadRecord(ctx context.Context, arg UploadRecordParams) (*Upload, error) {
-	row := q.db.QueryRow(ctx, uploadRecord, arg.OrganizationID, arg.UserID, arg.ScanTitle)
+	row := q.db.QueryRow(ctx, uploadRecord, arg.DiagnosticID, arg.UserID, arg.ScanTitle)
 	var i Upload
 	err := row.Scan(
 		&i.ID,
-		&i.OrganizationID,
+		&i.DiagnosticID,
 		&i.UserID,
 		&i.ScanTitle,
 		&i.CreatedAt,
