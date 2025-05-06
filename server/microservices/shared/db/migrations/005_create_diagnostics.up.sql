@@ -10,4 +10,9 @@ CREATE TABLE IF NOT EXISTS diagnostics (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE diagnostics
+ADD COLUMN name TEXT NULL,
+ADD COLUMN latitude DOUBLE PRECISION NULL,
+ADD COLUMN longitude DOUBLE PRECISION NULL;
+
 CREATE INDEX idx_diagnostics_user_id ON diagnostics (user_id);

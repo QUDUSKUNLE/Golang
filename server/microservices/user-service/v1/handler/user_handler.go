@@ -34,7 +34,7 @@ func (srv *UserServiceStruct) Create(ctx context.Context, req *userProtoc.Create
 			UserType: newUser.UserType,
 		})
 	if err != nil {
-		return nil, status.Errorf(codes.AlreadyExists, err.Error())
+		return nil, status.Errorf(codes.AlreadyExists, fmt.Sprintf("Error creating a new user account %s", err.Error()))
 	}
 	// Check if user is an organization
 	switch data.UserType {
