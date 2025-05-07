@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"time"
 
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
@@ -23,12 +24,12 @@ func (s *ScheduleService) CreateScheduleSession(ctx context.Context, req *schedu
 	}
 	// N.B Work on validating the user as a registered user
 	// Parse timestamps
-	date, err := utils.ParseTimestamp(req.GetDate())
+	date, err := utils.ParseTimestampToPgTimestamptz(req.GetDate())
 	if err != nil {
 		utils.LogError("Error parsing date: ", err)
 		return nil, status.Errorf(codes.InvalidArgument, "Invalid date format: %v", err)
 	}
-	tim, err := utils.ParseTimestamp(req.GetTime())
+	tim, err := utils.ParseTimestampToPgTimestamptz(req.GetTime())
 	if err != nil {
 		utils.LogError("Error parsing time: ", err)
 		return nil, status.Errorf(codes.InvalidArgument, "Invalid time format: %v", err)
@@ -40,7 +41,7 @@ func (s *ScheduleService) CreateScheduleSession(ctx context.Context, req *schedu
 		Date:               date,
 		Time:               tim,
 		TestType:           db.ScheduleType(req.GetTestType().Enum().String()),
-		Status:             db.ScheduleStatus(req.GetStatus().Enum().String()),
+		Status:             db.ScheduleStatus(req.GetTestStatus().Enum().String()),
 		Notes: func() pgtype.Text {
 			var text pgtype.Text
 			_ = text.Scan(req.GetNotes()) // Assuming req.GetNotes() is in a valid format
@@ -80,8 +81,8 @@ func (s *ScheduleService) GetScheduleSession(ctx context.Context, arg *schedule.
 		DiagnosticCentreId: response.DiagnosticCentreID,
 		Date:               response.Date.Time.String(),
 		Time:               response.Time.Time.String(),
-		TestType:           string(response.TestType),
-		Status:             string(response.Status),
+		TestType:           schedule.TestType(schedule.TestType_value[string(response.TestType)]),
+		TestStatus:         schedule.TestStatus(schedule.TestStatus_value[string(response.Status)]),
 		Notes:              &response.Notes.String,
 		CreatedAt:          response.CreatedAt.Time.String(),
 		UpdatedAt:          response.UpdatedAt.Time.String(),
@@ -131,7 +132,7 @@ func (s *ScheduleService) UpdateScheduleSession(ctx context.Context, req *schedu
 		Date:     parseTimestamp(req.GetDate()),
 		Time:     parseTimestamp(req.GetTime()),
 		TestType: db.ScheduleType(req.GetTestType()),
-		Status:   db.ScheduleStatus(req.GetStatus()),
+		Status:   db.ScheduleStatus(req.GetTestStatus()),
 		Notes: func() pgtype.Text {
 			var text pgtype.Text
 			_ = text.Scan(req.GetNotes()) // Assuming req.GetNotes() is in a valid format
@@ -173,8 +174,8 @@ func (s *ScheduleService) ListScheduleSessions(ctx context.Context, req *schedul
 			DiagnosticCentreId: schedul.DiagnosticCentreID,
 			Date:               schedul.Date.Time.String(),
 			Time:               schedul.Time.Time.String(),
-			TestType:           string(schedul.TestType),
-			Status:             string(schedul.Status),
+			TestType:           schedule.TestType(schedule.TestType_value[string(schedul.TestType)]),
+			TestStatus:         schedule.TestStatus(schedule.TestStatus_value[string(schedul.Status)]),
 			Notes:              &schedul.Notes.String,
 			CreatedAt:          schedul.CreatedAt.Time.String(),
 			UpdatedAt:          schedul.UpdatedAt.Time.String(),
@@ -192,22 +193,45 @@ func (s *ScheduleService) ListDiagnosticCentreSchedules(ctx context.Context, req
 	}
 
 	// Parse the date if provided
-	var parsedDate *pgtype.Timestamptz
-	if req.GetDate() != "" {
-		date, err := utils.ParseTimestamp(req.GetDate())
+	var parsedDate pgtype.Timestamptz
+	if req.GetDate() == "" {
+		date, err := utils.ParseTimestampToPgTimestamptz(time.Now().Format(time.RFC3339))
 		if err != nil {
 			utils.LogError("Error parsing date: ", err)
 			return nil, status.Errorf(codes.InvalidArgument, "Invalid date format: %v", err)
 		}
-		parsedDate = &date
-	}
-	// Convert parsedDate to pgtype.Timestamp if not nil
-	var convertedDate pgtype.Timestamp
-	if parsedDate != nil {
-		convertedDate = pgtype.Timestamp{Time: parsedDate.Time, Valid: parsedDate.Valid}
+		parsedDate = date
+	} else {
+		date, err := utils.ParseTimestampToPgTimestamptz(req.GetDate())
+		if err != nil {
+			utils.LogError("Error parsing date: ", err)
+			return nil, status.Errorf(codes.InvalidArgument, "Invalid date format: %v", err)
+		}
+		parsedDate = date
 	}
 	// Get all schedules for the diagnostic centre from the database
-	response, err := s.Repo.GetSchedulesByDiagnosticCentre(ctx, db.GetSchedulesByDiagnosticCentreParams{Limit: req.GetLimit(), Offset: req.GetOffset(), DiagnosticCentreID: req.GetDiagnosticCentreId(), Column2: db.ScheduleStatus(req.GetStatus().Enum().String()), Column3: convertedDate})
+	response, err := s.Repo.GetSchedulesDiagnosticCentreByStatusAndDate(ctx, db.GetSchedulesDiagnosticCentreByStatusAndDateParams{
+		Limit: func() int32 {
+			if req.GetLimit() == 0 {
+				return constants.DefaultLimit
+			}
+			return req.GetLimit()
+		}(),
+		Offset: func() int32 {
+			if req.GetOffset() == 0 {
+				return constants.DefaultOffset
+			}
+			return req.GetOffset()
+		}(),
+		DiagnosticCentreID: req.GetDiagnosticCentreId(),
+		Status: func() db.ScheduleStatus {
+			if req.GetTestStatus() == schedule.TestStatus_TEST_STATUS_UNSPECIFIED {
+				return db.ScheduleStatus("SCHEDULED")
+			}
+			return db.ScheduleStatus(req.GetTestStatus().Enum().String())
+		}(),
+		Date: parsedDate,
+	})
 	if err != nil {
 		utils.LogError("Error getting diagnostic centre schedules: ", err)
 		return nil, err
@@ -220,8 +244,8 @@ func (s *ScheduleService) ListDiagnosticCentreSchedules(ctx context.Context, req
 			DiagnosticCentreId: schedul.DiagnosticCentreID,
 			Date:               schedul.Date.Time.String(),
 			Time:               schedul.Time.Time.String(),
-			TestType:           string(schedul.TestType),
-			Status:             string(schedul.Status),
+			TestType:           schedule.TestType(schedule.TestType_value[string(schedul.TestType)]),
+			TestStatus:         schedule.TestStatus(schedule.TestStatus_value[string(schedul.Status)]),
 			Notes:              &schedul.Notes.String,
 			CreatedAt:          schedul.CreatedAt.Time.String(),
 			UpdatedAt:          schedul.UpdatedAt.Time.String(),
@@ -249,8 +273,8 @@ func (s *ScheduleService) GetScheduleByDiagnosticCentre(ctx context.Context, req
 		DiagnosticCentreId: response.DiagnosticCentreID,
 		Date:               response.Date.Time.String(),
 		Time:               response.Time.Time.String(),
-		TestType:           string(response.TestType),
-		Status:             string(response.Status),
+		TestType:           schedule.TestType(schedule.TestType_value[string(response.TestType)]),
+		TestStatus:         schedule.TestStatus(schedule.TestStatus_value[string(response.Status)]),
 		Notes:              &response.Notes.String,
 	}, nil
 }

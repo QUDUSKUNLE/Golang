@@ -47,3 +47,104 @@ FROM diagnostics
 WHERE name ILIKE '%' || $1 || '%'
 ORDER BY created_at DESC
 LIMIT $2 OFFSET $3;
+
+-- name: GetDiagnosticCentreSchedules :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.id AS diagnostic_id,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $2 OFFSET $3;
+
+-- name: GetDiagnosticCentreUpcomingSchedules :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.date >= NOW()
+ORDER BY ds.date ASC, ds.time ASC
+LIMIT $2 OFFSET $3;
+
+-- name: GetDiagnosticCentreSchedulesByTestType :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.test_type ILIKE '%' || $2 || '%'
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $3 OFFSET $4;
+
+-- name: GetDiagnosticCentreSchedulesByStatus :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.status = $2
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $3 OFFSET $4;
+
+-- name: GetDiagnosticCentreSchedulesBySpecificDate :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.date::DATE = $2
+ORDER BY ds.time ASC
+LIMIT $3 OFFSET $4;
+
+-- name: GetDiagnosticCentreSchedulesWithDiagnosticsDetails :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name,
+  d.latitude,
+  d.longitude,
+  d.address,
+  d.contact
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $2 OFFSET $3;

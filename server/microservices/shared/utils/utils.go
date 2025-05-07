@@ -8,6 +8,8 @@ import (
 
 	"time"
 
+	"errors"
+
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/joho/godotenv"
@@ -25,12 +27,12 @@ type Config struct {
 	// Add other configuration fields as needed
 	// For example:
 	// GATEWAY
-	Gateway string
-	AuthService string
-	UserService string
-	RecordService string
+	Gateway           string
+	AuthService       string
+	UserService       string
+	RecordService     string
 	DiagnosticService string
-	ScheduleService string
+	ScheduleService   string
 }
 
 func LoadEnvironmentVariable() error {
@@ -135,10 +137,31 @@ func LogError(message string, err error) {
 	logger.Error(message, zap.Error(err))
 }
 
-func ParseTimestamp(input string) (pgtype.Timestamptz, error) {
-	parsedTime, err := time.Parse(time.RFC3339, input)
-	if err != nil {
-		return pgtype.Timestamptz{Valid: false}, fmt.Errorf("invalid timestamp format: %v", err)
+func ParseTimestamp(timestamp string) (time.Time, error) {
+	// Define the expected format
+	formats := []string{
+		time.RFC3339,                       // "2006-01-02T15:04:05Z07:00"
+		"2006-01-02 15:04:05.999999 -0700", // "2025-05-07 03:08:54.647015 +0100"
+		"2006-01-02 15:04:05 -0700",        // "2025-05-07 03:08:54 +0100"
 	}
-	return pgtype.Timestamptz{Time: parsedTime, Valid: true}, nil
+	// Try parsing with each format
+	for _, format := range formats {
+		parsedTime, err := time.Parse(format, timestamp)
+		if err == nil {
+			return parsedTime, nil
+		}
+	}
+
+	return time.Time{}, errors.New("invalid timestamp format")
+}
+
+func ParseTimestampToPgTimestamptz(timestamp string) (pgtype.Timestamptz, error) {
+	parsedTime, err := time.Parse(time.RFC3339, timestamp)
+	if err != nil {
+		return pgtype.Timestamptz{}, err
+	}
+	return pgtype.Timestamptz{
+		Time:  parsedTime,
+		Valid: true,
+	}, nil
 }

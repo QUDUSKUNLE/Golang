@@ -118,21 +118,22 @@ func validateScheduleRequest(r *schedule.ScheduleRequest) error {
 
 func requiresAuthorization(method string) bool {
 	authorizedMethods := map[string]bool{
-		constants.UpdateUser:            true,
-		constants.ReadUsers:             true,
-		constants.GetRecords:            true,
-		constants.GetRecord:             true,
-		constants.ScanUpload:            true,
-		constants.SearchRecord:          true,
-		constants.SearchByNin:           true,
-		constants.GetDiagnostic:         true,
-		constants.UpdateDiagnostic:      true,
-		constants.DeleteDiagnostic:      true,
-		constants.CreateSchedule:        true,
-		constants.GetScheduleSession:    true,
-		constants.ListScheduleSessions:  true,
-		constants.DeleteScheduleSession: true,
-		constants.UpdateScheduleSession: true,
+		constants.UpdateUser:                    true,
+		constants.ReadUsers:                     true,
+		constants.GetRecords:                    true,
+		constants.GetRecord:                     true,
+		constants.ScanUpload:                    true,
+		constants.SearchRecord:                  true,
+		constants.SearchByNin:                   true,
+		constants.GetDiagnostic:                 true,
+		constants.UpdateDiagnostic:              true,
+		constants.DeleteDiagnostic:              true,
+		constants.CreateSchedule:                true,
+		constants.GetScheduleSession:            true,
+		constants.ListScheduleSessions:          true,
+		constants.DeleteScheduleSession:         true,
+		constants.UpdateScheduleSession:         true,
+		constants.ListDiagnosticCentreSchedules: true,
 	}
 	return authorizedMethods[method]
 }

@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
-
 
 // ScheduleRepository provides methods to interact with the diagnostic_schedules table.
 type ScheduleRepository struct {
@@ -13,7 +13,6 @@ type ScheduleRepository struct {
 }
 
 // Query by schedulers
-
 
 // CreateSchedule creates a new diagnostic schedule in the database.
 func (s *ScheduleRepository) CreateSchedule(ctx context.Context, arg db.CreateScheduleParams) (*db.DiagnosticSchedule, error) {
@@ -34,7 +33,6 @@ func (s *ScheduleRepository) GetScheduleByID(ctx context.Context, arg db.GetSche
 	}
 	return schedule, nil
 }
-
 
 func (s *ScheduleRepository) DeleteSchedule(ctx context.Context, arg db.CancelScheduleParams) (*db.DiagnosticSchedule, error) {
 	// Implementation for deleting a schedule
@@ -93,6 +91,7 @@ func (s *ScheduleRepository) GetSchedulesByDiagnosticCentre(ctx context.Context,
 
 func (s *ScheduleRepository) GetSchedulesDiagnosticCentreByStatusAndDate(ctx context.Context, arg db.GetSchedulesDiagnosticCentreByStatusAndDateParams) ([]*db.DiagnosticSchedule, error) {
 	// Implementation for getting schedules by status and date
+	fmt.Println("arg", arg)
 	schedules, err := s.database.GetSchedulesDiagnosticCentreByStatusAndDate(ctx, arg)
 	if err != nil {
 		return nil, err

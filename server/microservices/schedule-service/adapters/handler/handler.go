@@ -37,7 +37,7 @@ func (h *ScheduleHandler) ListScheduleSessions(ctx context.Context, req *schedul
 	return h.ScheduleService.ListScheduleSessions(ctx, req)
 }
 
-// Get Diagnostic centre schedule
+// Get Diagnostic centre schedule by schedule ID
 func (h *ScheduleHandler) GetDiagnosticCentreSchedule(ctx context.Context, req *schedule.GetDiagnosticCentreScheduleRequest) (*schedule.GetDiagnosticCentreScheduleResponse, error) {
 	// Call the GetDiagnosticCentreSchedule method of the ScheduleService and return the response.
 	return h.ScheduleService.GetScheduleByDiagnosticCentre(ctx, req)

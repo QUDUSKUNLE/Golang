@@ -23,6 +23,12 @@ type Querier interface {
 	GetAllDiagnostics(ctx context.Context, arg GetAllDiagnosticsParams) ([]*Diagnostic, error)
 	// Retrieves a single diagnostic record by its ID.
 	GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error)
+	GetDiagnosticCentreSchedules(ctx context.Context, arg GetDiagnosticCentreSchedulesParams) ([]*GetDiagnosticCentreSchedulesRow, error)
+	GetDiagnosticCentreSchedulesBySpecificDate(ctx context.Context, arg GetDiagnosticCentreSchedulesBySpecificDateParams) ([]*GetDiagnosticCentreSchedulesBySpecificDateRow, error)
+	GetDiagnosticCentreSchedulesByStatus(ctx context.Context, arg GetDiagnosticCentreSchedulesByStatusParams) ([]*GetDiagnosticCentreSchedulesByStatusRow, error)
+	GetDiagnosticCentreSchedulesByTestType(ctx context.Context, arg GetDiagnosticCentreSchedulesByTestTypeParams) ([]*GetDiagnosticCentreSchedulesByTestTypeRow, error)
+	GetDiagnosticCentreSchedulesWithDiagnosticsDetails(ctx context.Context, arg GetDiagnosticCentreSchedulesWithDiagnosticsDetailsParams) ([]*GetDiagnosticCentreSchedulesWithDiagnosticsDetailsRow, error)
+	GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg GetDiagnosticCentreUpcomingSchedulesParams) ([]*GetDiagnosticCentreUpcomingSchedulesRow, error)
 	GetRecord(ctx context.Context, id string) (*Record, error)
 	GetRecords(ctx context.Context, diagnosticID string) ([]*Record, error)
 	GetRecordsByUser(ctx context.Context, userID string) ([]*Record, error)

@@ -50,4 +50,7 @@ const (
 	ListScheduleSessions  = "/ScheduleService/ListScheduleSessions"
 	DeleteScheduleSession = "/ScheduleService/DeleteScheduleSession"
 	UpdateScheduleSession = "/ScheduleService/UpdateScheduleSession"
+
+	// Diagnostic Centre Schedule
+	ListDiagnosticCentreSchedules	= "/ScheduleService/ListDiagnosticCentreSchedules"
 )

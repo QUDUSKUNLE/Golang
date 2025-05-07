@@ -3,6 +3,7 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/diagnos
 
 import "google/api/annotations.proto";
 import "google/protobuf/struct.proto";
+// Adjusted path to match the correct directory structure
 
 service DiagnosticService {
   rpc CreateDiagnostic(CreateDiagnosticRequest) returns (CreateDiagnosticResponse) {
@@ -37,7 +38,30 @@ service DiagnosticService {
       get: "/v1/diagnostics/search"
     };
   }
+  // Get Diagnostics Centre Schedules
+  rpc GetDiagnosticCentreSchedules(GetDiagnosticCentreSchedulesRequest) returns (GetDiagnosticCentreSchedulesResponse) {
+    option (google.api.http) = {
+      get: "/v1/diagnostics/schedules/{diagnostic_id}"
+    };
+  }
 
+}
+message GetDiagnosticCentreSchedulesRequest {
+  string diagnostic_id = 1 [json_name = "diagnostic_id"];
+  int32 offset = 2 [json_name = "offset"];
+  int32 limit = 3 [json_name = "limit"];
+}
+
+message GetDiagnosticCentreSchedulesResponse {
+  string schedule_id = 1 [json_name = "schedule_id"];
+  string user_id = 2 [json_name = "user_id"];
+  string date = 3 [json_name = "date"];
+  string time = 4 [json_name = "time"];
+  string test_type = 5 [json_name = "test_type"];
+  string status = 6 [json_name = "status"];
+  optional string notes = 7 [json_name = "notes"];
+  string diagnostic_id = 8 [json_name = "diagnostic_id"];
+  string diagnostic_centre_name = 9 [json_name = "diagnostic_centre_name"];
 }
 
 message Address {
@@ -60,6 +84,7 @@ message SearchNearestDiagnosticsRequest {
   double latitude = 1 [json_name = "latitude"];
   double longitude = 2 [json_name = "longitude"];
   int32 limit = 3 [json_name = "limit"];
+  int32 offset = 4 [json_name = "offset"];
 }
 
 message CreateDiagnosticRequest {

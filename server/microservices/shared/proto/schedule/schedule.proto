@@ -3,15 +3,15 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/schedul
 
 import "google/api/annotations.proto";
 
-enum SessionStatus {
-  SESSION_STATUS_UNSPECIFIED = 0; // For SessionStatus
+enum TestStatus {
+  TEST_STATUS_UNSPECIFIED = 0; // For SessionStatus
   SCHEDULED = 1; // Session is scheduled
   COMPLETED = 2; // Session is completed
   CANCELED = 3;  // Session is canceled
 }
 
-enum SessionType {
-  SESSION_TYPE_UNSPECIFIED = 0;
+enum TestType {
+  TEST_TYPE_UNSPECIFIED = 0;
   BLOOD_TEST = 1; // Blood test
   URINE_TEST = 2; // Urine test
   X_RAY = 3;     // X-ray
@@ -26,33 +26,6 @@ enum SessionType {
   OTHER = 12;   // Other types of tests
 }
 
-enum SessionMode {
-  SESSION_MODE_UNSPECIFIED = 0;
-  IN_PERSON = 1; // In-person session
-  VIRTUAL = 2;   // Virtual session
-  HOME_VISIT = 3; // Home visit session
-}
-
-enum SessionPriority {
-  SESSION_PRIORITY_UNSPECIFIED = 0;
-  HIGH = 1;   // High priority
-  MEDIUM = 2; // Medium priority
-  LOW = 3;    // Low priority
-}
-
-enum SessionResult {
-  SESSION_RESULT_UNSPECIFIED = 0;
-  POSITIVE = 1; // Positive result
-  NEGATIVE = 2; // Negative result
-  INCONCLUSIVE = 3; // Inconclusive result
-
-}
-
-enum SessionPaymentStatus {
-  SESSION_PAYMENT_STATUS_UNSPECIFIED = 0;
-  PAID = 1;   // Payment completed
-  UNPAID = 2; // Payment pending
-}
 
 service ScheduleService {
   rpc CreateScheduleSession(ScheduleRequest) returns (ScheduleResponse) {
@@ -84,12 +57,12 @@ service ScheduleService {
   }
   rpc ListDiagnosticCentreSchedules(ListDiagnosticCentreSchedulesRequest) returns (ListDiagnosticCentreSchedulesResponse) {
     option (google.api.http) = {
-      get: "/v1/diagnostic-centres/{diagnostic_centre_id}/schedules"
+      get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"
     };
   }
   rpc GetDiagnosticCentreSchedule(GetDiagnosticCentreScheduleRequest) returns (GetDiagnosticCentreScheduleResponse) {
     option (google.api.http) = {
-      get: "/v1/diagnostic-centres/{diagnostic_centre_id}/schedules/{schedule_id}"
+      get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"
     };
   }
 }
@@ -99,14 +72,14 @@ message ScheduleRequest {              // ID of the user scheduling the session
   string user_id = 2; // ID of the diagnostic center
   string date = 3;                 // Date of the session (e.g., "2025-05-01")
   string time = 4;                 // Time of the session (e.g., "10:00 AM")
-  SessionType test_type = 5;            // Type of diagnostic test
-  SessionStatus status = 6;
+  TestType test_type = 5;            // Type of diagnostic test
+  TestStatus test_status = 6;
   optional string notes = 7;            // Status of the session              // Additional notes (optional)
 }
 
 message ListDiagnosticCentreSchedulesRequest {
   string diagnostic_centre_id = 1; // ID of the diagnostic center// ID of the user scheduling the session
-  SessionStatus status = 2;
+  TestStatus test_status = 2;
   string date = 3;
   int32 limit = 4;             // Number of results to return
   int32 offset = 5;       // Status of the session
@@ -128,15 +101,15 @@ message UpdateScheduledSessionRequest {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  SessionType test_type = 6;            // Type of diagnostic test
-  SessionStatus status = 7;
+  TestType test_type = 6;            // Type of diagnostic test
+  TestStatus test_status = 7;
   optional string notes = 8;                // Status of the session              // Additional notes (optional)
 }
 
 message CancelScheduledSessionRequest {
   string schedule_id = 1;  
   string user_id = 2;
-  SessionStatus status = 3;        // Status of the session
+  TestStatus test_status = 3;        // Status of the session
 }
 
 message ListScheduledSessionsRequest {
@@ -151,8 +124,8 @@ message GetScheduledSessionResponse {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  string test_type = 6;
-  string status = 7;
+  TestType test_type = 6;            // Type of diagnostic test
+  TestStatus test_status = 7;
   optional string notes = 8;         // Status of the session             // Additional notes (optional)
   string created_at = 9;          // Creation timestamp
   string updated_at = 10;          // Last update timestamp
@@ -163,8 +136,8 @@ message GetDiagnosticCentreScheduleResponse {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  string test_type = 6;
-  string status = 7;          // Type of diagnostic test
+  TestType test_type = 6;            // Type of diagnostic test
+  TestStatus test_status = 7;       // Type of diagnostic test
   optional string notes = 8;
   string created_at = 9;
   string updated_at = 10;          // Creation timestamp
@@ -176,8 +149,8 @@ message ScheduledSession {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  string test_type = 6;
-  string status = 7;          // Type of diagnostic test
+  TestType test_type = 6;            // Type of diagnostic test
+  TestStatus test_status = 7;        // Type of diagnostic test
   optional string notes = 8;
   string created_at = 9;          // Creation timestamp
   string updated_at = 10;                        // Additional notes (optional)

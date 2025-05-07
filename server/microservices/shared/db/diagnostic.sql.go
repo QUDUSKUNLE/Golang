@@ -129,6 +129,417 @@ func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, er
 	return &i, err
 }
 
+const getDiagnosticCentreSchedules = `-- name: GetDiagnosticCentreSchedules :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.id AS diagnostic_id,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $2 OFFSET $3
+`
+
+type GetDiagnosticCentreSchedulesParams struct {
+	ID     string `db:"id" json:"id"`
+	Limit  int32  `db:"limit" json:"limit"`
+	Offset int32  `db:"offset" json:"offset"`
+}
+
+type GetDiagnosticCentreSchedulesRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	DiagnosticID         string             `db:"diagnostic_id" json:"diagnostic_id"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+func (q *Queries) GetDiagnosticCentreSchedules(ctx context.Context, arg GetDiagnosticCentreSchedulesParams) ([]*GetDiagnosticCentreSchedulesRow, error) {
+	rows, err := q.db.Query(ctx, getDiagnosticCentreSchedules, arg.ID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetDiagnosticCentreSchedulesRow
+	for rows.Next() {
+		var i GetDiagnosticCentreSchedulesRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.DiagnosticID,
+			&i.DiagnosticCentreName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getDiagnosticCentreSchedulesBySpecificDate = `-- name: GetDiagnosticCentreSchedulesBySpecificDate :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.date::DATE = $2
+ORDER BY ds.time ASC
+LIMIT $3 OFFSET $4
+`
+
+type GetDiagnosticCentreSchedulesBySpecificDateParams struct {
+	ID     string             `db:"id" json:"id"`
+	Date   pgtype.Timestamptz `db:"date" json:"date"`
+	Limit  int32              `db:"limit" json:"limit"`
+	Offset int32              `db:"offset" json:"offset"`
+}
+
+type GetDiagnosticCentreSchedulesBySpecificDateRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+func (q *Queries) GetDiagnosticCentreSchedulesBySpecificDate(ctx context.Context, arg GetDiagnosticCentreSchedulesBySpecificDateParams) ([]*GetDiagnosticCentreSchedulesBySpecificDateRow, error) {
+	rows, err := q.db.Query(ctx, getDiagnosticCentreSchedulesBySpecificDate,
+		arg.ID,
+		arg.Date,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetDiagnosticCentreSchedulesBySpecificDateRow
+	for rows.Next() {
+		var i GetDiagnosticCentreSchedulesBySpecificDateRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.DiagnosticCentreName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getDiagnosticCentreSchedulesByStatus = `-- name: GetDiagnosticCentreSchedulesByStatus :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.status = $2
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $3 OFFSET $4
+`
+
+type GetDiagnosticCentreSchedulesByStatusParams struct {
+	ID     string         `db:"id" json:"id"`
+	Status ScheduleStatus `db:"status" json:"status"`
+	Limit  int32          `db:"limit" json:"limit"`
+	Offset int32          `db:"offset" json:"offset"`
+}
+
+type GetDiagnosticCentreSchedulesByStatusRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+func (q *Queries) GetDiagnosticCentreSchedulesByStatus(ctx context.Context, arg GetDiagnosticCentreSchedulesByStatusParams) ([]*GetDiagnosticCentreSchedulesByStatusRow, error) {
+	rows, err := q.db.Query(ctx, getDiagnosticCentreSchedulesByStatus,
+		arg.ID,
+		arg.Status,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetDiagnosticCentreSchedulesByStatusRow
+	for rows.Next() {
+		var i GetDiagnosticCentreSchedulesByStatusRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.DiagnosticCentreName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getDiagnosticCentreSchedulesByTestType = `-- name: GetDiagnosticCentreSchedulesByTestType :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.test_type ILIKE '%' || $2 || '%'
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $3 OFFSET $4
+`
+
+type GetDiagnosticCentreSchedulesByTestTypeParams struct {
+	ID      string      `db:"id" json:"id"`
+	Column2 pgtype.Text `db:"column_2" json:"column_2"`
+	Limit   int32       `db:"limit" json:"limit"`
+	Offset  int32       `db:"offset" json:"offset"`
+}
+
+type GetDiagnosticCentreSchedulesByTestTypeRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+func (q *Queries) GetDiagnosticCentreSchedulesByTestType(ctx context.Context, arg GetDiagnosticCentreSchedulesByTestTypeParams) ([]*GetDiagnosticCentreSchedulesByTestTypeRow, error) {
+	rows, err := q.db.Query(ctx, getDiagnosticCentreSchedulesByTestType,
+		arg.ID,
+		arg.Column2,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetDiagnosticCentreSchedulesByTestTypeRow
+	for rows.Next() {
+		var i GetDiagnosticCentreSchedulesByTestTypeRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.DiagnosticCentreName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getDiagnosticCentreSchedulesWithDiagnosticsDetails = `-- name: GetDiagnosticCentreSchedulesWithDiagnosticsDetails :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name,
+  d.latitude,
+  d.longitude,
+  d.address,
+  d.contact
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $2 OFFSET $3
+`
+
+type GetDiagnosticCentreSchedulesWithDiagnosticsDetailsParams struct {
+	ID     string `db:"id" json:"id"`
+	Limit  int32  `db:"limit" json:"limit"`
+	Offset int32  `db:"offset" json:"offset"`
+}
+
+type GetDiagnosticCentreSchedulesWithDiagnosticsDetailsRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+	Latitude             pgtype.Float8      `db:"latitude" json:"latitude"`
+	Longitude            pgtype.Float8      `db:"longitude" json:"longitude"`
+	Address              []byte             `db:"address" json:"address"`
+	Contact              []byte             `db:"contact" json:"contact"`
+}
+
+func (q *Queries) GetDiagnosticCentreSchedulesWithDiagnosticsDetails(ctx context.Context, arg GetDiagnosticCentreSchedulesWithDiagnosticsDetailsParams) ([]*GetDiagnosticCentreSchedulesWithDiagnosticsDetailsRow, error) {
+	rows, err := q.db.Query(ctx, getDiagnosticCentreSchedulesWithDiagnosticsDetails, arg.ID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetDiagnosticCentreSchedulesWithDiagnosticsDetailsRow
+	for rows.Next() {
+		var i GetDiagnosticCentreSchedulesWithDiagnosticsDetailsRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.DiagnosticCentreName,
+			&i.Latitude,
+			&i.Longitude,
+			&i.Address,
+			&i.Contact,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getDiagnosticCentreUpcomingSchedules = `-- name: GetDiagnosticCentreUpcomingSchedules :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1 AND ds.date >= NOW()
+ORDER BY ds.date ASC, ds.time ASC
+LIMIT $2 OFFSET $3
+`
+
+type GetDiagnosticCentreUpcomingSchedulesParams struct {
+	ID     string `db:"id" json:"id"`
+	Limit  int32  `db:"limit" json:"limit"`
+	Offset int32  `db:"offset" json:"offset"`
+}
+
+type GetDiagnosticCentreUpcomingSchedulesRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+func (q *Queries) GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg GetDiagnosticCentreUpcomingSchedulesParams) ([]*GetDiagnosticCentreUpcomingSchedulesRow, error) {
+	rows, err := q.db.Query(ctx, getDiagnosticCentreUpcomingSchedules, arg.ID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetDiagnosticCentreUpcomingSchedulesRow
+	for rows.Next() {
+		var i GetDiagnosticCentreUpcomingSchedulesRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.DiagnosticCentreName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listDiagnostics = `-- name: ListDiagnostics :many
 SELECT id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at FROM diagnostics WHERE user_id = $1
 ORDER BY created_at DESC

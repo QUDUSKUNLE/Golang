@@ -575,7 +575,7 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/ListDiagnosticCentreSchedules", runtime.WithHTTPPathPattern("/v1/diagnostic-centres/{diagnostic_centre_id}/schedules"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/ListDiagnosticCentreSchedules", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -600,7 +600,7 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/GetDiagnosticCentreSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic-centres/{diagnostic_centre_id}/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/GetDiagnosticCentreSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -774,7 +774,7 @@ func RegisterScheduleServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/ListDiagnosticCentreSchedules", runtime.WithHTTPPathPattern("/v1/diagnostic-centres/{diagnostic_centre_id}/schedules"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/ListDiagnosticCentreSchedules", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -796,7 +796,7 @@ func RegisterScheduleServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/GetDiagnosticCentreSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic-centres/{diagnostic_centre_id}/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/GetDiagnosticCentreSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -826,9 +826,9 @@ var (
 
 	pattern_ScheduleService_ListScheduleSessions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "schedules"}, ""))
 
-	pattern_ScheduleService_ListDiagnosticCentreSchedules_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "diagnostic-centres", "diagnostic_centre_id", "schedules"}, ""))
+	pattern_ScheduleService_ListDiagnosticCentreSchedules_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "diagnostic_centres", "diagnostic_centre_id", "schedules"}, ""))
 
-	pattern_ScheduleService_GetDiagnosticCentreSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "diagnostic-centres", "diagnostic_centre_id", "schedules", "schedule_id"}, ""))
+	pattern_ScheduleService_GetDiagnosticCentreSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "diagnostic_centres", "diagnostic_centre_id", "schedules", "schedule_id"}, ""))
 )
 
 var (
