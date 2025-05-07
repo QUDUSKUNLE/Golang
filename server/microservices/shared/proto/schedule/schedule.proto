@@ -26,45 +26,44 @@ enum TestType {
   OTHER = 12;   // Other types of tests
 }
 
-
 service ScheduleService {
-  rpc CreateScheduleSession(ScheduleRequest) returns (ScheduleResponse) {
+  rpc CreateSchedule(ScheduleRequest) returns (ScheduleResponse) {
     option (google.api.http) = {
       post: "/v1/schedules",
       body: "*"
     };
   }
-  rpc GetScheduleSession(GetScheduledSessionRequest) returns (GetScheduledSessionResponse) {
+  rpc GetSchedule(GetScheduleRequest) returns (GetScheduleResponse) {
     option (google.api.http) = {
       get: "/v1/schedules/{schedule_id}"
     };
   }
-  rpc UpdateScheduleSession(UpdateScheduledSessionRequest) returns (UpdateScheduledSessionResponse) {
+  rpc UpdateSchedule(UpdateScheduleRequest) returns (UpdateScheduleResponse) {
     option (google.api.http) = {
       put: "/v1/schedules/{schedule_id}",
       body: "*"
     };
   }
-  rpc CancelScheduleSession(CancelScheduledSessionRequest) returns (CancelScheduledSessionResponse) {
+  rpc CancelSchedule(CancelScheduleRequest) returns (CancelScheduleResponse) {
     option (google.api.http) = {
       delete: "/v1/schedules/{schedule_id}"
     };
   }
-  rpc ListScheduleSessions(ListScheduledSessionsRequest) returns (ListScheduledSessionsResponse) {
+  rpc ListSchedules(ListSchedulesRequest) returns (ListSchedulesResponse) {
     option (google.api.http) = {
       get: "/v1/schedules"
     };
   }
-  rpc ListDiagnosticCentreSchedules(ListDiagnosticCentreSchedulesRequest) returns (ListDiagnosticCentreSchedulesResponse) {
-    option (google.api.http) = {
-      get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"
-    };
-  }
-  rpc GetDiagnosticCentreSchedule(GetDiagnosticCentreScheduleRequest) returns (GetDiagnosticCentreScheduleResponse) {
-    option (google.api.http) = {
-      get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"
-    };
-  }
+  // rpc ListDiagnosticCentreSchedules(ListDiagnosticCentreSchedulesRequest) returns (ListDiagnosticCentreSchedulesResponse) {
+  //   option (google.api.http) = {
+  //     get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"
+  //   };
+  // }
+  // rpc GetDiagnosticCentreSchedule(GetDiagnosticCentreScheduleRequest) returns (GetDiagnosticCentreScheduleResponse) {
+  //   option (google.api.http) = {
+  //     get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"
+  //   };
+  // }
 }
 
 message ScheduleRequest {              // ID of the user scheduling the session
@@ -77,25 +76,25 @@ message ScheduleRequest {              // ID of the user scheduling the session
   optional string notes = 7;            // Status of the session              // Additional notes (optional)
 }
 
-message ListDiagnosticCentreSchedulesRequest {
-  string diagnostic_centre_id = 1; // ID of the diagnostic center// ID of the user scheduling the session
-  TestStatus test_status = 2;
-  string date = 3;
-  int32 limit = 4;             // Number of results to return
-  int32 offset = 5;       // Status of the session
-}
+// message ListDiagnosticCentreSchedulesRequest {
+//   string diagnostic_centre_id = 1; // ID of the diagnostic center// ID of the user scheduling the session
+//   TestStatus test_status = 2;
+//   string date = 3;
+//   int32 limit = 4;             // Number of results to return
+//   int32 offset = 5;       // Status of the session
+// }
 
-message GetDiagnosticCentreScheduleRequest {
-  string diagnostic_centre_id = 1; // ID of the diagnostic center
-  string schedule_id = 2;           // ID of the scheduled session        // ID of the user scheduling the session
-}
+// message GetDiagnosticCentreScheduleRequest {
+//   string diagnostic_centre_id = 1; // ID of the diagnostic center
+//   string schedule_id = 2;           // ID of the scheduled session        // ID of the user scheduling the session
+// }
 
-message GetScheduledSessionRequest {
+message GetScheduleRequest {
   string schedule_id = 1;
   string user_id = 2;            // ID of the scheduled session
 }
 
-message UpdateScheduledSessionRequest {
+message UpdateScheduleRequest {
   string schedule_id = 1;
   string user_id = 2;           // ID of the scheduled session             // ID of the user scheduling the session
   string diagnostic_centre_id = 3; // ID of the diagnostic center
@@ -106,19 +105,19 @@ message UpdateScheduledSessionRequest {
   optional string notes = 8;                // Status of the session              // Additional notes (optional)
 }
 
-message CancelScheduledSessionRequest {
+message CancelScheduleRequest {
   string schedule_id = 1;  
   string user_id = 2;
   TestStatus test_status = 3;        // Status of the session
 }
 
-message ListScheduledSessionsRequest {
+message ListSchedulesRequest {
   string user_id = 1;          // ID of the user scheduling the session// Offset for pagination
   int32 limit = 2;             // Number of results to return
   int32 offset = 3;            // Number of results to skip
 }
 
-message GetScheduledSessionResponse {
+message GetScheduleResponse {
   string schedule_id = 1 [json_name = "schedule_id"]; 
   string user_id = 2;          // ID of the scheduled session// ID of the user who scheduled the session
   string diagnostic_centre_id = 3; // ID of the diagnostic center
@@ -130,18 +129,18 @@ message GetScheduledSessionResponse {
   string created_at = 9;          // Creation timestamp
   string updated_at = 10;          // Last update timestamp
 }
-message GetDiagnosticCentreScheduleResponse {
-  string schedule_id = 1;           // ID of the scheduled session
-  string user_id = 2;              // ID of the user who scheduled the session
-  string diagnostic_centre_id = 3; // ID of the diagnostic center
-  string date = 4;                 // Date of the session (e.g., "2025-05-01")
-  string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  TestType test_type = 6;            // Type of diagnostic test
-  TestStatus test_status = 7;       // Type of diagnostic test
-  optional string notes = 8;
-  string created_at = 9;
-  string updated_at = 10;          // Creation timestamp
-}
+// message GetDiagnosticCentreScheduleResponse {
+//   string schedule_id = 1;           // ID of the scheduled session
+//   string user_id = 2;              // ID of the user who scheduled the session
+//   string diagnostic_centre_id = 3; // ID of the diagnostic center
+//   string date = 4;                 // Date of the session (e.g., "2025-05-01")
+//   string time = 5;                 // Time of the session (e.g., "10:00 AM")
+//   TestType test_type = 6;            // Type of diagnostic test
+//   TestStatus test_status = 7;       // Type of diagnostic test
+//   optional string notes = 8;
+//   string created_at = 9;
+//   string updated_at = 10;          // Creation timestamp
+// }
 
 message ScheduledSession {
   string schedule_id = 1;           // ID of the scheduled session
@@ -156,15 +155,15 @@ message ScheduledSession {
   string updated_at = 10;                        // Additional notes (optional)
 }
 
-message ListScheduledSessionsResponse {
+message ListSchedulesResponse {
   repeated ScheduledSession sessions = 1; // List of scheduled sessions
 }
 
-message ListDiagnosticCentreSchedulesResponse {
-  repeated ScheduledSession sessions = 1; // List of scheduled sessions
-}
+// message ListDiagnosticCentreSchedulesResponse {
+//   repeated ScheduledSession sessions = 1; // List of scheduled sessions
+// }
 
-message UpdateScheduledSessionResponse {
+message UpdateScheduleResponse {
   string schedule_id = 1;
   string user_id = 2;          // ID of the updated session
   string message = 3;              // Confirmation message
@@ -172,11 +171,12 @@ message UpdateScheduledSessionResponse {
   string updated_at = 5;         // Status of the session     // Amount paid for the session
 }
 
-message CancelScheduledSessionResponse {
+message CancelScheduleResponse {
   string schedule_id = 1;
   string user_id = 2;             // ID of the canceled session
   string message = 3;              // Confirmation message
 }
+
 message ScheduleResponse {
   string schedule_id = 1;
   string user_id = 2;             // ID of the scheduled session

@@ -19,13 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	DiagnosticService_CreateDiagnostic_FullMethodName             = "/DiagnosticService/CreateDiagnostic"
-	DiagnosticService_GetDiagnostic_FullMethodName                = "/DiagnosticService/GetDiagnostic"
-	DiagnosticService_UpdateDiagnostic_FullMethodName             = "/DiagnosticService/UpdateDiagnostic"
-	DiagnosticService_DeleteDiagnostic_FullMethodName             = "/DiagnosticService/DeleteDiagnostic"
-	DiagnosticService_ListDiagnostics_FullMethodName              = "/DiagnosticService/ListDiagnostics"
-	DiagnosticService_SearchNearestDiagnostics_FullMethodName     = "/DiagnosticService/SearchNearestDiagnostics"
-	DiagnosticService_GetDiagnosticCentreSchedules_FullMethodName = "/DiagnosticService/GetDiagnosticCentreSchedules"
+	DiagnosticService_CreateDiagnostic_FullMethodName              = "/DiagnosticService/CreateDiagnostic"
+	DiagnosticService_GetDiagnostic_FullMethodName                 = "/DiagnosticService/GetDiagnostic"
+	DiagnosticService_UpdateDiagnostic_FullMethodName              = "/DiagnosticService/UpdateDiagnostic"
+	DiagnosticService_DeleteDiagnostic_FullMethodName              = "/DiagnosticService/DeleteDiagnostic"
+	DiagnosticService_ListDiagnostics_FullMethodName               = "/DiagnosticService/ListDiagnostics"
+	DiagnosticService_SearchNearestDiagnostics_FullMethodName      = "/DiagnosticService/SearchNearestDiagnostics"
+	DiagnosticService_ListDiagnosticCentreSchedules_FullMethodName = "/DiagnosticService/ListDiagnosticCentreSchedules"
+	DiagnosticService_GetDiagnosticCentreSchedule_FullMethodName   = "/DiagnosticService/GetDiagnosticCentreSchedule"
 )
 
 // DiagnosticServiceClient is the client API for DiagnosticService service.
@@ -39,7 +40,8 @@ type DiagnosticServiceClient interface {
 	ListDiagnostics(ctx context.Context, in *ListDiagnosticsRequest, opts ...grpc.CallOption) (*ListDiagnosticsResponse, error)
 	SearchNearestDiagnostics(ctx context.Context, in *SearchNearestDiagnosticsRequest, opts ...grpc.CallOption) (*SearchNearestDiagnosticsResponse, error)
 	// Get Diagnostics Centre Schedules
-	GetDiagnosticCentreSchedules(ctx context.Context, in *GetDiagnosticCentreSchedulesRequest, opts ...grpc.CallOption) (*GetDiagnosticCentreSchedulesResponse, error)
+	ListDiagnosticCentreSchedules(ctx context.Context, in *ListDiagnosticCentreSchedulesRequest, opts ...grpc.CallOption) (*ListDiagnosticCentreSchedulesResponse, error)
+	GetDiagnosticCentreSchedule(ctx context.Context, in *GetDiagnosticCentreScheduleRequest, opts ...grpc.CallOption) (*GetDiagnosticCentreScheduleResponse, error)
 }
 
 type diagnosticServiceClient struct {
@@ -104,9 +106,18 @@ func (c *diagnosticServiceClient) SearchNearestDiagnostics(ctx context.Context, 
 	return out, nil
 }
 
-func (c *diagnosticServiceClient) GetDiagnosticCentreSchedules(ctx context.Context, in *GetDiagnosticCentreSchedulesRequest, opts ...grpc.CallOption) (*GetDiagnosticCentreSchedulesResponse, error) {
-	out := new(GetDiagnosticCentreSchedulesResponse)
-	err := c.cc.Invoke(ctx, DiagnosticService_GetDiagnosticCentreSchedules_FullMethodName, in, out, opts...)
+func (c *diagnosticServiceClient) ListDiagnosticCentreSchedules(ctx context.Context, in *ListDiagnosticCentreSchedulesRequest, opts ...grpc.CallOption) (*ListDiagnosticCentreSchedulesResponse, error) {
+	out := new(ListDiagnosticCentreSchedulesResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_ListDiagnosticCentreSchedules_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *diagnosticServiceClient) GetDiagnosticCentreSchedule(ctx context.Context, in *GetDiagnosticCentreScheduleRequest, opts ...grpc.CallOption) (*GetDiagnosticCentreScheduleResponse, error) {
+	out := new(GetDiagnosticCentreScheduleResponse)
+	err := c.cc.Invoke(ctx, DiagnosticService_GetDiagnosticCentreSchedule_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +135,8 @@ type DiagnosticServiceServer interface {
 	ListDiagnostics(context.Context, *ListDiagnosticsRequest) (*ListDiagnosticsResponse, error)
 	SearchNearestDiagnostics(context.Context, *SearchNearestDiagnosticsRequest) (*SearchNearestDiagnosticsResponse, error)
 	// Get Diagnostics Centre Schedules
-	GetDiagnosticCentreSchedules(context.Context, *GetDiagnosticCentreSchedulesRequest) (*GetDiagnosticCentreSchedulesResponse, error)
+	ListDiagnosticCentreSchedules(context.Context, *ListDiagnosticCentreSchedulesRequest) (*ListDiagnosticCentreSchedulesResponse, error)
+	GetDiagnosticCentreSchedule(context.Context, *GetDiagnosticCentreScheduleRequest) (*GetDiagnosticCentreScheduleResponse, error)
 	mustEmbedUnimplementedDiagnosticServiceServer()
 }
 
@@ -150,8 +162,11 @@ func (UnimplementedDiagnosticServiceServer) ListDiagnostics(context.Context, *Li
 func (UnimplementedDiagnosticServiceServer) SearchNearestDiagnostics(context.Context, *SearchNearestDiagnosticsRequest) (*SearchNearestDiagnosticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchNearestDiagnostics not implemented")
 }
-func (UnimplementedDiagnosticServiceServer) GetDiagnosticCentreSchedules(context.Context, *GetDiagnosticCentreSchedulesRequest) (*GetDiagnosticCentreSchedulesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDiagnosticCentreSchedules not implemented")
+func (UnimplementedDiagnosticServiceServer) ListDiagnosticCentreSchedules(context.Context, *ListDiagnosticCentreSchedulesRequest) (*ListDiagnosticCentreSchedulesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDiagnosticCentreSchedules not implemented")
+}
+func (UnimplementedDiagnosticServiceServer) GetDiagnosticCentreSchedule(context.Context, *GetDiagnosticCentreScheduleRequest) (*GetDiagnosticCentreScheduleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDiagnosticCentreSchedule not implemented")
 }
 func (UnimplementedDiagnosticServiceServer) mustEmbedUnimplementedDiagnosticServiceServer() {}
 
@@ -274,20 +289,38 @@ func _DiagnosticService_SearchNearestDiagnostics_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DiagnosticService_GetDiagnosticCentreSchedules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDiagnosticCentreSchedulesRequest)
+func _DiagnosticService_ListDiagnosticCentreSchedules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDiagnosticCentreSchedulesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DiagnosticServiceServer).GetDiagnosticCentreSchedules(ctx, in)
+		return srv.(DiagnosticServiceServer).ListDiagnosticCentreSchedules(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DiagnosticService_GetDiagnosticCentreSchedules_FullMethodName,
+		FullMethod: DiagnosticService_ListDiagnosticCentreSchedules_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DiagnosticServiceServer).GetDiagnosticCentreSchedules(ctx, req.(*GetDiagnosticCentreSchedulesRequest))
+		return srv.(DiagnosticServiceServer).ListDiagnosticCentreSchedules(ctx, req.(*ListDiagnosticCentreSchedulesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DiagnosticService_GetDiagnosticCentreSchedule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDiagnosticCentreScheduleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DiagnosticServiceServer).GetDiagnosticCentreSchedule(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DiagnosticService_GetDiagnosticCentreSchedule_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DiagnosticServiceServer).GetDiagnosticCentreSchedule(ctx, req.(*GetDiagnosticCentreScheduleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,8 +357,12 @@ var DiagnosticService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DiagnosticService_SearchNearestDiagnostics_Handler,
 		},
 		{
-			MethodName: "GetDiagnosticCentreSchedules",
-			Handler:    _DiagnosticService_GetDiagnosticCentreSchedules_Handler,
+			MethodName: "ListDiagnosticCentreSchedules",
+			Handler:    _DiagnosticService_ListDiagnosticCentreSchedules_Handler,
+		},
+		{
+			MethodName: "GetDiagnosticCentreSchedule",
+			Handler:    _DiagnosticService_GetDiagnosticCentreSchedule_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

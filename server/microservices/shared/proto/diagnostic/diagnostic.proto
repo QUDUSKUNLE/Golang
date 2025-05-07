@@ -3,7 +3,6 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/diagnos
 
 import "google/api/annotations.proto";
 import "google/protobuf/struct.proto";
-// Adjusted path to match the correct directory structure
 
 service DiagnosticService {
   rpc CreateDiagnostic(CreateDiagnosticRequest) returns (CreateDiagnosticResponse) {
@@ -39,20 +38,32 @@ service DiagnosticService {
     };
   }
   // Get Diagnostics Centre Schedules
-  rpc GetDiagnosticCentreSchedules(GetDiagnosticCentreSchedulesRequest) returns (GetDiagnosticCentreSchedulesResponse) {
+  rpc ListDiagnosticSchedules(ListDiagnosticSchedulesRequest) returns (ListDiagnosticSchedulesResponse) {
     option (google.api.http) = {
-      get: "/v1/diagnostics/schedules/{diagnostic_id}"
+      get: "/v1/diagnostics/{diagnostic_id}/schedules"
     };
   }
-
+  rpc GetDiagnosticSchedule(GetDiagnosticScheduleRequest) returns (GetDiagnosticScheduleResponse) {
+    option (google.api.http) = {
+      get: "/v1/diagnostic/{diagnostic_id}/schedules/{schedule_id}"
+    };
+  }
 }
-message GetDiagnosticCentreSchedulesRequest {
+
+message GetDiagnosticScheduleRequest {
+  string diagnostic_id = 1; // ID of the diagnostic center
+  string schedule_id = 2;           // ID of the scheduled session        // ID of the user scheduling the session
+}
+
+message ListDiagnosticSchedulesRequest {
   string diagnostic_id = 1 [json_name = "diagnostic_id"];
-  int32 offset = 2 [json_name = "offset"];
-  int32 limit = 3 [json_name = "limit"];
+  string test_status = 2 [json_name = "test_status"];
+  string date = 3 [json_name = "date"];
+  int32 offset = 4 [json_name = "offset"];
+  int32 limit = 5 [json_name = "limit"];
 }
 
-message GetDiagnosticCentreSchedulesResponse {
+message GetDiagnosticScheduleResponse {
   string schedule_id = 1 [json_name = "schedule_id"];
   string user_id = 2 [json_name = "user_id"];
   string date = 3 [json_name = "date"];
@@ -62,6 +73,12 @@ message GetDiagnosticCentreSchedulesResponse {
   optional string notes = 7 [json_name = "notes"];
   string diagnostic_id = 8 [json_name = "diagnostic_id"];
   string diagnostic_centre_name = 9 [json_name = "diagnostic_centre_name"];
+  string created_at = 10 [json_name = "created_at"];
+  string updated_at = 11 [json_name ="updated_at"];
+}
+
+message ListDiagnosticSchedulesResponse {
+  repeated GetDiagnosticScheduleResponse schedules = 1;
 }
 
 message Address {

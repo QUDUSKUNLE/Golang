@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_ScheduleService_CreateScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ScheduleService_CreateSchedule_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ScheduleRequest
 	var metadata runtime.ServerMetadata
 
@@ -39,12 +39,12 @@ func request_ScheduleService_CreateScheduleSession_0(ctx context.Context, marsha
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.CreateScheduleSession(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.CreateSchedule(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_ScheduleService_CreateScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ScheduleService_CreateSchedule_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ScheduleRequest
 	var metadata runtime.ServerMetadata
 
@@ -52,17 +52,17 @@ func local_request_ScheduleService_CreateScheduleSession_0(ctx context.Context, 
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.CreateScheduleSession(ctx, &protoReq)
+	msg, err := server.CreateSchedule(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_ScheduleService_GetScheduleSession_0 = &utilities.DoubleArray{Encoding: map[string]int{"schedule_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_ScheduleService_GetSchedule_0 = &utilities.DoubleArray{Encoding: map[string]int{"schedule_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
-func request_ScheduleService_GetScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetScheduledSessionRequest
+func request_ScheduleService_GetSchedule_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetScheduleRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -85,17 +85,17 @@ func request_ScheduleService_GetScheduleSession_0(ctx context.Context, marshaler
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_GetScheduleSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_GetSchedule_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.GetScheduleSession(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetSchedule(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_ScheduleService_GetScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetScheduledSessionRequest
+func local_request_ScheduleService_GetSchedule_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetScheduleRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -118,17 +118,17 @@ func local_request_ScheduleService_GetScheduleSession_0(ctx context.Context, mar
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_GetScheduleSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_GetSchedule_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.GetScheduleSession(ctx, &protoReq)
+	msg, err := server.GetSchedule(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_ScheduleService_UpdateScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UpdateScheduledSessionRequest
+func request_ScheduleService_UpdateSchedule_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdateScheduleRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -152,13 +152,13 @@ func request_ScheduleService_UpdateScheduleSession_0(ctx context.Context, marsha
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schedule_id", err)
 	}
 
-	msg, err := client.UpdateScheduleSession(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.UpdateSchedule(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_ScheduleService_UpdateScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UpdateScheduledSessionRequest
+func local_request_ScheduleService_UpdateSchedule_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdateScheduleRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -182,17 +182,17 @@ func local_request_ScheduleService_UpdateScheduleSession_0(ctx context.Context, 
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schedule_id", err)
 	}
 
-	msg, err := server.UpdateScheduleSession(ctx, &protoReq)
+	msg, err := server.UpdateSchedule(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_ScheduleService_CancelScheduleSession_0 = &utilities.DoubleArray{Encoding: map[string]int{"schedule_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_ScheduleService_CancelSchedule_0 = &utilities.DoubleArray{Encoding: map[string]int{"schedule_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
-func request_ScheduleService_CancelScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CancelScheduledSessionRequest
+func request_ScheduleService_CancelSchedule_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CancelScheduleRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -215,17 +215,17 @@ func request_ScheduleService_CancelScheduleSession_0(ctx context.Context, marsha
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_CancelScheduleSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_CancelSchedule_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.CancelScheduleSession(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.CancelSchedule(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_ScheduleService_CancelScheduleSession_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CancelScheduledSessionRequest
+func local_request_ScheduleService_CancelSchedule_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CancelScheduleRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -248,189 +248,47 @@ func local_request_ScheduleService_CancelScheduleSession_0(ctx context.Context, 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_CancelScheduleSession_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_CancelSchedule_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.CancelScheduleSession(ctx, &protoReq)
+	msg, err := server.CancelSchedule(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_ScheduleService_ListScheduleSessions_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+	filter_ScheduleService_ListSchedules_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
-func request_ScheduleService_ListScheduleSessions_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListScheduledSessionsRequest
+func request_ScheduleService_ListSchedules_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListSchedulesRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_ListScheduleSessions_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_ListSchedules_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.ListScheduleSessions(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.ListSchedules(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_ScheduleService_ListScheduleSessions_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListScheduledSessionsRequest
+func local_request_ScheduleService_ListSchedules_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListSchedulesRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_ListScheduleSessions_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_ListSchedules_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.ListScheduleSessions(ctx, &protoReq)
-	return msg, metadata, err
-
-}
-
-var (
-	filter_ScheduleService_ListDiagnosticCentreSchedules_0 = &utilities.DoubleArray{Encoding: map[string]int{"diagnostic_centre_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
-)
-
-func request_ScheduleService_ListDiagnosticCentreSchedules_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListDiagnosticCentreSchedulesRequest
-	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["diagnostic_centre_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_centre_id")
-	}
-
-	protoReq.DiagnosticCentreId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_centre_id", err)
-	}
-
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_ListDiagnosticCentreSchedules_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-
-	msg, err := client.ListDiagnosticCentreSchedules(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-
-}
-
-func local_request_ScheduleService_ListDiagnosticCentreSchedules_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListDiagnosticCentreSchedulesRequest
-	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["diagnostic_centre_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_centre_id")
-	}
-
-	protoReq.DiagnosticCentreId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_centre_id", err)
-	}
-
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ScheduleService_ListDiagnosticCentreSchedules_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-
-	msg, err := server.ListDiagnosticCentreSchedules(ctx, &protoReq)
-	return msg, metadata, err
-
-}
-
-func request_ScheduleService_GetDiagnosticCentreSchedule_0(ctx context.Context, marshaler runtime.Marshaler, client ScheduleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetDiagnosticCentreScheduleRequest
-	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["diagnostic_centre_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_centre_id")
-	}
-
-	protoReq.DiagnosticCentreId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_centre_id", err)
-	}
-
-	val, ok = pathParams["schedule_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schedule_id")
-	}
-
-	protoReq.ScheduleId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schedule_id", err)
-	}
-
-	msg, err := client.GetDiagnosticCentreSchedule(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-
-}
-
-func local_request_ScheduleService_GetDiagnosticCentreSchedule_0(ctx context.Context, marshaler runtime.Marshaler, server ScheduleServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetDiagnosticCentreScheduleRequest
-	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["diagnostic_centre_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "diagnostic_centre_id")
-	}
-
-	protoReq.DiagnosticCentreId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "diagnostic_centre_id", err)
-	}
-
-	val, ok = pathParams["schedule_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schedule_id")
-	}
-
-	protoReq.ScheduleId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schedule_id", err)
-	}
-
-	msg, err := server.GetDiagnosticCentreSchedule(ctx, &protoReq)
+	msg, err := server.ListSchedules(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -442,7 +300,7 @@ func local_request_ScheduleService_GetDiagnosticCentreSchedule_0(ctx context.Con
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ScheduleServiceServer) error {
 
-	mux.Handle("POST", pattern_ScheduleService_CreateScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_ScheduleService_CreateSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -450,12 +308,12 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/CreateScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/CreateSchedule", runtime.WithHTTPPathPattern("/v1/schedules"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ScheduleService_CreateScheduleSession_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ScheduleService_CreateSchedule_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -463,11 +321,11 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_ScheduleService_CreateScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_CreateSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_ScheduleService_GetScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ScheduleService_GetSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -475,12 +333,12 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/GetScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/GetSchedule", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ScheduleService_GetScheduleSession_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ScheduleService_GetSchedule_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -488,11 +346,11 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_ScheduleService_GetScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_GetSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_ScheduleService_UpdateScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_ScheduleService_UpdateSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -500,12 +358,12 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/UpdateScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/UpdateSchedule", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ScheduleService_UpdateScheduleSession_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ScheduleService_UpdateSchedule_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -513,11 +371,11 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_ScheduleService_UpdateScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_UpdateSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_ScheduleService_CancelScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_ScheduleService_CancelSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -525,12 +383,12 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/CancelScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/CancelSchedule", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ScheduleService_CancelScheduleSession_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ScheduleService_CancelSchedule_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -538,11 +396,11 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_ScheduleService_CancelScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_CancelSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_ScheduleService_ListScheduleSessions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ScheduleService_ListSchedules_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -550,12 +408,12 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/ListScheduleSessions", runtime.WithHTTPPathPattern("/v1/schedules"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/ListSchedules", runtime.WithHTTPPathPattern("/v1/schedules"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ScheduleService_ListScheduleSessions_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ScheduleService_ListSchedules_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -563,57 +421,7 @@ func RegisterScheduleServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_ScheduleService_ListScheduleSessions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
-	})
-
-	mux.Handle("GET", pattern_ScheduleService_ListDiagnosticCentreSchedules_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/ListDiagnosticCentreSchedules", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_ScheduleService_ListDiagnosticCentreSchedules_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-
-		forward_ScheduleService_ListDiagnosticCentreSchedules_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
-	})
-
-	mux.Handle("GET", pattern_ScheduleService_GetDiagnosticCentreSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.ScheduleService/GetDiagnosticCentreSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_ScheduleService_GetDiagnosticCentreSchedule_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-
-		forward_ScheduleService_GetDiagnosticCentreSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_ListSchedules_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -658,157 +466,113 @@ func RegisterScheduleServiceHandler(ctx context.Context, mux *runtime.ServeMux, 
 // "ScheduleServiceClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterScheduleServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ScheduleServiceClient) error {
 
-	mux.Handle("POST", pattern_ScheduleService_CreateScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_ScheduleService_CreateSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/CreateScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/CreateSchedule", runtime.WithHTTPPathPattern("/v1/schedules"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ScheduleService_CreateScheduleSession_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ScheduleService_CreateSchedule_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ScheduleService_CreateScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_CreateSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_ScheduleService_GetScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ScheduleService_GetSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/GetScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/GetSchedule", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ScheduleService_GetScheduleSession_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ScheduleService_GetSchedule_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ScheduleService_GetScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_GetSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_ScheduleService_UpdateScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_ScheduleService_UpdateSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/UpdateScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/UpdateSchedule", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ScheduleService_UpdateScheduleSession_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ScheduleService_UpdateSchedule_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ScheduleService_UpdateScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_UpdateSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_ScheduleService_CancelScheduleSession_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_ScheduleService_CancelSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/CancelScheduleSession", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/CancelSchedule", runtime.WithHTTPPathPattern("/v1/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ScheduleService_CancelScheduleSession_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ScheduleService_CancelSchedule_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ScheduleService_CancelScheduleSession_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_CancelSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_ScheduleService_ListScheduleSessions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ScheduleService_ListSchedules_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/ListScheduleSessions", runtime.WithHTTPPathPattern("/v1/schedules"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/ListSchedules", runtime.WithHTTPPathPattern("/v1/schedules"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ScheduleService_ListScheduleSessions_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ScheduleService_ListSchedules_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ScheduleService_ListScheduleSessions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
-	})
-
-	mux.Handle("GET", pattern_ScheduleService_ListDiagnosticCentreSchedules_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/ListDiagnosticCentreSchedules", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_ScheduleService_ListDiagnosticCentreSchedules_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-
-		forward_ScheduleService_ListDiagnosticCentreSchedules_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
-	})
-
-	mux.Handle("GET", pattern_ScheduleService_GetDiagnosticCentreSchedule_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.ScheduleService/GetDiagnosticCentreSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_ScheduleService_GetDiagnosticCentreSchedule_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-
-		forward_ScheduleService_GetDiagnosticCentreSchedule_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ScheduleService_ListSchedules_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -816,33 +580,25 @@ func RegisterScheduleServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 }
 
 var (
-	pattern_ScheduleService_CreateScheduleSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "schedules"}, ""))
+	pattern_ScheduleService_CreateSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "schedules"}, ""))
 
-	pattern_ScheduleService_GetScheduleSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "schedules", "schedule_id"}, ""))
+	pattern_ScheduleService_GetSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "schedules", "schedule_id"}, ""))
 
-	pattern_ScheduleService_UpdateScheduleSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "schedules", "schedule_id"}, ""))
+	pattern_ScheduleService_UpdateSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "schedules", "schedule_id"}, ""))
 
-	pattern_ScheduleService_CancelScheduleSession_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "schedules", "schedule_id"}, ""))
+	pattern_ScheduleService_CancelSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "schedules", "schedule_id"}, ""))
 
-	pattern_ScheduleService_ListScheduleSessions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "schedules"}, ""))
-
-	pattern_ScheduleService_ListDiagnosticCentreSchedules_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "diagnostic_centres", "diagnostic_centre_id", "schedules"}, ""))
-
-	pattern_ScheduleService_GetDiagnosticCentreSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "diagnostic_centres", "diagnostic_centre_id", "schedules", "schedule_id"}, ""))
+	pattern_ScheduleService_ListSchedules_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "schedules"}, ""))
 )
 
 var (
-	forward_ScheduleService_CreateScheduleSession_0 = runtime.ForwardResponseMessage
+	forward_ScheduleService_CreateSchedule_0 = runtime.ForwardResponseMessage
 
-	forward_ScheduleService_GetScheduleSession_0 = runtime.ForwardResponseMessage
+	forward_ScheduleService_GetSchedule_0 = runtime.ForwardResponseMessage
 
-	forward_ScheduleService_UpdateScheduleSession_0 = runtime.ForwardResponseMessage
+	forward_ScheduleService_UpdateSchedule_0 = runtime.ForwardResponseMessage
 
-	forward_ScheduleService_CancelScheduleSession_0 = runtime.ForwardResponseMessage
+	forward_ScheduleService_CancelSchedule_0 = runtime.ForwardResponseMessage
 
-	forward_ScheduleService_ListScheduleSessions_0 = runtime.ForwardResponseMessage
-
-	forward_ScheduleService_ListDiagnosticCentreSchedules_0 = runtime.ForwardResponseMessage
-
-	forward_ScheduleService_GetDiagnosticCentreSchedule_0 = runtime.ForwardResponseMessage
+	forward_ScheduleService_ListSchedules_0 = runtime.ForwardResponseMessage
 )

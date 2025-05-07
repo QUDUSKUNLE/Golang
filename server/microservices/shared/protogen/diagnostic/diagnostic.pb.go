@@ -22,18 +22,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetDiagnosticCentreSchedulesRequest struct {
+type GetDiagnosticCentreScheduleRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DiagnosticId string `protobuf:"bytes,1,opt,name=diagnostic_id,proto3" json:"diagnostic_id,omitempty"`
-	Offset       int32  `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
-	Limit        int32  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	DiagnosticId string `protobuf:"bytes,1,opt,name=diagnostic_id,json=diagnosticId,proto3" json:"diagnostic_id,omitempty"` // ID of the diagnostic center
+	ScheduleId   string `protobuf:"bytes,2,opt,name=schedule_id,json=scheduleId,proto3" json:"schedule_id,omitempty"`       // ID of the scheduled session        // ID of the user scheduling the session
 }
 
-func (x *GetDiagnosticCentreSchedulesRequest) Reset() {
-	*x = GetDiagnosticCentreSchedulesRequest{}
+func (x *GetDiagnosticCentreScheduleRequest) Reset() {
+	*x = GetDiagnosticCentreScheduleRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_diagnostic_diagnostic_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -41,13 +40,13 @@ func (x *GetDiagnosticCentreSchedulesRequest) Reset() {
 	}
 }
 
-func (x *GetDiagnosticCentreSchedulesRequest) String() string {
+func (x *GetDiagnosticCentreScheduleRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetDiagnosticCentreSchedulesRequest) ProtoMessage() {}
+func (*GetDiagnosticCentreScheduleRequest) ProtoMessage() {}
 
-func (x *GetDiagnosticCentreSchedulesRequest) ProtoReflect() protoreflect.Message {
+func (x *GetDiagnosticCentreScheduleRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_diagnostic_diagnostic_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,33 +58,105 @@ func (x *GetDiagnosticCentreSchedulesRequest) ProtoReflect() protoreflect.Messag
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetDiagnosticCentreSchedulesRequest.ProtoReflect.Descriptor instead.
-func (*GetDiagnosticCentreSchedulesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetDiagnosticCentreScheduleRequest.ProtoReflect.Descriptor instead.
+func (*GetDiagnosticCentreScheduleRequest) Descriptor() ([]byte, []int) {
 	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetDiagnosticCentreSchedulesRequest) GetDiagnosticId() string {
+func (x *GetDiagnosticCentreScheduleRequest) GetDiagnosticId() string {
 	if x != nil {
 		return x.DiagnosticId
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesRequest) GetOffset() int32 {
+func (x *GetDiagnosticCentreScheduleRequest) GetScheduleId() string {
+	if x != nil {
+		return x.ScheduleId
+	}
+	return ""
+}
+
+type ListDiagnosticCentreSchedulesRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	DiagnosticId string `protobuf:"bytes,1,opt,name=diagnostic_id,proto3" json:"diagnostic_id,omitempty"`
+	TestStatus   string `protobuf:"bytes,2,opt,name=test_status,proto3" json:"test_status,omitempty"`
+	Date         string `protobuf:"bytes,3,opt,name=date,proto3" json:"date,omitempty"`
+	Offset       int32  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Limit        int32  `protobuf:"varint,5,opt,name=limit,proto3" json:"limit,omitempty"`
+}
+
+func (x *ListDiagnosticCentreSchedulesRequest) Reset() {
+	*x = ListDiagnosticCentreSchedulesRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListDiagnosticCentreSchedulesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListDiagnosticCentreSchedulesRequest) ProtoMessage() {}
+
+func (x *ListDiagnosticCentreSchedulesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListDiagnosticCentreSchedulesRequest.ProtoReflect.Descriptor instead.
+func (*ListDiagnosticCentreSchedulesRequest) Descriptor() ([]byte, []int) {
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ListDiagnosticCentreSchedulesRequest) GetDiagnosticId() string {
+	if x != nil {
+		return x.DiagnosticId
+	}
+	return ""
+}
+
+func (x *ListDiagnosticCentreSchedulesRequest) GetTestStatus() string {
+	if x != nil {
+		return x.TestStatus
+	}
+	return ""
+}
+
+func (x *ListDiagnosticCentreSchedulesRequest) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *ListDiagnosticCentreSchedulesRequest) GetOffset() int32 {
 	if x != nil {
 		return x.Offset
 	}
 	return 0
 }
 
-func (x *GetDiagnosticCentreSchedulesRequest) GetLimit() int32 {
+func (x *ListDiagnosticCentreSchedulesRequest) GetLimit() int32 {
 	if x != nil {
 		return x.Limit
 	}
 	return 0
 }
 
-type GetDiagnosticCentreSchedulesResponse struct {
+type GetDiagnosticCentreScheduleResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -99,25 +170,27 @@ type GetDiagnosticCentreSchedulesResponse struct {
 	Notes                *string `protobuf:"bytes,7,opt,name=notes,proto3,oneof" json:"notes,omitempty"`
 	DiagnosticId         string  `protobuf:"bytes,8,opt,name=diagnostic_id,proto3" json:"diagnostic_id,omitempty"`
 	DiagnosticCentreName string  `protobuf:"bytes,9,opt,name=diagnostic_centre_name,proto3" json:"diagnostic_centre_name,omitempty"`
+	CreatedAt            string  `protobuf:"bytes,10,opt,name=created_at,proto3" json:"created_at,omitempty"`
+	UpdatedAt            string  `protobuf:"bytes,11,opt,name=updated_at,proto3" json:"updated_at,omitempty"`
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) Reset() {
-	*x = GetDiagnosticCentreSchedulesResponse{}
+func (x *GetDiagnosticCentreScheduleResponse) Reset() {
+	*x = GetDiagnosticCentreScheduleResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[1]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) String() string {
+func (x *GetDiagnosticCentreScheduleResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetDiagnosticCentreSchedulesResponse) ProtoMessage() {}
+func (*GetDiagnosticCentreScheduleResponse) ProtoMessage() {}
 
-func (x *GetDiagnosticCentreSchedulesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[1]
+func (x *GetDiagnosticCentreScheduleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -128,72 +201,133 @@ func (x *GetDiagnosticCentreSchedulesResponse) ProtoReflect() protoreflect.Messa
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetDiagnosticCentreSchedulesResponse.ProtoReflect.Descriptor instead.
-func (*GetDiagnosticCentreSchedulesResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use GetDiagnosticCentreScheduleResponse.ProtoReflect.Descriptor instead.
+func (*GetDiagnosticCentreScheduleResponse) Descriptor() ([]byte, []int) {
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetScheduleId() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetScheduleId() string {
 	if x != nil {
 		return x.ScheduleId
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetUserId() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetDate() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetDate() string {
 	if x != nil {
 		return x.Date
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetTime() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetTime() string {
 	if x != nil {
 		return x.Time
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetTestType() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetTestType() string {
 	if x != nil {
 		return x.TestType
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetStatus() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetNotes() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetNotes() string {
 	if x != nil && x.Notes != nil {
 		return *x.Notes
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetDiagnosticId() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetDiagnosticId() string {
 	if x != nil {
 		return x.DiagnosticId
 	}
 	return ""
 }
 
-func (x *GetDiagnosticCentreSchedulesResponse) GetDiagnosticCentreName() string {
+func (x *GetDiagnosticCentreScheduleResponse) GetDiagnosticCentreName() string {
 	if x != nil {
 		return x.DiagnosticCentreName
 	}
 	return ""
+}
+
+func (x *GetDiagnosticCentreScheduleResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *GetDiagnosticCentreScheduleResponse) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
+type ListDiagnosticCentreSchedulesResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Schedules []*GetDiagnosticCentreScheduleResponse `protobuf:"bytes,1,rep,name=schedules,proto3" json:"schedules,omitempty"`
+}
+
+func (x *ListDiagnosticCentreSchedulesResponse) Reset() {
+	*x = ListDiagnosticCentreSchedulesResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListDiagnosticCentreSchedulesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListDiagnosticCentreSchedulesResponse) ProtoMessage() {}
+
+func (x *ListDiagnosticCentreSchedulesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListDiagnosticCentreSchedulesResponse.ProtoReflect.Descriptor instead.
+func (*ListDiagnosticCentreSchedulesResponse) Descriptor() ([]byte, []int) {
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListDiagnosticCentreSchedulesResponse) GetSchedules() []*GetDiagnosticCentreScheduleResponse {
+	if x != nil {
+		return x.Schedules
+	}
+	return nil
 }
 
 type Address struct {
@@ -210,7 +344,7 @@ type Address struct {
 func (x *Address) Reset() {
 	*x = Address{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[2]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -223,7 +357,7 @@ func (x *Address) String() string {
 func (*Address) ProtoMessage() {}
 
 func (x *Address) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[2]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -236,7 +370,7 @@ func (x *Address) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Address.ProtoReflect.Descriptor instead.
 func (*Address) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{2}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Address) GetStreet() string {
@@ -278,7 +412,7 @@ type Phone struct {
 func (x *Phone) Reset() {
 	*x = Phone{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[3]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -291,7 +425,7 @@ func (x *Phone) String() string {
 func (*Phone) ProtoMessage() {}
 
 func (x *Phone) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[3]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -304,7 +438,7 @@ func (x *Phone) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Phone.ProtoReflect.Descriptor instead.
 func (*Phone) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{3}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Phone) GetPhone() string {
@@ -326,7 +460,7 @@ type Contact struct {
 func (x *Contact) Reset() {
 	*x = Contact{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[4]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -339,7 +473,7 @@ func (x *Contact) String() string {
 func (*Contact) ProtoMessage() {}
 
 func (x *Contact) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[4]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -352,7 +486,7 @@ func (x *Contact) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Contact.ProtoReflect.Descriptor instead.
 func (*Contact) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{4}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Contact) GetPhone() []*Phone {
@@ -383,7 +517,7 @@ type SearchNearestDiagnosticsRequest struct {
 func (x *SearchNearestDiagnosticsRequest) Reset() {
 	*x = SearchNearestDiagnosticsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[5]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -396,7 +530,7 @@ func (x *SearchNearestDiagnosticsRequest) String() string {
 func (*SearchNearestDiagnosticsRequest) ProtoMessage() {}
 
 func (x *SearchNearestDiagnosticsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[5]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -409,7 +543,7 @@ func (x *SearchNearestDiagnosticsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchNearestDiagnosticsRequest.ProtoReflect.Descriptor instead.
 func (*SearchNearestDiagnosticsRequest) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{5}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *SearchNearestDiagnosticsRequest) GetLatitude() float64 {
@@ -452,7 +586,7 @@ type CreateDiagnosticRequest struct {
 func (x *CreateDiagnosticRequest) Reset() {
 	*x = CreateDiagnosticRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[6]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -465,7 +599,7 @@ func (x *CreateDiagnosticRequest) String() string {
 func (*CreateDiagnosticRequest) ProtoMessage() {}
 
 func (x *CreateDiagnosticRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[6]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -478,7 +612,7 @@ func (x *CreateDiagnosticRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDiagnosticRequest.ProtoReflect.Descriptor instead.
 func (*CreateDiagnosticRequest) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{6}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateDiagnosticRequest) GetUserId() string {
@@ -506,7 +640,7 @@ type GetDiagnosticRequest struct {
 func (x *GetDiagnosticRequest) Reset() {
 	*x = GetDiagnosticRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[7]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -519,7 +653,7 @@ func (x *GetDiagnosticRequest) String() string {
 func (*GetDiagnosticRequest) ProtoMessage() {}
 
 func (x *GetDiagnosticRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[7]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -532,7 +666,7 @@ func (x *GetDiagnosticRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDiagnosticRequest.ProtoReflect.Descriptor instead.
 func (*GetDiagnosticRequest) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{7}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetDiagnosticRequest) GetDiagnosticId() string {
@@ -558,7 +692,7 @@ type UpdateDiagnosticRequest struct {
 func (x *UpdateDiagnosticRequest) Reset() {
 	*x = UpdateDiagnosticRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[8]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -571,7 +705,7 @@ func (x *UpdateDiagnosticRequest) String() string {
 func (*UpdateDiagnosticRequest) ProtoMessage() {}
 
 func (x *UpdateDiagnosticRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[8]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -584,7 +718,7 @@ func (x *UpdateDiagnosticRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDiagnosticRequest.ProtoReflect.Descriptor instead.
 func (*UpdateDiagnosticRequest) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{8}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateDiagnosticRequest) GetDiagnosticId() string {
@@ -640,7 +774,7 @@ type DeleteDiagnosticRequest struct {
 func (x *DeleteDiagnosticRequest) Reset() {
 	*x = DeleteDiagnosticRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[9]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -653,7 +787,7 @@ func (x *DeleteDiagnosticRequest) String() string {
 func (*DeleteDiagnosticRequest) ProtoMessage() {}
 
 func (x *DeleteDiagnosticRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[9]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -666,7 +800,7 @@ func (x *DeleteDiagnosticRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDiagnosticRequest.ProtoReflect.Descriptor instead.
 func (*DeleteDiagnosticRequest) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{9}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DeleteDiagnosticRequest) GetDiagnosticId() string {
@@ -690,7 +824,7 @@ type GetDiagnosticResponse struct {
 func (x *GetDiagnosticResponse) Reset() {
 	*x = GetDiagnosticResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[10]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -703,7 +837,7 @@ func (x *GetDiagnosticResponse) String() string {
 func (*GetDiagnosticResponse) ProtoMessage() {}
 
 func (x *GetDiagnosticResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[10]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -716,7 +850,7 @@ func (x *GetDiagnosticResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDiagnosticResponse.ProtoReflect.Descriptor instead.
 func (*GetDiagnosticResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{10}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetDiagnosticResponse) GetDiagnosticId() string {
@@ -758,7 +892,7 @@ type ListDiagnosticsRequest struct {
 func (x *ListDiagnosticsRequest) Reset() {
 	*x = ListDiagnosticsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[11]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -771,7 +905,7 @@ func (x *ListDiagnosticsRequest) String() string {
 func (*ListDiagnosticsRequest) ProtoMessage() {}
 
 func (x *ListDiagnosticsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[11]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -784,7 +918,7 @@ func (x *ListDiagnosticsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDiagnosticsRequest.ProtoReflect.Descriptor instead.
 func (*ListDiagnosticsRequest) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{11}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListDiagnosticsRequest) GetUserId() string {
@@ -811,7 +945,7 @@ type Diagnostic struct {
 func (x *Diagnostic) Reset() {
 	*x = Diagnostic{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[12]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -824,7 +958,7 @@ func (x *Diagnostic) String() string {
 func (*Diagnostic) ProtoMessage() {}
 
 func (x *Diagnostic) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[12]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -837,7 +971,7 @@ func (x *Diagnostic) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Diagnostic.ProtoReflect.Descriptor instead.
 func (*Diagnostic) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{12}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Diagnostic) GetDiagnosticId() string {
@@ -900,7 +1034,7 @@ type ListDiagnosticsResponse struct {
 func (x *ListDiagnosticsResponse) Reset() {
 	*x = ListDiagnosticsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[13]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -913,7 +1047,7 @@ func (x *ListDiagnosticsResponse) String() string {
 func (*ListDiagnosticsResponse) ProtoMessage() {}
 
 func (x *ListDiagnosticsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[13]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -926,7 +1060,7 @@ func (x *ListDiagnosticsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDiagnosticsResponse.ProtoReflect.Descriptor instead.
 func (*ListDiagnosticsResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{13}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListDiagnosticsResponse) GetDiagnostics() []*Diagnostic {
@@ -950,7 +1084,7 @@ type DeleteDiagnosticResponse struct {
 func (x *DeleteDiagnosticResponse) Reset() {
 	*x = DeleteDiagnosticResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[14]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -963,7 +1097,7 @@ func (x *DeleteDiagnosticResponse) String() string {
 func (*DeleteDiagnosticResponse) ProtoMessage() {}
 
 func (x *DeleteDiagnosticResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[14]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -976,7 +1110,7 @@ func (x *DeleteDiagnosticResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDiagnosticResponse.ProtoReflect.Descriptor instead.
 func (*DeleteDiagnosticResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{14}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeleteDiagnosticResponse) GetDiagnosticId() string {
@@ -1023,7 +1157,7 @@ type UpdateDiagnosticResponse struct {
 func (x *UpdateDiagnosticResponse) Reset() {
 	*x = UpdateDiagnosticResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[15]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1036,7 +1170,7 @@ func (x *UpdateDiagnosticResponse) String() string {
 func (*UpdateDiagnosticResponse) ProtoMessage() {}
 
 func (x *UpdateDiagnosticResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[15]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1049,7 +1183,7 @@ func (x *UpdateDiagnosticResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDiagnosticResponse.ProtoReflect.Descriptor instead.
 func (*UpdateDiagnosticResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{15}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateDiagnosticResponse) GetDiagnosticId() string {
@@ -1108,7 +1242,7 @@ type CreateDiagnosticResponse struct {
 func (x *CreateDiagnosticResponse) Reset() {
 	*x = CreateDiagnosticResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[16]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1121,7 +1255,7 @@ func (x *CreateDiagnosticResponse) String() string {
 func (*CreateDiagnosticResponse) ProtoMessage() {}
 
 func (x *CreateDiagnosticResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[16]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1134,7 +1268,7 @@ func (x *CreateDiagnosticResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDiagnosticResponse.ProtoReflect.Descriptor instead.
 func (*CreateDiagnosticResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{16}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *CreateDiagnosticResponse) GetDiagnosticId() string {
@@ -1176,7 +1310,7 @@ type SearchNearestDiagnosticsResponse struct {
 func (x *SearchNearestDiagnosticsResponse) Reset() {
 	*x = SearchNearestDiagnosticsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_diagnostic_diagnostic_proto_msgTypes[17]
+		mi := &file_diagnostic_diagnostic_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1189,7 +1323,7 @@ func (x *SearchNearestDiagnosticsResponse) String() string {
 func (*SearchNearestDiagnosticsResponse) ProtoMessage() {}
 
 func (x *SearchNearestDiagnosticsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_diagnostic_diagnostic_proto_msgTypes[17]
+	mi := &file_diagnostic_diagnostic_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1202,7 +1336,7 @@ func (x *SearchNearestDiagnosticsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchNearestDiagnosticsResponse.ProtoReflect.Descriptor instead.
 func (*SearchNearestDiagnosticsResponse) Descriptor() ([]byte, []int) {
-	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{17}
+	return file_diagnostic_diagnostic_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *SearchNearestDiagnosticsResponse) GetDiagnostics() []*Diagnostic {
@@ -1220,35 +1354,56 @@ var file_diagnostic_diagnostic_proto_rawDesc = []byte{
 	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61,
 	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1c, 0x67, 0x6f, 0x6f,
 	0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x73, 0x74, 0x72,
-	0x75, 0x63, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x79, 0x0a, 0x23, 0x47, 0x65, 0x74,
+	0x75, 0x63, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x6a, 0x0a, 0x22, 0x47, 0x65, 0x74,
 	0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65,
-	0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x24, 0x0a, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73,
-	0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x12, 0x14,
-	0x0a, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x6c,
-	0x69, 0x6d, 0x69, 0x74, 0x22, 0xc3, 0x02, 0x0a, 0x24, 0x47, 0x65, 0x74, 0x44, 0x69, 0x61, 0x67,
-	0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65,
-	0x64, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x20, 0x0a,
-	0x0b, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x0b, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x5f, 0x69, 0x64, 0x12,
-	0x18, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74,
-	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x65, 0x12, 0x12, 0x0a,
-	0x04, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x69, 0x6d,
-	0x65, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x05,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x12,
-	0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x19, 0x0a, 0x05, 0x6e, 0x6f, 0x74, 0x65, 0x73,
-	0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x6e, 0x6f, 0x74, 0x65, 0x73, 0x88,
-	0x01, 0x01, 0x12, 0x24, 0x0a, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63,
-	0x5f, 0x69, 0x64, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e,
-	0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x12, 0x36, 0x0a, 0x16, 0x64, 0x69, 0x61, 0x67,
-	0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x63, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x5f, 0x6e, 0x61,
-	0x6d, 0x65, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x16, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f,
-	0x73, 0x74, 0x69, 0x63, 0x5f, 0x63, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65,
-	0x42, 0x08, 0x0a, 0x06, 0x5f, 0x6e, 0x6f, 0x74, 0x65, 0x73, 0x22, 0x65, 0x0a, 0x07, 0x41, 0x64,
+	0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x23, 0x0a, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74,
+	0x69, 0x63, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65,
+	0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x64,
+	0x75, 0x6c, 0x65, 0x49, 0x64, 0x22, 0xb0, 0x01, 0x0a, 0x24, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x69,
+	0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63,
+	0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x24,
+	0x0a, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69,
+	0x63, 0x5f, 0x69, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x73, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x74, 0x65, 0x73, 0x74, 0x5f,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x66,
+	0x66, 0x73, 0x65, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x6f, 0x66, 0x66, 0x73,
+	0x65, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x05, 0x52, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x22, 0x82, 0x03, 0x0a, 0x23, 0x47, 0x65, 0x74,
+	0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65,
+	0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x20, 0x0a, 0x0b, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x5f, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x5f,
+	0x69, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x64, 0x61, 0x74, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x65,
+	0x12, 0x12, 0x0a, 0x04, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
+	0x74, 0x69, 0x6d, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x74, 0x79, 0x70,
+	0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x65, 0x73, 0x74, 0x5f, 0x74, 0x79,
+	0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x06, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x19, 0x0a, 0x05, 0x6e, 0x6f,
+	0x74, 0x65, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x6e, 0x6f, 0x74,
+	0x65, 0x73, 0x88, 0x01, 0x01, 0x12, 0x24, 0x0a, 0x0d, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73,
+	0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x64, 0x69,
+	0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x12, 0x36, 0x0a, 0x16, 0x64,
+	0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x63, 0x65, 0x6e, 0x74, 0x72, 0x65,
+	0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x16, 0x64, 0x69, 0x61,
+	0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x63, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x5f, 0x6e,
+	0x61, 0x6d, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61,
+	0x74, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64,
+	0x5f, 0x61, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61,
+	0x74, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64,
+	0x5f, 0x61, 0x74, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x6e, 0x6f, 0x74, 0x65, 0x73, 0x22, 0x6b, 0x0a,
+	0x25, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43,
+	0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x42, 0x0a, 0x09, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75,
+	0x6c, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x47, 0x65, 0x74, 0x44,
+	0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x53,
+	0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52,
+	0x09, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x22, 0x65, 0x0a, 0x07, 0x41, 0x64,
 	0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x72, 0x65, 0x65, 0x74, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x72, 0x65, 0x65, 0x74, 0x12, 0x12, 0x0a,
 	0x04, 0x63, 0x69, 0x74, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x69, 0x74,
@@ -1372,8 +1527,8 @@ var file_diagnostic_diagnostic_proto_rawDesc = []byte{
 	0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
 	0x2d, 0x0a, 0x0b, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x73, 0x18, 0x01,
 	0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69,
-	0x63, 0x52, 0x0b, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x73, 0x32, 0xc9,
-	0x06, 0x0a, 0x11, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x53, 0x65, 0x72,
+	0x63, 0x52, 0x0b, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x73, 0x32, 0xf7,
+	0x07, 0x0a, 0x11, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x53, 0x65, 0x72,
 	0x76, 0x69, 0x63, 0x65, 0x12, 0x63, 0x0a, 0x10, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x69,
 	0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x12, 0x18, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
 	0x65, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x52, 0x65, 0x71, 0x75, 0x65,
@@ -1415,22 +1570,33 @@ var file_diagnostic_diagnostic_proto_rawDesc = []byte{
 	0x65, 0x61, 0x72, 0x65, 0x73, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63,
 	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02,
 	0x18, 0x12, 0x16, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69,
-	0x63, 0x73, 0x2f, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x12, 0x9e, 0x01, 0x0a, 0x1c, 0x47, 0x65,
-	0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72,
-	0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x12, 0x24, 0x2e, 0x47, 0x65, 0x74,
-	0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65,
-	0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x25, 0x2e, 0x47, 0x65, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63,
-	0x43, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x31, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x2b, 0x12,
-	0x29, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x73,
-	0x2f, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x64, 0x69, 0x61, 0x67,
-	0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x7d, 0x42, 0x40, 0x5a, 0x3e, 0x67, 0x69,
-	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x51, 0x55, 0x44, 0x55, 0x53, 0x4b, 0x55,
-	0x4e, 0x4c, 0x45, 0x2f, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x73, 0x2f, 0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x67, 0x65,
-	0x6e, 0x2f, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x63, 0x73, 0x2f, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x12, 0xa1, 0x01, 0x0a, 0x1d, 0x4c, 0x69,
+	0x73, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74,
+	0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x12, 0x25, 0x2e, 0x4c, 0x69,
+	0x73, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74,
+	0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x26, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73,
+	0x74, 0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c,
+	0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x31, 0x82, 0xd3, 0xe4, 0x93,
+	0x02, 0x2b, 0x12, 0x29, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74,
+	0x69, 0x63, 0x73, 0x2f, 0x7b, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f,
+	0x69, 0x64, 0x7d, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x12, 0xa8, 0x01,
+	0x0a, 0x1b, 0x47, 0x65, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43,
+	0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x12, 0x23, 0x2e,
+	0x47, 0x65, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x43, 0x65, 0x6e,
+	0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x24, 0x2e, 0x47, 0x65, 0x74, 0x44, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74,
+	0x69, 0x63, 0x43, 0x65, 0x6e, 0x74, 0x72, 0x65, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x3e, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x38,
+	0x12, 0x36, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63,
+	0x2f, 0x7b, 0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x5f, 0x69, 0x64, 0x7d,
+	0x2f, 0x73, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x73, 0x63, 0x68, 0x65,
+	0x64, 0x75, 0x6c, 0x65, 0x5f, 0x69, 0x64, 0x7d, 0x42, 0x40, 0x5a, 0x3e, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x51, 0x55, 0x44, 0x55, 0x53, 0x4b, 0x55, 0x4e, 0x4c,
+	0x45, 0x2f, 0x6d, 0x69, 0x63, 0x72, 0x6f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2f,
+	0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x67, 0x65, 0x6e, 0x2f,
+	0x64, 0x69, 0x61, 0x67, 0x6e, 0x6f, 0x73, 0x74, 0x69, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -1445,55 +1611,60 @@ func file_diagnostic_diagnostic_proto_rawDescGZIP() []byte {
 	return file_diagnostic_diagnostic_proto_rawDescData
 }
 
-var file_diagnostic_diagnostic_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_diagnostic_diagnostic_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_diagnostic_diagnostic_proto_goTypes = []interface{}{
-	(*GetDiagnosticCentreSchedulesRequest)(nil),  // 0: GetDiagnosticCentreSchedulesRequest
-	(*GetDiagnosticCentreSchedulesResponse)(nil), // 1: GetDiagnosticCentreSchedulesResponse
-	(*Address)(nil),                          // 2: Address
-	(*Phone)(nil),                            // 3: Phone
-	(*Contact)(nil),                          // 4: Contact
-	(*SearchNearestDiagnosticsRequest)(nil),  // 5: SearchNearestDiagnosticsRequest
-	(*CreateDiagnosticRequest)(nil),          // 6: CreateDiagnosticRequest
-	(*GetDiagnosticRequest)(nil),             // 7: GetDiagnosticRequest
-	(*UpdateDiagnosticRequest)(nil),          // 8: UpdateDiagnosticRequest
-	(*DeleteDiagnosticRequest)(nil),          // 9: DeleteDiagnosticRequest
-	(*GetDiagnosticResponse)(nil),            // 10: GetDiagnosticResponse
-	(*ListDiagnosticsRequest)(nil),           // 11: ListDiagnosticsRequest
-	(*Diagnostic)(nil),                       // 12: Diagnostic
-	(*ListDiagnosticsResponse)(nil),          // 13: ListDiagnosticsResponse
-	(*DeleteDiagnosticResponse)(nil),         // 14: DeleteDiagnosticResponse
-	(*UpdateDiagnosticResponse)(nil),         // 15: UpdateDiagnosticResponse
-	(*CreateDiagnosticResponse)(nil),         // 16: CreateDiagnosticResponse
-	(*SearchNearestDiagnosticsResponse)(nil), // 17: SearchNearestDiagnosticsResponse
-	(*structpb.Struct)(nil),                  // 18: google.protobuf.Struct
+	(*GetDiagnosticCentreScheduleRequest)(nil),    // 0: GetDiagnosticCentreScheduleRequest
+	(*ListDiagnosticCentreSchedulesRequest)(nil),  // 1: ListDiagnosticCentreSchedulesRequest
+	(*GetDiagnosticCentreScheduleResponse)(nil),   // 2: GetDiagnosticCentreScheduleResponse
+	(*ListDiagnosticCentreSchedulesResponse)(nil), // 3: ListDiagnosticCentreSchedulesResponse
+	(*Address)(nil),                          // 4: Address
+	(*Phone)(nil),                            // 5: Phone
+	(*Contact)(nil),                          // 6: Contact
+	(*SearchNearestDiagnosticsRequest)(nil),  // 7: SearchNearestDiagnosticsRequest
+	(*CreateDiagnosticRequest)(nil),          // 8: CreateDiagnosticRequest
+	(*GetDiagnosticRequest)(nil),             // 9: GetDiagnosticRequest
+	(*UpdateDiagnosticRequest)(nil),          // 10: UpdateDiagnosticRequest
+	(*DeleteDiagnosticRequest)(nil),          // 11: DeleteDiagnosticRequest
+	(*GetDiagnosticResponse)(nil),            // 12: GetDiagnosticResponse
+	(*ListDiagnosticsRequest)(nil),           // 13: ListDiagnosticsRequest
+	(*Diagnostic)(nil),                       // 14: Diagnostic
+	(*ListDiagnosticsResponse)(nil),          // 15: ListDiagnosticsResponse
+	(*DeleteDiagnosticResponse)(nil),         // 16: DeleteDiagnosticResponse
+	(*UpdateDiagnosticResponse)(nil),         // 17: UpdateDiagnosticResponse
+	(*CreateDiagnosticResponse)(nil),         // 18: CreateDiagnosticResponse
+	(*SearchNearestDiagnosticsResponse)(nil), // 19: SearchNearestDiagnosticsResponse
+	(*structpb.Struct)(nil),                  // 20: google.protobuf.Struct
 }
 var file_diagnostic_diagnostic_proto_depIdxs = []int32{
-	3,  // 0: Contact.phone:type_name -> Phone
-	2,  // 1: UpdateDiagnosticRequest.address:type_name -> Address
-	4,  // 2: UpdateDiagnosticRequest.contact:type_name -> Contact
-	12, // 3: ListDiagnosticsResponse.diagnostics:type_name -> Diagnostic
-	18, // 4: UpdateDiagnosticResponse.address:type_name -> google.protobuf.Struct
-	18, // 5: UpdateDiagnosticResponse.contact:type_name -> google.protobuf.Struct
-	12, // 6: SearchNearestDiagnosticsResponse.diagnostics:type_name -> Diagnostic
-	6,  // 7: DiagnosticService.CreateDiagnostic:input_type -> CreateDiagnosticRequest
-	7,  // 8: DiagnosticService.GetDiagnostic:input_type -> GetDiagnosticRequest
-	8,  // 9: DiagnosticService.UpdateDiagnostic:input_type -> UpdateDiagnosticRequest
-	9,  // 10: DiagnosticService.DeleteDiagnostic:input_type -> DeleteDiagnosticRequest
-	11, // 11: DiagnosticService.ListDiagnostics:input_type -> ListDiagnosticsRequest
-	5,  // 12: DiagnosticService.SearchNearestDiagnostics:input_type -> SearchNearestDiagnosticsRequest
-	0,  // 13: DiagnosticService.GetDiagnosticCentreSchedules:input_type -> GetDiagnosticCentreSchedulesRequest
-	16, // 14: DiagnosticService.CreateDiagnostic:output_type -> CreateDiagnosticResponse
-	10, // 15: DiagnosticService.GetDiagnostic:output_type -> GetDiagnosticResponse
-	15, // 16: DiagnosticService.UpdateDiagnostic:output_type -> UpdateDiagnosticResponse
-	14, // 17: DiagnosticService.DeleteDiagnostic:output_type -> DeleteDiagnosticResponse
-	13, // 18: DiagnosticService.ListDiagnostics:output_type -> ListDiagnosticsResponse
-	17, // 19: DiagnosticService.SearchNearestDiagnostics:output_type -> SearchNearestDiagnosticsResponse
-	1,  // 20: DiagnosticService.GetDiagnosticCentreSchedules:output_type -> GetDiagnosticCentreSchedulesResponse
-	14, // [14:21] is the sub-list for method output_type
-	7,  // [7:14] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	2,  // 0: ListDiagnosticCentreSchedulesResponse.schedules:type_name -> GetDiagnosticCentreScheduleResponse
+	5,  // 1: Contact.phone:type_name -> Phone
+	4,  // 2: UpdateDiagnosticRequest.address:type_name -> Address
+	6,  // 3: UpdateDiagnosticRequest.contact:type_name -> Contact
+	14, // 4: ListDiagnosticsResponse.diagnostics:type_name -> Diagnostic
+	20, // 5: UpdateDiagnosticResponse.address:type_name -> google.protobuf.Struct
+	20, // 6: UpdateDiagnosticResponse.contact:type_name -> google.protobuf.Struct
+	14, // 7: SearchNearestDiagnosticsResponse.diagnostics:type_name -> Diagnostic
+	8,  // 8: DiagnosticService.CreateDiagnostic:input_type -> CreateDiagnosticRequest
+	9,  // 9: DiagnosticService.GetDiagnostic:input_type -> GetDiagnosticRequest
+	10, // 10: DiagnosticService.UpdateDiagnostic:input_type -> UpdateDiagnosticRequest
+	11, // 11: DiagnosticService.DeleteDiagnostic:input_type -> DeleteDiagnosticRequest
+	13, // 12: DiagnosticService.ListDiagnostics:input_type -> ListDiagnosticsRequest
+	7,  // 13: DiagnosticService.SearchNearestDiagnostics:input_type -> SearchNearestDiagnosticsRequest
+	1,  // 14: DiagnosticService.ListDiagnosticCentreSchedules:input_type -> ListDiagnosticCentreSchedulesRequest
+	0,  // 15: DiagnosticService.GetDiagnosticCentreSchedule:input_type -> GetDiagnosticCentreScheduleRequest
+	18, // 16: DiagnosticService.CreateDiagnostic:output_type -> CreateDiagnosticResponse
+	12, // 17: DiagnosticService.GetDiagnostic:output_type -> GetDiagnosticResponse
+	17, // 18: DiagnosticService.UpdateDiagnostic:output_type -> UpdateDiagnosticResponse
+	16, // 19: DiagnosticService.DeleteDiagnostic:output_type -> DeleteDiagnosticResponse
+	15, // 20: DiagnosticService.ListDiagnostics:output_type -> ListDiagnosticsResponse
+	19, // 21: DiagnosticService.SearchNearestDiagnostics:output_type -> SearchNearestDiagnosticsResponse
+	3,  // 22: DiagnosticService.ListDiagnosticCentreSchedules:output_type -> ListDiagnosticCentreSchedulesResponse
+	2,  // 23: DiagnosticService.GetDiagnosticCentreSchedule:output_type -> GetDiagnosticCentreScheduleResponse
+	16, // [16:24] is the sub-list for method output_type
+	8,  // [8:16] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_diagnostic_diagnostic_proto_init() }
@@ -1503,7 +1674,7 @@ func file_diagnostic_diagnostic_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_diagnostic_diagnostic_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDiagnosticCentreSchedulesRequest); i {
+			switch v := v.(*GetDiagnosticCentreScheduleRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1515,7 +1686,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDiagnosticCentreSchedulesResponse); i {
+			switch v := v.(*ListDiagnosticCentreSchedulesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1527,7 +1698,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Address); i {
+			switch v := v.(*GetDiagnosticCentreScheduleResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1539,7 +1710,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Phone); i {
+			switch v := v.(*ListDiagnosticCentreSchedulesResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1551,7 +1722,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Contact); i {
+			switch v := v.(*Address); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1563,7 +1734,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SearchNearestDiagnosticsRequest); i {
+			switch v := v.(*Phone); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1575,7 +1746,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateDiagnosticRequest); i {
+			switch v := v.(*Contact); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1587,7 +1758,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDiagnosticRequest); i {
+			switch v := v.(*SearchNearestDiagnosticsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1599,7 +1770,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDiagnosticRequest); i {
+			switch v := v.(*CreateDiagnosticRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1611,7 +1782,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDiagnosticRequest); i {
+			switch v := v.(*GetDiagnosticRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1623,7 +1794,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDiagnosticResponse); i {
+			switch v := v.(*UpdateDiagnosticRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1635,7 +1806,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDiagnosticsRequest); i {
+			switch v := v.(*DeleteDiagnosticRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1647,7 +1818,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Diagnostic); i {
+			switch v := v.(*GetDiagnosticResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1659,7 +1830,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDiagnosticsResponse); i {
+			switch v := v.(*ListDiagnosticsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1671,7 +1842,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDiagnosticResponse); i {
+			switch v := v.(*Diagnostic); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1683,7 +1854,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDiagnosticResponse); i {
+			switch v := v.(*ListDiagnosticsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1695,7 +1866,7 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateDiagnosticResponse); i {
+			switch v := v.(*DeleteDiagnosticResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1707,6 +1878,30 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 		file_diagnostic_diagnostic_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateDiagnosticResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_diagnostic_diagnostic_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateDiagnosticResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_diagnostic_diagnostic_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SearchNearestDiagnosticsResponse); i {
 			case 0:
 				return &v.state
@@ -1719,14 +1914,14 @@ func file_diagnostic_diagnostic_proto_init() {
 			}
 		}
 	}
-	file_diagnostic_diagnostic_proto_msgTypes[1].OneofWrappers = []interface{}{}
+	file_diagnostic_diagnostic_proto_msgTypes[2].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_diagnostic_diagnostic_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

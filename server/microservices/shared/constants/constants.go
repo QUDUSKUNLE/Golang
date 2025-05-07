@@ -45,12 +45,12 @@ const (
 
 // ScheduleService constants
 const (
-	CreateSchedule        = "/ScheduleService/CreateScheduleSession"
-	GetScheduleSession    = "/ScheduleService/GetScheduleSession"
-	ListScheduleSessions  = "/ScheduleService/ListScheduleSessions"
-	DeleteScheduleSession = "/ScheduleService/DeleteScheduleSession"
-	UpdateScheduleSession = "/ScheduleService/UpdateScheduleSession"
+	CreateSchedule = "/ScheduleService/CreateSchedule"
+	GetSchedule    = "/ScheduleService/GetSchedule"
+	ListSchedules  = "/ScheduleService/ListSchedules"
+	CancelSchedule = "/ScheduleService/DeleteSchedule"
+	UpdateSchedule = "/ScheduleService/UpdateSchedule"
 
 	// Diagnostic Centre Schedule
-	ListDiagnosticCentreSchedules	= "/ScheduleService/ListDiagnosticCentreSchedules"
+	ListDiagnosticCentreSchedules = "/ScheduleService/ListDiagnosticCentreSchedules"
 )

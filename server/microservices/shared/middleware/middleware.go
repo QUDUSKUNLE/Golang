@@ -129,10 +129,10 @@ func requiresAuthorization(method string) bool {
 		constants.UpdateDiagnostic:              true,
 		constants.DeleteDiagnostic:              true,
 		constants.CreateSchedule:                true,
-		constants.GetScheduleSession:            true,
-		constants.ListScheduleSessions:          true,
-		constants.DeleteScheduleSession:         true,
-		constants.UpdateScheduleSession:         true,
+		constants.GetSchedule:                   true,
+		constants.ListSchedules:                 true,
+		constants.CancelSchedule:                true,
+		constants.UpdateSchedule:                true,
 		constants.ListDiagnosticCentreSchedules: true,
 	}
 	return authorizedMethods[method]
