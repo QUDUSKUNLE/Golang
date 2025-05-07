@@ -631,18 +631,19 @@ func (q *Queries) SearchDiagnostics(ctx context.Context, arg SearchDiagnosticsPa
 const updateDiagnostic = `-- name: UpdateDiagnostic :one
 UPDATE diagnostics
 SET
-  diagnostic_centre_name = COALESCE($2, diagnostic_centre_name),
-  latitude = COALESCE($3, latitude),
-  longitude = COALESCE($4, longitude),
-  address = COALESCE($5, address),
-  contact = COALESCE($6, contact),
+  diagnostic_centre_name = COALESCE($3, diagnostic_centre_name),
+  latitude = COALESCE($4, latitude),
+  longitude = COALESCE($5, longitude),
+  address = COALESCE($6, address),
+  contact = COALESCE($7, contact),
   updated_at = NOW()
-WHERE id = $1
+WHERE id = $1 AND user_id = $2
 RETURNING id, user_id, diagnostic_centre_name, latitude, longitude, address, contact, created_at, updated_at
 `
 
 type UpdateDiagnosticParams struct {
 	ID                   string        `db:"id" json:"id"`
+	UserID               string        `db:"user_id" json:"user_id"`
 	DiagnosticCentreName string        `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
 	Latitude             pgtype.Float8 `db:"latitude" json:"latitude"`
 	Longitude            pgtype.Float8 `db:"longitude" json:"longitude"`
@@ -654,6 +655,7 @@ type UpdateDiagnosticParams struct {
 func (q *Queries) UpdateDiagnostic(ctx context.Context, arg UpdateDiagnosticParams) (*Diagnostic, error) {
 	row := q.db.QueryRow(ctx, updateDiagnostic,
 		arg.ID,
+		arg.UserID,
 		arg.DiagnosticCentreName,
 		arg.Latitude,
 		arg.Longitude,

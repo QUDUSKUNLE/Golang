@@ -50,6 +50,35 @@ service DiagnosticService {
   }
 }
 
+message CreateDiagnosticRequest {
+  string user_id = 1 [json_name = "user_id"];
+  string diagnostic_centre_name = 2 [json_name = "diagnostic_centre_name"];
+}
+
+message GetDiagnosticRequest {
+  string diagnostic_id = 1 [json_name = "diagnostic_id"];
+}
+
+message UpdateDiagnosticRequest {
+  string diagnostic_id = 1 [json_name = "diagnostic_id"];
+  string user_id = 2 [json_name = "user_id"];
+  string diagnostic_centre_name = 3 [json_name = "diagnostic_centre_name"];
+  Address address = 4 [json_name = "address"];
+  Contact contact = 5 [json_name = "contact"];
+  double latitude = 6 [json_name = "latitude"];
+  double longitude = 7 [json_name = "longitude"];
+}
+
+message DeleteDiagnosticRequest {
+  string diagnostic_id = 1 [json_name = "diagnostic_id"];
+}
+
+message ListDiagnosticsRequest {
+  string user_id = 1 [json_name = "user_id"];
+  int32 offset = 2 [json_name = "offset"];
+  int32 limit = 3 [json_name = "limit"];
+}
+
 message GetDiagnosticScheduleRequest {
   string diagnostic_id = 1; // ID of the diagnostic center
   string schedule_id = 2;           // ID of the scheduled session        // ID of the user scheduling the session
@@ -88,12 +117,9 @@ message Address {
   string country = 4 [json_name = "country"];
 }
 
-message Phone {
-  string phone = 1 [json_name = "phone"];
-}
 
 message Contact {
-  repeated Phone phone = 1 [json_name = "phone"];
+  repeated string phones = 1 [json_name = "phones"];
   string email = 2 [json_name = "email"];
 }
 
@@ -104,47 +130,29 @@ message SearchNearestDiagnosticsRequest {
   int32 offset = 4 [json_name = "offset"];
 }
 
-message CreateDiagnosticRequest {
-  string user_id = 1 [json_name = "user_id"];
-  string diagnostic_centre_name = 2 [json_name = "diagnostic_centre_name"];
-}
-
-message GetDiagnosticRequest {
-  string diagnostic_id = 1 [json_name = "diagnostic_id"];
-}
-
-message UpdateDiagnosticRequest {
-  string diagnostic_id = 1 [json_name = "diagnostic_id"];
-  string user_id = 2 [json_name = "user_id"];
-  Address address = 3 [json_name = "address"];
-  Contact contact = 4 [json_name = "contact"];
-  int32 latitude = 5 [json_name = "latitude"];
-  int32 longitude = 6 [json_name = "longitude"];
-}
-
-message DeleteDiagnosticRequest {
-  string diagnostic_id = 1 [json_name = "diagnostic_id"];
-}
-
 message GetDiagnosticResponse {
   string diagnostic_id = 1 [json_name = "diagnostic_id"];
   string user_id = 2 [json_name = "user_id"];
-  string created_at = 3 [json_name = "created_at"];
-  string updated_at = 4 [json_name = "updated_at"];
+  string diagnostic_centre_name = 3 [json_name = "diagnostic_centre_name"];
+  double latitude = 4 [json_name = "latitude"];
+  double longitude = 5 [json_name = "longitude"];
+  google.protobuf.Struct address = 6 [json_name = "address"];
+  google.protobuf.Struct contact = 7 [json_name = "contact"];
+  string created_at = 8 [json_name = "created_at"];
+  string updated_at = 9 [json_name = "updated_at"];
 }
 
-message ListDiagnosticsRequest {
-  string user_id = 1 [json_name = "user_id"];
-}
 
 message Diagnostic {
   string diagnostic_id = 1 [json_name = "diagnostic_id"];
   string user_id = 2 [json_name = "user_id"];
   string diagnostic_centre_name = 3 [json_name = "diagnostic_centre_name"];
-  string latitude = 4 [json_name = "latitude"];
-  string longitude = 5 [json_name = "longitude"];
-  string created_at = 6 [json_name = "created_at"];
-  string updated_at = 7 [json_name = "updated_at"];
+  double latitude = 4 [json_name = "latitude"];
+  double longitude = 5 [json_name = "longitude"];
+  google.protobuf.Struct address = 6 [json_name = "address"];
+  google.protobuf.Struct contact = 7 [json_name = "contact"];
+  string created_at = 8 [json_name = "created_at"];
+  string updated_at = 9 [json_name = "updated_at"];
 }
 
 message ListDiagnosticsResponse {
@@ -161,10 +169,13 @@ message DeleteDiagnosticResponse {
 message UpdateDiagnosticResponse {
   string diagnostic_id = 1 [json_name = "diagnostic_id"];
   string user_id = 2 [json_name = "user_id"];
-  google.protobuf.Struct address = 3 [json_name = "address"];
-  google.protobuf.Struct contact = 4 [json_name = "contact"];
-  string created_at = 5 [json_name = "created_at"];
-  string updated_at = 6 [json_name = "updated_at"];
+  string diagnostic_centre_name = 3 [json_name = "diagnostic_centre_name"];
+  double latitude = 4 [json_name = "latitude"];
+  double longitude = 5 [json_name = "longitude"];
+  Address address = 6 [json_name = "address"];
+  Contact contact = 7 [json_name = "contact"];
+  string created_at = 8 [json_name = "created_at"];
+  string updated_at = 9 [json_name = "updated_at"];
 }
 
 message CreateDiagnosticResponse {

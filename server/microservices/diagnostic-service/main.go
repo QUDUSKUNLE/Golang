@@ -21,7 +21,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-
 func main() {
 	// Load configuration
 	// Load environment variable

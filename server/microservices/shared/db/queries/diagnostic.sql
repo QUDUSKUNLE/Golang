@@ -21,13 +21,13 @@ LIMIT $1 OFFSET $2;
 -- Updates a diagnostic record by its ID.
 UPDATE diagnostics
 SET
-  diagnostic_centre_name = COALESCE($2, diagnostic_centre_name),
-  latitude = COALESCE($3, latitude),
-  longitude = COALESCE($4, longitude),
-  address = COALESCE($5, address),
-  contact = COALESCE($6, contact),
+  diagnostic_centre_name = COALESCE($3, diagnostic_centre_name),
+  latitude = COALESCE($4, latitude),
+  longitude = COALESCE($5, longitude),
+  address = COALESCE($6, address),
+  contact = COALESCE($7, contact),
   updated_at = NOW()
-WHERE id = $1
+WHERE id = $1 AND user_id = $2
 RETURNING *;
 
 -- name: DeleteDiagnostic :one

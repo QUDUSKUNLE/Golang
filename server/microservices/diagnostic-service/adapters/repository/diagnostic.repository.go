@@ -19,6 +19,15 @@ func (d *DiagnosticRepository) CreateDiagnostic(ctx context.Context, arg db.Crea
 	return diagnostic, nil
 }
 
+func (d *DiagnosticRepository) GetDiagnostic(ctx context.Context, id string) (*db.Diagnostic, error) {
+	// Implementation for getting a diagnostic by ID
+	diagnostic, err := d.database.GetDiagnostic(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return diagnostic, nil
+}
+
 func (d *DiagnosticRepository) GetAllDiagnostics(ctx context.Context, arg db.GetAllDiagnosticsParams) ([]*db.Diagnostic, error) {
 	// Implementation for getting all diagnostics
 	diagnostics, err := d.database.GetAllDiagnostics(ctx, arg)
@@ -28,18 +37,9 @@ func (d *DiagnosticRepository) GetAllDiagnostics(ctx context.Context, arg db.Get
 	return diagnostics, nil
 }
 
-func (d *DiagnosticRepository) CancelDiagnostic(ctx context.Context, id string) (*db.Diagnostic, error) {
+func (d *DiagnosticRepository) CancelDiagnostic(ctx context.Context, diagnostic_id string) (*db.Diagnostic, error) {
 	// Implementation for deleting a diagnostic
-	diagnostic, err := d.database.DeleteDiagnostic(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return diagnostic, nil
-}
-
-func (d *DiagnosticRepository) GetDiagnostic(ctx context.Context, id string) (*db.Diagnostic, error) {
-	// Implementation for getting a diagnostic by ID
-	diagnostic, err := d.database.GetDiagnostic(ctx, id)
+	diagnostic, err := d.database.DeleteDiagnostic(ctx, diagnostic_id)
 	if err != nil {
 		return nil, err
 	}

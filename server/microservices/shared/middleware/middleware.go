@@ -10,6 +10,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"
+	"github.com/QUDUSKUNLE/microservices/shared/protogen/diagnostic"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/schedule"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
@@ -54,6 +55,10 @@ func validateRequest(req interface{}) error {
 		return validateScanUploadRequest(r)
 	case *schedule.ScheduleRequest:
 		return validateScheduleRequest(r)
+	case *diagnostic.CreateDiagnosticRequest:
+		return validateCreateDiagnosticRequest(r)
+	case *diagnostic.GetDiagnosticRequest:
+		return validateGetDiagnosticRequest(r)
 	default:
 		return nil
 	}
@@ -116,6 +121,26 @@ func validateScheduleRequest(r *schedule.ScheduleRequest) error {
 	return nil
 }
 
+func validateCreateDiagnosticRequest(r *diagnostic.CreateDiagnosticRequest) error {
+	if r.UserId == "" {
+		return status.Errorf(codes.InvalidArgument, "UserId is required")
+	}
+	if r.DiagnosticCentreName == "" {
+		return status.Errorf(codes.InvalidArgument, "DiagnosticCentreId is required")
+	}
+	return nil
+}
+
+func validateGetDiagnosticRequest(r *diagnostic.GetDiagnosticRequest) error {
+	if r.DiagnosticId == "" {
+		return status.Errorf(codes.InvalidArgument, "DiagnosticId is required")
+	}
+	if !ValidateUUID(r.DiagnosticId) {
+		return status.Errorf(codes.InvalidArgument, "Invalid DiagnosticId")
+	}
+	return nil
+}
+
 func requiresAuthorization(method string) bool {
 	authorizedMethods := map[string]bool{
 		constants.UpdateUser:                    true,
@@ -125,6 +150,7 @@ func requiresAuthorization(method string) bool {
 		constants.ScanUpload:                    true,
 		constants.SearchRecord:                  true,
 		constants.SearchByNin:                   true,
+		constants.ListDiagnostics:               true,
 		constants.GetDiagnostic:                 true,
 		constants.UpdateDiagnostic:              true,
 		constants.DeleteDiagnostic:              true,
@@ -146,7 +172,7 @@ func authorizationHelper(ctx context.Context, req interface{}, handler grpc.Unar
 
 	// Extract token from the authorization header
 	token := meta["authorization"]
-	if len(token) == 0 {
+	if len(token) <= 1 {
 		return nil, status.Error(codes.Unauthenticated, "Authorization token is not provided")
 	}
 
