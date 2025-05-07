@@ -23,11 +23,28 @@ type Querier interface {
 	GetAllDiagnostics(ctx context.Context, arg GetAllDiagnosticsParams) ([]*Diagnostic, error)
 	// Retrieves a single diagnostic record by its ID.
 	GetDiagnostic(ctx context.Context, id string) (*Diagnostic, error)
-	GetDiagnosticCentreSchedules(ctx context.Context, arg GetDiagnosticCentreSchedulesParams) ([]*GetDiagnosticCentreSchedulesRow, error)
 	GetDiagnosticCentreSchedulesBySpecificDate(ctx context.Context, arg GetDiagnosticCentreSchedulesBySpecificDateParams) ([]*GetDiagnosticCentreSchedulesBySpecificDateRow, error)
 	GetDiagnosticCentreSchedulesByStatus(ctx context.Context, arg GetDiagnosticCentreSchedulesByStatusParams) ([]*GetDiagnosticCentreSchedulesByStatusRow, error)
 	GetDiagnosticCentreSchedulesByTestType(ctx context.Context, arg GetDiagnosticCentreSchedulesByTestTypeParams) ([]*GetDiagnosticCentreSchedulesByTestTypeRow, error)
 	GetDiagnosticCentreSchedulesWithDiagnosticsDetails(ctx context.Context, arg GetDiagnosticCentreSchedulesWithDiagnosticsDetailsParams) ([]*GetDiagnosticCentreSchedulesWithDiagnosticsDetailsRow, error)
+	// -- name: LisDiagnosticSchedules :many
+	// SELECT
+	//   ds.id AS schedule_id,
+	//   ds.user_id,
+	//   ds.date,
+	//   ds.time,
+	//   ds.test_type,
+	//   ds.status,
+	//   ds.notes,
+	//   ds.created_at,
+	//   ds.updated_at,
+	//   d.id AS diagnostic_id,
+	//   d.diagnostic_centre_name
+	// FROM diagnostic_schedules ds
+	// JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+	// WHERE d.id = $1 AND ds.date >= NOW()
+	// ORDER BY ds.date DESC, ds.time DESC
+	// LIMIT $2 OFFSET $3;
 	GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg GetDiagnosticCentreUpcomingSchedulesParams) ([]*GetDiagnosticCentreUpcomingSchedulesRow, error)
 	GetRecord(ctx context.Context, id string) (*Record, error)
 	GetRecords(ctx context.Context, diagnosticID string) ([]*Record, error)
@@ -42,6 +59,7 @@ type Querier interface {
 	GetUser(ctx context.Context, id string) (*User, error)
 	GetUserByEmail(ctx context.Context, email pgtype.Text) (*User, error)
 	GetUsers(ctx context.Context, arg GetUsersParams) ([]*User, error)
+	LisDiagnosticSchedules(ctx context.Context, arg LisDiagnosticSchedulesParams) ([]*LisDiagnosticSchedulesRow, error)
 	// Retrieves all diagnostic records for a specific user.
 	ListDiagnostics(ctx context.Context, arg ListDiagnosticsParams) ([]*Diagnostic, error)
 	// Searches diagnostics by name with pagination.

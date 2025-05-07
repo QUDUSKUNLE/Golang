@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"time"
 
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
@@ -16,9 +18,15 @@ import (
 )
 
 func (s *DiagnosticService) CreateDiagnostic(ctx context.Context, req *diagnostic.CreateDiagnosticRequest) (*diagnostic.CreateDiagnosticResponse, error) {
+	// Validate the request
+	user, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTICCENTRE))
+	if err != nil {
+		utils.LogError("Error validating diagnostic centre: ", err)
+		return nil, status.Errorf(codes.PermissionDenied, "Unauthorized: %v", err)
+	}
 	// Save the diagnostic to the database
 	diag, err := s.Repo.CreateDiagnostic(ctx, db.CreateDiagnosticParams{
-		UserID: req.GetUserId(), DiagnosticCentreName: req.GetDiagnosticCentreName()})
+		UserID: user.UserID, DiagnosticCentreName: req.GetDiagnosticCentreName()})
 	if err != nil {
 		return nil, err
 	}
@@ -189,11 +197,21 @@ func (s *DiagnosticService) UpdateDiagnostic(ctx context.Context, req *diagnosti
 	}
 	// Update the diagnostic in the database
 	diag, err := s.Repo.UpdateDiagnostic(ctx, db.UpdateDiagnosticParams{
-		ID:                   req.GetDiagnosticId(),
-		UserID:               user.UserID,
-		DiagnosticCentreName: req.GetDiagnosticCentreName(),
-		Latitude:             pgtype.Float8{Float64: req.GetLatitude(), Valid: true},
-		Longitude:            pgtype.Float8{Float64: req.GetLongitude(), Valid: true},
+		ID:     req.GetDiagnosticId(),
+		UserID: user.UserID,
+		DiagnosticCentreName: func() string {
+			if req.GetDiagnosticCentreName() == "" {
+				oldDiag, err := s.Repo.GetDiagnostic(ctx, req.GetDiagnosticId())
+				if err != nil {
+					utils.LogError("Failed to fetch existing diagnostic: ", err)
+					return ""
+				}
+				return oldDiag.DiagnosticCentreName
+			}
+			return req.GetDiagnosticCentreName()
+		}(),
+		Latitude:  pgtype.Float8{Float64: req.GetLatitude(), Valid: true},
+		Longitude: pgtype.Float8{Float64: req.GetLongitude(), Valid: true},
 		Address: func() []byte {
 			addressBytes, err := json.Marshal(req.GetAddress())
 			if err != nil {
@@ -244,5 +262,73 @@ func (s *DiagnosticService) UpdateDiagnostic(ctx context.Context, req *diagnosti
 		}(),
 		CreatedAt: diag.CreatedAt.Time.String(),
 		UpdatedAt: diag.UpdatedAt.Time.String(),
+	}, nil
+}
+
+func (s *DiagnosticService) ListDiagnosticSchedules(ctx context.Context, req *diagnostic.ListDiagnosticSchedulesRequest) (*diagnostic.ListDiagnosticSchedulesResponse, error) {
+	// Validate the request
+	_, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTICCENTRE))
+	if err != nil {
+		utils.LogError("Error validating diagnostic centre: ", err)
+		return nil, status.Errorf(codes.PermissionDenied, "Unauthorized: %v", err)
+	}
+
+	// List diagnostic schedules from the database
+	diaSchedules, err := s.Repo.ListDiagnosticSchedules(ctx, db.LisDiagnosticSchedulesParams{
+		ID: req.DiagnosticId,
+		// If Date is not specify
+		Column2: func() string {
+			if req.GetDate() == "" {
+				return time.Now().Format(time.RFC3339)
+			}
+			return req.GetDate()
+		}(),
+		// Column2: req.GetDate(),
+		// Column3: func() string {
+		// 	if req.GetTestType() == "" {
+		// 		return ""
+		// 	}
+		// 	return req.GetTestType()
+		// }(),
+		// Column3: func() string {
+		// 	if req.GetTestStatus() == "" {
+		// 		return "SCHEDULED"
+		// 	}
+		// 	return req.GetTestStatus()
+		// }(),
+		Limit: func() int32 {
+			if req.GetLimit() == 0 || req.GetLimit() > constants.DefaultLimit {
+				return constants.DefaultLimit
+			}
+			return req.GetLimit()
+		}(),
+		Offset: func() int32 {
+			if req.GetOffset() == 0 {
+				return constants.DefaultOffset
+			}
+			return req.GetOffset()
+		}(),
+	})
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Failed to fetch diagnostic schedules: %v", err)
+	}
+	var responseSchedules []*diagnostic.GetDiagnosticScheduleResponse
+	for _, schedule := range diaSchedules {
+		responseSchedules = append(responseSchedules, &diagnostic.GetDiagnosticScheduleResponse{
+			ScheduleId:           schedule.ScheduleID,
+			DiagnosticCentreName: schedule.DiagnosticCentreName,
+			UserId:               schedule.UserID,
+			DiagnosticId:         req.GetDiagnosticId(),
+			Date:                 schedule.Date.Time.String(),
+			Time:                 schedule.Time.Time.String(),
+			TestType:             fmt.Sprintf("%v", schedule.TestType),
+			Status:               fmt.Sprintf("%v", schedule.Status),
+			CreatedAt:            schedule.CreatedAt.Time.String(),
+			UpdatedAt:            schedule.UpdatedAt.Time.String(),
+		})
+	}
+	return &diagnostic.ListDiagnosticSchedulesResponse{
+		Schedules: responseSchedules,
 	}, nil
 }

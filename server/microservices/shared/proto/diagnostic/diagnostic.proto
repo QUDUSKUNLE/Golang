@@ -32,6 +32,7 @@ service DiagnosticService {
       get: "/v1/diagnostics"
     };
   }
+
   rpc SearchNearestDiagnostics(SearchNearestDiagnosticsRequest) returns (SearchNearestDiagnosticsResponse) {
     option (google.api.http) = {
       get: "/v1/diagnostics/search"
@@ -86,10 +87,11 @@ message GetDiagnosticScheduleRequest {
 
 message ListDiagnosticSchedulesRequest {
   string diagnostic_id = 1 [json_name = "diagnostic_id"];
-  string test_status = 2 [json_name = "test_status"];
-  string date = 3 [json_name = "date"];
-  int32 offset = 4 [json_name = "offset"];
-  int32 limit = 5 [json_name = "limit"];
+  string test_status = 2 [json_name = "test_status"]; // Replace with a valid type if schedule.TestStatus is unavailable
+  string test_type = 3 [json_name = "test_type"];
+  string date = 4 [json_name = "date"];
+  int32 offset = 5 [json_name = "offset"];
+  int32 limit = 6 [json_name = "limit"];
 }
 
 message GetDiagnosticScheduleResponse {

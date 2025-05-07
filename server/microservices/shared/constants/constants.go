@@ -41,6 +41,7 @@ const (
 	DeleteDiagnostic         = "/DiagnosticService/DeleteDiagnostic"
 	UpdateDiagnostic         = "/DiagnosticService/UpdateDiagnostic"
 	SearchNearestDiagnostics = "/DiagnosticService/SearchNearestDiagnostics"
+	ListDiagnosticSchedules  = "/DiagnosticService/ListDiagnosticSchedules"
 )
 
 // ScheduleService constants

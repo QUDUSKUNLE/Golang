@@ -73,6 +73,15 @@ func (d *DiagnosticRepository) UpdateDiagnostic(ctx context.Context, arg db.Upda
 	return diagnostic, nil
 }
 
+func (d *DiagnosticRepository) ListDiagnosticSchedules(ctx context.Context, arg db.LisDiagnosticSchedulesParams) ([]*db.LisDiagnosticSchedulesRow, error) {
+	// Implementation for listing diagnostic schedules
+	schedules, err := d.database.LisDiagnosticSchedules(ctx, arg)
+	if err != nil {
+		return nil, err
+	}
+	return schedules, nil
+}
+
 func NewDiagnosticRepository(database *db.Queries) *DiagnosticRepository {
 	return &DiagnosticRepository{
 		database: database,

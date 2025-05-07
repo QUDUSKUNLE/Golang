@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/QUDUSKUNLE/microservices/shared/constants"
 	"google.golang.org/grpc"
@@ -12,7 +11,6 @@ import (
 
 func ValidateUser(ctx context.Context, userType string) (*constants.UserType, error) {
 	user, ok := ctx.Value("user").(*constants.UserType)
-	fmt.Println(user, "**********")
 	if !ok || user.Type != userType {
 		return nil, status.Errorf(codes.PermissionDenied, constants.ErrUnauthorized)
 	}

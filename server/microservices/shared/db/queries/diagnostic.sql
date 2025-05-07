@@ -48,22 +48,24 @@ WHERE name ILIKE '%' || $1 || '%'
 ORDER BY created_at DESC
 LIMIT $2 OFFSET $3;
 
--- name: GetDiagnosticCentreSchedules :many
-SELECT 
-  ds.id AS schedule_id,
-  ds.user_id,
-  ds.date,
-  ds.time,
-  ds.test_type,
-  ds.status,
-  ds.notes,
-  d.id AS diagnostic_id,
-  d.diagnostic_centre_name
-FROM diagnostic_schedules ds
-JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
-WHERE d.id = $1
-ORDER BY ds.date DESC, ds.time DESC
-LIMIT $2 OFFSET $3;
+-- -- name: LisDiagnosticSchedules :many
+-- SELECT 
+--   ds.id AS schedule_id,
+--   ds.user_id,
+--   ds.date,
+--   ds.time,
+--   ds.test_type,
+--   ds.status,
+--   ds.notes,
+--   ds.created_at,
+--   ds.updated_at,
+--   d.id AS diagnostic_id,
+--   d.diagnostic_centre_name
+-- FROM diagnostic_schedules ds
+-- JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+-- WHERE d.id = $1 AND ds.date >= NOW()
+-- ORDER BY ds.date DESC, ds.time DESC
+-- LIMIT $2 OFFSET $3;
 
 -- name: GetDiagnosticCentreUpcomingSchedules :many
 SELECT 
@@ -74,6 +76,9 @@ SELECT
   ds.test_type,
   ds.status,
   ds.notes,
+  ds.created_at,
+  ds.updated_at,
+  d.id AS diagnostic_id,
   d.diagnostic_centre_name
 FROM diagnostic_schedules ds
 JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
@@ -148,3 +153,24 @@ JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
 WHERE d.id = $1
 ORDER BY ds.date DESC, ds.time DESC
 LIMIT $2 OFFSET $3;
+
+-- name: LisDiagnosticSchedules :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  ds.created_at,
+  ds.updated_at,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1
+  AND ($2::TEXT IS NULL OR ds.date::TEXT >= $2)
+  -- AND ($3::TEXT IS NULL OR ds.test_type ILIKE '%' || $3 || '%')
+  -- AND ($3::TEXT IS NULL OR ds.status = $3)
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $3 OFFSET $4;

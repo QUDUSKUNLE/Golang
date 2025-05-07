@@ -26,7 +26,9 @@ func (h *DiagnosticHandler) CancelDiagnostic(ctx context.Context, req *diagnosti
 	return h.DiagnosticService.CancelDiagnostic(ctx, req)
 }
 
-
+func (h *DiagnosticHandler) ListDiagnosticSchedules(ctx context.Context, req *diagnostic.ListDiagnosticSchedulesRequest) (*diagnostic.ListDiagnosticSchedulesResponse, error) {
+	return h.DiagnosticService.ListDiagnosticSchedules(ctx, req)
+}
 
 func (h *DiagnosticHandler) SearchNearestDiagnosticCenter(ctx context.Context, req *diagnostic.SearchNearestDiagnosticsRequest) (*diagnostic.SearchNearestDiagnosticsResponse, error) {
 	return h.DiagnosticService.SearchNearestDiagnosticCenter(ctx, req)

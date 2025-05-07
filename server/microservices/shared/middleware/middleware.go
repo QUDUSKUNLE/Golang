@@ -122,9 +122,6 @@ func validateScheduleRequest(r *schedule.ScheduleRequest) error {
 }
 
 func validateCreateDiagnosticRequest(r *diagnostic.CreateDiagnosticRequest) error {
-	if r.UserId == "" {
-		return status.Errorf(codes.InvalidArgument, "UserId is required")
-	}
 	if r.DiagnosticCentreName == "" {
 		return status.Errorf(codes.InvalidArgument, "DiagnosticCentreId is required")
 	}
@@ -150,6 +147,7 @@ func requiresAuthorization(method string) bool {
 		constants.ScanUpload:                    true,
 		constants.SearchRecord:                  true,
 		constants.SearchByNin:                   true,
+		constants.CreateDiagnostic:              true,
 		constants.ListDiagnostics:               true,
 		constants.GetDiagnostic:                 true,
 		constants.UpdateDiagnostic:              true,
@@ -160,6 +158,7 @@ func requiresAuthorization(method string) bool {
 		constants.CancelSchedule:                true,
 		constants.UpdateSchedule:                true,
 		constants.ListDiagnosticCentreSchedules: true,
+		constants.ListDiagnosticSchedules:       true,
 	}
 	return authorizedMethods[method]
 }

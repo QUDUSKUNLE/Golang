@@ -129,72 +129,6 @@ func (q *Queries) GetDiagnostic(ctx context.Context, id string) (*Diagnostic, er
 	return &i, err
 }
 
-const getDiagnosticCentreSchedules = `-- name: GetDiagnosticCentreSchedules :many
-SELECT 
-  ds.id AS schedule_id,
-  ds.user_id,
-  ds.date,
-  ds.time,
-  ds.test_type,
-  ds.status,
-  ds.notes,
-  d.id AS diagnostic_id,
-  d.diagnostic_centre_name
-FROM diagnostic_schedules ds
-JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
-WHERE d.id = $1
-ORDER BY ds.date DESC, ds.time DESC
-LIMIT $2 OFFSET $3
-`
-
-type GetDiagnosticCentreSchedulesParams struct {
-	ID     string `db:"id" json:"id"`
-	Limit  int32  `db:"limit" json:"limit"`
-	Offset int32  `db:"offset" json:"offset"`
-}
-
-type GetDiagnosticCentreSchedulesRow struct {
-	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
-	UserID               string             `db:"user_id" json:"user_id"`
-	Date                 pgtype.Timestamptz `db:"date" json:"date"`
-	Time                 pgtype.Timestamptz `db:"time" json:"time"`
-	TestType             ScheduleType       `db:"test_type" json:"test_type"`
-	Status               ScheduleStatus     `db:"status" json:"status"`
-	Notes                pgtype.Text        `db:"notes" json:"notes"`
-	DiagnosticID         string             `db:"diagnostic_id" json:"diagnostic_id"`
-	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
-}
-
-func (q *Queries) GetDiagnosticCentreSchedules(ctx context.Context, arg GetDiagnosticCentreSchedulesParams) ([]*GetDiagnosticCentreSchedulesRow, error) {
-	rows, err := q.db.Query(ctx, getDiagnosticCentreSchedules, arg.ID, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []*GetDiagnosticCentreSchedulesRow
-	for rows.Next() {
-		var i GetDiagnosticCentreSchedulesRow
-		if err := rows.Scan(
-			&i.ScheduleID,
-			&i.UserID,
-			&i.Date,
-			&i.Time,
-			&i.TestType,
-			&i.Status,
-			&i.Notes,
-			&i.DiagnosticID,
-			&i.DiagnosticCentreName,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, &i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getDiagnosticCentreSchedulesBySpecificDate = `-- name: GetDiagnosticCentreSchedulesBySpecificDate :many
 SELECT 
   ds.id AS schedule_id,
@@ -478,6 +412,7 @@ func (q *Queries) GetDiagnosticCentreSchedulesWithDiagnosticsDetails(ctx context
 }
 
 const getDiagnosticCentreUpcomingSchedules = `-- name: GetDiagnosticCentreUpcomingSchedules :many
+
 SELECT 
   ds.id AS schedule_id,
   ds.user_id,
@@ -486,6 +421,9 @@ SELECT
   ds.test_type,
   ds.status,
   ds.notes,
+  ds.created_at,
+  ds.updated_at,
+  d.id AS diagnostic_id,
   d.diagnostic_centre_name
 FROM diagnostic_schedules ds
 JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
@@ -508,9 +446,32 @@ type GetDiagnosticCentreUpcomingSchedulesRow struct {
 	TestType             ScheduleType       `db:"test_type" json:"test_type"`
 	Status               ScheduleStatus     `db:"status" json:"status"`
 	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	CreatedAt            pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt            pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	DiagnosticID         string             `db:"diagnostic_id" json:"diagnostic_id"`
 	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
 }
 
+// -- name: LisDiagnosticSchedules :many
+// SELECT
+//
+//	ds.id AS schedule_id,
+//	ds.user_id,
+//	ds.date,
+//	ds.time,
+//	ds.test_type,
+//	ds.status,
+//	ds.notes,
+//	ds.created_at,
+//	ds.updated_at,
+//	d.id AS diagnostic_id,
+//	d.diagnostic_centre_name
+//
+// FROM diagnostic_schedules ds
+// JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+// WHERE d.id = $1 AND ds.date >= NOW()
+// ORDER BY ds.date DESC, ds.time DESC
+// LIMIT $2 OFFSET $3;
 func (q *Queries) GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg GetDiagnosticCentreUpcomingSchedulesParams) ([]*GetDiagnosticCentreUpcomingSchedulesRow, error) {
 	rows, err := q.db.Query(ctx, getDiagnosticCentreUpcomingSchedules, arg.ID, arg.Limit, arg.Offset)
 	if err != nil {
@@ -528,6 +489,87 @@ func (q *Queries) GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg 
 			&i.TestType,
 			&i.Status,
 			&i.Notes,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DiagnosticID,
+			&i.DiagnosticCentreName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const lisDiagnosticSchedules = `-- name: LisDiagnosticSchedules :many
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  ds.created_at,
+  ds.updated_at,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE d.id = $1
+  AND ($2::TEXT IS NULL OR ds.date::TEXT >= $2)
+  -- AND ($3::TEXT IS NULL OR ds.test_type ILIKE '%' || $3 || '%')
+  -- AND ($3::TEXT IS NULL OR ds.status = $3)
+ORDER BY ds.date DESC, ds.time DESC
+LIMIT $3 OFFSET $4
+`
+
+type LisDiagnosticSchedulesParams struct {
+	ID      string `db:"id" json:"id"`
+	Column2 string `db:"column_2" json:"column_2"`
+	Limit   int32  `db:"limit" json:"limit"`
+	Offset  int32  `db:"offset" json:"offset"`
+}
+
+type LisDiagnosticSchedulesRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	CreatedAt            pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt            pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+func (q *Queries) LisDiagnosticSchedules(ctx context.Context, arg LisDiagnosticSchedulesParams) ([]*LisDiagnosticSchedulesRow, error) {
+	rows, err := q.db.Query(ctx, lisDiagnosticSchedules,
+		arg.ID,
+		arg.Column2,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*LisDiagnosticSchedulesRow
+	for rows.Next() {
+		var i LisDiagnosticSchedulesRow
+		if err := rows.Scan(
+			&i.ScheduleID,
+			&i.UserID,
+			&i.Date,
+			&i.Time,
+			&i.TestType,
+			&i.Status,
+			&i.Notes,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.DiagnosticCentreName,
 		); err != nil {
 			return nil, err

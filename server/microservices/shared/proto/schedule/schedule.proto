@@ -3,15 +3,15 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/schedul
 
 import "google/api/annotations.proto";
 
-enum TestStatus {
-  TEST_STATUS_UNSPECIFIED = 0; // For SessionStatus
+enum ScheduleStatus {
+  SCHEDULE_STATUS_UNSPECIFIED = 0; // For SessionStatus
   SCHEDULED = 1; // Session is scheduled
   COMPLETED = 2; // Session is completed
   CANCELED = 3;  // Session is canceled
 }
 
-enum TestType {
-  TEST_TYPE_UNSPECIFIED = 0;
+enum ScheduleType {
+  SCHEDULE_TYPE_UNSPECIFIED = 0;
   BLOOD_TEST = 1; // Blood test
   URINE_TEST = 2; // Urine test
   X_RAY = 3;     // X-ray
@@ -71,14 +71,14 @@ message ScheduleRequest {              // ID of the user scheduling the session
   string user_id = 2; // ID of the diagnostic center
   string date = 3;                 // Date of the session (e.g., "2025-05-01")
   string time = 4;                 // Time of the session (e.g., "10:00 AM")
-  TestType test_type = 5;            // Type of diagnostic test
-  TestStatus test_status = 6;
+  ScheduleType test_type = 5;            // Type of diagnostic test
+  ScheduleStatus test_status = 6;
   optional string notes = 7;            // Status of the session              // Additional notes (optional)
 }
 
 // message ListDiagnosticCentreSchedulesRequest {
 //   string diagnostic_centre_id = 1; // ID of the diagnostic center// ID of the user scheduling the session
-//   TestStatus test_status = 2;
+//   ScheduleStatus test_status = 2;
 //   string date = 3;
 //   int32 limit = 4;             // Number of results to return
 //   int32 offset = 5;       // Status of the session
@@ -100,15 +100,15 @@ message UpdateScheduleRequest {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  TestType test_type = 6;            // Type of diagnostic test
-  TestStatus test_status = 7;
+  ScheduleType test_type = 6;            // Type of diagnostic test
+  ScheduleStatus test_status = 7;
   optional string notes = 8;                // Status of the session              // Additional notes (optional)
 }
 
 message CancelScheduleRequest {
   string schedule_id = 1;  
   string user_id = 2;
-  TestStatus test_status = 3;        // Status of the session
+  ScheduleStatus test_status = 3;        // Status of the session
 }
 
 message ListSchedulesRequest {
@@ -123,8 +123,8 @@ message GetScheduleResponse {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  TestType test_type = 6;            // Type of diagnostic test
-  TestStatus test_status = 7;
+  ScheduleType test_type = 6;            // Type of diagnostic test
+  ScheduleStatus test_status = 7;
   optional string notes = 8;         // Status of the session             // Additional notes (optional)
   string created_at = 9;          // Creation timestamp
   string updated_at = 10;          // Last update timestamp
@@ -135,8 +135,8 @@ message GetScheduleResponse {
 //   string diagnostic_centre_id = 3; // ID of the diagnostic center
 //   string date = 4;                 // Date of the session (e.g., "2025-05-01")
 //   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-//   TestType test_type = 6;            // Type of diagnostic test
-//   TestStatus test_status = 7;       // Type of diagnostic test
+//   ScheduleType test_type = 6;            // Type of diagnostic test
+//   ScheduleStatus test_status = 7;       // Type of diagnostic test
 //   optional string notes = 8;
 //   string created_at = 9;
 //   string updated_at = 10;          // Creation timestamp
@@ -148,8 +148,8 @@ message ScheduledSession {
   string diagnostic_centre_id = 3; // ID of the diagnostic center
   string date = 4;                 // Date of the session (e.g., "2025-05-01")
   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-  TestType test_type = 6;            // Type of diagnostic test
-  TestStatus test_status = 7;        // Type of diagnostic test
+  ScheduleType test_type = 6;            // Type of diagnostic test
+  ScheduleStatus test_status = 7;        // Type of diagnostic test
   optional string notes = 8;
   string created_at = 9;          // Creation timestamp
   string updated_at = 10;                        // Additional notes (optional)
