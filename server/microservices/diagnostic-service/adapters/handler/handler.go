@@ -34,6 +34,6 @@ func (h *DiagnosticHandler) GetDiagnosticSchedule(ctx context.Context, req *diag
 	return h.DiagnosticService.GetDiagnosticSchedule(ctx, req)
 }
 
-func (h *DiagnosticHandler) SearchNearestDiagnosticCenter(ctx context.Context, req *diagnostic.SearchNearestDiagnosticsRequest) (*diagnostic.SearchNearestDiagnosticsResponse, error) {
+func (h *DiagnosticHandler) SearchNearestDiagnostics(ctx context.Context, req *diagnostic.SearchNearestDiagnosticsRequest) (*diagnostic.SearchNearestDiagnosticsResponse, error) {
 	return h.DiagnosticService.SearchNearestDiagnosticCenter(ctx, req)
 }

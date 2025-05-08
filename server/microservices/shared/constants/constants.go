@@ -9,6 +9,8 @@ type UserType struct {
 const (
 	DefaultLimit  = 50
 	DefaultOffset = 0
+	MaxLimit      = 100
+	DistanceUnit  = "km"
 )
 
 // UserService constants

@@ -36,15 +36,3 @@ func (h *ScheduleHandler) ListSchedules(ctx context.Context, req *schedule.ListS
 	// Call the ListSchedule method of the ScheduleService and return the response.
 	return h.ScheduleService.ListScheduleSessions(ctx, req)
 }
-
-// // Get Diagnostic centre schedule by schedule ID
-// func (h *ScheduleHandler) GetDiagnosticCentreSchedule(ctx context.Context, req *schedule.GetDiagnosticCentreScheduleRequest) (*schedule.GetDiagnosticCentreScheduleResponse, error) {
-// 	// Call the GetDiagnosticCentreSchedule method of the ScheduleService and return the response.
-// 	return h.ScheduleService.GetScheduleByDiagnosticCentre(ctx, req)
-// }
-
-// Get Diagnostic centre schedule by status and date
-// func (h *ScheduleHandler) ListDiagnosticCentreSchedules(ctx context.Context, req *schedule.ListDiagnosticCentreSchedulesRequest) (*schedule.ListDiagnosticCentreSchedulesResponse, error) {
-// 	// Call the GetDiagnosticCentreScheduleByStatusAndDate method of the ScheduleService and return the response.
-// 	return h.ScheduleService.ListDiagnosticCentreSchedules(ctx, req)
-// }

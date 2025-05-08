@@ -40,30 +40,49 @@ func (s *DiagnosticService) CreateDiagnostic(ctx context.Context, req *diagnosti
 
 func (s *DiagnosticService) SearchNearestDiagnosticCenter(ctx context.Context, req *diagnostic.SearchNearestDiagnosticsRequest) (*diagnostic.SearchNearestDiagnosticsResponse, error) {
 	// Search for the nearest diagnostic center
-	diagnostics, err := s.Repo.GetAllDiagnostics(ctx, db.GetAllDiagnosticsParams{Limit: 50, Offset: 0})
+	diagnostics, err := s.Repo.GetAllDiagnostics(ctx, db.GetAllDiagnosticsParams{Limit: constants.MaxLimit, Offset: constants.DefaultOffset})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to fetch diagnostics centers: %v", err)
 	}
+	// Validate Latitude and Longitude
 	userLat, userLon := req.GetLatitude(), req.GetLongitude()
-	var responseDiagnostics []*diagnostic.Diagnostic
+	var responseDiagnostics []*diagnostic.SearchResult
 	for _, diag := range diagnostics {
 		lat := diag.Latitude.Float64
 		lon := diag.Longitude.Float64
-		_, err := utils.Haversine(userLat, userLon, lat, lon)
+		distance, err := utils.Haversine(userLat, userLon, lat, lon)
 		if err != nil {
 			return nil, status.Errorf(codes.InvalidArgument, "Invalid latitude or longitude: %v", err)
 		}
-		responseDiagnostics = append(responseDiagnostics, &diagnostic.Diagnostic{
+		responseDiagnostics = append(responseDiagnostics, &diagnostic.SearchResult{
 			DiagnosticId:         diag.ID,
-			UserId:               diag.UserID,
 			DiagnosticCentreName: diag.DiagnosticCentreName,
-			CreatedAt:            diag.CreatedAt.Time.String(),
-			UpdatedAt:            diag.UpdatedAt.Time.String(),
+			Distance:             distance,
+			DistanceUnit:         constants.DistanceUnit,
+			DistanceValue:        fmt.Sprintf("%f %s", distance, constants.DistanceUnit),
+			Latitude:             diag.Latitude.Float64,
+			Longitude:            diag.Longitude.Float64,
+			Address: func() *structpb.Struct {
+				var addressStruct structpb.Struct
+				if err := addressStruct.UnmarshalJSON(diag.Address); err != nil {
+					utils.LogError("Failed to unmarshal address: ", err)
+					return nil
+				}
+				return &addressStruct
+			}(),
+			Contact: func() *structpb.Struct {
+				var contactStruct structpb.Struct
+				if err := contactStruct.UnmarshalJSON(diag.Contact); err != nil {
+					utils.LogError("Failed to unmarshal contact: ", err)
+					return nil
+				}
+				return &contactStruct
+			}(),
 		})
 	}
 	// Sort result by distance
 	return &diagnostic.SearchNearestDiagnosticsResponse{
-		Diagnostics: responseDiagnostics,
+		Result: responseDiagnostics,
 	}, nil
 }
 

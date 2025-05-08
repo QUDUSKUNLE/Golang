@@ -4,12 +4,11 @@ DROP INDEX IF EXISTS idx_diagnostic_schedules_id_centre_user;
 DROP INDEX IF EXISTS idx_diagnostic_schedules_centre_date;
 DROP INDEX IF EXISTS idx_diagnostic_schedules_status;
 
--- Drop table
-DROP TABLE IF EXISTS diagnostic_schedules CASCADE;
-
 -- Drop ENUM types
-DROP TYPE IF EXISTS schedule_status;
-DROP TYPE IF EXISTS schedule_type;
+DROP TYPE IF EXISTS schedule_status CASCADE;
+DROP TYPE IF EXISTS schedule_type CASCADE;
 
 -- Drop Extension
-DROP EXTENSION IF EXISTS "uuid-ossp";
+DROP EXTENSION IF EXISTS "uuid-ossp" CASCADE;
+-- Drop table
+DROP TABLE IF EXISTS diagnostic_schedules CASCADE;

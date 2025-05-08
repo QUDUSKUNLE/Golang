@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
@@ -91,7 +90,6 @@ func (s *ScheduleRepository) GetSchedulesByDiagnosticCentre(ctx context.Context,
 
 func (s *ScheduleRepository) GetSchedulesDiagnosticCentreByStatusAndDate(ctx context.Context, arg db.GetSchedulesDiagnosticCentreByStatusAndDateParams) ([]*db.DiagnosticSchedule, error) {
 	// Implementation for getting schedules by status and date
-	fmt.Println("arg", arg)
 	schedules, err := s.database.GetSchedulesDiagnosticCentreByStatusAndDate(ctx, arg)
 	if err != nil {
 		return nil, err

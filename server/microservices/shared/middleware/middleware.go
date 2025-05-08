@@ -120,6 +120,10 @@ func validateScheduleRequest(r *schedule.ScheduleRequest) error {
 	if r.Time == "" {
 		return status.Errorf(codes.InvalidArgument, "Time is required")
 	}
+	if r.TestStatus != schedule.ScheduleStatus(1) {
+		return status.Errorf(codes.InvalidArgument, "Invalid TestStatus")
+	}
+
 	return nil
 }
 
