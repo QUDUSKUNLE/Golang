@@ -504,6 +504,60 @@ func (q *Queries) GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg 
 	return items, nil
 }
 
+const getDiagnosticSchedule = `-- name: GetDiagnosticSchedule :one
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  ds.created_at,
+  ds.updated_at,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE ds.id = $1 AND d.id = $2
+`
+
+type GetDiagnosticScheduleParams struct {
+	ID   string `db:"id" json:"id"`
+	ID_2 string `db:"id_2" json:"id_2"`
+}
+
+type GetDiagnosticScheduleRow struct {
+	ScheduleID           string             `db:"schedule_id" json:"schedule_id"`
+	UserID               string             `db:"user_id" json:"user_id"`
+	Date                 pgtype.Timestamptz `db:"date" json:"date"`
+	Time                 pgtype.Timestamptz `db:"time" json:"time"`
+	TestType             ScheduleType       `db:"test_type" json:"test_type"`
+	Status               ScheduleStatus     `db:"status" json:"status"`
+	Notes                pgtype.Text        `db:"notes" json:"notes"`
+	CreatedAt            pgtype.Timestamptz `db:"created_at" json:"created_at"`
+	UpdatedAt            pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	DiagnosticCentreName string             `db:"diagnostic_centre_name" json:"diagnostic_centre_name"`
+}
+
+// Retrieves a single diagnostic schedule by its ID and Diagnostic ID.
+func (q *Queries) GetDiagnosticSchedule(ctx context.Context, arg GetDiagnosticScheduleParams) (*GetDiagnosticScheduleRow, error) {
+	row := q.db.QueryRow(ctx, getDiagnosticSchedule, arg.ID, arg.ID_2)
+	var i GetDiagnosticScheduleRow
+	err := row.Scan(
+		&i.ScheduleID,
+		&i.UserID,
+		&i.Date,
+		&i.Time,
+		&i.TestType,
+		&i.Status,
+		&i.Notes,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DiagnosticCentreName,
+	)
+	return &i, err
+}
+
 const lisDiagnosticSchedules = `-- name: LisDiagnosticSchedules :many
 SELECT 
   ds.id AS schedule_id,

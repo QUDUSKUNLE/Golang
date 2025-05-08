@@ -30,6 +30,10 @@ func (h *DiagnosticHandler) ListDiagnosticSchedules(ctx context.Context, req *di
 	return h.DiagnosticService.ListDiagnosticSchedules(ctx, req)
 }
 
+func (h *DiagnosticHandler) GetDiagnosticSchedule(ctx context.Context, req *diagnostic.GetDiagnosticScheduleRequest) (*diagnostic.GetDiagnosticScheduleResponse, error) {
+	return h.DiagnosticService.GetDiagnosticSchedule(ctx, req)
+}
+
 func (h *DiagnosticHandler) SearchNearestDiagnosticCenter(ctx context.Context, req *diagnostic.SearchNearestDiagnosticsRequest) (*diagnostic.SearchNearestDiagnosticsResponse, error) {
 	return h.DiagnosticService.SearchNearestDiagnosticCenter(ctx, req)
 }

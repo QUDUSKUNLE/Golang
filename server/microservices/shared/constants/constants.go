@@ -27,12 +27,6 @@ const (
 	SearchByNin  = "/RecordService/SearchByNin"
 )
 
-// OrganizationService constants
-const (
-	CreateOrganization = "/OrganizationService/CreateOrganization"
-	GetOrganization    = "/OrganizationService/GetOrganization"
-)
-
 // DiagnosticService constants
 const (
 	CreateDiagnostic         = "/DiagnosticService/CreateDiagnostic"
@@ -42,6 +36,7 @@ const (
 	UpdateDiagnostic         = "/DiagnosticService/UpdateDiagnostic"
 	SearchNearestDiagnostics = "/DiagnosticService/SearchNearestDiagnostics"
 	ListDiagnosticSchedules  = "/DiagnosticService/ListDiagnosticSchedules"
+	GetDiagnosticSchedule    = "/DiagnosticService/GetDiagnosticSchedule"
 )
 
 // ScheduleService constants

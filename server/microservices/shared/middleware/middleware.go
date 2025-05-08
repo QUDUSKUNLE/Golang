@@ -59,6 +59,8 @@ func validateRequest(req interface{}) error {
 		return validateCreateDiagnosticRequest(r)
 	case *diagnostic.GetDiagnosticRequest:
 		return validateGetDiagnosticRequest(r)
+	case *diagnostic.GetDiagnosticScheduleRequest:
+		return validateGetDiagnosticScheduleRequest(r)
 	default:
 		return nil
 	}
@@ -128,6 +130,23 @@ func validateCreateDiagnosticRequest(r *diagnostic.CreateDiagnosticRequest) erro
 	return nil
 }
 
+func validateGetDiagnosticScheduleRequest(r *diagnostic.GetDiagnosticScheduleRequest) error {
+	if r.GetScheduleId() == "" {
+		return status.Errorf(codes.InvalidArgument, "ScheduleId is required")
+	}
+	if r.GetDiagnosticId() == "" {
+		return status.Errorf(codes.InvalidArgument, "DiagnosticId is required")
+	}
+	if !ValidateUUID(r.GetDiagnosticId()) {
+		return status.Errorf(codes.InvalidArgument, "Invalid DiagnosticId")
+	}
+	if !ValidateUUID(r.ScheduleId) {
+		return status.Errorf(codes.InvalidArgument, "Invalid ScheduleId")
+	}
+
+	return nil
+}
+
 func validateGetDiagnosticRequest(r *diagnostic.GetDiagnosticRequest) error {
 	if r.DiagnosticId == "" {
 		return status.Errorf(codes.InvalidArgument, "DiagnosticId is required")
@@ -159,6 +178,7 @@ func requiresAuthorization(method string) bool {
 		constants.UpdateSchedule:                true,
 		constants.ListDiagnosticCentreSchedules: true,
 		constants.ListDiagnosticSchedules:       true,
+		constants.GetDiagnosticSchedule:         true,
 	}
 	return authorizedMethods[method]
 }

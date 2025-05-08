@@ -332,3 +332,29 @@ func (s *DiagnosticService) ListDiagnosticSchedules(ctx context.Context, req *di
 		Schedules: responseSchedules,
 	}, nil
 }
+
+func (s *DiagnosticService) GetDiagnosticSchedule(ctx context.Context, req *diagnostic.GetDiagnosticScheduleRequest) (*diagnostic.GetDiagnosticScheduleResponse, error) {
+	// Validate the request
+	_, err := middleware.ValidateUser(ctx, string(db.UserEnumDIAGNOSTICCENTRE))
+	if err != nil {
+		utils.LogError("Error validating diagnostic centre: ", err)
+		return nil, status.Errorf(codes.PermissionDenied, "Unauthorized: %v", err)
+	}
+	// Get the diagnostic schedule from the database)
+	schedule, err := s.Repo.GetDiagnosticSchedule(ctx, db.GetDiagnosticScheduleParams{ID: req.GetScheduleId(), ID_2: req.GetDiagnosticId()})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Failed to fetch diagnostic schedule: %v", err)
+	}
+	return &diagnostic.GetDiagnosticScheduleResponse{
+		ScheduleId:           schedule.ScheduleID,
+		UserId:               schedule.UserID,
+		DiagnosticCentreName: schedule.DiagnosticCentreName,
+		Date:                 schedule.Date.Time.String(),
+		Time:                 schedule.Time.Time.String(),
+		CreatedAt:            schedule.CreatedAt.Time.String(),
+		UpdatedAt:            schedule.UpdatedAt.Time.String(),
+		DiagnosticId:         req.GetDiagnosticId(),
+		TestType:             fmt.Sprintf("%v", schedule.TestType),
+		Status:               fmt.Sprintf("%v", schedule.Status),
+	}, nil
+}

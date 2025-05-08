@@ -46,6 +46,8 @@ type Querier interface {
 	// ORDER BY ds.date DESC, ds.time DESC
 	// LIMIT $2 OFFSET $3;
 	GetDiagnosticCentreUpcomingSchedules(ctx context.Context, arg GetDiagnosticCentreUpcomingSchedulesParams) ([]*GetDiagnosticCentreUpcomingSchedulesRow, error)
+	// Retrieves a single diagnostic schedule by its ID and Diagnostic ID.
+	GetDiagnosticSchedule(ctx context.Context, arg GetDiagnosticScheduleParams) (*GetDiagnosticScheduleRow, error)
 	GetRecord(ctx context.Context, id string) (*Record, error)
 	GetRecords(ctx context.Context, diagnosticID string) ([]*Record, error)
 	GetRecordsByUser(ctx context.Context, userID string) ([]*Record, error)

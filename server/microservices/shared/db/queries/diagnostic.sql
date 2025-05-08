@@ -174,3 +174,21 @@ WHERE d.id = $1
   -- AND ($3::TEXT IS NULL OR ds.status = $3)
 ORDER BY ds.date DESC, ds.time DESC
 LIMIT $3 OFFSET $4;
+
+-- name: GetDiagnosticSchedule :one
+-- Retrieves a single diagnostic schedule by its ID and Diagnostic ID.
+SELECT 
+  ds.id AS schedule_id,
+  ds.user_id,
+  ds.date,
+  ds.time,
+  ds.test_type,
+  ds.status,
+  ds.notes,
+  ds.created_at,
+  ds.updated_at,
+  d.diagnostic_centre_name
+FROM diagnostic_schedules ds
+JOIN diagnostics d ON ds.diagnostic_centre_id = d.id
+WHERE ds.id = $1 AND d.id = $2;
+

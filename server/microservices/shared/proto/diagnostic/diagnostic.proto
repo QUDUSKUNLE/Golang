@@ -46,7 +46,7 @@ service DiagnosticService {
   }
   rpc GetDiagnosticSchedule(GetDiagnosticScheduleRequest) returns (GetDiagnosticScheduleResponse) {
     option (google.api.http) = {
-      get: "/v1/diagnostic/{diagnostic_id}/schedules/{schedule_id}"
+      get: "/v1/diagnostics/{diagnostic_id}/schedules/{schedule_id}"
     };
   }
 }

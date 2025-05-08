@@ -625,7 +625,7 @@ func RegisterDiagnosticServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/GetDiagnosticSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic/{diagnostic_id}/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.DiagnosticService/GetDiagnosticSchedule", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -843,7 +843,7 @@ func RegisterDiagnosticServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/GetDiagnosticSchedule", runtime.WithHTTPPathPattern("/v1/diagnostic/{diagnostic_id}/schedules/{schedule_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.DiagnosticService/GetDiagnosticSchedule", runtime.WithHTTPPathPattern("/v1/diagnostics/{diagnostic_id}/schedules/{schedule_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -877,7 +877,7 @@ var (
 
 	pattern_DiagnosticService_ListDiagnosticSchedules_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "diagnostics", "diagnostic_id", "schedules"}, ""))
 
-	pattern_DiagnosticService_GetDiagnosticSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "diagnostic", "diagnostic_id", "schedules", "schedule_id"}, ""))
+	pattern_DiagnosticService_GetDiagnosticSchedule_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "diagnostics", "diagnostic_id", "schedules", "schedule_id"}, ""))
 )
 
 var (
