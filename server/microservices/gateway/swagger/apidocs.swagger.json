@@ -1,0 +1,1778 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "auth/auth.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AuthService"
+    },
+    {
+      "name": "DiagnosticService"
+    },
+    {
+      "name": "RecordService"
+    },
+    {
+      "name": "ScheduleService"
+    },
+    {
+      "name": "UserService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/diagnostics": {
+      "get": {
+        "operationId": "DiagnosticService_ListDiagnostics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListDiagnosticsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      },
+      "post": {
+        "operationId": "DiagnosticService_CreateDiagnostic",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateDiagnosticResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDiagnosticRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      }
+    },
+    "/v1/diagnostics/search": {
+      "get": {
+        "operationId": "DiagnosticService_SearchNearestDiagnostics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SearchNearestDiagnosticsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      }
+    },
+    "/v1/diagnostics/{diagnosticId}/schedules/{scheduleId}": {
+      "get": {
+        "summary": "@Summary Get a diagnostic schedule by ID\n @Description Retrieve the details of a diagnostic schedule using its ID.\n @Tags Diagnostic\n @Accept json\n @Produce json\n @Param diagnostic_id path string true \"Diagnostic ID\"\n @Param schedule_id path string true \"Schedule ID\"\n @Success 200 {object} GetDiagnosticScheduleResponse\n @Failure 404 {object} ErrorResponse",
+        "operationId": "DiagnosticService_GetDiagnosticSchedule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetDiagnosticScheduleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "diagnosticId",
+            "description": "ID of the diagnostic center",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scheduleId",
+            "description": "ID of the scheduled session        // ID of the user scheduling the session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      }
+    },
+    "/v1/diagnostics/{diagnostic_id}": {
+      "get": {
+        "operationId": "DiagnosticService_GetDiagnostic",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetDiagnosticResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "diagnostic_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      },
+      "delete": {
+        "operationId": "DiagnosticService_DeleteDiagnostic",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteDiagnosticResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "diagnostic_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      },
+      "put": {
+        "operationId": "DiagnosticService_UpdateDiagnostic",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateDiagnosticResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "diagnostic_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DiagnosticServiceUpdateDiagnosticBody"
+            }
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      }
+    },
+    "/v1/diagnostics/{diagnostic_id}/schedules": {
+      "get": {
+        "summary": "Get Diagnostics Centre Schedules",
+        "operationId": "DiagnosticService_ListDiagnosticSchedules",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListDiagnosticSchedulesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "diagnostic_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "test_status",
+            "description": "Replace with a valid type if schedule.TestStatus is unavailable",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "test_type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "DiagnosticService"
+        ]
+      }
+    },
+    "/v1/home": {
+      "get": {
+        "operationId": "UserService_Home",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetHomeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "operationId": "AuthService_Signin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SignInResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignInRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/records": {
+      "get": {
+        "operationId": "RecordService_GetRecords",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetRecordsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "scan_title",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "latest",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RecordService"
+        ]
+      },
+      "post": {
+        "operationId": "RecordService_ScanUpload",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ScanUploadResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScanUploadRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RecordService"
+        ]
+      }
+    },
+    "/v1/records/search": {
+      "get": {
+        "operationId": "RecordService_SearchRecord",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SearchRecordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "scan_title",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "RecordService"
+        ]
+      }
+    },
+    "/v1/records/search/nin": {
+      "get": {
+        "operationId": "RecordService_SearchByNin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SearchRecordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "nin",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "scan_title",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RecordService"
+        ]
+      }
+    },
+    "/v1/records/{record_id}": {
+      "get": {
+        "operationId": "RecordService_GetRecord",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetRecordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "record_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scan_title",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RecordService"
+        ]
+      }
+    },
+    "/v1/schedules": {
+      "get": {
+        "operationId": "ScheduleService_ListSchedules",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListSchedulesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "description": "ID of the user scheduling the session// Offset for pagination",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Number of results to return",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "description": "Number of results to skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "ScheduleService"
+        ]
+      },
+      "post": {
+        "operationId": "ScheduleService_CreateSchedule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ScheduleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScheduleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ScheduleService"
+        ]
+      }
+    },
+    "/v1/schedules/{scheduleId}": {
+      "get": {
+        "operationId": "ScheduleService_GetSchedule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetScheduleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "description": "ID of the scheduled session",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ScheduleService"
+        ]
+      },
+      "delete": {
+        "operationId": "ScheduleService_CancelSchedule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CancelScheduleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "testStatus",
+            "description": "Status of the session\n\n - SCHEDULE_STATUS_UNSPECIFIED: For SessionStatus\n - SCHEDULED: Session is scheduled\n - COMPLETED: Session is completed\n - CANCELED: Session is canceled",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "SCHEDULE_STATUS_UNSPECIFIED",
+              "SCHEDULED",
+              "COMPLETED",
+              "CANCELED"
+            ],
+            "default": "SCHEDULE_STATUS_UNSPECIFIED"
+          }
+        ],
+        "tags": [
+          "ScheduleService"
+        ]
+      },
+      "put": {
+        "operationId": "ScheduleService_UpdateSchedule",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateScheduleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScheduleServiceUpdateScheduleBody"
+            }
+          }
+        ],
+        "tags": [
+          "ScheduleService"
+        ]
+      }
+    },
+    "/v1/users": {
+      "get": {
+        "operationId": "UserService_ReadUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetUsersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      },
+      "post": {
+        "operationId": "UserService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      },
+      "put": {
+        "operationId": "UserService_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
+    "/v1/users/{id}": {
+      "get": {
+        "operationId": "UserService_Read",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
+      }
+    },
+    "CancelScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "scheduleId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID of the canceled session"
+        },
+        "message": {
+          "type": "string",
+          "title": "Confirmation message"
+        }
+      }
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "phones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateDiagnosticRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateDiagnosticResponse": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateUserRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirm_password": {
+          "type": "string"
+        },
+        "diagnostic_centre": {
+          "type": "string"
+        },
+        "user_type": {
+          "$ref": "#/definitions/UserType"
+        }
+      }
+    },
+    "DeleteDiagnosticResponse": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "Diagnostic": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "address": {
+          "type": "object"
+        },
+        "contact": {
+          "type": "object"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "DiagnosticServiceUpdateDiagnosticBody": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "contact": {
+          "$ref": "#/definitions/Contact"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "GetDiagnosticResponse": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "address": {
+          "type": "object"
+        },
+        "contact": {
+          "type": "object"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "GetDiagnosticScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "schedule_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "test_type": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "GetHomeResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "GetRecordResponse": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "scan_title": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "GetRecordsResponse": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Record"
+          }
+        }
+      }
+    },
+    "GetScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "schedule_id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID of the scheduled session// ID of the user who scheduled the session"
+        },
+        "diagnosticCentreId": {
+          "type": "string",
+          "title": "ID of the diagnostic center"
+        },
+        "date": {
+          "type": "string",
+          "title": "Date of the session (e.g., \"2025-05-01\")"
+        },
+        "time": {
+          "type": "string",
+          "title": "Time of the session (e.g., \"10:00 AM\")"
+        },
+        "testType": {
+          "$ref": "#/definitions/ScheduleType",
+          "title": "Type of diagnostic test"
+        },
+        "testStatus": {
+          "$ref": "#/definitions/ScheduleStatus"
+        },
+        "notes": {
+          "type": "string",
+          "title": "Status of the session             // Additional notes (optional)"
+        },
+        "createdAt": {
+          "type": "string",
+          "title": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "title": "Last update timestamp"
+        }
+      }
+    },
+    "GetUserResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "GetUsersResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/User"
+          }
+        }
+      }
+    },
+    "ListDiagnosticSchedulesResponse": {
+      "type": "object",
+      "properties": {
+        "schedules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/GetDiagnosticScheduleResponse"
+          }
+        }
+      }
+    },
+    "ListDiagnosticsResponse": {
+      "type": "object",
+      "properties": {
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Diagnostic"
+          }
+        }
+      }
+    },
+    "ListSchedulesResponse": {
+      "type": "object",
+      "properties": {
+        "sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ScheduledSession"
+          },
+          "title": "List of scheduled sessions"
+        }
+      }
+    },
+    "Record": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "type": "string"
+        },
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "scan_title": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "ScanUploadRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "scan_title": {
+          "type": "string"
+        },
+        "file_name": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "ScanUploadResponse": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "type": "string"
+        },
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "scan_title": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "ScheduleRequest": {
+      "type": "object",
+      "properties": {
+        "diagnosticCentreId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID of the diagnostic center"
+        },
+        "date": {
+          "type": "string",
+          "title": "Date of the session (e.g., \"2025-05-01\")"
+        },
+        "time": {
+          "type": "string",
+          "title": "Time of the session (e.g., \"10:00 AM\")"
+        },
+        "testType": {
+          "$ref": "#/definitions/ScheduleType",
+          "title": "Type of diagnostic test"
+        },
+        "testStatus": {
+          "$ref": "#/definitions/ScheduleStatus"
+        },
+        "notes": {
+          "type": "string",
+          "title": "Status of the session              // Additional notes (optional)"
+        }
+      },
+      "title": "ID of the user scheduling the session"
+    },
+    "ScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "scheduleId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID of the scheduled session"
+        },
+        "message": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "title": "Confirmation message"
+        }
+      }
+    },
+    "ScheduleServiceUpdateScheduleBody": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "title": "ID of the scheduled session             // ID of the user scheduling the session"
+        },
+        "diagnosticCentreId": {
+          "type": "string",
+          "title": "ID of the diagnostic center"
+        },
+        "date": {
+          "type": "string",
+          "title": "Date of the session (e.g., \"2025-05-01\")"
+        },
+        "time": {
+          "type": "string",
+          "title": "Time of the session (e.g., \"10:00 AM\")"
+        },
+        "testType": {
+          "$ref": "#/definitions/ScheduleType",
+          "title": "Type of diagnostic test"
+        },
+        "testStatus": {
+          "$ref": "#/definitions/ScheduleStatus"
+        },
+        "notes": {
+          "type": "string",
+          "title": "Status of the session              // Additional notes (optional)"
+        }
+      }
+    },
+    "ScheduleStatus": {
+      "type": "string",
+      "enum": [
+        "SCHEDULE_STATUS_UNSPECIFIED",
+        "SCHEDULED",
+        "COMPLETED",
+        "CANCELED"
+      ],
+      "default": "SCHEDULE_STATUS_UNSPECIFIED",
+      "title": "- SCHEDULE_STATUS_UNSPECIFIED: For SessionStatus\n - SCHEDULED: Session is scheduled\n - COMPLETED: Session is completed\n - CANCELED: Session is canceled"
+    },
+    "ScheduleType": {
+      "type": "string",
+      "enum": [
+        "SCHEDULE_TYPE_UNSPECIFIED",
+        "BLOOD_TEST",
+        "URINE_TEST",
+        "X_RAY",
+        "MRI",
+        "CT_SCAN",
+        "ULTRASOUND",
+        "ECG",
+        "COVID_TEST",
+        "DNA_TEST",
+        "ALLERGY_TEST",
+        "GENETIC_TEST",
+        "OTHER"
+      ],
+      "default": "SCHEDULE_TYPE_UNSPECIFIED",
+      "title": "- BLOOD_TEST: Blood test\n - URINE_TEST: Urine test\n - X_RAY: X-ray\n - MRI: MRI\n - CT_SCAN: CT scan\n - ULTRASOUND: Ultrasound\n - ECG: Electrocardiogram\n - COVID_TEST: COVID-19 test\n - DNA_TEST: DNA test\n - ALLERGY_TEST: Allergy test\n - GENETIC_TEST: Genetic test\n - OTHER: Other types of tests"
+    },
+    "ScheduledSession": {
+      "type": "object",
+      "properties": {
+        "scheduleId": {
+          "type": "string",
+          "title": "ID of the scheduled session"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID of the user who scheduled the session"
+        },
+        "diagnosticCentreId": {
+          "type": "string",
+          "title": "ID of the diagnostic center"
+        },
+        "date": {
+          "type": "string",
+          "title": "Date of the session (e.g., \"2025-05-01\")"
+        },
+        "time": {
+          "type": "string",
+          "title": "Time of the session (e.g., \"10:00 AM\")"
+        },
+        "testType": {
+          "$ref": "#/definitions/ScheduleType",
+          "title": "Type of diagnostic test"
+        },
+        "testStatus": {
+          "$ref": "#/definitions/ScheduleStatus",
+          "title": "Type of diagnostic test"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "title": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "title": "Additional notes (optional)"
+        }
+      }
+    },
+    "SearchNearestDiagnosticsResponse": {
+      "type": "object",
+      "properties": {
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/SearchResult"
+          }
+        }
+      }
+    },
+    "SearchRecordResponse": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Record"
+          }
+        }
+      }
+    },
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "distance": {
+          "type": "number",
+          "format": "double"
+        },
+        "distance_unit": {
+          "type": "string"
+        },
+        "distance_value": {
+          "type": "string"
+        },
+        "address": {
+          "type": "object"
+        },
+        "contact": {
+          "type": "object"
+        }
+      }
+    },
+    "SignInRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "SignInResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "SuccessResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateDiagnosticResponse": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "diagnostic_centre_name": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "contact": {
+          "$ref": "#/definitions/Contact"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "scheduleId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID of the updated session"
+        },
+        "message": {
+          "type": "string",
+          "title": "Confirmation message"
+        },
+        "createdAt": {
+          "type": "string",
+          "title": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "title": "Status of the session     // Amount paid for the session"
+        }
+      }
+    },
+    "UpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "nin": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateUserResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "nin": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "UserType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "USER",
+        "DIAGNOSTIC_CENTRE",
+        "HOSPITAL",
+        "ADMIN"
+      ],
+      "default": "UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

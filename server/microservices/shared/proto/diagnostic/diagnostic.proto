@@ -4,47 +4,119 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/diagnos
 import "google/api/annotations.proto";
 import "google/protobuf/struct.proto";
 
+// @title Diagnostic Service API
+// @version 1.0
+// @description This is the API documentation for the Diagnostic Service.
 service DiagnosticService {
   rpc CreateDiagnostic(CreateDiagnosticRequest) returns (CreateDiagnosticResponse) {
+    // @Summary Create a new diagnostic centre
+    // @Description Create a new diagnostic centre with the provided details.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param body body CreateDiagnosticRequest true "Create diagnostic request"
+    // @Success 200 {object} CreateDiagnosticResponse
     option (google.api.http) = {
       post: "/v1/diagnostics",
       body: "*"
     };
   }
   rpc GetDiagnostic(GetDiagnosticRequest) returns (GetDiagnosticResponse) {
+    // @Summary Get a diagnostic centre by ID
+    // @Description Retrieve the details of a diagnostic centre using its ID.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param diagnostic_id path string true "Diagnostic ID"
+    // @Success 200 {object} GetDiagnosticResponse
     option (google.api.http) = {
       get: "/v1/diagnostics/{diagnostic_id}"
     };
   }
   rpc UpdateDiagnostic(UpdateDiagnosticRequest) returns (UpdateDiagnosticResponse) {
+    // @Summary Update a diagnostic centre
+    // @Description Update the details of an existing diagnostic centre.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param diagnostic_id path string true "Diagnostic ID"
+    // @Param body body UpdateDiagnosticRequest true "Update diagnostic request"
+    // @Success 200 {object} UpdateDiagnosticResponse
     option (google.api.http) = {
       put: "/v1/diagnostics/{diagnostic_id}",
       body: "*"
     };
   }
   rpc DeleteDiagnostic(DeleteDiagnosticRequest) returns (DeleteDiagnosticResponse) {
+    // @Summary Delete a diagnostic centre
+    // @Description Delete a diagnostic centre using its ID.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param diagnostic_id path string true "Diagnostic ID"
+    // @Success 200 {object} DeleteDiagnosticResponse
     option (google.api.http) = {
       delete: "/v1/diagnostics/{diagnostic_id}"
     };
   }
   rpc ListDiagnostics(ListDiagnosticsRequest) returns (ListDiagnosticsResponse) {
+    // @Summary List all diagnostic centres
+    // @Description Retrieve a list of all diagnostic centres.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param user_id query string false "User ID"
+    // @Param offset query int32 false "Offset for pagination"
+    // @Param limit query int32 false "Limit for pagination"
     option (google.api.http) = {
       get: "/v1/diagnostics"
     };
   }
 
   rpc SearchNearestDiagnostics(SearchNearestDiagnosticsRequest) returns (SearchNearestDiagnosticsResponse) {
+    // @Summary Search for nearest diagnostic centres
+    // @Description Search for the nearest diagnostic centres based on latitude and longitude.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param latitude query double true "Latitude"
+    // @Param longitude query double true "Longitude"
+    // @Param limit query int32 false "Limit for pagination"
+    // @Param offset query int32 false "Offset for pagination"
+    // @Success 200 {object} SearchNearestDiagnosticsResponse
     option (google.api.http) = {
       get: "/v1/diagnostics/search"
     };
   }
   // Get Diagnostics Centre Schedules
   rpc ListDiagnosticSchedules(ListDiagnosticSchedulesRequest) returns (ListDiagnosticSchedulesResponse) {
+    // @Summary List all diagnostic schedules
+    // @Description Retrieve a list of all diagnostic schedules for a specific diagnostic centre.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param diagnostic_id path string true "Diagnostic ID"
+    // @Param test_status query string false "Test status"
+    // @Param test_type query string false "Test type"
+    // @Param date query string false "Date"
+    // @Param offset query int32 false "Offset for pagination"
+    // @Param limit query int32 false "Limit for pagination"
+    // @Success 200 {object} ListDiagnosticSchedulesResponse
     option (google.api.http) = {
       get: "/v1/diagnostics/{diagnostic_id}/schedules"
     };
   }
   rpc GetDiagnosticSchedule(GetDiagnosticScheduleRequest) returns (GetDiagnosticScheduleResponse) {
+    // @Summary Get a diagnostic schedule by ID
+    // @Description Retrieve the details of a diagnostic schedule using its ID.
+    // @Tags Diagnostic
+    // @Accept json
+    // @Produce json
+    // @Param diagnostic_id path string true "Diagnostic ID"
+    // @Param schedule_id path string true "Schedule ID"
+    // @Success 200 {object} GetDiagnosticScheduleResponse
+    // @Failure 404 {object} ErrorResponse
+
     option (google.api.http) = {
       get: "/v1/diagnostics/{diagnostic_id}/schedules/{schedule_id}"
     };

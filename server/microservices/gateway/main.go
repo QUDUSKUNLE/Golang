@@ -23,6 +23,7 @@ import (
 	"syscall"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	// "github.com/swaggo/http-swagger/v2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
@@ -47,31 +48,52 @@ const (
 	maxRequestBodySize         = 10 * 1024 * 1024 // 10 MB
 )
 
-func main() {
+func initializeConfigAndLogger() (*utils.Config, context.Context, context.CancelFunc) {
 	cfg, err := utils.LoadConfig("GATEWAY")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
-	// Initialize the logger
 	logger.InitLogger()
 	defer logger.Sync()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	return cfg, ctx, stop
+}
+
+func initializeServerComponents(cfg *utils.Config) (*runtime.ServeMux, []grpc.DialOption, http.Handler) {
+	mux := setupRuntimeServer()
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	registerServices(context.Background(), mux, opts, cfg)
+	handler := setupMiddleware(mux)
+	return mux, opts, handler
+}
+
+func main() {
+	cfg, ctx, stop := initializeConfigAndLogger()
 	defer stop()
 
-	// Initialize runtime server
-	mux := setupRuntimeServer()
-
-	// Register services
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	mux, opts, handler := initializeServerComponents(cfg)
 
 	registerServices(ctx, mux, opts, cfg)
 
-	// Create a  rate limiter middleware
-	handler := setupMiddleware(mux)
-
 	addr := fmt.Sprintf("%v:%v", cfg.Gateway, cfg.Port)
+
+	swaggerDir := "./swagger"
+	if _, err := os.Stat(swaggerDir); os.IsNotExist(err) {
+		logger.GetLogger().Fatal("Swagger directory does not exist or is inaccessible", zap.String("path", swaggerDir))
+	}
+
+	httpMux := http.NewServeMux()
+	httpMux.Handle("/swagger/",
+		http.StripPrefix("/swagger/",
+			http.FileServer(http.Dir(swaggerDir))))
+	log.Printf("Swagger UI available at http://%s/swagger/index.html", addr)
+
+	// Serve the gRPC Gateway handler on the root path
+	httpMux.Handle("/", handler)
+
+	go startHTTPServer(addr, httpMux)
 
 	go events.EventsSubscriber(
 		os.Getenv("KAFKA_BROKER"),
@@ -79,8 +101,6 @@ func main() {
 		os.Getenv("KAFKA_GROUP_ID"),
 		subscribe.SubsribeNotification,
 	)
-
-	go startHTTPServer(addr, handler)
 	<-ctx.Done()
 	logger.GetLogger().Info("Shutting down gateway server gracefully...")
 }

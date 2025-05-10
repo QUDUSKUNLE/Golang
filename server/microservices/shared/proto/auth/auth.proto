@@ -3,8 +3,19 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/auth";
 
 import "google/api/annotations.proto";
 
+// @title Auth Service API
+// @version 1.0
+// @description This is the API documentation for the Auth Service.
 service AuthService {
   rpc Signin(SignInRequest) returns (SignInResponse) {
+    // @Summary Sign in a user
+    // @Description Authenticate a user and return a JWT token.
+    // @Tags Auth
+    // @Accept json
+    // @Produce json
+    // @Param body body SignInRequest true "Sign in request"
+    // @Success 200 {object} SignInResponse
+    // @Failure 401 {object} ErrorResponse
     option (google.api.http) = {
       post: "/v1/login",
       body: "*"
