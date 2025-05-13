@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/QUDUSKUNLE/microservices/record-service/clients"
+	"github.com/QUDUSKUNLE/microservices/record-service/adapters/clients"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
 	v1 "github.com/QUDUSKUNLE/microservices/user-service/adapters"
 

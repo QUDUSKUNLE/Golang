@@ -21,7 +21,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/authcase"
+	"github.com/QUDUSKUNLE/microservices/auth-service/core/services"
 	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/logger"
@@ -65,7 +65,7 @@ func main() {
 		))
 
 	// Initialize use case and register services
-	authUseCase := authcase.InitAuthServer(db)
+	authUseCase := services.InitAuthServer(db)
 
 	handler.NewAuthServer(grpcServer, authUseCase)
 	reflection.Register(grpcServer)
