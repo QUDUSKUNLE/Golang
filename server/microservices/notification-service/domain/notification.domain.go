@@ -1,5 +1,11 @@
 package domain
 
+const (
+	// EmailNotificationType represents the type of email notification
+	RegistrationEmail= "RegistrationEmail"
+	ResetPasswordEmail = "ResetPasswordEmail"
+)
+
 type Notification interface {
 	EmailNotification(userID, message string) error
 	PushNotification(userID, message string) error

@@ -5,7 +5,7 @@ import (
 
 	"github.com/QUDUSKUNLE/microservices/record-service/core/domain"
 	"github.com/QUDUSKUNLE/microservices/record-service/core/ports"
-	"github.com/QUDUSKUNLE/microservices/record-service/core/repository"
+	"github.com/QUDUSKUNLE/microservices/record-service/adapters/repository"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 )
 

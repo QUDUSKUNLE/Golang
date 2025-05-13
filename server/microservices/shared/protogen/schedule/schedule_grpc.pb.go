@@ -30,10 +30,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ScheduleServiceClient interface {
+	// Create a new schedule
 	CreateSchedule(ctx context.Context, in *ScheduleRequest, opts ...grpc.CallOption) (*ScheduleResponse, error)
+	// Get a schedule by ID
 	GetSchedule(ctx context.Context, in *GetScheduleRequest, opts ...grpc.CallOption) (*GetScheduleResponse, error)
+	// Update a schedule
 	UpdateSchedule(ctx context.Context, in *UpdateScheduleRequest, opts ...grpc.CallOption) (*UpdateScheduleResponse, error)
+	// Cancel a schedule
 	CancelSchedule(ctx context.Context, in *CancelScheduleRequest, opts ...grpc.CallOption) (*CancelScheduleResponse, error)
+	// List all schedules
 	ListSchedules(ctx context.Context, in *ListSchedulesRequest, opts ...grpc.CallOption) (*ListSchedulesResponse, error)
 }
 
@@ -94,10 +99,15 @@ func (c *scheduleServiceClient) ListSchedules(ctx context.Context, in *ListSched
 // All implementations must embed UnimplementedScheduleServiceServer
 // for forward compatibility
 type ScheduleServiceServer interface {
+	// Create a new schedule
 	CreateSchedule(context.Context, *ScheduleRequest) (*ScheduleResponse, error)
+	// Get a schedule by ID
 	GetSchedule(context.Context, *GetScheduleRequest) (*GetScheduleResponse, error)
+	// Update a schedule
 	UpdateSchedule(context.Context, *UpdateScheduleRequest) (*UpdateScheduleResponse, error)
+	// Cancel a schedule
 	CancelSchedule(context.Context, *CancelScheduleRequest) (*CancelScheduleResponse, error)
+	// List all schedules
 	ListSchedules(context.Context, *ListSchedulesRequest) (*ListSchedulesResponse, error)
 	mustEmbedUnimplementedScheduleServiceServer()
 }

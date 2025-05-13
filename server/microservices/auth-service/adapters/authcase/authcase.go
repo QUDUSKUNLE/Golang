@@ -3,8 +3,8 @@ package authcase
 import (
 	"context"
 
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
-	repo "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/authrepository"
+	v1 "github.com/QUDUSKUNLE/microservices/auth-service/adapters"
+	repo "github.com/QUDUSKUNLE/microservices/auth-service/adapters/authrepository"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/jackc/pgx/v5/pgtype"

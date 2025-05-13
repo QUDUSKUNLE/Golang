@@ -1,7 +1,7 @@
 package handler
 
 import (
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/auth-service/adapters"
 	// "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/client"
 	"github.com/QUDUSKUNLE/microservices/events-service/domain"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/auth"

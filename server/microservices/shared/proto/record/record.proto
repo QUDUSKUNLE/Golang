@@ -3,28 +3,74 @@ option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/record"
 
 import "google/api/annotations.proto";
 
+
 service RecordService {
+  // Get a record by ID
   rpc GetRecord(GetRecordRequest) returns (GetRecordResponse) {
+    // @Summary Get a record by ID
+    // @Description Retrieve a record using its unique record ID.
+    // @Tags Record
+    // @Accept json
+    // @Produce json
+    // @Param record_id path string true "Record ID"
+    // @Success 200 {object} GetRecordResponse
     option (google.api.http) = {
-      get: "/v1/records/{record_id}",
+      get: "/v1/records/{record_id}"
     };
   }
+  // Search for records by user and scan title
   rpc SearchRecord(SearchRecordRequest) returns (SearchRecordResponse) {
+    // @Summary Search for records
+    // @Description Search for records by user ID and scan title.
+    // @Tags Record
+    // @Accept json
+    // @Produce json
+    // @Param user_id query string true "User ID"
+    // @Param scan_title query string false "Scan Title"
+    // @Param limit query int32 false "Limit"
+    // @Param offset query int32 false "Offset"
+    // @Success 200 {object} SearchRecordResponse
     option (google.api.http) = {
-      get: "/v1/records/search",
+      get: "/v1/records/search"
     };
   }
+  // Search for records by NIN
   rpc SearchByNin(SearchByNinRequest) returns (SearchRecordResponse) {
+    // @Summary Search for records by NIN
+    // @Description Search for records using NIN and scan title.
+    // @Tags Record
+    // @Accept json
+    // @Produce json
+    // @Param nin query string true "NIN"
+    // @Param scan_title query string false "Scan Title"
+    // @Success 200 {object} SearchRecordResponse
     option (google.api.http) = {
-      get: "/v1/records/search/nin",
+      get: "/v1/records/search/nin"
     };
   }
+  // List all records
   rpc GetRecords(GetRecordsRequest) returns (GetRecordsResponse) {
+    // @Summary List all records
+    // @Description Retrieve a list of all records, optionally filtered by scan title or latest flag.
+    // @Tags Record
+    // @Accept json
+    // @Produce json
+    // @Param scan_title query string false "Scan Title"
+    // @Param latest query string false "Latest"
+    // @Success 200 {object} GetRecordsResponse
     option (google.api.http) = {
-      get: "/v1/records",
+      get: "/v1/records"
     };
   }
+  // Upload a scan record
   rpc ScanUpload(ScanUploadRequest) returns (ScanUploadResponse) {
+    // @Summary Upload a scan record
+    // @Description Upload a new scan record for a user.
+    // @Tags Record
+    // @Accept multipart/form-data
+    // @Produce json
+    // @Param body body ScanUploadRequest true "Scan upload request"
+    // @Success 201 {object} ScanUploadResponse
     option (google.api.http) = {
       post: "/v1/records",
       body: "*"

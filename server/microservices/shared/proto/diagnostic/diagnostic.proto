@@ -41,7 +41,7 @@ service DiagnosticService {
     // @Produce json
     // @Param diagnostic_id path string true "Diagnostic ID"
     // @Param body body UpdateDiagnosticRequest true "Update diagnostic request"
-    // @Success 200 {object} UpdateDiagnosticResponse
+    // @Success 202 {object} UpdateDiagnosticResponse
     option (google.api.http) = {
       put: "/v1/diagnostics/{diagnostic_id}",
       body: "*"
@@ -68,6 +68,7 @@ service DiagnosticService {
     // @Param user_id query string false "User ID"
     // @Param offset query int32 false "Offset for pagination"
     // @Param limit query int32 false "Limit for pagination"
+    // @Success 200 {object} ListDiagnosticsResponse
     option (google.api.http) = {
       get: "/v1/diagnostics"
     };
@@ -102,6 +103,8 @@ service DiagnosticService {
     // @Param offset query int32 false "Offset for pagination"
     // @Param limit query int32 false "Limit for pagination"
     // @Success 200 {object} ListDiagnosticSchedulesResponse
+    // @Failure 404 {object} common.ErrorResponse
+    // @Failure 500 {object} common.ErrorResponse
     option (google.api.http) = {
       get: "/v1/diagnostics/{diagnostic_id}/schedules"
     };
@@ -115,8 +118,6 @@ service DiagnosticService {
     // @Param diagnostic_id path string true "Diagnostic ID"
     // @Param schedule_id path string true "Schedule ID"
     // @Success 200 {object} GetDiagnosticScheduleResponse
-    // @Failure 404 {object} ErrorResponse
-
     option (google.api.http) = {
       get: "/v1/diagnostics/{diagnostic_id}/schedules/{schedule_id}"
     };

@@ -30,10 +30,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RecordServiceClient interface {
+	// Get a record by ID
 	GetRecord(ctx context.Context, in *GetRecordRequest, opts ...grpc.CallOption) (*GetRecordResponse, error)
+	// Search for records by user and scan title
 	SearchRecord(ctx context.Context, in *SearchRecordRequest, opts ...grpc.CallOption) (*SearchRecordResponse, error)
+	// Search for records by NIN
 	SearchByNin(ctx context.Context, in *SearchByNinRequest, opts ...grpc.CallOption) (*SearchRecordResponse, error)
+	// List all records
 	GetRecords(ctx context.Context, in *GetRecordsRequest, opts ...grpc.CallOption) (*GetRecordsResponse, error)
+	// Upload a scan record
 	ScanUpload(ctx context.Context, in *ScanUploadRequest, opts ...grpc.CallOption) (*ScanUploadResponse, error)
 }
 
@@ -94,10 +99,15 @@ func (c *recordServiceClient) ScanUpload(ctx context.Context, in *ScanUploadRequ
 // All implementations must embed UnimplementedRecordServiceServer
 // for forward compatibility
 type RecordServiceServer interface {
+	// Get a record by ID
 	GetRecord(context.Context, *GetRecordRequest) (*GetRecordResponse, error)
+	// Search for records by user and scan title
 	SearchRecord(context.Context, *SearchRecordRequest) (*SearchRecordResponse, error)
+	// Search for records by NIN
 	SearchByNin(context.Context, *SearchByNinRequest) (*SearchRecordResponse, error)
+	// List all records
 	GetRecords(context.Context, *GetRecordsRequest) (*GetRecordsResponse, error)
+	// Upload a scan record
 	ScanUpload(context.Context, *ScanUploadRequest) (*ScanUploadResponse, error)
 	mustEmbedUnimplementedRecordServiceServer()
 }

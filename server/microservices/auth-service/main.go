@@ -21,8 +21,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/authcase"
-	"github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/authcase"
+	"github.com/QUDUSKUNLE/microservices/auth-service/adapters/handler"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/QUDUSKUNLE/microservices/shared/logger"
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"

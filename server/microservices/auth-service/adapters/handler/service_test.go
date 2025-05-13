@@ -3,7 +3,7 @@ package handler
 import (
 	"testing"
 
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/auth-service/adapters"
 	"google.golang.org/grpc"
 )
 

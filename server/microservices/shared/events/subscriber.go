@@ -1,27 +1,4 @@
-// ConsumeCreatedUserEvent listens to a Kafka topic for user creation events and processes them.
-//
-// Parameters:
-//   - d (*db.Queries): A database queries object for interacting with the database.
-//   - brokerAddress (string): The address of the Kafka broker.
-//   - topic (string): The Kafka topic to consume messages from.
-//   - groupID (string): The consumer group ID for Kafka.
-//
-// Behavior:
-//   - Initializes a Kafka reader with the provided broker address, topic, and group ID.
-//   - Continuously reads messages from the specified Kafka topic.
-//   - Processes messages based on the topic type. Specifically, it handles user creation events
-//     by unmarshaling the event data, logging the event, and creating an associated organization
-//     in the database using the organization service.
-//   - Logs errors encountered during message reading, unmarshaling, or organization creation.
-//
-// Notes:
-//   - The function assumes the existence of a constant `USER_EVENTS` for identifying user-related events.
-//   - The organization service must be properly initialized with a concrete implementation of `db.Queries`.
-//   - The function runs indefinitely and should be executed in a separate goroutine or managed appropriately.
-//
-// Example Usage:
-//
-//	go consumers.ConsumeCreatedUserEvent(dbQueries, "localhost:9092", "user-events", "group-id")
+// ConsumeCreatedUserEvent listens to a Kafka topic for user creation events
 package events
 
 import (

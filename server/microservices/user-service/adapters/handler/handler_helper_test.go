@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/adapters"
 	"github.com/QUDUSKUNLE/microservices/shared/dto"
 	"github.com/QUDUSKUNLE/microservices/shared/protogen/user"
 )

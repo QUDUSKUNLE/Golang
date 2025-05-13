@@ -23,7 +23,6 @@ import (
 	"syscall"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	// "github.com/swaggo/http-swagger/v2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
@@ -84,7 +83,15 @@ func main() {
 		logger.GetLogger().Fatal("Swagger directory does not exist or is inaccessible", zap.String("path", swaggerDir))
 	}
 
+	// Improved: Add health check endpoint, better logging, and graceful shutdown message
 	httpMux := http.NewServeMux()
+
+	// Health check endpoint
+	httpMux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	})
+
 	httpMux.Handle("/swagger/",
 		http.StripPrefix("/swagger/",
 			http.FileServer(http.Dir(swaggerDir))))
@@ -99,10 +106,13 @@ func main() {
 		os.Getenv("KAFKA_BROKER"),
 		os.Getenv("KAFKA_TOPIC"),
 		os.Getenv("KAFKA_GROUP_ID"),
-		subscribe.SubsribeNotification,
+		subscribe.SubscribeNotification,
 	)
+
 	<-ctx.Done()
-	logger.GetLogger().Info("Shutting down gateway server gracefully...")
+	logger.GetLogger().Info("Gateway server received shutdown signal, cleaning up...")
+	// Optionally: Add shutdown logic for background goroutines or resources here
+	logger.GetLogger().Info("Gateway server shut down gracefully.")
 }
 
 func registerServices(ctx context.Context, mux *runtime.ServeMux, opts []grpc.DialOption, cfg *utils.Config) {

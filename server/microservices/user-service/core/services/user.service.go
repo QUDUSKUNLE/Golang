@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
-	repo "github.com/QUDUSKUNLE/microservices/user-service/core/repository"
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
+	repo "github.com/QUDUSKUNLE/microservices/user-service/adapters/repository"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/adapters"
 )
 
 type UserCase struct {

@@ -44,7 +44,16 @@ ORDER BY date DESC, time DESC
 LIMIT $2 OFFSET $3;
 
 -- name: GetSchedulesByDiagnosticCentre :many
-SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
+SELECT id,
+  user_id,
+  diagnostic_centre_id,
+  date,
+  time,
+  test_type,
+  status,
+  notes,
+  created_at,
+  updated_at
 FROM diagnostic_schedules
 WHERE diagnostic_centre_id = $1
   AND ($2::schedule_status IS NULL OR status = $2)
@@ -57,7 +66,16 @@ SELECT * FROM diagnostic_schedules
 WHERE id = $1 AND diagnostic_centre_id = $2;
 
 -- name: GetSchedulesDiagnosticCentreByStatusAndDate :many
-SELECT id, user_id, diagnostic_centre_id, date, time, test_type, status, notes, created_at, updated_at
+SELECT id,
+  user_id,
+  diagnostic_centre_id,
+  date,
+  time,
+  test_type,
+  status,
+  notes,
+  created_at,
+  updated_at
 FROM diagnostic_schedules
 WHERE diagnostic_centre_id = $1
   AND status = $2

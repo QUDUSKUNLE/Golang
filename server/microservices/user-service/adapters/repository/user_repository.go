@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/QUDUSKUNLE/microservices/shared/db"
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/adapters"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

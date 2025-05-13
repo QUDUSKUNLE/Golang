@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/QUDUSKUNLE/microservices/events-service/domain"
-	v1 "github.com/QUDUSKUNLE/microservices/user-service/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/user-service/adapters"
 	"google.golang.org/grpc"
 )
 

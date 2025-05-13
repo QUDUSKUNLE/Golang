@@ -28,7 +28,7 @@ import (
 	"github.com/QUDUSKUNLE/microservices/shared/middleware"
 	"github.com/QUDUSKUNLE/microservices/shared/utils"
 	"github.com/QUDUSKUNLE/microservices/user-service/core/services"
-	"github.com/QUDUSKUNLE/microservices/user-service/v1/handler"
+	"github.com/QUDUSKUNLE/microservices/user-service/adapters/handler"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

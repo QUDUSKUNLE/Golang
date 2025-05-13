@@ -30,10 +30,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	// Create a new user
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	// Get a list of users
 	ReadUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
+	// Get a single user by ID
 	Read(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	// Get home information
 	Home(ctx context.Context, in *HomeRequest, opts ...grpc.CallOption) (*GetHomeResponse, error)
+	// Update a user
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 }
 
@@ -94,10 +99,15 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserReques
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
+	// Create a new user
 	Create(context.Context, *CreateUserRequest) (*SuccessResponse, error)
+	// Get a list of users
 	ReadUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
+	// Get a single user by ID
 	Read(context.Context, *SingleUserRequest) (*GetUserResponse, error)
+	// Get home information
 	Home(context.Context, *HomeRequest) (*GetHomeResponse, error)
+	// Update a user
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }

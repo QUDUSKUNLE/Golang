@@ -3,7 +3,7 @@ package authrepository
 import (
 	"context"
 
-	v1 "github.com/QUDUSKUNLE/microservices/auth-service/pkg/v1"
+	v1 "github.com/QUDUSKUNLE/microservices/auth-service/adapters"
 	"github.com/QUDUSKUNLE/microservices/shared/db"
 	"github.com/jackc/pgx/v5/pgtype"
 )

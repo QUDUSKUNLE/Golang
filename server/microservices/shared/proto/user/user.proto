@@ -11,29 +11,70 @@ enum UserType {
   ADMIN = 4;
 }
 
+
 service UserService {
+  // Create a new user
   rpc Create(CreateUserRequest) returns (SuccessResponse) {
+    // @Summary Create a new user
+    // @Description Register a new user with email, password, and user type.
+    // @Tags User
+    // @Accept json
+    // @Produce json
+    // @Param body body CreateUserRequest true "User registration request"
+    // @Success 200 {object} SuccessResponse
     option (google.api.http) = {
       post: "/v1/users",
       body: "*"
     };
   }
+  // Get a list of users
   rpc ReadUsers(GetUsersRequest) returns (GetUsersResponse) {
+    // @Summary Get a list of users
+    // @Description Retrieve a paginated list of users.
+    // @Tags User
+    // @Accept json
+    // @Produce json
+    // @Param limit query int32 false "Limit"
+    // @Param offset query int32 false "Offset"
+    // @Success 200 {object} GetUsersResponse
     option (google.api.http) = {
       get: "/v1/users",
     };
   }
+  // Get a single user by ID
   rpc Read(SingleUserRequest) returns (GetUserResponse) {
+    // @Summary Get a user by ID
+    // @Description Retrieve a user by their unique ID.
+    // @Tags User
+    // @Accept json
+    // @Produce json
+    // @Param id path string true "User ID"
+    // @Success 200 {object} GetUserResponse
     option (google.api.http) = {
       get: "/v1/users/{id}",
     };
   }
+  // Get home information
   rpc Home(HomeRequest) returns (GetHomeResponse) {
+    // @Summary Get home information
+    // @Description Retrieve home information for the user service.
+    // @Tags User
+    // @Accept json
+    // @Produce json
+    // @Success 200 {object} GetHomeResponse
     option (google.api.http) = {
       get: "/v1/home",
     };
   }
+  // Update a user
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    // @Summary Update a user
+    // @Description Update user information such as NIN.
+    // @Tags User
+    // @Accept json
+    // @Produce json
+    // @Param body body UpdateUserRequest true "Update user request"
+    // @Success 200 {object} UpdateUserResponse
     option (google.api.http) = {
       put: "/v1/users",
       body: "*"

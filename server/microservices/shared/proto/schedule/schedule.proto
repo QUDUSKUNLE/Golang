@@ -2,6 +2,7 @@ syntax = "proto3";
 option go_package = "github.com/QUDUSKUNLE/microservices/shared/protogen/schedule";
 
 import "google/api/annotations.proto";
+// import "common/error.proto";
 
 enum ScheduleStatus {
   SCHEDULE_STATUS_UNSPECIFIED = 0; // For SessionStatus
@@ -27,43 +28,76 @@ enum ScheduleType {
 }
 
 service ScheduleService {
+  // Create a new schedule
   rpc CreateSchedule(ScheduleRequest) returns (ScheduleResponse) {
+    // @Summary Create a new schedule
+    // @Description Schedule a new diagnostic session for a user.
+    // @Tags Schedule
+    // @Accept json
+    // @Produce json
+    // @Param body body ScheduleRequest true "Schedule request"
+    // @Success 201 {object} ScheduleResponse
     option (google.api.http) = {
       post: "/v1/schedules",
       body: "*"
     };
   }
+  // Get a schedule by ID
   rpc GetSchedule(GetScheduleRequest) returns (GetScheduleResponse) {
+    // @Summary Get a schedule by ID
+    // @Description Retrieve a scheduled diagnostic session by its ID.
+    // @Tags Schedule
+    // @Accept json
+    // @Produce json
+    // @Param schedule_id path string true "Schedule ID"
+    // @Success 200 {object} GetScheduleResponse
     option (google.api.http) = {
       get: "/v1/schedules/{schedule_id}"
     };
   }
+  // Update a schedule
   rpc UpdateSchedule(UpdateScheduleRequest) returns (UpdateScheduleResponse) {
+    // @Summary Update a schedule
+    // @Description Update an existing scheduled diagnostic session.
+    // @Tags Schedule
+    // @Accept json
+    // @Produce json
+    // @Param schedule_id path string true "Schedule ID"
+    // @Param body body UpdateScheduleRequest true "Update schedule request"
+    // @Success 200 {object} UpdateScheduleResponse
+    // @Failure 400 {object} common.ErrorResponse
     option (google.api.http) = {
       put: "/v1/schedules/{schedule_id}",
       body: "*"
     };
   }
+  // Cancel a schedule
   rpc CancelSchedule(CancelScheduleRequest) returns (CancelScheduleResponse) {
+    // @Summary Cancel a schedule
+    // @Description Cancel a scheduled diagnostic session by its ID.
+    // @Tags Schedule
+    // @Accept json
+    // @Produce json
+    // @Param schedule_id path string true "Schedule ID"
+    // @Success 200 {object} CancelScheduleResponse
     option (google.api.http) = {
       delete: "/v1/schedules/{schedule_id}"
     };
   }
+  // List all schedules
   rpc ListSchedules(ListSchedulesRequest) returns (ListSchedulesResponse) {
+    // @Summary List all schedules
+    // @Description Retrieve a list of all scheduled diagnostic sessions for a user.
+    // @Tags Schedule
+    // @Accept json
+    // @Produce json
+    // @Param user_id query string false "User ID"
+    // @Param limit query int32 false "Limit"
+    // @Param offset query int32 false "Offset"
     option (google.api.http) = {
       get: "/v1/schedules"
     };
   }
-  // rpc ListDiagnosticCentreSchedules(ListDiagnosticCentreSchedulesRequest) returns (ListDiagnosticCentreSchedulesResponse) {
-  //   option (google.api.http) = {
-  //     get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules"
-  //   };
-  // }
-  // rpc GetDiagnosticCentreSchedule(GetDiagnosticCentreScheduleRequest) returns (GetDiagnosticCentreScheduleResponse) {
-  //   option (google.api.http) = {
-  //     get: "/v1/diagnostic_centres/{diagnostic_centre_id}/schedules/{schedule_id}"
-  //   };
-  // }
 }
 
 message ScheduleRequest {              // ID of the user scheduling the session
@@ -75,19 +109,6 @@ message ScheduleRequest {              // ID of the user scheduling the session
   ScheduleStatus test_status = 6;
   optional string notes = 7;            // Status of the session              // Additional notes (optional)
 }
-
-// message ListDiagnosticCentreSchedulesRequest {
-//   string diagnostic_centre_id = 1; // ID of the diagnostic center// ID of the user scheduling the session
-//   ScheduleStatus test_status = 2;
-//   string date = 3;
-//   int32 limit = 4;             // Number of results to return
-//   int32 offset = 5;       // Status of the session
-// }
-
-// message GetDiagnosticCentreScheduleRequest {
-//   string diagnostic_centre_id = 1; // ID of the diagnostic center
-//   string schedule_id = 2;           // ID of the scheduled session        // ID of the user scheduling the session
-// }
 
 message GetScheduleRequest {
   string schedule_id = 1;
@@ -129,18 +150,6 @@ message GetScheduleResponse {
   string created_at = 9;          // Creation timestamp
   string updated_at = 10;          // Last update timestamp
 }
-// message GetDiagnosticCentreScheduleResponse {
-//   string schedule_id = 1;           // ID of the scheduled session
-//   string user_id = 2;              // ID of the user who scheduled the session
-//   string diagnostic_centre_id = 3; // ID of the diagnostic center
-//   string date = 4;                 // Date of the session (e.g., "2025-05-01")
-//   string time = 5;                 // Time of the session (e.g., "10:00 AM")
-//   ScheduleType test_type = 6;            // Type of diagnostic test
-//   ScheduleStatus test_status = 7;       // Type of diagnostic test
-//   optional string notes = 8;
-//   string created_at = 9;
-//   string updated_at = 10;          // Creation timestamp
-// }
 
 message ScheduledSession {
   string schedule_id = 1;           // ID of the scheduled session
@@ -158,10 +167,6 @@ message ScheduledSession {
 message ListSchedulesResponse {
   repeated ScheduledSession sessions = 1; // List of scheduled sessions
 }
-
-// message ListDiagnosticCentreSchedulesResponse {
-//   repeated ScheduledSession sessions = 1; // List of scheduled sessions
-// }
 
 message UpdateScheduleResponse {
   string schedule_id = 1;

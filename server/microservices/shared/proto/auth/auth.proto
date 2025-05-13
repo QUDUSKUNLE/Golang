@@ -7,6 +7,7 @@ import "google/api/annotations.proto";
 // @version 1.0
 // @description This is the API documentation for the Auth Service.
 service AuthService {
+  // Sign in a user
   rpc Signin(SignInRequest) returns (SignInResponse) {
     // @Summary Sign in a user
     // @Description Authenticate a user and return a JWT token.
@@ -15,14 +16,28 @@ service AuthService {
     // @Produce json
     // @Param body body SignInRequest true "Sign in request"
     // @Success 200 {object} SignInResponse
-    // @Failure 401 {object} ErrorResponse
+    // @Failure 401 {object} common.ErrorResponse
+    // @Failure 500 {object} common.ErrorResponse
     option (google.api.http) = {
       post: "/v1/login",
       body: "*"
     };
   }
-}
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/refresh-token",
+      body: "*"
+    };
+  };
 
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/v1/logout",
+      body: "*"
+    };
+  };
+
+}
 
 message SignInRequest {
   string email = 1 [json_name = "email"];
@@ -31,5 +46,40 @@ message SignInRequest {
 
 message SignInResponse {
   string token = 1;
+  // Optionally, add more fields (e.g., user info, expiry)
+}
+
+// RefreshTokenRequest represents the request for refreshing a token
+message RefreshTokenRequest {
+  string refresh_token = 1 [json_name = "refresh_token"];
+}
+
+// RefreshTokenResponse represents the response after refreshing a token
+message RefreshTokenResponse {
+  string token = 1;
+  // Optionally, add more fields (e.g., expiry)
+}
+
+// LogoutRequest represents the request for logging out a user
+message LogoutRequest {
+  string token = 1 [json_name = "token"];
+}
+
+// LogoutResponse represents the response after logging out a user
+message LogoutResponse {
+  string message = 1; // e.g., "Logout successful"
+}
+
+// SignUpRequest represents the request for signing up a new user
+message SignUpRequest {
+  string email = 1 [json_name = "email"];
+  string password = 2 [json_name = "password"];
+  string username = 3 [json_name = "username"];
+}
+
+// SignUpResponse represents the response after signing up a new user
+message SignUpResponse {
+  string token = 1;
+  // Optionally, add more fields (e.g., user info, expiry)
 }
 
