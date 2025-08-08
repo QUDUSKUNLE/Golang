@@ -2,35 +2,31 @@ package eetcode
 
 import (
 	"strings"
-	"fmt"
 )
 
 func ReturnWeekends(days []map[string]string) []map[string]string {
+	if len(days) == 0 {
+		return nil
+	}
 	result := make([]map[string]string, 0, 7)
-	for index := 0; index < len(days); index++ {
-		if index == 0 {
-			result = append(result, map[string]string{
-				"days": days[index]["day"],
-				"open": days[index]["open"],
-				"close": days[index]["close"],
-			})
-		} else {
-			for jindex := 0; jindex < len(result); jindex++ {
-				if (result[jindex]["open"] == days[index]["open"] &&
-					result[jindex]["close"] == days[index]["close"]) {
-						if (!strings.Contains(result[jindex]["days"], days[index]["day"])) {
-							before, _, _ := strings.Cut(result[jindex]["days"],  "-")
-							result[jindex]["days"] = fmt.Sprintf("%v-%v", before, days[index]["day"])
-							break
-						}
-					} else if (jindex == len(result) - 1) {
-						result = append(result, map[string]string{
-							"days": days[index]["day"],
-							"open": days[index]["open"],
-							"close": days[index]["close"],
-						})
-					}
+	for i := 0; i < len(days); i++ {
+		found := false
+		for j := 0; j < len(result); j++ {
+			if result[j]["open"] == days[i]["open"] && result[j]["close"] == days[i]["close"] {
+				// Merge days if open/close times match
+				if !strings.Contains(result[j]["days"], days[i]["day"]) {
+					result[j]["days"] = result[j]["days"] + "," + days[i]["day"]
+				}
+				found = true
+				break
 			}
+		}
+		if !found {
+			result = append(result, map[string]string{
+				"days":  days[i]["day"],
+				"open":  days[i]["open"],
+				"close": days[i]["close"],
+			})
 		}
 	}
 	return result

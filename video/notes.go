@@ -52,6 +52,8 @@ ffmpeg -i video.mp4 -vn audio.mp3
 */
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -107,4 +109,153 @@ func ProcessVideo() {
 	if err != nil {
 		fmt.Printf("Error walking through folder: %v\n", err)
 	}
+}
+
+func ConvertAllToMP3(dirPath string) {
+	// Ensure the directory exists
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		fmt.Printf("Directory does not exist: %s\n", dirPath)
+		return
+	}
+
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return fmt.Errorf("error accessing path %s: %v", path, err)
+		}
+
+		// Skip directories
+		if info.IsDir() {
+			return nil
+		}
+
+		// Skip files that are already .mp3
+		if strings.HasSuffix(strings.ToLower(info.Name()), ".mp3") {
+			return nil
+		}
+
+		// Output file path with .mp3 extension
+		outputFile := strings.TrimSuffix(path, filepath.Ext(path)) + ".mp3"
+
+		// ffmpeg command to convert to mp3
+		cmd := exec.Command("ffmpeg", "-y", "-i", path, "-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k", outputFile)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		fmt.Printf("Converting %s to %s\n", path, outputFile)
+		if err := cmd.Run(); err != nil {
+			fmt.Printf("Error converting file %s: %v\n", path, err)
+		} else {
+			fmt.Printf("Successfully converted: %s\n", outputFile)
+		}
+		return nil
+	})
+
+	if err != nil {
+		fmt.Printf("Error walking through directory: %v\n", err)
+	}
+}
+
+// RemoveBackgroundNoise uses ffmpeg's afftdn filter to reduce background noise in an audio file.
+// inputPath: path to the original audio file
+// outputPath: path to save the cleaned audio file
+func RemoveBackgroundNoise(inputPath, outputPath string) error {
+	cmd := exec.Command("ffmpeg", "-y", "-i", inputPath, "-af", "afftdn", outputPath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+type AudioMetadata struct {
+	Streams []struct {
+		CodecName  string `json:"codec_name"`
+		Channels   int    `json:"channels"`
+		SampleRate string `json:"sample_rate"`
+		BitRate    string `json:"bit_rate"`
+		Duration   string `json:"duration"`
+	} `json:"streams"`
+}
+
+// GetAudioMetadata uses ffprobe to extract audio metadata from a file
+func GetAudioMetadata(filePath string) (*AudioMetadata, error) {
+	cmd := exec.Command("ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries", "stream=codec_name,channels,sample_rate,bit_rate,duration", "-of", "json", filePath)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+	if err := cmd.Run(); err != nil {
+		return nil, err
+	}
+	var meta AudioMetadata
+	if err := json.Unmarshal(out.Bytes(), &meta); err != nil {
+		return nil, err
+	}
+	return &meta, nil
+}
+
+// SaveAudioMetadata uses ffprobe to extract audio metadata from a file and saves it as JSON in the specified directory.
+func SaveAudioMetadata(filePath, saveDir string) error {
+	cmd := exec.Command("ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries", "stream=codec_name,channels,sample_rate,bit_rate,duration", "-of", "json", filePath)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	// Ensure saveDir exists
+	if err := os.MkdirAll(saveDir, 0755); err != nil {
+		return err
+	}
+
+	// Create output file path
+	base := filepath.Base(filePath)
+	jsonFile := filepath.Join(saveDir, base+".metadata.json")
+
+	// Write JSON output to file
+	return os.WriteFile(jsonFile, out.Bytes(), 0644)
+}
+
+// CutOutAudioSegment removes a segment from an audio file and returns the path to the new file.
+// inputPath: original audio file
+// start: start time of the segment to remove (e.g., "00:01:00")
+// end: end time of the segment to remove (e.g., "00:02:00")
+// outputPath: path to save the new audio file
+func CutOutAudioSegment(inputPath, start, end, outputPath string) error {
+    // Temporary files for the two segments
+    before := inputPath + ".before.mp3"
+    after := inputPath + ".after.mp3"
+
+    // 1. Extract before segment
+    cmd1 := exec.Command("ffmpeg", "-y", "-i", inputPath, "-ss", "0", "-to", start, "-c", "copy", before)
+    cmd1.Stdout = os.Stdout
+    cmd1.Stderr = os.Stderr
+    if err := cmd1.Run(); err != nil {
+        return err
+    }
+
+    // 2. Extract after segment
+    cmd2 := exec.Command("ffmpeg", "-y", "-i", inputPath, "-ss", end, "-c", "copy", after)
+    cmd2.Stdout = os.Stdout
+    cmd2.Stderr = os.Stderr
+    if err := cmd2.Run(); err != nil {
+        os.Remove(before)
+        return err
+    }
+
+    // 3. Concatenate both segments
+    listFile := inputPath + ".concat.txt"
+    if err := os.WriteFile(listFile, []byte("file '"+before+"'\nfile '"+after+"'\n"), 0644); err != nil {
+        os.Remove(before)
+        os.Remove(after)
+        return err
+    }
+    cmd3 := exec.Command("ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", listFile, "-c", "copy", outputPath)
+    cmd3.Stdout = os.Stdout
+    cmd3.Stderr = os.Stderr
+    err := cmd3.Run()
+
+    // Clean up
+    os.Remove(before)
+    os.Remove(after)
+    os.Remove(listFile)
+    return err
 }
