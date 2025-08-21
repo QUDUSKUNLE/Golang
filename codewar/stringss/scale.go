@@ -17,24 +17,16 @@ Function scale(strng, k, v) will perform a k-horizontal scaling and a v-vertical
 */
 
 import (
-	"fmt"
 	"strings"
 )
 
 func Scale(s string, k, v int) string {
-	if s == "" {
-		return ""
-	}
-	strng := strings.Split(s, "\n")
-	result := make([]string, len(strng))
-	for i, v := range strng {
-		for _, c := range v {
-			result[i] += strings.Repeat(string(c), k)
+	var result strings.Builder
+	for i := 0; i < v; i++ {
+		for j := 0; j < k; j++ {
+			result.WriteString(s)
 		}
+		result.WriteString("\n")
 	}
-	final := make([]string, len(result))
-	for j, r := range result {
-		final[j] = strings.Repeat(fmt.Sprintf("%s\n", r), v)
-	}
-	return strings.TrimRight(strings.Join(final, ""), "\n")
+	return result.String()
 }

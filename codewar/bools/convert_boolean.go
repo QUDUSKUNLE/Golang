@@ -5,13 +5,6 @@ Complete the method that takes a boolean value and return a "Yes" string for tru
 
 */
 
-func ConvertBool(arg bool) string {
-	return map[bool]string{true: "Yes", false: "No"}[arg]
-}
-
-func ReturnString(arg bool) string {
-	if arg {
-		return "Yes"
-	}
-	return "No"
+func ConvertBoolean(b bool) string {
+	return map[bool]string{true: "Yes", false: "No"}[b]
 }

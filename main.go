@@ -1,26 +1,26 @@
+
 package main
 
 import (
 	"fmt"
-
-	"github.com/QUDUSKUNLE/Golang/tutorial/video"
+	"log"
+	"net/http"
+	"os"
 )
 
 func main() {
-
-	urls := []string{
-		"https://www.youtube.com/watch?v=rbkgThC_klQ",
-		// "https://www.instagram.com/reel/C5KxiNlL0Z1/",
-		// "https://fb.watch/nXtUy5xQ6e/",
+	if len(os.Args) < 2 {
+		log.Fatal("Usage: test_backends <port>")
 	}
+	port := os.Args[1]
 
-	for _, u := range urls {
-		fmt.Printf("🎬 Downloading: %s\n", u)
-		path, err := video.DownloadVideo(u)
-		if err != nil {
-			fmt.Printf("❌ Failed: %v\n", err)
-			continue
-		}
-		fmt.Printf("✅ Saved to: %s\n", path)
-	}
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello from backend %s\n", port)
+	})
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	log.Printf("Backend %s listening", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

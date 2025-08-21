@@ -6,11 +6,6 @@ Write a function named setAlarm/set_alarm/set-alarm/setalarm (depending on langu
 The function should return true if you are employed and not on vacation (because these are the circumstances under which you need to set an alarm). It should return false otherwise. Examples:
 */
 
-func SetAlarm(employed, vacation bool) bool {
-	if employed && vacation {
-		return false
-	} else if employed {
-		return true
-	}
-	return false
+func SetAlarm(employed bool, vacation bool) bool {
+	return employed && !vacation
 }

@@ -4,22 +4,8 @@ package stringss
 Is the string uppercase?
 */
 
-import (
-	"strings"
-	"unicode"
-)
+import "strings"
 
-type MyString string
-
-func (s MyString) IsUpperCase() bool {
-	return string(s) == strings.ToUpper(string(s))
-}
-
-func (s MyString) IsUpper() bool {
-	for _, c := range s {
-		if unicode.IsLower(c) {
-			return false
-		}
-	}
-	return true
+func IsStringUpperCase(str string) bool {
+	return strings.ToUpper(str) == str
 }
