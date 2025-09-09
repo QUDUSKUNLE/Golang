@@ -1,3 +1,2 @@
 #!/bin/bash
-
-go build main.go && ./main
+go build main.go && ./main "$@"
