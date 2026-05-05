@@ -87,6 +87,88 @@ func DownloadAndConvert(url string, outputDir string) error {
 	return nil
 }
 
+// DownloadYoutubeVideo downloads a YouTube video to the specified output directory.
+// It preserves the best video quality available.
+// youtubeURL: the YouTube video URL
+// outputDir: the directory where the video will be saved
+func DownloadYoutubeVideo(youtubeURL, outputDir string) error {
+	// Validate input
+	if youtubeURL == "" {
+		return fmt.Errorf("YouTube URL cannot be empty")
+	}
+	if outputDir == "" {
+		return fmt.Errorf("output directory cannot be empty")
+	}
+
+	fmt.Printf("Downloading from: %s\n", youtubeURL)
+	fmt.Printf("Output directory: %s\n", outputDir)
+
+	// Ensure outputDir exists
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return fmt.Errorf("failed to create output directory: %v", err)
+	}
+
+	// yt-dlp output template
+	outputTemplate := filepath.Join(outputDir, "%(title)s.%(ext)s")
+
+	// Try multiple format options in order of preference
+	formats := []string{
+		"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
+		"best[ext=mp4]/best",
+		"best",
+	}
+
+	var lastErr error
+	for _, format := range formats {
+		fmt.Printf("Trying format: %s\n", format)
+		cmd := exec.Command("yt-dlp",
+			"--no-update",
+			"--socket-timeout", "30",
+			"-f", format,
+			"-o", outputTemplate,
+			youtubeURL,
+		)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Run(); err != nil {
+			lastErr = err
+			fmt.Printf("Format %s failed, trying next...\n", format)
+			continue
+		}
+
+		// Success
+		fmt.Printf("✅ Video downloaded successfully to: %s\n", outputDir)
+		return nil
+	}
+
+	return fmt.Errorf("yt-dlp failed to download video with all format options: %v\nPlease update yt-dlp with: pip install --upgrade yt-dlp", lastErr)
+}
+
+// DownloadYoutubeAudio downloads only the audio from a YouTube video to the specified output directory.
+// youtubeURL: the YouTube video URL
+// outputDir: the directory where the audio will be saved
+func DownloadYoutubeAudio(youtubeURL, outputDir string) error {
+	// Ensure outputDir exists
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return fmt.Errorf("failed to create output directory: %v", err)
+	}
+
+	// yt-dlp output template
+	outputTemplate := filepath.Join(outputDir, "%(title)s.%(ext)s")
+
+	// Download the best audio
+	cmd := exec.Command("yt-dlp", "-f", "bestaudio", "-o", outputTemplate, youtubeURL)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("yt-dlp failed to download audio: %v", err)
+	}
+
+	fmt.Printf("✅ Audio downloaded successfully to: %s\n", outputDir)
+	return nil
+}
 
 // // main for CLI usage
 // func main() {

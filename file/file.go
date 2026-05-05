@@ -10,9 +10,8 @@ func OpenFile(name string) (string, error) {
 	f, er := os.Open(name)
 	if er != nil {
 		return "", errors.New("custom error message: file name is wrong")
-	} else {
-		return f.Name(), nil
 	}
+	return f.Name(), nil
 }
 
 func ReadFile(filename string) (string, error) {

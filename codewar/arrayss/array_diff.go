@@ -13,8 +13,7 @@ If a = [1, 2, 2, 2, 3] and b = [2], the result should be [1, 3].
 import "slices"
 
 func ArrayDiff(a, b []int) []int {
-	var result []int
-	var min, max []int
+	var result, min, max []int
 	if len(a) < len(b) {
 		min = a
 		max = b
